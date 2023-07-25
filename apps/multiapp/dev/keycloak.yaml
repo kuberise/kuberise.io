@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+spec:
+  project: argocd-project
+  source:
+    helm:
+      repoURL: https://kubernetes-charts.storage.googleapis.com # or a chart source from templates folder in this repo
+      chart: keycloak
+      targetRevision: 9.0.0
+      values:
+        - ./apps/keycloak/dev/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+      retry:
+        limit: 3
+        backoff:
+          duration: 30
+          factor: 2
+          maxDuration: 60

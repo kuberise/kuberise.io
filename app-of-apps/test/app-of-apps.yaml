@@ -1,0 +1,26 @@
+#write argocd appliction yaml file
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+  namespace: argocd
+spec:
+  project: argocd-project
+  source:
+    repoURL: https://github.com/kuberise/kuberise.git
+    path: ./apps/multiapp/dev
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+      retry:
+        limit: 3
+        backoff:
+          duration: 30
+          factor: 2
+          maxDuration: 60
