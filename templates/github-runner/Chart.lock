@@ -1,0 +1,9 @@
+dependencies:
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.12.3
+- name: actions-runner-controller
+  repository: https://actions-runner-controller.github.io/actions-runner-controller
+  version: 0.22.0
+digest: sha256:8f2f32516a0704a9d543d5a867508b5cce5473b7851f855cd385dfd2cb40de26
+generated: "2023-07-29T23:09:52.872114+03:30"

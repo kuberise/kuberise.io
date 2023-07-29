@@ -1,0 +1,12 @@
+
+
+cert-manager: 
+  namespace: cert-manager
+  # installCRDs: true
+
+actions-runner-controller:
+  syncPeriod: 1m
+
+
+runner-deployment:
+  repository: rapour/kuberise
