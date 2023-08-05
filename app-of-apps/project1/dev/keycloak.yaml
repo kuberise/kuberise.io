@@ -16,6 +16,11 @@ spec:
     server: https://kubernetes.default.svc
     namespace: keycloak
   syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        managed: "true"
+    syncOptins:
+      - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true
