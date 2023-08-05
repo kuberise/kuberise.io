@@ -8,7 +8,7 @@ metadata:
 spec:
   project: project1-dev
   sources:
-  - repoURL: ghcr.io/nginxinc/charts/nginx-ingress
+  - repoURL: ghcr.io/nginxinc/charts
     chart: nginx-ingress
     targetRevision: 0.18.0
     helm:
