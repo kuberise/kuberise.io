@@ -3,15 +3,21 @@ kind: Application
 metadata:
   name: nginx-ingress
   namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   project: project1-dev
   source:
+  - repoURL: ghcr.io/nginxinc/charts/nginx-ingress
+    chart: nginx-ingress
+    targetRevision: 0.18.0
     helm:
-      repoURL: https://kubernetes-charts.storage.googleapis.com
-      chart: nginx-ingress
-      targetRevision: 1.41.3
+      releaseName: nginx-ingress
       values:
-        - ./app-values/nginx-ingress/nginx-ingress-values-project1-dev.yaml
+        - $values/app-values/nginx-ingress/nginx-ingress-values-project1-dev.yaml
+  - repoURL: https://github.com/Kuberise/kuberise.git
+    targetRevision: mojtaba/folder-structure
+    ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: nginx-ingress
