@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   project: project1-dev
-  source:
+  sources:
   - repoURL: registry-1.docker.io/bitnamicharts/keycloak
     chart: keycloak
     targetRevision: 22.0.1

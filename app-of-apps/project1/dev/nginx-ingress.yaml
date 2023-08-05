@@ -7,7 +7,7 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: project1-dev
-  source:
+  sources:
   - repoURL: ghcr.io/nginxinc/charts/nginx-ingress
     chart: nginx-ingress
     targetRevision: 0.18.0
