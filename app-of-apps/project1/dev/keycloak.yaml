@@ -6,12 +6,16 @@ metadata:
 spec:
   project: project1-dev
   source:
+  - repoURL: registry-1.docker.io/bitnamicharts/keycloak
+    chart: keycloak
+    targetRevision: 22.0.1
     helm:
-      repoURL: https://kubernetes-charts.storage.googleapis.com
-      chart: keycloak
-      targetRevision: 9.0.0
-      values:
-        - ./app-values/keycloak/keycloak-values-project1-dev.yaml
+      releaseName: keycloak
+      valueFiles:
+        - $values/app-values/keycloak/keycloak-values-project1-dev.yaml
+  - repoURL: https://github.com/Kuberise/kuberise.git
+    targetRevision: mojtaba/folder-structure
+    ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
