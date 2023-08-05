@@ -19,7 +19,7 @@ spec:
     managedNamespaceMetadata:
       labels:
         managed: "true"
-    syncOptins:
+    syncOptions:
       - CreateNamespace=true
     automated:
       prune: true
