@@ -1,7 +1,0 @@
-bash script:
-
-helm install argocd
-- project
-- repository
-
-kubectl apply -f app-of-apps/app-of-apps.yaml

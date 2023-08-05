@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: keycloak
+  name: nginx-ingress
   namespace: argocd
 spec:
-  project: argocd-project
+  project: project1-dev
   source:
     helm:
-      repoURL: https://kubernetes-charts.storage.googleapis.com # or a chart source from templates folder in this repo
-      chart: keycloak
-      targetRevision: 9.0.0
+      repoURL: https://kubernetes-charts.storage.googleapis.com
+      chart: nginx-ingress
+      targetRevision: 1.41.3
       values:
-        - ./apps/keycloak/dev/values.yaml
+        - ./app-values/nginx-ingress/nginx-ingress-values-project1-dev.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: nginx-ingress
   syncPolicy:
     automated:
       prune: true

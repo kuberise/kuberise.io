@@ -1,18 +1,20 @@
-#write argocd appliction yaml file
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps
+  name: keycloak
   namespace: argocd
 spec:
-  project: argocd-project
+  project: project1-dev
   source:
-    repoURL: https://github.com/kuberise/kuberise.git
-    path: ./apps/multiapp/dev
-    targetRevision: HEAD
+    helm:
+      repoURL: https://kubernetes-charts.storage.googleapis.com
+      chart: keycloak
+      targetRevision: 9.0.0
+      values:
+        - ./app-values/keycloak/keycloak-values-project1-dev.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: keycloak
   syncPolicy:
     automated:
       prune: true
