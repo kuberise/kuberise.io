@@ -3,7 +3,7 @@
 KUBECONFIG=$1           # example: /home/ubuntu/.kube/config
 CONTEXT=$2              # example: kubernetes-admin@kubernetes
 REPOSITORY_TOKEN=$3     # example: 1234567890qpoieraksjdhzxcbv
-ENVIRONMENT=$4          # possible values: dev, tst, acc, prd
+ENVIRONMENT=$4          # example: dev, tst, acc, prd
 PROJECT=$5              # example: project1
 
 
