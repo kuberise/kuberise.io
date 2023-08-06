@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-ingress
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: project1-acc
+  sources:
+  - repoURL: ghcr.io/nginxinc/charts
+    chart: nginx-ingress
+    targetRevision: 0.18.0
+    helm:
+      releaseName: nginx-ingress
+      valueFiles:
+        - $values/app-values/nginx-ingress/nginx-ingress-values-project1-acc.yaml
+  - repoURL: https://github.com/Kuberise/kuberise.git
+    targetRevision: mojtaba/folder-structure
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-ingress
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        managed: "true"
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+      retry:
+        limit: 3
+        backoff:
+          duration: 30
+          factor: 2
+          maxDuration: 60
