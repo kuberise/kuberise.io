@@ -13,7 +13,7 @@ spec:
   source:
     path: ./app-of-apps/project1/tst
     repoURL: https://github.com/Kuberise/kuberise.git
-    targetRevision: mojtaba/folder-structure
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

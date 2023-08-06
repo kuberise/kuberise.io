@@ -14,7 +14,7 @@ spec:
       valueFiles:
         - $values/app-values/keycloak/keycloak-values-project1-prd.yaml
   - repoURL: https://github.com/Kuberise/kuberise.git
-    targetRevision: mojtaba/folder-structure
+    targetRevision: HEAD
     ref: values
   destination:
     server: https://kubernetes.default.svc

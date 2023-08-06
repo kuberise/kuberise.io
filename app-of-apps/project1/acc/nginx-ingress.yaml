@@ -16,7 +16,7 @@ spec:
       valueFiles:
         - $values/app-values/nginx-ingress/nginx-ingress-values-project1-acc.yaml
   - repoURL: https://github.com/Kuberise/kuberise.git
-    targetRevision: mojtaba/folder-structure
+    targetRevision: HEAD
     ref: values
   destination:
     server: https://kubernetes.default.svc
