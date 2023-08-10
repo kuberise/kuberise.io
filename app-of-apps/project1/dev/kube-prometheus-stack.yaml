@@ -7,10 +7,10 @@ spec:
   project: project1-dev
   sources:
   - repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus-community/kube-prometheus-stack
-    targetRevision: 48.3.1
+    path: kube-prometheus-stack
+    targetRevision: HEAD
     helm:
-      releaseName: prometheus-stack
+      releaseName: kube-prometheus-stack
       valueFiles:
         - $values/app-values/prometheus/prometheus-values-project1-dev.yaml
   - repoURL: https://github.com/Kuberise/kuberise.git
