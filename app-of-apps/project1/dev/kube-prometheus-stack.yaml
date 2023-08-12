@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  project: project1-dev
+  sources:
+  - repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 43.3.0
+    helm:
+      releaseName: kube-prometheus-stack
+      valueFiles:
+        - $values/app-values/prometheus/prometheus-values-project1-dev.yaml
+  - repoURL: https://github.com/Kuberise/kuberise.git
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        managed: "true"
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+      retry:
+        limit: 3
+        backoff:
+          duration: 30
+          factor: 2
+          maxDuration: 60
