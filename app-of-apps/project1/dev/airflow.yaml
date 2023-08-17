@@ -1,31 +1,30 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kube-prometheus-stack
+  name: airflow
   namespace: argocd
 spec:
   project: project1-dev
   sources:
-  - repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 43.3.0
+  - repoURL: https://airflow.apache.org
+    chart: apache-airflow/airflow
+    targetRevision: 1.10.0
     helm:
-      releaseName: kube-prometheus-stack
+      releaseName: airflow
       valueFiles:
-        - $values/app-values/prometheus/prometheus-values-project1-dev.yaml
+        - $values/app-values/prometheus/airflow-values-project1-dev.yaml
   - repoURL: https://github.com/Kuberise/kuberise.git
     targetRevision: HEAD
     ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: prometheus
+    namespace: airflow
   syncPolicy:
     managedNamespaceMetadata:
       labels:
         managed: "true"
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
     automated:
       prune: true
       selfHeal: true
