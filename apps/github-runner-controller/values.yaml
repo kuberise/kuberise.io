@@ -1,0 +1,8 @@
+
+
+cert-manager: 
+  namespace: cert-manager
+
+actions-runner-controller:
+  syncPeriod: 1m
+
