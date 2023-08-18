@@ -6,9 +6,9 @@ metadata:
 spec:
   project: project1-dev
   sources:
-  - repoURL: https://airflow.apache.org
+  - repoURL: https://charts.bitnami.com/bitnami
     chart: apache-airflow/airflow
-    targetRevision: 1.10.0
+    targetRevision: 14.3.6
     helm:
       releaseName: airflow
       valueFiles:
