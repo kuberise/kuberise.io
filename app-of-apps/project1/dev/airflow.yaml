@@ -12,7 +12,7 @@ spec:
     helm:
       releaseName: airflow
       valueFiles:
-        - $values/app-values/prometheus/airflow-values-project1-dev.yaml
+        - $values/app-values/airflow/airflow-values-project1-dev.yaml
   - repoURL: https://github.com/Kuberise/kuberise.git
     targetRevision: HEAD
     ref: values
