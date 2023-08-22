@@ -1,6 +1,7 @@
 global:
   env: dta
 
-argocdApplications:
-  prometheus:
+
+helmCharts:
+  keycloak:
     enabled: false

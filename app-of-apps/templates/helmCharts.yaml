@@ -1,4 +1,4 @@
-{{- range $name, $app := .Values.internalHelmCharts -}}
+{{- range $name, $app := .Values.helmCharts -}}
 {{ if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -9,10 +9,14 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: {{ $.Values.global.spec.project }}
-  source:
-  - repoURL:  {{ $.Values.global.spec.source.repoURL }}
+  sources:
+  - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
+    {{- if hasKey . "chart"}}
+    chart: {{ default $name .chart }}
+    {{- else }}
     path: apps/{{ default $name .name }}
+    {{- end }}
     helm:
       valueFiles:
       - $valuesRepo/values/{{ default $name .name }}/values-{{ $.Values.global.env }}.yaml
