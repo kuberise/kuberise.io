@@ -54,3 +54,10 @@ helmCharts:
     namespace: monitoring
     targetRevision: 48.3.3
     chart: kube-prometheus-stack
+
+  loki:
+    enabled: true
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 0.71.1
+    chart: loki-distributed
