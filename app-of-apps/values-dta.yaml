@@ -7,3 +7,5 @@ helmCharts:
     enabled: false
   airflow:
     enabled: false
+  nginx-ingress:
+    enabled: false
