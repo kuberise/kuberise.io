@@ -38,8 +38,8 @@ helmCharts:
 
   airflow:
     enabled: true
-    repoURL: charts.bitnami.com/bitnami
-    targetRevision: 14.3.6
+    repoURL: airflow.apache.org
+    targetRevision: 1.10.0
     chart: airflow
 
   nginx-ingress:
