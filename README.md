@@ -10,6 +10,10 @@ Platform team creates a namespace for each team and each team can deploy their s
 
 There are two Kubernetes clusters one for dev/test/acc (dta) and another one dedicated to the production (prd) environment. dev/test/acc in dta cluster are separated in different namespaces. They use one cluster for those environment to save cost. otherwise they can have separate cluster for each environment.
 
+## Values
+
+You can define a separate repository for values. If you do so, you can update the main platform source without affecting your values.
+
 ## Installation
 
 You need to have kubectl and helm commands installed in your local environment then use these commands to install and configure argocd. Then argocd will pull the code from the repository and deploy apps to the cluster.

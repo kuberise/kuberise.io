@@ -15,7 +15,7 @@ spec:
   source:
     path: ./app-of-apps
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: HEAD
+    targetRevision: mojtaba/app-of-apps-helm
     helm:
       valueFiles:
         - values-prd.yaml

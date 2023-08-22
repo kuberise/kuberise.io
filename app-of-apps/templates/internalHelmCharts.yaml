@@ -10,12 +10,15 @@ metadata:
 spec:
   project: {{ $.Values.global.spec.project }}
   source:
-    repoURL:  {{ $.Values.global.spec.source.repoURL }}
+  - repoURL:  {{ $.Values.global.spec.source.repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
     path: apps/{{ default $name .name }}
     helm:
       valueFiles:
-      - ../../values/{{ default $name .name }}/values-{{ $.Values.global.env }}.yaml
+      - $valuesRepo/values/{{ default $name .name }}/values-{{ $.Values.global.env }}.yaml
+  - repoURL: {{ $.Values.global.spec.values.repoURL }}
+    targetRevision: {{ default $.Values.global.spec.values.targetRevision .values.targetRevision }}
+    ref: valuesRepo
   destination:
     namespace: {{ default $name .namespace }}
     server: {{ $.Values.global.spec.destination.server }}

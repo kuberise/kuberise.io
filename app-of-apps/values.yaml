@@ -8,6 +8,9 @@ global:
     source:
       repoURL: https://github.com/kuberise/kuberise.git
       targetRevision: mojtaba/app-of-apps-helm
+    values:
+      repoURL: https://github.com/kuberise/kuberise.git
+      targetRevision: mojtaba/app-of-apps-helm
 
 applications:
 
@@ -29,18 +32,16 @@ externalHelmCharts:
     targetRevision: 16.0.3
     releaseName: keycloak
     valuesFile: ../../app-values/keycloak/keycloak-values-dta.yaml
-  prometheus:
-    enabled: true
-    valuesFile: ../../app-values/prometheus/prometheus-values-dta.yaml
 
   sealed-secrets:
     enabled: true
     valuesFile: ../../app-values/sealed-secrets/sealed-secrets-values-dta.yaml
+    repoURL: https://bitnami-labs.github.io/sealed-secrets
+    targetRevision: 2.11.0
 
   airflow:
     enabled: true
     repoURL: https://charts.bitnami.com/bitnami
-    chart: airflow
     targetRevision: 14.3.6
     releaseName: airflow
     valuesFile: ../../app-values/airflow/airflow-values-dta.yaml
