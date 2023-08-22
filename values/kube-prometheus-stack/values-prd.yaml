@@ -1,8 +1,10 @@
 grafana:
   datasources:
-    loki:
-      name: Loki
-      type: loki
-      access: proxy
-      url: http://loki-loki-distributed-gateway
-      isDefault: false
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-loki-distributed-gateway
+        isDefault: false
