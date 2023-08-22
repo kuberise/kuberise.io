@@ -3,4 +3,10 @@ global:
   spec:
     project: platform-prd
     source:
-      targetRevision: 0.1.0
+      targetRevision: mojtaba/app-of-apps-helm
+
+helmCharts:
+  keycloak:
+    enabled: false
+  airflow:
+    enabled: false
