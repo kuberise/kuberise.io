@@ -1,10 +1,10 @@
 # kuberise
 
-Kuberise is an internal developer platform that install core apps into a kubernetes cluster and makes it ready to deploy custom services. Then developers also can use this platform to deploy their services to different environments.
+Kuberise is an internal developer platform that installs core apps into a kubernetes cluster and makes it ready to deploy custom services. Then developers can use this platform to deploy their services to different environments.
 
 ## Use case
 
-Assume that there are multiple business or developer teams called blue, red, green, etc. There is one platform team that provides the kubernetes platform and platform tools and automation so developer teams can focus on their own business application and development.
+Assume that there are multiple business or developer teams called blue, red, green, etc. There is one platform team that provides the kubernetes platform and platform tools and automation so that developer teams can focus on their own business applications and development.
 
 Platform team creates a namespace for each team and each team can deploy their services to only their own namespace.
 
@@ -19,27 +19,17 @@ You can define a separate repository for values. If you do so, you can update th
 You need to have kubectl and helm commands installed in your local environment then use these commands to install and configure argocd. Then argocd will pull the code from the repository and deploy apps to the cluster.
 
 ```bash
-cicd/scripts/install.sh <path to kubeconfig file> <Kubernetes context> <git repository token> <environment name> <project name>
+cicd/scripts/install.sh <Kubernetes context> <git repository token> <environment name>
 ```
 
-example command for development, test, acceptance and production environments are:
+example command for dta and prd environments are:
 
-development:
+dta:
 ```
-cicd/scripts/install.sh ~/.kube/minikube.yaml minikube-dev <token> dev project1
-```
-
-test:
-```
-cicd/scripts/install.sh ~/.kube/minikube.yaml minikube-tst <token> tst project1
+cicd/scripts/install.sh minikube-dta <token> dta
 ```
 
-acceptance:
+prd:
 ```
-cicd/scripts/install.sh ~/.kube/minikube.yaml minikube-acc <token> acc project1
-```
-
-production:
-```
-cicd/scripts/install.sh ~/.kube/minikube.yaml minikube-prd <token> prd project1
+cicd/scripts/install.sh minikube-prd <token> prd
 ```
