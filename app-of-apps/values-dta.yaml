@@ -1,0 +1,11 @@
+global:
+  env: dta
+
+
+helmCharts:
+  keycloak:
+    enabled: false
+  airflow:
+    enabled: false
+  nginx-ingress:
+    enabled: false

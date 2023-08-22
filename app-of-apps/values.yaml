@@ -1,0 +1,49 @@
+global:
+  env: dta
+  automated: true
+  spec:
+    project: platform-dta
+    destination:
+      server: https://kubernetes.default.svc
+    source:
+      repoURL: https://github.com/kuberise/kuberise.git
+      targetRevision: HEAD
+    values:
+      repoURL: https://github.com/kuberise/kuberise.git
+      targetRevision: HEAD
+
+applications:
+
+  helm-guestbook:
+    enabled: true
+    valuesFile: ../../app-values/guestbook/guestbook-values-dta.yaml
+
+
+helmCharts:
+  teams-namespaces:
+    enabled: true
+    namespace: default
+
+  keycloak:
+    enabled: true
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: keycloak
+    targetRevision: 16.0.3
+
+  sealed-secrets:
+    enabled: true
+    repoURL: https://bitnami-labs.github.io/sealed-secrets
+    targetRevision: 2.11.0
+    chart: sealed-secrets
+
+  airflow:
+    enabled: true
+    repoURL: https://airflow.apache.org
+    targetRevision: 1.10.0
+    chart: airflow
+
+  nginx-ingress:
+    enabled: true
+    repoURL: ghcr.io/nginxinc/charts
+    targetRevision: 0.18.0
+    chart: nginx-ingress
