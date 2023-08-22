@@ -40,7 +40,7 @@ helmCharts:
     enabled: true
     repoURL: airflow.apache.org
     targetRevision: 1.10.0
-    chart: airflow
+    chart: apache-airflow/airflow
 
   nginx-ingress:
     enabled: true
