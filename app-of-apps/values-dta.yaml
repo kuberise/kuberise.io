@@ -5,3 +5,5 @@ global:
 helmCharts:
   keycloak:
     enabled: false
+  airflow:
+    enabled: false
