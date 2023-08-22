@@ -7,10 +7,10 @@ global:
       server: https://kubernetes.default.svc
     source:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: mojtaba/prometheus-loki
     values:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: mojtaba/prometheus-loki
 
 applications:
 
