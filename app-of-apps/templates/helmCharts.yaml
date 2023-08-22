@@ -21,7 +21,7 @@ spec:
       valueFiles:
       - $valuesRepo/values/{{ default $name .name }}/values-{{ $.Values.global.env }}.yaml
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
-    targetRevision: {{ default $.Values.global.spec.values.targetRevision .values.targetRevision }}
+    targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo
   destination:
     namespace: {{ default $name .namespace }}
