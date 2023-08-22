@@ -1,0 +1,20 @@
+global:
+  env: prd
+  spec:
+    project: platform-prd
+    source:
+      targetRevision: 1.0.0
+
+argocdApplications:
+
+  helm-guestbook:
+    valuesFile: ../../app-values/guestbook/guestbook-values-prd.yaml
+
+  prometheus:
+    valuesFile: ../../app-values/prometheus/prometheus-values-prd.yaml
+
+  sealed-secrets:
+    valuesFile: ../../app-values/sealed-secrets/sealed-secrets-values-prd.yaml
+
+  teams-namespaces:
+    valuesFile: ../../app-values/teams-namespaces/teams-namespaces-values-prd.yaml

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps-prd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    team: platform
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: platform-prd
+  source:
+    path: ./app-of-apps
+    repoURL: https://github.com/kuberise/kuberise.git
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values-prd.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,52 @@
+global:
+  env: dta
+  helmDefault: false
+  valuesFile: values.yaml
+  automated: true
+  spec:
+    project: platform-dta
+    destination:
+      server: https://kubernetes.default.svc
+    source:
+      repoURL: https://github.com/mojtabaimani/sodeko-platform-services.git
+      targetRevision: HEAD
+
+applications:
+  helm-guestbook:
+    enabled: true
+    helm: true
+    valuesFile: ../../app-values/guestbook/guestbook-values-dta.yaml
+
+  prometheus:
+    enabled: true
+    helm: true
+    valuesFile: ../../app-values/prometheus/prometheus-values-dta.yaml
+
+  sealed-secrets:
+    enabled: true
+    helm: true
+    valuesFile: ../../app-values/sealed-secrets/sealed-secrets-values-dta.yaml
+
+  teams-namespaces:
+    enabled: true
+    namespace: default
+    helm: true
+    valuesFile: ../../app-values/teams-namespaces/teams-namespaces-values-dta.yaml
+
+internalHelmCharts:
+  keycloak:
+    enabled: true
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: keycloak
+    targetRevision: 16.0.3
+    releaseName: keycloak
+    valuesFile: ../../app-values/keycloak/keycloak-values-dta.yaml
+
+externalHelmCharts:
+  airflow:
+    enabled: true
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: airflow
+    targetRevision: 14.3.6
+    releaseName: airflow
+    valuesFile: ../../app-values/airflow/airflow-values-dta.yaml
