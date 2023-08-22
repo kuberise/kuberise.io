@@ -1,6 +1,0 @@
-global:
-  env: dta
-
-argocdApplications:
-  prometheus:
-    enabled: false

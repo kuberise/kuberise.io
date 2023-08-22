@@ -1,3 +1,0 @@
-argocdApplications:
-  prometheus:
-    enabled: false
