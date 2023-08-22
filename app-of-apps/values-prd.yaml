@@ -3,10 +3,21 @@ global:
   spec:
     project: platform-prd
     source:
-      targetRevision: mojtaba/app-of-apps-helm
+      targetRevision: 0.0.1
 
 helmCharts:
   keycloak:
     enabled: false
+    targetRevision: 16.0.3
+
+  sealed-secrets:
+    enabled: true
+    targetRevision: 2.11.0
+
   airflow:
     enabled: false
+    targetRevision: 1.10.0
+
+  nginx-ingress:
+    enabled: true
+    targetRevision: 0.18.0
