@@ -1,8 +1,9 @@
 grafana:
-  sidecar:
-    datasources:
-      loki:
-        name: Loki
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
         type: loki
         access: proxy
         url: http://loki-loki-distributed-gateway
