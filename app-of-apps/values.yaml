@@ -32,7 +32,7 @@ helmCharts:
 
   sealed-secrets:
     enabled: true
-    repoURL: bitnami-labs.github.io/sealed-secrets
+    repoURL: https://bitnami-labs.github.io/sealed-secrets
     targetRevision: 2.11.0
     chart: sealed-secrets
 
