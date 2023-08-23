@@ -14,5 +14,5 @@ helmCharts:
     enabled: true
     targetRevision: mojtaba/configuration
     valuesTargetRevision: mojtaba/configuration
-    name: guestbook
+    name: helm-guestbook
     namespace: guestbook
