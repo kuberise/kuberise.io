@@ -1,2 +1,5 @@
 cm:
   timeout.reconciliation: 5s
+controller:
+  metrics:
+    enabled: true

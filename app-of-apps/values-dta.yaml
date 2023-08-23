@@ -8,4 +8,5 @@ helmCharts:
   airflow:
     enabled: false
   nginx-ingress:
-    enabled: false
+    enabled: true
+    valuesTargetRevision: mojtaba/configuration
