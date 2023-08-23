@@ -1,12 +1,3 @@
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - guestbook.127.0.0.1.nip.io
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  host: guestbook.127.0.0.1.nip.io

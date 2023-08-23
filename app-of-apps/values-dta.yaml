@@ -5,14 +5,11 @@ global:
 helmCharts:
   keycloak:
     enabled: false
+
   airflow:
     enabled: false
-  nginx-ingress:
-    enabled: true
-    valuesTargetRevision: mojtaba/configuration
+
   helm-guestbook:
     enabled: true
-    targetRevision: mojtaba/configuration
-    valuesTargetRevision: mojtaba/configuration
     name: helm-guestbook
     namespace: guestbook
