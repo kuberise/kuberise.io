@@ -47,3 +47,24 @@ helmCharts:
     repoURL: ghcr.io/nginxinc/charts
     targetRevision: 0.18.0
     chart: nginx-ingress
+
+  kube-prometheus-stack:
+    enabled: true
+    repoURL: https://prometheus-community.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 48.3.3
+    chart: kube-prometheus-stack
+
+  loki:
+    enabled: true
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 0.71.1
+    chart: loki-distributed
+
+  promtail:
+    enabled: true
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 6.14.1
+    chart: promtail
