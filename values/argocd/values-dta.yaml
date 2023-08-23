@@ -1,9 +1,13 @@
-cm:
-  timeout.reconciliation: 5s
+configs:
+  cm:
+    timeout.reconciliation: 5s
+  params:
+    server.insecure: true
 controller:
   metrics:
     enabled: true
 server:
+  insecure: true
   ingress:
     enabled: true
     annotations:

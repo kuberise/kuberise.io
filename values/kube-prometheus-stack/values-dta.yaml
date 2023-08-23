@@ -8,3 +8,13 @@ grafana:
         access: proxy
         url: http://loki-loki-distributed-gateway
         isDefault: false
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    hosts:
+      - grafana.127.0.0.1.nip.io
+    path: /
