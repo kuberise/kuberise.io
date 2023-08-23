@@ -10,3 +10,8 @@ helmCharts:
   nginx-ingress:
     enabled: true
     valuesTargetRevision: mojtaba/configuration
+  helm-guestbook:
+    enabled: true
+    targetRevision: mojtaba/configuration
+    valuesTargetRevision: mojtaba/configuration
+    chart: guestbook
