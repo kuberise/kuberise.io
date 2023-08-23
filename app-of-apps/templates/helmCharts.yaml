@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ default $name .name }}-{{ $.Values.global.env }}
+  name: {{ default $name .name }} # Better to have the same names for different environment, then the config would be more similar to each others -{{ $.Values.global.env }}
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
