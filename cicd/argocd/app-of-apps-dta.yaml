@@ -15,7 +15,7 @@ spec:
   source:
     path: ./app-of-apps
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: mojtaba/configuration
+    targetRevision: HEAD
     helm:
       valueFiles:
         - values-dta.yaml
