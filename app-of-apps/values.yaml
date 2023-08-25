@@ -91,7 +91,7 @@ helmCharts:
   actions-runner: 
     enabled: true 
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: HEAD
+    targetRevision: github-runner-argo
     namespace: actions-runner-system
 
 
