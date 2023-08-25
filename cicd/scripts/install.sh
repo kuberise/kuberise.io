@@ -1,15 +1,37 @@
 #!/bin/bash
 
-CONTEXT=$1              # example: minikube-dta
-REPOSITORY_TOKEN=$2     # example: 1234567890qpoieraksjdhzxcbv
-ENVIRONMENT=$3          # example: dta or prd
+set -euo pipefail
+
+CONTEXT=${1-}               # example: minikube-dta
+ENVIRONMENT=${2-dta}        # example: dta or prd (defaults to dta)
+REPOSITORY_TOKEN=${3-}      # example: 1234567890qpoieraksjdhzxcbv 
+
+# context MUST be set to connect to the k8s cluster
+if [ -z "${CONTEXT}" ]
+then 
+  echo 1>&2 CONTEXT is undefined
+  exit 2
+fi
+
+# environment MUST be either dta or prd 
+shopt -s extglob
+if [[ $ENVIRONMENT == @(dta|prd) ]]; then
+    echo "Procrssing with ${ENVIRONMENT} environment"
+else
+    echo 1>&2 envrionment ${ENVIRONMENT} is not valid
+    exit 2
+fi
+
 
 # create namespace
 NAMESPACE=argocd
 REPOSITORY=https://github.com/kuberise/kuberise.git
+
 kubectl create namespace $NAMESPACE --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -
 
-# create secret for repository
+# create secret for repository if token is set for it 
+if [ -n "${REPOSITORY_TOKEN}"]
+then
 kubectl create secret generic git-credentials --context $CONTEXT -n $NAMESPACE \
   --from-literal=name=kuberise \
   --from-literal=username=x \
@@ -18,6 +40,7 @@ kubectl create secret generic git-credentials --context $CONTEXT -n $NAMESPACE \
   --from-literal=type=git \
   --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n $NAMESPACE -f -
 kubectl label secret git-credentials argocd.argoproj.io/secret-type=repository --context $CONTEXT -n $NAMESPACE
+fi 
 
 # install argocd using helm
 PROJECT_NAME=platform-$ENVIRONMENT
