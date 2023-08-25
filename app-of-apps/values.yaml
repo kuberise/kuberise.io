@@ -73,3 +73,10 @@ helmCharts:
     namespace: harbor
     targetRevision: 1.12.4
     chart: harbor
+
+  cert-manager:
+    enabled: true 
+    repoURL: https://charts.jetstack.io
+    namespace: cert-manager 
+    targetRevision: 1.12.3
+    chart: cert-manager
