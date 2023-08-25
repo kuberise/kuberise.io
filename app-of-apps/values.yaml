@@ -87,11 +87,13 @@ helmCharts:
     namespace: actions-runner-system
     targetRevision: 0.22.0
     chart: actions-runner-controller
+    sync-wave: 0
 
   actions-runner: 
     enabled: true 
     repoURL: https://github.com/kuberise/kuberise.git
     targetRevision: github-runner-argo
     namespace: actions-runner-system
+    sync-wave: 1
 
 
