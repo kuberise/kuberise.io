@@ -66,3 +66,10 @@ helmCharts:
     namespace: monitoring
     targetRevision: 6.14.1
     chart: promtail
+
+  harbor:
+    enabled: true
+    repoURL: https://helm.goharbor.io
+    namespace: harbor
+    targetRevision: 1.12.4
+    chart: harbor
