@@ -12,6 +12,7 @@ then
   exit 2
 fi
 
+
 # namespace 
 NAMESPACE=argocd
 PROJECT_NAME=platform-$ENVIRONMENT
