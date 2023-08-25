@@ -1,0 +1,14 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: k8s-action-runner
+  namespace: actions-runner-system
+spec:
+  replicas: 1
+  template:
+    spec:
+      serviceAccountName: g-runner
+      automountServiceAccountToken: true
+      repository: {{ index .Values "runner-deployment" "repository" }}
+      labels:
+      - "actions_runner_dev"
