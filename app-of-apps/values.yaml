@@ -14,10 +14,8 @@ global:
 
 applications:
 
-  helm-guestbook:
-    enabled: true
-    valuesFile: ../../app-values/guestbook/guestbook-values-dta.yaml
-
+  # helm-guestbook:
+  #   enabled: true
 
 helmCharts:
   teams-namespaces:
