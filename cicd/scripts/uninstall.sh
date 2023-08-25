@@ -12,15 +12,6 @@ then
   exit 2
 fi
 
-# environment MUST be either dta or prd 
-shopt -s extglob
-if [[ $ENVIRONMENT == @(dta|prd) ]]; then
-    echo "Procrssing with ${ENVIRONMENT} environment"
-else
-    echo 1>&2 envrionment ${ENVIRONMENT} is not valid
-    exit 2
-fi
-
 # namespace 
 NAMESPACE=argocd
 PROJECT_NAME=platform-$ENVIRONMENT
