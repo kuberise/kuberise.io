@@ -6,7 +6,7 @@ metadata:
   name: {{ default $name .name }} # Better to have the same names for different environment, then the config would be more similar to each others -{{ $.Values.global.env }}
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: {{ default $.Values.global.spec.sync-wave 0 }}
+    argocd.argoproj.io/sync-wave: {{ default $.Values.global.spec.syncWave 0 }}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
