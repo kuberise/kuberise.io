@@ -80,3 +80,11 @@ helmCharts:
     namespace: cert-manager 
     targetRevision: 1.12.3
     chart: cert-manager
+
+  actions-runner-controller:
+    enabled: true 
+    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    namespace: actions-runner-system
+    targetRevision: 0.22.0
+    chart: actions-runner-controller
+
