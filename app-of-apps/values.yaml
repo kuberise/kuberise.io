@@ -7,10 +7,10 @@ global:
       server: https://kubernetes.default.svc
     source:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: github-runner-argo
+      targetRevision: HEAD
     values:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: github-runner-argo
+      targetRevision: HEAD
 
 applications:
 
@@ -92,7 +92,7 @@ helmCharts:
   actions-runner: 
     enabled: true 
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: github-runner-argo
+    targetRevision: HEAD
     namespace: actions-runner-system
     syncWave: 1
 
