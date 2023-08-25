@@ -14,13 +14,7 @@ helmCharts:
     name: helm-guestbook
     namespace: guestbook
 
-  keycloak:
-    enabled: false
-
   sealed-secrets:
-    enabled: false
-
-  airflow:
     enabled: false
 
   nginx-ingress:
