@@ -5,7 +5,11 @@ global:
 helmCharts:
   keycloak:
     enabled: false
+
   airflow:
     enabled: false
-  nginx-ingress:
-    enabled: false
+
+  helm-guestbook:
+    enabled: true
+    name: helm-guestbook
+    namespace: guestbook

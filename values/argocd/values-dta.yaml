@@ -1,2 +1,23 @@
-cm:
-  timeout.reconciliation: 5s
+configs:
+  cm:
+    timeout.reconciliation: 5s
+  params:
+    server.insecure: true
+controller:
+  metrics:
+    enabled: true
+server:
+  insecure: true
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    ingressClassName: "nginx"
+    hosts:
+      - argocd.127.0.0.1.nip.io
+    paths:
+      - /
+    pathType: Prefix
+    https: false
