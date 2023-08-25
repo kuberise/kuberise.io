@@ -15,7 +15,7 @@ spec:
   source:
     path: ./app-of-apps
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: HEAD
+    targetRevision: github-runner-argo
     helm:
       valueFiles:
         - values-dta.yaml

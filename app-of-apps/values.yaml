@@ -7,10 +7,10 @@ global:
       server: https://kubernetes.default.svc
     source:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: github-runner-argo
     values:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: github-runner-argo
 
 applications:
 
