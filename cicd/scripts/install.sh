@@ -14,6 +14,7 @@ then
 fi
 
 
+
 # create namespace
 NAMESPACE=argocd
 REPOSITORY=https://github.com/kuberise/kuberise.git
