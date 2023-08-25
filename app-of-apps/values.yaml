@@ -88,3 +88,10 @@ helmCharts:
     targetRevision: 0.22.0
     chart: actions-runner-controller
 
+  actions-runner: 
+    enabled: true 
+    repoURL: https://github.com/kuberise/kuberise.git
+    targetRevision: HEAD
+    namespace: actions-runner-system
+
+
