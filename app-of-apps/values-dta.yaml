@@ -30,4 +30,6 @@ helmCharts:
     enabled: false
 
   harbor:
-    enabled: true
+    enabled: false
+
+  

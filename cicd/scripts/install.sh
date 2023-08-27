@@ -21,7 +21,7 @@ REPOSITORY=https://github.com/kuberise/kuberise.git
 kubectl create namespace $NAMESPACE --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -
 
 # create secret for repository if token is set for it 
-if [ -n "${REPOSITORY_TOKEN}"]
+if [ -n "${REPOSITORY_TOKEN}" ]
 then
 kubectl create secret generic git-credentials --context $CONTEXT -n $NAMESPACE \
   --from-literal=name=kuberise \

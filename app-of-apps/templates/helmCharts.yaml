@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: {{ default $name .name }} # Better to have the same names for different environment, then the config would be more similar to each others -{{ $.Values.global.env }}
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "{{ default 0 .syncWave }}"
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:

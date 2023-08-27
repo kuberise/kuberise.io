@@ -73,3 +73,27 @@ helmCharts:
     namespace: harbor
     targetRevision: 1.12.4
     chart: harbor
+
+  cert-manager:
+    enabled: true 
+    repoURL: https://charts.jetstack.io
+    namespace: cert-manager 
+    targetRevision: 1.12.3
+    chart: cert-manager
+
+  actions-runner-controller:
+    enabled: true 
+    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    namespace: actions-runner-system
+    targetRevision: 0.22.0
+    chart: actions-runner-controller
+    syncWave: 0
+
+  actions-runner: 
+    enabled: true 
+    repoURL: https://github.com/kuberise/kuberise.git
+    targetRevision: HEAD
+    namespace: actions-runner-system
+    syncWave: 1
+
+
