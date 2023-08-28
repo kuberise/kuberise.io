@@ -9,13 +9,15 @@ metadata:
     argocd.argoproj.io/sync-wave: "{{ default 0 .syncWave }}"
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  labels:
+    team: platform
 spec:
   project: {{ $.Values.global.spec.project }}
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
     {{- if hasKey . "chart"}}
-    chart: {{ default $name .chart }}
+    chart: {{ .chart }}
     {{- else }}
     path: apps/{{ default $name .name }}
     {{- end }}

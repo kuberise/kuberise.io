@@ -10,12 +10,12 @@ helmCharts:
     enabled: false
 
   helm-guestbook:
-    enabled: false
+    enabled: true
     name: helm-guestbook
     namespace: guestbook
 
   sealed-secrets:
-    enabled: false
+    enabled: true
 
   nginx-ingress:
     enabled: true
@@ -32,4 +32,11 @@ helmCharts:
   harbor:
     enabled: false
 
-  
+  cert-manager:
+    enabled: false
+
+  actions-runner-controller:
+    enabled: false
+
+  actions-runner:
+    enabled: false
