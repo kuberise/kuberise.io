@@ -1,7 +1,12 @@
 
+airflow:
+  config: 
+    AIRFLOW__WEBSERVER__BASE_URL: "http://airflow.127.0.0.1.nip.io/"
 
 ingress:
   enabled: true
+  apiVersion: networking.k8s.io/v1
+
   web:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /
