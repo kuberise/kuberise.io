@@ -7,7 +7,7 @@ helmCharts:
     enabled: false
 
   airflow:
-    enabled: false
+    enabled: true
 
   helm-guestbook:
     enabled: true
