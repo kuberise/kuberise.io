@@ -1,7 +1,4 @@
 
-web:
-  service:
-    externalPort: 8091
 
 ingress:
     enabled: true
