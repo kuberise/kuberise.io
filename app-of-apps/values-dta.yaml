@@ -42,4 +42,4 @@ helmCharts:
     enabled: false
 
   postgresql:
-    enabled: true
+    enabled: false
