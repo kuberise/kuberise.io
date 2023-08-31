@@ -42,3 +42,5 @@ spec:
   - group: '*'
     kind: '*'
 EOF
+
+helm uninstall --kube-context $CONTEXT -n $NAMESPACE argocd --wait
