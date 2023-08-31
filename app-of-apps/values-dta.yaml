@@ -40,3 +40,6 @@ helmCharts:
 
   actions-runner:
     enabled: false
+
+  postgresql:
+    enabled: true

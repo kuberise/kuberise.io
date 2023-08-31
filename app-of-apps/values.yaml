@@ -28,6 +28,13 @@ helmCharts:
     chart: keycloak
     targetRevision: 16.0.3
 
+  postgresql:
+    enabled: true
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: postgresql
+    targetRevision: 12.10.0
+  
+
   sealed-secrets:
     enabled: true
     repoURL: https://bitnami-labs.github.io/sealed-secrets
