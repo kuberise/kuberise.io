@@ -8,5 +8,5 @@ ingress:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
       ingressClassName: "nginx"
-      host: airflow.127.0.0.1.nip.io
-      path: /
+      host: "airflow.127.0.0.1.nip.io"
+      path: "/"
