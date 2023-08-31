@@ -5,13 +5,11 @@ web:
 
 ingress:
     enabled: true
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    ingressClassName: "nginx"
-    hosts:
-      - airflow.127.0.0.1.nip.io
-    paths:
-      - /
-    pathType: Prefix
-    https: false
+    web:
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+
+      ingressClassName: "nginx"
+      host: airflow.127.0.0.1.nip.io
+      path: /
