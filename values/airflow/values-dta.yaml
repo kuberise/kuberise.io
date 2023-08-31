@@ -8,10 +8,10 @@ ingress:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
       ingressClassName: "nginx"
-      hosts: 
-      - "airflow.127.0.0.1.nip.io"
-      paths: 
-      - "/"
-      
+      hosts:
+        - airflow.127.0.0.1.nip.io
+      paths:
+        - /
+    
       pathType: Prefix
 
