@@ -14,7 +14,7 @@ applications:
 
   # Database clusters (raw manifests)
   cnpg-database:
-    enabled: true
+    enabled: false
     path: apps/cnpg-database/dta
 
 helmCharts:
