@@ -7,6 +7,11 @@ spec:
   instances: 1
 
   bootstrap:
+    initdb:
+      database: app
+      owner: app
+      secret:
+        name: cnpg-database-app
 
   storage:
     size: 1Gi
@@ -15,6 +20,8 @@ spec:
     enablePodMonitor: true
 
   enableSuperuserAccess: true
+  superuserSecret:
+    name: cnpg-database-superuser
 
   managed:
     roles:
