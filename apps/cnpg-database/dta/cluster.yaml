@@ -13,5 +13,3 @@ spec:
     enablePodMonitor: true
 
   enableSuperuserAccess: true
-  superuserSecret:
-    name: superuser-secret
