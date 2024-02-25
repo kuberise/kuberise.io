@@ -49,10 +49,27 @@ if [ -z "$ADMIN_PASSWORD" ]; then
 fi
 # Create secret for postgresql from environment variable
 kubectl create namespace cloudnative-pg --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -
-# a secret for the postgresql database for app user
-kubectl create secret generic app-secret --type=kubernetes.io/basic-auth --from-literal=username=app --from-literal=password="$ADMIN_PASSWORD" --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n cloudnative-pg -f -
+# a secret for the postgresql database for apps
+kubectl create secret generic cnpg-database-app \
+  --from-literal=dbname=app \
+  --from-literal=host=cnpg-database-rw \
+  --from-literal=username=app \
+  --from-literal=user=app \
+  --from-literal=port=5432 \
+  --from-literal=password="$ADMIN_PASSWORD" \
+  --type=kubernetes.io/basic-auth \
+  --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n cloudnative-pg -f -
+
 # a secret for the postgresql database for superuser
-kubectl create secret generic superuser --type=kubernetes.io/basic-auth --from-literal=username=superuser --from-literal=password="$ADMIN_PASSWORD" --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n cloudnative-pg -f -
+kubectl create secret generic cnpg-database-superuser \
+  --from-literal=dbname='*' \
+  --from-literal=host=cnpg-database-rw \
+  --from-literal=username=postgres \
+  --from-literal=user=postgres \
+  --from-literal=port=5432 \
+  --from-literal=password="$PG_SUPERUSER_PASSWORD" \
+  --type=kubernetes.io/basic-auth \
+  --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n cloudnative-pg -f -
 
 # Create secret for keycloak from environment variable
 kubectl create namespace keycloak --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -

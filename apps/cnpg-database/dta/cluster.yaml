@@ -11,7 +11,7 @@ spec:
       database: app
       owner: app
       secret:
-        name: app-secret
+        name: cnpg-database-app
 
   storage:
     size: 1Gi
@@ -21,4 +21,10 @@ spec:
 
   enableSuperuserAccess: true
   superuserSecret:
-    name: superuser
+    name: cnpg-database-superuser
+
+  managed:
+    roles:
+    - name: app
+      createdb: true
+      login: true

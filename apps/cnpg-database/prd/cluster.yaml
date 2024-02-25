@@ -6,13 +6,6 @@ metadata:
 spec:
   instances: 3
 
-  bootstrap:
-    initdb:
-      database: app
-      owner: app
-      secret:
-        name: app-secret
-
   storage:
     size: 10Gi
 
