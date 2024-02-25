@@ -44,3 +44,6 @@ helmCharts:
 
   ingress-nginx:
     enabled: true
+
+  backstage:
+    enabled: true
