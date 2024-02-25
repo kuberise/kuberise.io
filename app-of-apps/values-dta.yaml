@@ -21,32 +21,26 @@ helmCharts:
   keycloak:
     enabled: true
 
-  ingress-nginx:
-    enabled: true
-
   actions-runner-controller:
-    enabled: true
+    enabled: false
 
   actions-runner:
-    enabled: true
+    enabled: false
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cert-manager:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
     enabled: true
 
   ingress-nginx:
-    enabled: true
-
-  cert-manager:
     enabled: true
