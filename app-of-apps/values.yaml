@@ -18,6 +18,11 @@ applications:
     enabled: false
     path: values/hello/overlays/dta
 
+  helm-guestbook:
+    enabled: false
+    name: helm-guestbook
+    namespace: guestbook
+
   raw:
     enabled: false
     path: apps/raw/dta

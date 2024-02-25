@@ -45,5 +45,6 @@ EOF
 
 helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE
 kubectl get namespaces --context $CONTEXT --no-headers -o custom-columns=":metadata.name" | grep -vE '^(default|kube-system|kube-public|kube-node-lease)$' | xargs -r kubectl delete namespace
+kubectl delete pv --all --context $CONTEXT
 
 echo "kuberise uninstalled successfully."
