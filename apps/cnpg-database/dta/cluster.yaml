@@ -7,11 +7,11 @@ spec:
   instances: 1
 
   bootstrap:
-    initdb:
-      database: app
-      owner: app
-      secret:
-        name: app-secret
+    # initdb:
+    #   database: app
+    #   owner: app
+    #   secret:
+    #     name: app-secret
 
   storage:
     size: 1Gi
