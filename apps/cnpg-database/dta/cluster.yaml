@@ -28,3 +28,6 @@ spec:
     - name: app
       createdb: true
       login: true
+      connectionLimit: -1
+      ensure: present
+      inherit: true
