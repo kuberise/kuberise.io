@@ -41,12 +41,38 @@ kubectl create secret generic argocd-repo-green-services --context $CONTEXT -n $
 kubectl label secret argocd-repo-green-services argocd.argoproj.io/secret-type=repository --context $CONTEXT -n $NAMESPACE
 fi
 
+# generate secrets(this is temporary until we have vault for secret management )
+# Check if the ADMIN_PASSWORD environment variable is set
+if [ -z "$ADMIN_PASSWORD" ]; then
+  echo "The ADMIN_PASSWORD environment variable is not set."
+  exit 1
+fi
+# Create secret for postgresql from environment variable
+kubectl create namespace cloudnative-pg --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -
+# a secret for the postgresql database for app user
+kubectl create secret generic app-secret --type=kubernetes.io/basic-auth --from-literal=username=app --from-literal=password="$ADMIN_PASSWORD" --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n cloudnative-pg -f -
+# a secret for the postgresql database for superuser
+kubectl create secret generic superuser --type=kubernetes.io/basic-auth --from-literal=username=superuser --from-literal=password="$ADMIN_PASSWORD" --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n cloudnative-pg -f -
+
+# Create secret for keycloak from environment variable
+kubectl create namespace keycloak --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -
+kubectl create secret generic pg-secret --type=kubernetes.io/basic-auth --from-literal=password="$ADMIN_PASSWORD" --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n keycloak -f -
+
+# Create secret for backstage from environment variable
+kubectl create namespace backstage --context $CONTEXT --dry-run=client -o yaml | kubectl apply --context $CONTEXT -f -
+kubectl create secret generic pg-secret --type=kubernetes.io/basic-auth --from-literal=password="$ADMIN_PASSWORD" --dry-run=client -o yaml | kubectl apply --context $CONTEXT -n backstage -f -
+
+# Create secret for argocd admin password from environment variable
+# Generate bcrypt hash of the admin password
+BCRYPT_HASH=$(htpasswd -nbBC 10 "" $ADMIN_PASSWORD | tr -d ':\n' | sed 's/$2y/$2a/')
+
 # install argocd using helm
 PROJECT_NAME=platform-$ENVIRONMENT
 VALUES_FILE=values/argocd/values-$ENVIRONMENT.yaml
-helm repo add argocd https://argoproj.github.io/argo-helm
-helm repo update
-helm upgrade --install --kube-context $CONTEXT -n $NAMESPACE -f $VALUES_FILE argocd argocd/argo-cd --version 5.42.2 --wait
+# helm repo add argocd https://argoproj.github.io/argo-helm
+# helm repo update
+echo Installing argocd using helm...
+helm upgrade --install --kube-context $CONTEXT -n $NAMESPACE -f $VALUES_FILE argocd argocd/argo-cd --version 6.1.0 --wait --set configs.secret.argocdServerAdminPassword=$BCRYPT_HASH > /dev/null
 
 
 # add project to the argocd server using yaml file

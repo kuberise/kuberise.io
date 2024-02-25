@@ -5,19 +5,71 @@ global:
     source:
       targetRevision: 0.0.1
 
+applications:
+  # A Kustomize application
+  hello:
+    enabled: true
+    path: values/hello/overlays/prd
+
+  raw:
+    enabled: true
+    path: apps/raw/prd
+
+  cnpg-database:
+    enabled: true
+    path: apps/cnpg-database/prd
+
 helmCharts:
   keycloak:
     enabled: false
-    targetRevision: 16.0.3
 
   sealed-secrets:
     enabled: true
-    targetRevision: 2.11.0
 
   airflow:
     enabled: false
-    targetRevision: 1.10.0
 
-  nginx-ingress:
+  ingress-nginx:
     enabled: true
-    targetRevision: 0.18.0
+
+  cert-manager:
+    enabled: false
+
+  actions-runner-controller:
+    enabled: false
+
+  actions-runner:
+    enabled: false
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  harbor:
+    enabled: false
+
+  cert-manager:
+    enabled: false
+
+  actions-runner-controller:
+    enabled: false
+
+  actions-runner:
+    enabled: false
+
+  gitea:
+    enabled: true
+
+  postgresql:
+    enabled: false
+
+  backstage:
+    enabled: true
+
+  cloudnative-pg:
+    enabled: true

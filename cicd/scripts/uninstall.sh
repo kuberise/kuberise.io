@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 set -euo pipefail
 
@@ -7,12 +7,12 @@ ENVIRONMENT=${2-dta}        # example: dta or prd (defaults to dta)
 
 # context MUST be set to connect to the k8s cluster
 if [ -z "${CONTEXT}" ]
-then 
+then
   echo 1>&2 CONTEXT is undefined
   exit 2
 fi
 
-# namespace 
+# namespace
 NAMESPACE=argocd
 PROJECT_NAME=platform-$ENVIRONMENT
 
@@ -42,3 +42,8 @@ spec:
   - group: '*'
     kind: '*'
 EOF
+
+helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE
+kubectl get namespaces --context $CONTEXT --no-headers -o custom-columns=":metadata.name" | grep -vE '^(default|kube-system|kube-public|kube-node-lease)$' | xargs -r kubectl delete namespace
+
+echo "kuberise uninstalled successfully."

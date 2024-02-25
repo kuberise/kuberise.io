@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: hello
+  namespace: hello
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hello.127.0.0.1.nip.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: hello
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix

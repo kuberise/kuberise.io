@@ -14,8 +14,7 @@ server:
       nginx.ingress.kubernetes.io/rewrite-target: /
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     ingressClassName: "nginx"
-    hosts:
-      - argocd.127.0.0.1.nip.io
+    hostname: argocd.127.0.0.1.nip.io
     paths:
       - /
     pathType: Prefix

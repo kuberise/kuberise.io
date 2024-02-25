@@ -1,0 +1,17 @@
+cloudnativePgClusters:
+  - name: my-postgres-cluster-1
+    postgresql:
+      instances: 1
+    storage:
+      size: 1Gi
+
+  - name: my-postgres-cluster-2
+    postgresql:
+      instances: 0
+    storage:
+      size: 1Gi
+      storageClassName: standard
+    backup:
+      enabled: false
+    recovery:
+      enabled: false

@@ -1,33 +1,56 @@
 global:
   env: dta
 
+applications:
+  # A Kustomize application
+  hello:
+    enabled: true
+    path: values/hello/overlays/dta
+
+  # Raw manifest application
+  raw:
+    enabled: true
+    path: apps/raw/dta
+
+  cnpg-database:
+    enabled: true
+    path: apps/cnpg-database/dta
 
 helmCharts:
   keycloak:
-    enabled: false
-
-  airflow:
-    enabled: false
+    enabled: true
 
   helm-guestbook:
-    enabled: true
+    enabled: false
     name: helm-guestbook
     namespace: guestbook
 
   sealed-secrets:
     enabled: true
 
-  nginx-ingress:
+  airflow:
+    enabled: false
+
+  ingress-nginx:
     enabled: true
 
-  kube-prometheus-stack:
+  cert-manager:
     enabled: false
+
+  actions-runner-controller:
+    enabled: false
+
+  actions-runner:
+    enabled: false
+
+  kube-prometheus-stack:
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   harbor:
     enabled: false
@@ -40,3 +63,21 @@ helmCharts:
 
   actions-runner:
     enabled: false
+
+  gitea:
+    enabled: true
+
+  postgresql:
+    enabled: false
+
+  backstage:
+    enabled: true
+
+  cloudnative-pg:
+    enabled: true
+
+  ingress-nginx:
+    enabled: true
+
+  cert-manager:
+    enabled: true

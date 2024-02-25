@@ -1,0 +1,39 @@
+{{- range $name, $app := .Values.applications -}}
+{{ if .enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ default $name .name }} # -{{ $.Values.global.team }}-{{ $.Values.global.env }}
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "{{ default 0 .syncWave }}"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  labels:
+    team: platform
+spec:
+  project: {{ $.Values.global.spec.project }}
+  sources:
+  - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
+    targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
+    {{- if hasKey . "path"}}
+    path: {{ .path }}
+    {{- else }}
+    path: apps/{{ default $name .name }}
+    {{- end }}
+  destination:
+    namespace: {{ default $name .namespace }}
+    server: {{ $.Values.global.spec.destination.server }}
+  syncPolicy:
+    {{- if default $.Values.global.automated .automated }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+{{- end }}
+{{- end }}
