@@ -47,6 +47,6 @@ In some networks nip.io for 127.0.0.1 doesn't work and you have to change you in
 
 
 Todo:
-- [X] Connect keycloak to cloudnative-pg
+- [ ] Action runner
 - [ ] Deploy Hashicorp Vault for secret management.
 - [ ] Each service use a different database and username and credentials for connecting to the database
