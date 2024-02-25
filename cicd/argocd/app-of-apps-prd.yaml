@@ -15,7 +15,7 @@ spec:
   source:
     path: ./app-of-apps
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: dbsecret
+    targetRevision: HEAD
     helm:
       valueFiles:
         - values-prd.yaml
