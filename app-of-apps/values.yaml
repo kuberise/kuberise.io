@@ -7,10 +7,10 @@ global:
       server: https://kubernetes.default.svc
     source:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: feat/backstage-add-team-services
     values:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: feat/backstage-add-team-services
 
 applications:
   # A Kustomize application
