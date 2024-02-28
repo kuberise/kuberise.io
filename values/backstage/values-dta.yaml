@@ -39,6 +39,9 @@ backstage:
           user: app
           existingSecret: pg-secret
           existingSecretPasswordKey: password
+    integrations:
+      github:
+        - host: github.com
     catalog:
       rules:
         - allow:
