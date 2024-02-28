@@ -30,7 +30,7 @@ backstage:
       cors:
         origin: https://backstage.127.0.0.1.nip.io
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-        credentials: false
+        credentials: true
       database:
         client: pg
         connection:
