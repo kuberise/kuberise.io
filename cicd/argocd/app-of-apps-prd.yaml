@@ -15,7 +15,7 @@ spec:
   source:
     path: ./app-of-apps
     repoURL: https://github.com/kuberise/kuberise.git
-    targetRevision: backstage-add-team-services
+    targetRevision: dev
     helm:
       valueFiles:
         - values-prd.yaml
