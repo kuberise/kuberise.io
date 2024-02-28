@@ -39,3 +39,15 @@ backstage:
           user: app
           existingSecret: pg-secret
           existingSecretPasswordKey: password
+    catalog:
+      import:
+        entityFilename: catalog-info.yaml
+        pullRequestBranchName: dev
+      rules:
+        - allow:
+          - Component
+          - API
+          - Resource
+          - System
+          - Domain
+          - Location

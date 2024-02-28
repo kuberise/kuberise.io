@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cloud-native postgresql
+  description: |
+    Cloud Native PostgreSQL database powering the different apps
+  links:
+    - title: Website
+      url: https://cloudnative-pg.io/
+spec:
+  type: service
+  owner: CNCF
+  lifecycle: experimental
