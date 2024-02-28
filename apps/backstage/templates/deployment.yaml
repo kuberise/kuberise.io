@@ -38,16 +38,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_HOST
-              value: {{ .Values.backstage.appConfig.db.connection.host }}
+              value: {{ .Values.backstage.appConfig.backend.database.connection.host }}
             - name: POSTGRES_PORT
-              value: {{ .Values.backstage.appConfig.db.connection.port | quote }}
+              value: {{ .Values.backstage.appConfig.backend.database.connection.port | quote }}
             - name: POSTGRES_USER
-              value: {{ .Values.backstage.appConfig.db.connection.user }}
+              value: {{ .Values.backstage.appConfig.backend.database.connection.user }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.backstage.appConfig.db.connection.existingSecret }}
-                  key: {{ .Values.backstage.appConfig.db.connection.existingSecretPasswordKey }}
+                  name: {{ .Values.backstage.appConfig.backend.database.connection.existingSecret }}
+                  key: {{ .Values.backstage.appConfig.backend.database.connection.existingSecretPasswordKey }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
