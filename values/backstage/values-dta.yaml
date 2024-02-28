@@ -31,7 +31,7 @@ backstage:
         origin: http://backstage.127.0.0.1.nip.io
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
         credentials: false
-        preflightContinue: true 
+        preflightContinue: false 
     db:
       connection:
         host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
