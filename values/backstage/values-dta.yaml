@@ -42,6 +42,7 @@ backstage:
     integrations:
       github:
         - host: github.com
+          token: backstage-secrets
     catalog:
       rules:
         - allow:
