@@ -49,5 +49,7 @@ backstage:
           - Domain
           - Location
       locations:
-        - type: file
-          target: ../cloudnative-pg/catalog-info.yaml
+        - type: url
+          target: https://github.com/kuberise/kuberise/blob/dev/values/cloudnative-pg/catalog-info.yaml
+          rules:
+            - allow: [Component]
