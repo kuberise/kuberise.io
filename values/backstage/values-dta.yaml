@@ -40,9 +40,6 @@ backstage:
           existingSecret: pg-secret
           existingSecretPasswordKey: password
     catalog:
-      import:
-        entityFilename: catalog-info.yaml
-        pullRequestBranchName: dev
       rules:
         - allow:
           - Component
@@ -51,3 +48,6 @@ backstage:
           - System
           - Domain
           - Location
+      locations:
+        - type: url
+          target: https://github.com/kuberise/kuberise/blob/dev/values/cloudnative-pg/catalog-info.yaml
