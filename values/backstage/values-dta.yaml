@@ -28,7 +28,7 @@ backstage:
       csp:
         connect-src: ["'self'", 'http:', 'https:']
       cors:
-        origin: '*'
+        origin: http://0.0.0.0
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
         credentials: false
     db:
