@@ -20,15 +20,15 @@ service:
 backstage:
   appConfig:
     app:
-      baseUrl: http://backstage.127.0.0.1.nip.io
+      baseUrl: https://backstage.127.0.0.1.nip.io
     backend:
-      baseUrl: http://backstage.127.0.0.1.nip.io
+      baseUrl: https://backstage.127.0.0.1.nip.io
       listen:
         port: 7007
       csp:
         connect-src: ["'self'", 'http:', 'https:']
       cors:
-        origin: http://backstage.127.0.0.1.nip.io
+        origin: https://backstage.127.0.0.1.nip.io
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
         credentials: false
       database:
