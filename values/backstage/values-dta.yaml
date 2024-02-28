@@ -39,7 +39,7 @@ backstage:
           user: app
           existingSecret: pg-secret
           existingSecretPasswordKey: password
-    proxy:
-      endpoints:
-        '/':
-          target: https://backstage.127.0.0.1.nip.io
+    #proxy:
+    #  endpoints:
+    #    '/':
+    #      target: https://backstage.127.0.0.1.nip.io
