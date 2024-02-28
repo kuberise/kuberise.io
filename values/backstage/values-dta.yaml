@@ -20,10 +20,13 @@ service:
 backstage:
   appConfig:
     app:
-      baseUrl: http://backstage.127.0.0.1.nip.io
+      baseUrl: http://localhost:7007
     backend:
-      listen: 0.0.0.0:7007
-      baseUrl: http://backstage.127.0.0.1.nip.io
+      baseUrl: http://localhost:7007
+      listen:
+        port: 7007
+      csp:
+        connect-src: ["'self'", 'http:', 'https:']
     db:
       connection:
         host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
