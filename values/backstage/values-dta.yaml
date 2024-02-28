@@ -57,3 +57,11 @@ backstage:
           target: https://github.com/kuberise/kuberise/blob/dev/values/cloudnative-pg/catalog-info.yaml
           rules:
             - allow: [Component]
+            
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+          rules:
+            - allow: [User, Group]
