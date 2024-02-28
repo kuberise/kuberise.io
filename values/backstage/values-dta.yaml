@@ -30,7 +30,7 @@ backstage:
       cors:
         origin: http://backstage.127.0.0.1.nip.io
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-        credentials: true
+        credentials: false
         Access-Control-Allow-Origin: '*'
     db:
       connection:
