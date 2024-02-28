@@ -45,19 +45,14 @@ backstage:
           token: backstage-secrets
     catalog:
       rules:
-        - allow:
-          - Component
-          - API
-          - Resource
-          - System
-          - Domain
-          - Location
+        - allow: [Component, System, API, Resource, Location, Domain]
+
       locations:
         - type: url
           target: https://github.com/kuberise/kuberise/blob/dev/values/cloudnative-pg/catalog-info.yaml
           rules:
             - allow: [Component]
-            
+
         - type: url
           target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
 
