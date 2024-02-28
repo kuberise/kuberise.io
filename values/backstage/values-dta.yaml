@@ -31,11 +31,11 @@ backstage:
         origin: http://backstage.127.0.0.1.nip.io
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
         credentials: false
-        preflightContinue: false 
-    db:
-      connection:
-        host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
-        port: 5432
-        user: app
-        existingSecret: pg-secret
-        existingSecretPasswordKey: password
+      database:
+        client: pg
+        connection:
+          host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+          port: 5432
+          user: app
+          existingSecret: pg-secret
+          existingSecretPasswordKey: password
