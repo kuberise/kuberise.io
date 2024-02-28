@@ -28,10 +28,9 @@ backstage:
       csp:
         connect-src: ["'self'", 'http:', 'https:']
       cors:
-        origin: http://backstage.127.0.0.1.nip.io
+        origin: '*'
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
         credentials: false
-        Access-Control-Allow-Origin: '*'
     db:
       connection:
         host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
