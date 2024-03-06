@@ -23,7 +23,7 @@ version: 0.1.0
 # It is recommended to use it with quotes.
 appVersion: "0.0.1"
 
-# dependencies:
-#   - name: argo-cd
-#     version: "6.3.1"
-#     repository: "https://argoproj.github.io/argo-helm"
+dependencies:
+  - name: argo-cd
+    version: "6.3.1"
+    repository: "https://argoproj.github.io/argo-helm"

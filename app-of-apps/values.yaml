@@ -40,13 +40,15 @@ helmCharts:
 
   backstage:
     enabled: false
+    syncWave: 1
 
 
   keycloak:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami
     chart: keycloak
-    targetRevision: 18.4.0
+    targetRevision: 19.1.0
+    syncWave: 1
 
   sealed-secrets:
     enabled: false
