@@ -1,52 +1,60 @@
 # kuberise
 
-kuberise is an internal developer platform that installs core apps into a kubernetes cluster and makes it ready to deploy custom services. Then developers can use this platform to deploy their services to different environments.
-
-## Use case
-
-Assume that there are multiple business or developer teams called blue, red, green, etc. There is one platform team that provides the kubernetes platform and platform tools and automation so that developer teams can focus on their own business applications and development.
-
-Platform team creates a namespace for each team and each team can deploy their services to only their own namespace.
-
-There are two Kubernetes clusters one for dev/test/acc (dta) and another one dedicated to the production (prd) environment. dev/test/acc in dta cluster are separated in different namespaces. They use one cluster for those environment to save cost. otherwise they can have separate cluster for each environment.
-
-## Values
-
-You can define a separate repository for values. If you do so, you can update the main platform source without affecting your values.
+kuberise is a free opensource internal developer platform for Kubernetes environment.
 
 ## Installation
 
-You need to have kubectl and helm commands installed in your local environment then use these commands to install and configure argocd. Then argocd will pull the code from the repository and deploy apps to the cluster.
-
-Also create an environment variable ADMIN_PASSWORD for argocd admin password
-
-```bash
-cicd/scripts/install.sh <Kubernetes context> <environment name> <git repository token>
+```
+git clone https://github.com/kuberise/kuberise.git
+cd kuberise
+helm install kuberise-dta ./chart/kuberise -n argocd --create-namespace
 ```
 
-example command for dta and prd environments are:
+## How to uninstall
 
-dta:
 ```
-cicd/scripts/install.sh minikube-dta dta $GITHUB_TOKEN
+helm uninstall kuberise-dta -n argocd
 ```
 
-prd:
-```
-cicd/scripts/install.sh minikube-prd prd $GITHUB_TOKEN
-```
-## nip.io Ingress
+## How to create a values repository
 
-The service type for dashboards should be LoadBalancer.
-
-First run `minikube tunnel -p <profile>`. Then use the ingress address like:
-
-ArgoCD dashboard: http://argocd.127.0.0.1.nip.io
-
-In some networks nip.io for 127.0.0.1 doesn't work and you have to change you internet network (for example use you mobile hotspot network) or change your dns server settings to google dns server.
+If you want to modify the values of different helm charts, you need to create a fork or clone of the repository and push it to your git repository and give the address of that repository to your app of apps helm chart.
 
 
-Todo:
-- [ ] Action runner
-- [ ] Deploy Hashicorp Vault for secret management.
-- [ ] Each service use a different database and username and credentials for connecting to the database
+## Platform Engineering Concept
+
+Being a DevOps today is different than before. In the complex environment of different cloud providers and Kubernetes clusters, it is challenging to be a developer and also know how to deploy your application to these environments.
+
+Platform teams can create an internal developer platform to abstract all the complexities of the deployment environments from the developers and help them to focus on their development. They provide a set of self-service tools, templates, best defaults and support to developers to be able to deploy their application whenever they want and to any environment they want without need to know and learn all details of the Kubernetes or different tools.
+
+After deployment of their applications, developers can also monitor and maintain their own application themselves. kuberise can help platform engineers or developers to create an internal developer platform for their teams.
+
+## kuberise features
+
+kuberise will deploy several tools to provide a developer environment in your Kubernetes cluster.
+- You can choose which tool you want to install
+- Are tools are common open source projects that are popular in IT environments.
+- There is no lock-in in kuberise. After deployment of kuberise, you will have the full control of your environment and shape your environment to fit you best.
+- kuberise is built based on GitOps best practices. The repository is the only source of truth and you can track the changes and avoid any manual changes in the cluster.
+
+## kuberise tools
+
+These tools are currently included in kuberise and more tools will be included in the future:
+
+### CD (Continuous Deployment)
+- ArgoCD
+### Observability
+- Grafana
+- Loki
+- Prometheus
+- Promtail
+
+### Authentication and Authorisation and security
+- Keycloak
+- sealed-secret
+- cert-manager
+### Data
+- PostgreSQL
+
+### Networking
+- Ingress-nginx
