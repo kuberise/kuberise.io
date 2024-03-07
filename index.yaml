@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  kuberise:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-03-07T21:52:06.563477+01:00"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 6.3.1
+    description: A Helm chart for Kubernetes
+    digest: 0ebbdeaf055ad411a8800d99b3845f6d81e0e9463ec229c59c9ec3372192ab51
+    name: kuberise
+    type: application
+    urls:
+    - https://kuberise.github.io/kuberise/kuberise-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-03-07T21:52:06.55547+01:00"
