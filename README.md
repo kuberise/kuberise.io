@@ -5,9 +5,9 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 ## Installation
 
 ```
-git clone https://github.com/kuberise/kuberise.git
-cd kuberise
-helm install kuberise-dta ./chart/kuberise -n argocd --create-namespace
+helm repo add kuberise https://kuberise.github.io/kuberise/
+helm repo update
+helm install kuberise-dta kuberise/kuberise -n argocd --create-namespace
 ```
 
 ## How to uninstall
