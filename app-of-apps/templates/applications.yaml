@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ default $name .name }} # -{{ $.Values.global.team }}-{{ $.Values.global.env }}
+  name: {{ default $name .name }} # -{{ $.Values.global.team }}-{{ $.Values.global.environment }}
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "{{ default 0 .syncWave }}"
@@ -12,7 +12,7 @@ metadata:
   labels:
     team: platform
 spec:
-  project: platform-{{ $.Values.global.env }}
+  project: platform-{{ $.Values.global.environment }}
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}

@@ -1,5 +1,5 @@
 global:
-  env: dev
+  environment: dev
   automated: true
   spec:
     destination:

@@ -6,7 +6,7 @@ pgSuperuserPassword: superpassword
 
 ###### app-of-apps values #####
 global:
-  env: dev
+  environment: dev
   spec:
     source:
       targetRevision: mojtaba/kuberise-chart

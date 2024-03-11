@@ -44,19 +44,13 @@ spec:
         image: bitnami/kubectl:latest
         env:
         - name: ENV
-          value: {{ .Values.global.env }}
+          value: {{ .Values.global.environment }}
         - name: REPO
-          value: {{ .Values.environment.repo }}
+          value: {{ .Values.global.spec.source.repoURL }}
         - name: REVISION
-          value: {{ .Values.environment.revision }}
+          value: {{ .Values.global.spec.source.targetRevision }}
         - name: SERVER
-          value: {{ .Values.environment.server }}
-        - name: GLOBAL
-          value: {{ .Values.global }}
-        - name: HELMCHARTS
-          value: {{ .Values.helmCharts }}
-        - name: APPLICATIONS
-          value: {{ .Values.applications }}
+          value: {{ .Values.global.spec.destination.server }}
         command:
           - /bin/bash
           - -c
@@ -66,7 +60,7 @@ spec:
             kind: AppProject
             metadata:
               name: platform-$ENV
-              label:
+              labels:
                 team: platform
             spec:
               sourceRepos:
@@ -101,9 +95,12 @@ spec:
                 targetRevision: '$REVISION'
                 helm:
                   values: |
-                    global: $GLOBAL
-                    applications: $APPLICATIONS
-                    helmCharts: $HELMCHARTS
+                    global:
+{{ .Values.global | toYaml | indent 22 }}
+                    applications:
+{{ .Values.applications | toYaml | indent 22 }}
+                    helmCharts:
+{{ .Values.helmCharts | toYaml | indent 22 }}
               syncPolicy:
                 automated:
                   prune: true
