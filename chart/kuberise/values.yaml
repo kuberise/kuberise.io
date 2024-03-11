@@ -58,7 +58,7 @@ applications:
     namespace: guestbook
 
   raw:
-    enabled: false
+    enabled: true
     path: apps/raw/dta
 
   cnpg-database:
