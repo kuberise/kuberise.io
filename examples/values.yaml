@@ -21,9 +21,6 @@ applications:
     enabled: true
 
 helmCharts:
-  teams-namespaces:
-    enabled: true
-
   backstage:
     enabled: true
 

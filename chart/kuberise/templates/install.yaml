@@ -68,7 +68,7 @@ spec:
               destinations:
               - name: '*'
                 namespace: '*'
-                server: $SERVER
+                server: '*'
               clusterResourceWhitelist:
               - group: '*'
                 kind: '*'
