@@ -12,7 +12,7 @@ metadata:
   labels:
     team: platform
 spec:
-  project: {{ $.Values.global.spec.project }}
+  project: platform-{{ $.Values.global.env }}
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
@@ -23,7 +23,7 @@ spec:
     {{- end }}
     helm:
       valueFiles:
-      - $valuesRepo/values/{{ default $name .name }}/values-{{ $.Values.global.env }}.yaml
+      - $valuesRepo/values-{{ $.Values.global.env }}/{{ default $name .name }}/values.yaml
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo

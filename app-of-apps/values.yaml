@@ -1,8 +1,7 @@
 global:
-  env: dta
+  env: dev
   automated: true
   spec:
-    project: platform-dta
     destination:
       server: https://kubernetes.default.svc
     source:
@@ -16,8 +15,7 @@ applications:
   # A Kustomize application
   hello:
     enabled: false
-    path: values/hello/overlays/dta
-
+    path: values-dev/hello
   helm-guestbook:
     enabled: false
     name: helm-guestbook
