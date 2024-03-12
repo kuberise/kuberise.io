@@ -53,7 +53,7 @@ applications:
     enabled: false
     path: values-dev/hello
   helm-guestbook:
-    enabled: true
+    enabled: false
     name: helm-guestbook
     namespace: guestbook
 
