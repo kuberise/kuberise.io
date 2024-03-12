@@ -4,11 +4,23 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 
 ## Installation
 
+If you don't have ArgoCD installed, you need to install it first:
+```
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+
+ADMIN_PASSWORD=admin
+BCRYPT_HASH=$(htpasswd -nbBC 10 "" $ADMIN_PASSWORD | tr -d ':\n' | sed 's/$2y/$2a/')
+helm upgrade --install -n argocd argocd argo/argo-cd --version 6.1.0  --set configs.secret.argocdServerAdminPassword=$BCRYPT_HASH --create-namespace
+```
+
+Now you can install kuberise helm chart:
 ```
 helm repo add kuberise https://kuberise.github.io/kuberise/
 helm repo update
-helm install kuberise-dta kuberise/kuberise -n argocd --create-namespace
+helm install kuberise-dev kuberise/kuberise -n argocd
 ```
+kuberise should be installed in the argocd namespace. If your argocd is in another namespace, then install kuberise in that namespace.
 
 ## How to uninstall
 

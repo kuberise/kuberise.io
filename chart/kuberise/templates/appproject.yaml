@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-{{ .Values.global.environment }}
+  labels:
+    team: platform
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  sourceRepos:
+  - '*'
+  destinations:
+  - name: '*'
+    namespace: '*'
+    server: {{ .Values.global.spec.destination.server }}
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
