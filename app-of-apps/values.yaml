@@ -23,7 +23,7 @@ applications:
 
   raw:
     enabled: false
-    path: apps/raw/dta
+    path: apps/raw/dev
 
   cnpg-database:
     enabled: false
