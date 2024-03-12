@@ -52,6 +52,7 @@ applications:
   hello:
     enabled: false
     path: values-dev/hello
+
   helm-guestbook:
     enabled: false
     name: helm-guestbook
@@ -62,7 +63,7 @@ applications:
     path: apps/raw/dev
 
   cnpg-database:
-    enabled: false
+    enabled: true
     namespace: cloudnative-pg
     path: apps/cnpg-database/dta
 
@@ -73,12 +74,12 @@ helmCharts:
     namespace: default
 
   backstage:
-    enabled: false
+    enabled: true
     syncWave: 1
 
 
   keycloak:
-    enabled: false
+    enabled: true
     repoURL: https://charts.bitnami.com/bitnami
     chart: keycloak
     targetRevision: 19.1.0
@@ -97,27 +98,27 @@ helmCharts:
     chart: airflow
 
   ingress-nginx:
-    enabled: false
+    enabled: true
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.9.1
     chart: ingress-nginx
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
     repoURL: https://prometheus-community.github.io/helm-charts
     namespace: monitoring
     targetRevision: 56.7.0
     chart: kube-prometheus-stack
 
   loki:
-    enabled: false
+    enabled: true
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
     targetRevision: 0.78.2
     chart: loki-distributed
 
   promtail:
-    enabled: false
+    enabled: true
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
     targetRevision: 6.15.5
@@ -166,7 +167,7 @@ helmCharts:
     chart: postgresql
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
     repoURL: https://cloudnative-pg.github.io/charts
     namespace: cloudnative-pg
     targetRevision: 0.20.1

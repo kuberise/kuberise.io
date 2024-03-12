@@ -28,7 +28,7 @@ applications:
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: apps/cnpg-database/dta
+    path: apps/cnpg-database/dev
 
 
 helmCharts:
