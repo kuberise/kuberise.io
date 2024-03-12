@@ -25,7 +25,7 @@ kuberise should be installed in the argocd namespace. If your argocd is in anoth
 ## How to uninstall
 
 ```
-helm uninstall kuberise-dta -n argocd
+helm uninstall kuberise-dev -n argocd
 ```
 
 ## How to create a values repository
