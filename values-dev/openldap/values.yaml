@@ -1,0 +1,106 @@
+replicaCount: 1
+
+# Spcifies an existing secret to be used for admin and config user passwords
+existingSecret: ""
+
+# settings for enabling TLS with custom certificate
+tls:
+  enabled: false
+
+service:
+  ldapPort: 389
+  type: ClusterIP
+
+# Default configuration for openldap as environment variables. These get injected directly in the container.
+# Use the env variables from https://github.com/osixia/docker-openldap#beginner-guide
+env:
+ LDAP_LOG_LEVEL: "256"
+ LDAP_ORGANISATION: "Example Inc."
+ LDAP_DOMAIN: "example.org"
+ LDAP_READONLY_USER: "false"
+ LDAP_READONLY_USER_USERNAME: "readonly"
+ LDAP_READONLY_USER_PASSWORD: "readonly"
+ LDAP_RFC2307BIS_SCHEMA: "false"
+ LDAP_BACKEND: "mdb"
+ LDAP_TLS: "true"
+ LDAP_TLS_CRT_FILENAME: "ldap.crt"
+ LDAP_TLS_KEY_FILENAME: "ldap.key"
+ LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
+ LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
+ LDAP_TLS_ENFORCE: "false"
+ CONTAINER_LOG_LEVEL: "4"
+ LDAP_TLS_REQCERT: "never"
+ KEEP_EXISTING_CONFIG: "false"
+ LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+ LDAP_SSL_HELPER_PREFIX: "ldap"
+ LDAP_TLS_VERIFY_CLIENT: "never"
+ LDAP_TLS_PROTOCOL_MIN: "3.0"
+ LDAP_TLS_CIPHER_SUITE: "NORMAL"
+
+
+
+# Default Passwords to use, stored as a secret.
+# You can override these at install time with
+# helm install openldap --set openldap.adminPassword=<passwd>,openldap.configPassword=<passwd>
+adminPassword: admin
+configPassword: config
+
+# Custom openldap configuration files used to override default settings
+# customLdifFiles:
+  # 01-default-users.ldif: |-
+    # Predefine users here
+replication:
+  enabled: true
+  # Enter the name of your cluster, defaults to "cluster.local"
+  clusterName: "cluster.local"
+  retry: 60
+  timeout: 1
+  interval: 00:00:00:10
+  starttls: "critical"
+  tls_reqcert: "never"
+
+
+## test container details
+test:
+  enabled: false
+  image:
+    repository: dduportal/bats
+    tag: 0.4.0
+ltb-passwd:
+  enabled : true
+  ingress:
+    enabled: true
+    annotations: {}
+    path: /
+    ## Ingress Host
+    hosts:
+    - "ssl-ldap2.example"
+  ldap:
+    server: ldap://openldap
+    searchBase: dc=example,dc=org
+    # existingSecret: openldaptest
+    bindDN: cn=admin,dc=example,dc=org
+    bindPWKey: admin
+
+phpldapadmin:
+  enabled: true
+  ingress:
+    enabled: true
+    annotations: {}
+    path: /
+    ## Ingress Host
+    hosts:
+    - phpldapadmin.example
+  env:
+    PHPLDAPADMIN_LDAP_HOSTS: openldap
+ # TODO make it works
+ #     "#PYTHON2BASH:
+ #       [{'openldap.openldap':
+ #         [{'server': [
+ #           {'tls': False},
+ #           {'port':636}
+ #         ]},
+ #           {'login':
+ #             [{'bind_id': 'cn=admin,dc=example,dc=org'}]
+ #           }]
+ #       }]"

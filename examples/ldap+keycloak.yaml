@@ -9,20 +9,20 @@ global:
   environment: dev
   spec:
     source:
-      targetRevision: HEAD
+      targetRevision: mojtaba/add-ldap
     values:
-      targetRevision: HEAD
+      targetRevision: mojtaba/add-ldap
 
 applications:
   raw:
-    enabled: true
+    enabled: false
 
   cnpg-database:
     enabled: true
 
 helmCharts:
   backstage:
-    enabled: true
+    enabled: false
 
   keycloak:
     enabled: true
@@ -31,16 +31,19 @@ helmCharts:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cert-manager:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
+    enabled: true
+
+  openldap:
     enabled: true
