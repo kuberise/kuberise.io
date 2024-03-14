@@ -1,0 +1,49 @@
+
+
+adminUsername: admin
+adminPassword: admin
+pgSuperuserPassword: superpassword
+
+###### app-of-apps values #####
+global:
+  environment: dev
+  spec:
+    source:
+      targetRevision: mojtaba/openldap
+    values:
+      targetRevision: mojtaba/openldap
+
+applications:
+  raw:
+    enabled: true
+
+  cnpg-database:
+    enabled: true
+
+helmCharts:
+  backstage:
+    enabled: false
+
+  keycloak:
+    enabled: true
+
+  ingress-nginx:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: false
+
+  loki:
+    enabled: false
+
+  promtail:
+    enabled: false
+
+  cert-manager:
+    enabled: false
+
+  cloudnative-pg:
+    enabled: true
+
+  openldap:
+    enabled: true
