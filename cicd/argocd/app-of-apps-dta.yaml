@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps-dta
+  name: app-of-apps-dev
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -11,14 +11,14 @@ spec:
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
-  project: platform-dta
+  project: platform-dev
   source:
     path: ./app-of-apps
     repoURL: https://github.com/kuberise/kuberise.git
     targetRevision: HEAD
     helm:
       valueFiles:
-        - values-dta.yaml
+        - values-dev.yaml
   syncPolicy:
     automated:
       prune: true

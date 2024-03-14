@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-CONTEXT=${1-}               # example: minikube-dta
-ENVIRONMENT=${2-dta}        # example: dta or prd (defaults to dta)
+CONTEXT=${1-}               # example: minikube-dev
+ENVIRONMENT=${2-dev}        # example: dev or prd (defaults to dev)
 REPOSITORY_TOKEN=${3-}      # example: 1234567890qpoieraksjdhzxcbv
 
 # context MUST be set to connect to the k8s cluster
