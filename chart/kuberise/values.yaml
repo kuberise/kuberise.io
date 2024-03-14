@@ -39,24 +39,24 @@ global:
   automated: true
   spec:
     destination:
-      # server: https://kubernetes.default.svc
+      server: https://kubernetes.default.svc
     source:
-      # repoURL: https://github.com/kuberise/kuberise.git
+      repoURL: https://github.com/kuberise/kuberise.git
       targetRevision: HEAD
     values:
-      # repoURL: https://github.com/kuberise/kuberise.git
+      repoURL: https://github.com/kuberise/kuberise.git
       targetRevision: HEAD
 
 applications:
   # A Kustomize application
-  # hello:
-  #   enabled: false
-  #   path: values-dev/hello
+  hello:
+    enabled: false
+    path: values-dev/hello
 
-  # helm-guestbook:
-  #   enabled: false
-  #   name: helm-guestbook
-  #   namespace: guestbook
+  helm-guestbook:
+    enabled: false
+    name: helm-guestbook
+    namespace: guestbook
 
   raw:
     enabled: true
@@ -64,14 +64,14 @@ applications:
 
   cnpg-database:
     enabled: true
-    # namespace: cloudnative-pg
-    # path: apps/cnpg-database/dev
+    namespace: cloudnative-pg
+    path: apps/cnpg-database/dev
 
 
 helmCharts:
-  # teams-namespaces:
-  #   enabled: false
-  #   namespace: default
+  teams-namespaces:
+    enabled: false
+    namespace: default
 
   backstage:
     enabled: true
@@ -80,98 +80,98 @@ helmCharts:
 
   keycloak:
     enabled: true
-    # repoURL: https://charts.bitnami.com/bitnami
-    # chart: keycloak
-    # targetRevision: 19.1.0
-    # syncWave: 1
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: keycloak
+    targetRevision: 19.1.0
+    syncWave: 1
 
-  # sealed-secrets:
-  #   enabled: false
-  #   repoURL: https://charts.bitnami.com/bitnami
-  #   targetRevision: 1.8.5
-  #   chart: sealed-secrets
+  sealed-secrets:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 1.8.5
+    chart: sealed-secrets
 
-  # airflow:
-  #   enabled: false
-  #   repoURL: https://airflow.apache.org
-  #   targetRevision: 1.12.0
-  #   chart: airflow
+  airflow:
+    enabled: false
+    repoURL: https://airflow.apache.org
+    targetRevision: 1.12.0
+    chart: airflow
 
   ingress-nginx:
     enabled: true
-    # repoURL: https://kubernetes.github.io/ingress-nginx
-    # targetRevision: 4.9.1
-    # chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.9.1
+    chart: ingress-nginx
 
   kube-prometheus-stack:
     enabled: true
-    # repoURL: https://prometheus-community.github.io/helm-charts
-    # namespace: monitoring
-    # targetRevision: 56.7.0
-    # chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 56.7.0
+    chart: kube-prometheus-stack
 
   loki:
     enabled: true
-    # repoURL: https://grafana.github.io/helm-charts
-    # namespace: monitoring
-    # targetRevision: 0.78.2
-    # chart: loki-distributed
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 0.78.2
+    chart: loki-distributed
 
   promtail:
     enabled: true
-    # repoURL: https://grafana.github.io/helm-charts
-    # namespace: monitoring
-    # targetRevision: 6.15.5
-    # chart: promtail
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 6.15.5
+    chart: promtail
 
-  # harbor:
-  #   enabled: false
-  #   repoURL: https://helm.goharbor.io
-  #   namespace: harbor
-  #   targetRevision: 1.14.0
-  #   chart: harbor
+  harbor:
+    enabled: false
+    repoURL: https://helm.goharbor.io
+    namespace: harbor
+    targetRevision: 1.14.0
+    chart: harbor
 
-  # cert-manager:
-  #   enabled: false
-  #   repoURL: https://charts.jetstack.io
-  #   namespace: cert-manager
-  #   targetRevision: v1.14.3
-  #   chart: cert-manager
+  cert-manager:
+    enabled: false
+    repoURL: https://charts.jetstack.io
+    namespace: cert-manager
+    targetRevision: v1.14.3
+    chart: cert-manager
 
-  # actions-runner-controller:
-  #   enabled: false
-  #   repoURL: https://actions-runner-controller.github.io/actions-runner-controller
-  #   namespace: actions-runner-system
-  #   targetRevision: 0.22.0
-  #   chart: actions-runner-controller
-  #   syncWave: 0
+  actions-runner-controller:
+    enabled: false
+    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    namespace: actions-runner-system
+    targetRevision: 0.22.0
+    chart: actions-runner-controller
+    syncWave: 0
 
-  # actions-runner:
-  #   enabled: false
-  #   repoURL: https://github.com/kuberise/kuberise.git
-  #   namespace: actions-runner-system
-  #   syncWave: 1
+  actions-runner:
+    enabled: false
+    repoURL: https://github.com/kuberise/kuberise.git
+    namespace: actions-runner-system
+    syncWave: 1
 
-  # gitea:
-  #   enabled: false
-  #   repoURL: https://dl.gitea.io/charts
-  #   namespace: gitea
-  #   targetRevision: 10.1.1
-  #   chart: gitea
+  gitea:
+    enabled: false
+    repoURL: https://dl.gitea.io/charts
+    namespace: gitea
+    targetRevision: 10.1.1
+    chart: gitea
 
-  # postgresql:
-  #   enabled: false
-  #   repoURL: https://charts.bitnami.com/bitnami
-  #   namespace: postgresql
-  #   targetRevision: 14.1.0
-  #   chart: postgresql
+  postgresql:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    namespace: postgresql
+    targetRevision: 14.1.0
+    chart: postgresql
 
   cloudnative-pg:
     enabled: true
-    # repoURL: https://cloudnative-pg.github.io/charts
-    # namespace: cloudnative-pg
-    # targetRevision: 0.20.1
-    # chart: cloudnative-pg
+    repoURL: https://cloudnative-pg.github.io/charts
+    namespace: cloudnative-pg
+    targetRevision: 0.20.1
+    chart: cloudnative-pg
 
   openldap:
     enabled: true
