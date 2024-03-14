@@ -175,3 +175,7 @@ helmCharts:
 
   openldap:
     enabled: true
+    repoURL: https://jp-gouin.github.io/helm-openldap/
+    namespace: openldap
+    targetRevision: 2.0.4
+    chart: openldap
