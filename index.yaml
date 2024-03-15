@@ -2,8 +2,18 @@ apiVersion: v1
 entries:
   kuberise:
   - apiVersion: v2
+    appVersion: 0.0.2
+    created: "2024-03-15T06:31:42.13319+01:00"
+    description: An internal developer platform for Kubernetes
+    digest: 4e5c4d99eb1f3def1b05212d7df91520484a61f9923393d43e52717ba3dd1a68
+    name: kuberise
+    type: application
+    urls:
+    - https://kuberise.github.io/kuberise/kuberise-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-03-07T21:52:06.563477+01:00"
+    created: "2024-03-15T06:31:42.132293+01:00"
     dependencies:
     - name: argo-cd
       repository: https://argoproj.github.io/argo-helm
@@ -15,4 +25,4 @@ entries:
     urls:
     - https://kuberise.github.io/kuberise/kuberise-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-07T21:52:06.55547+01:00"
+generated: "2024-03-15T06:31:42.117715+01:00"
