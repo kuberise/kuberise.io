@@ -1,34 +1,174 @@
 
 
-environment: dta
-adminPassword: mypassword
+adminUsername: admin
+adminPassword: admin
 pgSuperuserPassword: superpassword
 
-argocd:
-  appProject:
-    name: "platform"
+ingress:
+  domain: 127.0.0.1.ip.io
 
 
-argo-cd:
-  installCRDs: true
-  configs:
-    cm:
-      timeout.reconciliation: 5s
-    params:
-      server.insecure: true
-  controller:
-    metrics:
-      enabled: true
-  server:
-    insecure: true
-    ingress:
-      enabled: true
-      annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-      ingressClassName: "nginx"
-      hostname: argocd.127.0.0.1.nip.io
-      paths:
-        - /
-      pathType: Prefix
-      https: false
+# argo-cd:
+#   installCRDs: true
+#   configs:
+#     cm:
+#       timeout.reconciliation: 5s
+#     params:
+#       server.insecure: true
+#   controller:
+#     metrics:
+#       enabled: true
+#   server:
+#     insecure: true
+#     ingress:
+#       enabled: true
+#       annotations:
+#         nginx.ingress.kubernetes.io/rewrite-target: /
+#         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+#       ingressClassName: "nginx"
+#       hostname: argocd.127.0.0.1.nip.io
+#       paths:
+#         - /
+#       pathType: Prefix
+#       https: false
+
+
+###### app-of-apps values #####
+global:
+  environment: dev
+  automated: true
+  spec:
+    destination:
+      server: https://kubernetes.default.svc
+    source:
+      repoURL: https://github.com/kuberise/kuberise.git
+      targetRevision: HEAD
+    values:
+      repoURL: https://github.com/kuberise/kuberise.git
+      targetRevision: HEAD
+
+applications:
+  # A Kustomize application
+  hello:
+    enabled: false
+    path: values-dev/hello
+
+  helm-guestbook:
+    enabled: false
+    name: helm-guestbook
+    namespace: guestbook
+
+  raw:
+    enabled: true
+    path: apps/raw/dev
+
+  cnpg-database:
+    enabled: true
+    namespace: cloudnative-pg
+    path: apps/cnpg-database/dev
+
+
+helmCharts:
+  teams-namespaces:
+    enabled: false
+    namespace: default
+
+  backstage:
+    enabled: true
+    syncWave: 1
+
+
+  keycloak:
+    enabled: true
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: keycloak
+    targetRevision: 19.1.0
+    syncWave: 1
+
+  sealed-secrets:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 1.8.5
+    chart: sealed-secrets
+
+  airflow:
+    enabled: false
+    repoURL: https://airflow.apache.org
+    targetRevision: 1.12.0
+    chart: airflow
+
+  ingress-nginx:
+    enabled: true
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.9.1
+    chart: ingress-nginx
+
+  kube-prometheus-stack:
+    enabled: true
+    repoURL: https://prometheus-community.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 56.7.0
+    chart: kube-prometheus-stack
+
+  loki:
+    enabled: true
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 0.78.2
+    chart: loki-distributed
+
+  promtail:
+    enabled: true
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 6.15.5
+    chart: promtail
+
+  harbor:
+    enabled: false
+    repoURL: https://helm.goharbor.io
+    namespace: harbor
+    targetRevision: 1.14.0
+    chart: harbor
+
+  cert-manager:
+    enabled: false
+    repoURL: https://charts.jetstack.io
+    namespace: cert-manager
+    targetRevision: v1.14.3
+    chart: cert-manager
+
+  actions-runner-controller:
+    enabled: false
+    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    namespace: actions-runner-system
+    targetRevision: 0.22.0
+    chart: actions-runner-controller
+    syncWave: 0
+
+  actions-runner:
+    enabled: false
+    repoURL: https://github.com/kuberise/kuberise.git
+    namespace: actions-runner-system
+    syncWave: 1
+
+  gitea:
+    enabled: false
+    repoURL: https://dl.gitea.io/charts
+    namespace: gitea
+    targetRevision: 10.1.1
+    chart: gitea
+
+  postgresql:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    namespace: postgresql
+    targetRevision: 14.1.0
+    chart: postgresql
+
+  cloudnative-pg:
+    enabled: true
+    repoURL: https://cloudnative-pg.github.io/charts
+    namespace: cloudnative-pg
+    targetRevision: 0.20.1
+    chart: cloudnative-pg

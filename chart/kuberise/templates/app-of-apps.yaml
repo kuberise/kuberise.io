@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps-{{ .Values.global.environment }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    team: platform
+spec:
+  destination:
+    namespace: argocd
+    server: {{ .Values.global.spec.destination.server }}
+  project: platform-{{ .Values.global.environment }}
+  source:
+    path: ./app-of-apps
+    repoURL: {{ .Values.global.spec.source.repoURL }}
+    targetRevision: {{ .Values.global.spec.source.targetRevision }}
+    helm:
+      values: |
+        global:
+{{ .Values.global | toYaml | indent 10 }}
+        applications:
+{{ .Values.applications | toYaml | indent 10 }}
+        helmCharts:
+{{ .Values.helmCharts | toYaml | indent 10 }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

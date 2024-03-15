@@ -1,8 +1,7 @@
 global:
-  env: dta
+  environment: dev
   automated: true
   spec:
-    project: platform-dta
     destination:
       server: https://kubernetes.default.svc
     source:
@@ -16,8 +15,7 @@ applications:
   # A Kustomize application
   hello:
     enabled: false
-    path: values/hello/overlays/dta
-
+    path: values-dev/hello
   helm-guestbook:
     enabled: false
     name: helm-guestbook
@@ -25,12 +23,12 @@ applications:
 
   raw:
     enabled: false
-    path: apps/raw/dta
+    path: apps/raw/dev
 
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: apps/cnpg-database/dta
+    path: apps/cnpg-database/dev
 
 
 helmCharts:

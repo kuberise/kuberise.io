@@ -8,7 +8,7 @@ Assume that there are multiple business or developer teams called blue, red, gre
 
 Platform team creates a namespace for each team and each team can deploy their services to only their own namespace.
 
-There are two Kubernetes clusters one for dev/test/acc (dta) and another one dedicated to the production (prd) environment. dev/test/acc in dta cluster are separated in different namespaces. They use one cluster for those environment to save cost. otherwise they can have separate cluster for each environment.
+There are two Kubernetes clusters one for dev/test/acc (dev) and another one dedicated to the production (prd) environment. dev/test/acc in dev cluster are separated in different namespaces. They use one cluster for those environment to save cost. otherwise they can have separate cluster for each environment.
 
 ## Values
 
