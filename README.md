@@ -11,7 +11,7 @@ helm repo update
 
 ADMIN_PASSWORD=admin
 BCRYPT_HASH=$(htpasswd -nbBC 10 "" $ADMIN_PASSWORD | tr -d ':\n' | sed 's/$2y/$2a/')
-helm upgrade --install -n argocd argocd argo/argo-cd --version 6.1.0  --set configs.secret.argocdServerAdminPassword=$BCRYPT_HASH --create-namespace
+helm upgrade --install -n argocd argocd argo/argo-cd --version 6.1.0  --set configs.secret.argocdServerAdminPassword=$BCRYPT_HASH --set server.insecure=true --create-namespace
 ```
 
 Now you can install kuberise helm chart:
