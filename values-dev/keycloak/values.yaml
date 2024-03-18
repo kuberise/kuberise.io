@@ -80,31 +80,31 @@ ingress:
   tls: false
 
 
-configuration: |
-  spi:
-    userFederationProvider:
-      defaultProvider: ldap
-      ldap:
-        enabled: true
-        priority: 1
-        properties:
-          vendor: "other"
-          usernameLDAPAttribute: "uid"
-          rdnLDAPAttribute: "uid"
-          uuidLDAPAttribute: "uidNumber"
-          userObjectClasses: "inetOrgPerson, organizationalPerson"
-          connectionUrl: "ldap://openldap.default.svc.cluster.local"
-          usersDn: "ou=People,dc=sso,dc=127,dc=0,dc=0,dc=1,dc=nip,dc=io"
-          authType: "simple"
-          bindDn: "cn=admin,dc=sso,dc=127,dc=0,dc=0,dc=1,dc=nip,dc=io"
-          bindCredential: "password"
-          searchScope: "1"
-          validatePasswordPolicy: "false"
-          trustEmail: "true"
-          useTruststoreSpi: "always"
-          connectionPooling: "true"
-          pagination: "true"
-          batchSizeForSync: "1000"
-          fullSyncPeriod: "-1"
-          changedSyncPeriod: "-1"
-          debug: "false"
+# configuration: |
+#   spi:
+#     userFederationProvider:
+#       defaultProvider: ldap
+#       ldap:
+#         enabled: true
+#         priority: 1
+#         properties:
+#           vendor: "other"
+#           usernameLDAPAttribute: "uid"
+#           rdnLDAPAttribute: "uid"
+#           uuidLDAPAttribute: "uidNumber"
+#           userObjectClasses: "inetOrgPerson, organizationalPerson"
+#           connectionUrl: "ldap://openldap.default.svc.cluster.local"
+#           usersDn: "ou=People,dc=sso,dc=127,dc=0,dc=0,dc=1,dc=nip,dc=io"
+#           authType: "simple"
+#           bindDn: "cn=admin,dc=sso,dc=127,dc=0,dc=0,dc=1,dc=nip,dc=io"
+#           bindCredential: "password"
+#           searchScope: "1"
+#           validatePasswordPolicy: "false"
+#           trustEmail: "true"
+#           useTruststoreSpi: "always"
+#           connectionPooling: "true"
+#           pagination: "true"
+#           batchSizeForSync: "1000"
+#           fullSyncPeriod: "-1"
+#           changedSyncPeriod: "-1"
+#           debug: "false"
