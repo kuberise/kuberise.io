@@ -17,6 +17,6 @@ spec:
           service:
             name: argocd-server
             port:
-              number: http
+              number: 80
         path: /
         pathType: Prefix
