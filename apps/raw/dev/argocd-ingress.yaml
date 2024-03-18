@@ -15,4 +15,4 @@ spec:
             port:
               name: http
         path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
