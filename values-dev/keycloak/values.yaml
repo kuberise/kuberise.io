@@ -93,7 +93,7 @@ configuration: |
           rdnLDAPAttribute: "uid"
           uuidLDAPAttribute: "uidNumber"
           userObjectClasses: "inetOrgPerson, organizationalPerson"
-          connectionUrl: "ldap://openldap.identity.svc.cluster.local"
+          connectionUrl: "ldap://openldap.default.svc.cluster.local"
           usersDn: "ou=People,dc=sso,dc=127,dc=0,dc=0,dc=1,dc=nip,dc=io"
           authType: "simple"
           bindDn: "cn=admin,dc=sso,dc=127,dc=0,dc=0,dc=1,dc=nip,dc=io"
