@@ -10,7 +10,6 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false
 data:
   timeout.reconciliation: "5s"
-  server.insecure: "true"
   resource.customizations: |
     argoproj.io/Application:
       health.lua: |
