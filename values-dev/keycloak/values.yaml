@@ -79,13 +79,7 @@ ingress:
   ##
   tls: false
 
-extraVolumes: |
-  - name: realm-config
-    configMap:
-      name: keycloak-realm-config
-extraVolumeMounts: |
-  - name: realm-config
-    mountPath: /config
+
 configuration: |
   spi:
     userFederationProvider:
