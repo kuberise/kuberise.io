@@ -9,9 +9,9 @@ global:
   environment: dev
   spec:
     source:
-      targetRevision: HEAD
+      targetRevision: ldapintegration
     values:
-      targetRevision: HEAD
+      targetRevision: ldapintegration
 
 applications:
   raw:
