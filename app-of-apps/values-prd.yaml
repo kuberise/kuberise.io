@@ -11,6 +11,10 @@ applications:
     enabled: true
     path: values/hello/overlays/prd
 
+  python-hello-world:
+    enabled: true
+    path: values/python-hello-world/overlays/prd
+
   raw:
     enabled: true
     path: apps/raw/prd

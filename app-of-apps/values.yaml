@@ -17,6 +17,10 @@ applications:
   hello:
     enabled: false
     path: values/hello/overlays/dta
+  
+  python-hello-world:
+    enabled: false
+    path: values/python-hello-world/overlays/dta
 
   helm-guestbook:
     enabled: false

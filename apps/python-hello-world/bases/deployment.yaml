@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: python-hello-world
+  name: python-hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-hello-world
+  template:
+    metadata:
+      labels:
+        app: python-hello-world
+    spec:
+      containers:
+      - image: adnansh92/public-registry:python-hello-world
+        name: python-hello-world-app
+        resources: {}

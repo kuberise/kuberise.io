@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: python-hello-world
+  namespace: python-hello-world
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: python-hello-world.127.0.0.1.nip.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: python-hello-world
+            port:
+              number: 5050
+        path: /
+        pathType: Prefix

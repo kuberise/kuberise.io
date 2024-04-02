@@ -7,6 +7,10 @@ applications:
     enabled: false
     path: values/hello/overlays/dta
 
+  python-hello-world:
+    enabled: true
+    path: values/python-hello-world/overlays/dta
+
   # Raw manifests
   raw:
     enabled: true
