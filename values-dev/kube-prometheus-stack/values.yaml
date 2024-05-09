@@ -30,6 +30,9 @@ grafana:
       token_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/token
       api_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/userinfo
       role_attribute_path: contains(realm_access.roles[*], 'admin') && 'Admin' || contains(realm_access.roles[*], 'editor') && 'Editor' || 'Viewer'
+    server:
+      root_url: http://grafana.127.0.0.1.nip.io/
+
 
   extraSecretMounts:
     - name: grafana-keycloak-secrets
