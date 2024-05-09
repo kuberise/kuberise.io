@@ -18,6 +18,20 @@ grafana:
       - grafana.127.0.0.1.nip.io
     path: /
 
+  grafana.ini:
+    auth.generic_oauth:
+      enabled: true
+      name: OAuth
+      allow_sign_up: true
+      client_id: grafana
+      client_secret: n0m318N4RsRMthJb0xREozgREBWHDOSt
+      scopes: a@b.com
+      auth_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/auth
+      token_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/token
+      api_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/userinfo
+      role_attribute_path: contains(realm_access.roles[*], 'admin') && 'Admin' || contains(realm_access.roles[*], 'editor') && 'Editor' || 'Viewer'
+
+
 prometheus:
   ingress:
     enabled: true

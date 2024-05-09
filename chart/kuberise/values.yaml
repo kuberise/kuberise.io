@@ -42,10 +42,10 @@ global:
       server: https://kubernetes.default.svc
     source:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: grafana-login
     values:
       repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      targetRevision: grafana-login
 
 applications:
   # A Kustomize application
