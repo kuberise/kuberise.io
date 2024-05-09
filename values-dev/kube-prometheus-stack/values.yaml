@@ -27,7 +27,7 @@ grafana:
       client_secret: $__file{/etc/grafana/secrets/clientSecret}
       scopes: profile email
       auth_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/auth
-      token_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/token
+      token_url: http://keycloak.keycloak.svc.cluster.local/realms/platform/protocol/openid-connect/token
       api_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/userinfo
       role_attribute_strict: true
       role_attribute_path:  (contains(grafana.roles[], 'grafanaAdmin') && 'GrafanaAdmin') || (contains(grafana.roles[], 'admin') && 'Admin') || (contains(grafana.roles[], 'editor') && 'Editor') || 'Viewer'
