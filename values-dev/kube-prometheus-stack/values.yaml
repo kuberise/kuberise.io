@@ -21,17 +21,36 @@ grafana:
   grafana.ini:
     auth.generic_oauth:
       enabled: true
-      name: OAuth
+      name: Keycloak
       allow_sign_up: true
       client_id: grafana
       client_secret: $__file{/etc/grafana/secrets/clientSecret}
-      scopes: openid profile email
+      scopes: profile email
       auth_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/auth
       token_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/token
       api_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/userinfo
-      role_attribute_path: contains(realm_access.roles[*], 'admin') && 'Admin' || contains(realm_access.roles[*], 'editor') && 'Editor' || 'Viewer'
+      role_attribute_strict: true
+      role_attribute_path:  (contains(grafana.roles[], 'grafanaAdmin') && 'GrafanaAdmin') || (contains(grafana.roles[], 'admin') && 'Admin') || (contains(grafana.roles[], 'editor') && 'Editor') || 'Viewer'
+      allow_assign_grafana_admin: true  # enable grafanaAdmin login through Keycloak
+      email_attribute_path: email # from values from token
+      name_attribute_path: preferred_username  # from values from token
+      login_attribute_path: preferred_username # email or preferred_username or something from tokens
+    auth:
+      disable_login_form: false
+      oauth_auto_login: false
+      oauth_skip_org_role_update_sync: false
+      skip_org_role_sync: false
+    users:
+      auto_assign_org: true
+      auto_assign_org_role: Viewer  # default org_role
+      auto_assign_org_id: 1
+    security:
+      disable_initial_admin_creation: true
+      allow_embedding: true
+      cookie_secure: false
     server:
       root_url: http://grafana.127.0.0.1.nip.io/
+      domain: http://grafana.127.0.0.1.nip.io/
 
 
   extraSecretMounts:
