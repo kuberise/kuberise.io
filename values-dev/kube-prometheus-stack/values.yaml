@@ -26,9 +26,9 @@ grafana:
       client_id: grafana
       client_secret: $__file{/etc/grafana/secrets/clientSecret}
       scopes: a@b.com
-      auth_url: http://keycloak.keycloak.svc.cluster.local/realms/platform/protocol/openid-connect/auth
-      token_url: http://keycloak.keycloak.svc.cluster.local/realms/platform/protocol/openid-connect/token
-      api_url: http://keycloak.keycloak.svc.cluster.local/realms/platform/protocol/openid-connect/userinfo
+      auth_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/auth
+      token_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/token
+      api_url: http://keycloak.127.0.0.1.nip.io/realms/platform/protocol/openid-connect/userinfo
       role_attribute_path: contains(realm_access.roles[*], 'admin') && 'Admin' || contains(realm_access.roles[*], 'editor') && 'Editor' || 'Viewer'
 
   extraSecretMounts:
