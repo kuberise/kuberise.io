@@ -3,9 +3,11 @@ configs:
     timeout.reconciliation: 5s
   params:
     server.insecure: true
+
 controller:
   metrics:
     enabled: true
+
 server:
   insecure: true
   ingress:
@@ -19,3 +21,29 @@ server:
       - /
     pathType: Prefix
     https: false
+  # service:
+  #   type: LoadBalancer
+
+#   extraArgs:
+#     - --oidc.config=/shared/oidc/config.yaml
+
+#   volumes:
+#     - name: oidc-config
+#       configMap:
+#         name: argocd-oidc-config
+
+#   volumeMounts:
+#     - mountPath: /shared/oidc
+#       name: oidc-config
+
+# config:
+#   oidc.config: |
+#     name: Keycloak
+#     issuer: http://<KEYCLOAK_IP_OR_DNS>:<PORT>/auth/realms/<REALM_NAME>
+#     clientID: <CLIENT_ID>
+#     clientSecret: $oidc.keycloak.clientSecret
+#     requestedScopes: ["openid", "profile", "email"]
+#   dex.config: ""  # Disable built-in DEX if using Keycloak
+
+# secrets:
+#   oidc.keycloak.clientSecret: <CLIENT_SECRET>
