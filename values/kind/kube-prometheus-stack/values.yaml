@@ -1,0 +1,29 @@
+grafana:
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-loki-distributed-gateway
+        isDefault: false
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    hosts:
+      - grafana.127.0.0.1.nip.io
+    path: /
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - prometheus.127.0.0.1.nip.io
+    paths:
+      - /
+    pathType: Prefix

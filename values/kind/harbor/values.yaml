@@ -1,0 +1,15 @@
+expose:
+  type: ingress
+  tls:
+    enabled: false
+  ingress:
+    hosts:
+      core: core.harbor.127.0.0.1.nip.io
+      notary: notary.harbor.127.0.0.1.nip.io
+    className: nginx
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "false"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+externalURL: http://core.harbor.127.0.0.1.nip.io
