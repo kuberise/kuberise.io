@@ -110,6 +110,8 @@ spec:
           value: $git_repo
         - name: global.spec.values.targetRevision
           value: $git_revision
+        - name: global.platformName
+          value: $platform_name
   destination:
     server: https://kubernetes.default.svc
     namespace: $namespace

@@ -1,15 +1,15 @@
 global:
-  platformName: minikube
+  platformName: x
   automated: true
   spec:
     destination:
       server: https://kubernetes.default.svc
     source:
-      repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      repoURL: x
+      targetRevision: x
     values:
-      repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      repoURL: x
+      targetRevision: x
 
 applications:
   # A Kustomize application
