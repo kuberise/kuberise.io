@@ -93,7 +93,7 @@ metadata:
   labels:
     team: platform
 spec:
-  project: platform-$platform_name
+  project: $platform_name
   source:
     repoURL: $git_repo
     targetRevision: $git_revision
