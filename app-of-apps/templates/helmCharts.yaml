@@ -12,7 +12,7 @@ metadata:
   labels:
     team: platform
 spec:
-  project: platform-{{ $.Values.global.platformName }}
+  project: {{ $.Values.global.platformName }}
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
