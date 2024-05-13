@@ -1,0 +1,10 @@
+configs:
+  cm:
+    timeout.reconciliation: 10s
+  params:
+    server.insecure: true
+controller:
+  metrics:
+    enabled: true
+server:
+  insecure: true

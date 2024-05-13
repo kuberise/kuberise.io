@@ -2,7 +2,27 @@
 
 kuberise is a free opensource internal developer platform for Kubernetes environment.
 
+## Prerquisites
+
+- kubectl,helm,htpasswd,git command line tools
+- git repository
+
 ## Installation
+
+### Summary
+
+- fork the repo in your github account (or clone the project and push it in any other code repository)
+- change the address of repository and revision in values file
+- install the platform by running the install.sh script
+
+### Installation details
+
+Assume you have one management cluster that you deploy your platform services in this cluster and then you have separate kubernetes clusters for your applications and for different environment and this management cluster will provide platform services for all development environments.
+
+<!-- TODO: Complete the instruction for multiple management clusters   -->
+### Multiple management clusters
+What if you want to have multiple management cluster for different environment. for example one management cluster
+
 
 If you don't have ArgoCD installed, you need to install it first:
 ```
