@@ -12,46 +12,22 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 ### Summary
 
 - fork the repo in your github account (or clone the project and push it in any other code repository)
-- change the address of repository and revision in values file
-- install the platform by running the install.sh script
+- provide a value file in app-of-apps folder with the name of your cluster
+- run cicd/scripts/install.sh command with all required input parameters
 
 ### Installation details
-
+tbd
 Assume you have one management cluster that you deploy your platform services in this cluster and then you have separate kubernetes clusters for your applications and for different environment and this management cluster will provide platform services for all development environments.
 
 <!-- TODO: Complete the instruction for multiple management clusters   -->
 ### Multiple management clusters
 What if you want to have multiple management cluster for different environment. for example one management cluster
 
-
-If you don't have ArgoCD installed, you need to install it first:
-```
-helm repo add argo https://argoproj.github.io/argo-helm
-helm repo update
-
-ADMIN_PASSWORD=admin
-BCRYPT_HASH=$(htpasswd -nbBC 10 "" $ADMIN_PASSWORD | tr -d ':\n' | sed 's/$2y/$2a/')
-helm upgrade --install -n argocd argocd argo/argo-cd --version 6.1.0  --set configs.secret.argocdServerAdminPassword=$BCRYPT_HASH --create-namespace
-```
-
-Now you can install kuberise helm chart:
-```
-helm repo add kuberise https://kuberise.github.io/kuberise/
-helm repo update
-helm install kuberise-dev kuberise/kuberise -n argocd
-```
-kuberise should be installed in the argocd namespace. If your argocd is in another namespace, then install kuberise in that namespace.
-
 ## How to uninstall
-
+tbd
 ```
-helm uninstall kuberise-dev -n argocd
+tbd
 ```
-
-## How to create a values repository
-
-If you want to modify the values of different helm charts, you need to create a fork or clone of the repository and push it to your git repository and give the address of that repository to your app of apps helm chart.
-
 
 ## Platform Engineering Concept
 
