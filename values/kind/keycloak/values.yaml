@@ -47,7 +47,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record (evaluated as template)
   ##
-  hostname: keycloak.127.0.0.1.nip.io
+  hostname: keycloak.kind.local
   ## @param ingress.path [string] Default path for the ingress record (evaluated as template)
   ##
   path: "{{ .Values.httpRelativePath }}"
