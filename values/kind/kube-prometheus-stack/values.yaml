@@ -15,7 +15,7 @@ grafana:
       nginx.ingress.kubernetes.io/rewrite-target: /
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     hosts:
-      - grafana.127.0.0.1.nip.io
+      - grafana.kind.local
     path: /
 
 prometheus:
@@ -23,7 +23,7 @@ prometheus:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - prometheus.127.0.0.1.nip.io
+      - prometheus.kind.local
     paths:
       - /
     pathType: Prefix
