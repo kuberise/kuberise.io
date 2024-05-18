@@ -19,7 +19,7 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 - Install kuberise (if you are using fork or your repository is public, you don't need to add Token at the end of command)
 
 ```sh
-./scripts/install.sh <KubernetesContext> <PlatformName> <RepoURL> <BranchName> <RepositoryToken>
+./scripts/install.sh <KubernetesContext> <PlatformName> <RepoURL> <BranchName> <RepoToken>
 ```
 
 ## Minikube and local installation
