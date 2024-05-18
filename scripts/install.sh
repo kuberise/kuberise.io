@@ -161,12 +161,14 @@ NAMESPACE_ARGOCD="argocd"
 NAMESPACE_CNPG="cloudnative-pg"
 NAMESPACE_KEYCLOAK="keycloak"
 NAMESPACE_BACKSTAGE="backstage"
+NAMESPACE_MONITORING="monitoring"
 
 # Create Namespaces
 create_namespace "$CONTEXT" "$NAMESPACE_ARGOCD"
 create_namespace "$CONTEXT" "$NAMESPACE_CNPG"
 create_namespace "$CONTEXT" "$NAMESPACE_KEYCLOAK"
 create_namespace "$CONTEXT" "$NAMESPACE_BACKSTAGE"
+create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
@@ -183,9 +185,10 @@ fi
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-app" "--from-literal=dbname=app --from-literal=host=cnpg-database-rw --from-literal=username=app --from-literal=user=app --from-literal=port=5432 --from-literal=password=$ADMIN_PASSWORD --type=kubernetes.io/basic-auth"
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-superuser" "--from-literal=dbname=* --from-literal=host=cnpg-database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
 
-# Keycloak and Backstage secrets
+# Keycloak and Backstage and Grafana secrets
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=password=$ADMIN_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$ADMIN_PASSWORD"
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
 # Install ArgoCD with custom values and admin password
 VALUES_FILE="values/$PLATFORM_NAME/argocd/values.yaml"
