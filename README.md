@@ -14,7 +14,9 @@ Assume that you have a kubernetes cluster with context called 'minikube' and als
 
 ```sh
 export CONTEXT=<Your kubernetes context>
-curl -sSL https://raw.githubusercontent.com/kuberise/kuberise/main/scripts/install.sh | bash -s -- $CONTEXT minikube https://github.com/kuberise/kuberise.git main
+git clone https://github.com/kuberise/kuberise.git
+cd kuberise
+./script/install.sh $CONTEXT minikube https://github.com/kuberise/kuberise.git main
 ```
 
 ## Installation
