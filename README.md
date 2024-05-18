@@ -13,8 +13,8 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 Assume that you have a kubernetes cluster with context called 'minikube' and also you name your platform cluster minikube. Then you can run this command to install kuberise platform on your minikube cluster.
 
 ```sh
-minikube start
-curl -sSL https://raw.githubusercontent.com/kuberise/kuberise/main/scripts/install.sh | bash -s -- minikube minikube https://github.com/kuberise/kuberise.git main
+export CONTEXT=<Your kubernetes context>
+curl -sSL https://raw.githubusercontent.com/kuberise/kuberise/main/scripts/install.sh | bash -s -- $CONTEXT minikube https://github.com/kuberise/kuberise.git main
 ```
 
 ## Installation
