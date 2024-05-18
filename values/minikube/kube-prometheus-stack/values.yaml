@@ -20,7 +20,7 @@ grafana:
   adminPassword: ""
   admin:
     existingSecret: grafana-admin
-    PasswordKey: admin-password
+    passwordKey: admin-password
     userKey: admin-user
 
 
