@@ -8,27 +8,62 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 - kubectl,helm,htpasswd,git command line tools
 - git repository
 
+## Quick Installation (with pre-defined set of tools)
+
+Assume that you have a kubernetes cluster with context called 'minikube' and also you name your platform cluster minikube. Then you can run this command to install kuberise platform on your minikube cluster.
+
+```sh
+export CONTEXT=<Your kubernetes context>
+curl -sSL https://raw.githubusercontent.com/kuberise/kuberise/main/scripts/install.sh | bash -s -- $CONTEXT minikube https://github.com/kuberise/kuberise.git main
+```
+
 ## Installation
 
 - Fork the repo in your github account (or clone the repository and push it in any other code repository). Now your new repository address is `RepoURL`
 - Clone the repository in your computer and enter to the kuberise folder. (`cd kuberise`)
 - Choose a name for your platform like `PlatformName`
-- Create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-minikube.yaml file `cp values-minikube.yaml values-PlatformName.yaml`)
-- In values folder create a new folder (or copy minikube sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp ./values/minikube/ ./values/PlatformName`)
+- Create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-minikube.yaml file `cp ./app-of-apps/values-minikube.yaml ./app-of-apps/values-PlatformName.yaml`)
+- In values folder create a new folder (or copy minikube sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp -r ./values/minikube ./values/PlatformName`)
 - Commit and push changes to your fork or your repository.
+- Choose admin password and also postgres super admin password
+
+```sh
+export ADMIN_PASSWORD=<Enter a password for admin>
+export PG_SUPERUSER_PASSWORD=<Enter a password for postgres super admin>
+
+# example:
+export ADMIN_PASSWORD=eiKJFhjd34fks
+export PG_SUPERUSER_PASSWORD=kFHEkjf323kfsW
+```
+
 - Install kuberise (if you are using fork or your repository is public, you don't need to add Token at the end of command)
 
 ```sh
 ./scripts/install.sh <KubernetesContext> <PlatformName> <RepoURL> <BranchName> <RepoToken>
+
+# example:
+./scripts/install.sh minikube minikube https://github.com/kuberise/kuberise.git main
 ```
 
 ## Minikube and local installation
 
-- After deploying to a minikube local cluster, you can run `sudo minikube tunnel` command to use the local ingress to access services. For example to go to argocd and keycloak and grafana you can use these urls and you don't need to do port-forward:
+After deploying to a minikube local cluster, you can run `sudo minikube tunnel` command to use the local ingress to access services. For example to go to argocd and keycloak and grafana you can use these urls and you don't need to do port-forward:
 
-  - [http://argocd.127.0.0.1.nip.io](http://argocd.127.0.0.1.nip.io)
-  - [http://grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
-  - [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
+- [http://argocd.127.0.0.1.nip.io](http://argocd.127.0.0.1.nip.io)
+- [http://grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
+- [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
+
+For minikube tunnel to work, the minikube config information should be in ~/.kube/config file which is the default kubeconfig location. If you can not use minikube tunnel, you can use prot-forward to be able to access the dashboard of different services:
+
+```sh
+kubectl port-forward svc/argocd-server -n argocd 8081:80 &
+kubectl port-forward svc/kube-prometheus-stack-grafana -n monitoring 8082:80 &
+kubectl  port-forward svc/keycloak -n keycloak 8083:80 &
+```
+
+- ArgoCD dashboard: [http://localhost:8081](http://localhost:8081)
+- Grafana dashboard: [http://localhost:8082](http://localhost:8082)
+- Keycloak dashboard: [http://localhost:8083](http://localhost:8083)
 
 ## Architecture
 
