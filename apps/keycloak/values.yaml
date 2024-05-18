@@ -1,0 +1,13 @@
+# Values for keycloak that are common for all clusters or environments
+keycloak:
+  postgresql:
+    enabled: false
+
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    pathType: ImplementationSpecific
+    apiVersion: ""
+    path: "{{ .Values.httpRelativePath }}"
+    servicePort: http
+    tls: false

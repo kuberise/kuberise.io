@@ -1,21 +1,22 @@
 global:
-  environment: dev
+  platformName: x
   automated: true
   spec:
     destination:
       server: https://kubernetes.default.svc
     source:
-      repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      repoURL: x
+      targetRevision: x
     values:
-      repoURL: https://github.com/kuberise/kuberise.git
-      targetRevision: HEAD
+      repoURL: x
+      targetRevision: x
 
 applications:
   # A Kustomize application
   hello:
     enabled: false
-    path: values-dev/hello
+    path: values/minikube/hello
+
   helm-guestbook:
     enabled: false
     name: helm-guestbook
@@ -23,12 +24,12 @@ applications:
 
   raw:
     enabled: false
-    path: apps/raw/dev
+    path: apps/raw/minikube
 
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: apps/cnpg-database/dev
+    path: apps/cnpg-database/minikube
 
 
 helmCharts:
@@ -40,12 +41,8 @@ helmCharts:
     enabled: false
     syncWave: 1
 
-
   keycloak:
     enabled: false
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: keycloak
-    targetRevision: 19.1.0
     syncWave: 1
 
   sealed-secrets:
@@ -63,7 +60,7 @@ helmCharts:
   ingress-nginx:
     enabled: false
     repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.9.1
+    targetRevision: 4.10.1
     chart: ingress-nginx
 
   kube-prometheus-stack:
@@ -122,12 +119,6 @@ helmCharts:
     targetRevision: 10.1.1
     chart: gitea
 
-  postgresql:
-    enabled: false
-    repoURL: https://charts.bitnami.com/bitnami
-    namespace: postgresql
-    targetRevision: 14.1.0
-    chart: postgresql
 
   cloudnative-pg:
     enabled: false

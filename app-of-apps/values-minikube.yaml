@@ -1,0 +1,22 @@
+applications:
+  cnpg-database:
+    enabled: true
+
+helmCharts:
+  keycloak:
+    enabled: true
+
+  ingress-nginx:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  cloudnative-pg:
+    enabled: true
