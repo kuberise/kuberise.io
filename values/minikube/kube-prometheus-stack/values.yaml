@@ -17,9 +17,9 @@ grafana:
     hosts:
       - grafana.127.0.0.1.nip.io
     path: /
-  adminPassword: ""
+  # adminPassword: ""
   admin:
-    existingSecret: grafana-admin-a
+    existingSecret: grafana-admin
     passwordKey: admin-password
     userKey: admin-user
 
