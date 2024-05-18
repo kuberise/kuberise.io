@@ -46,7 +46,7 @@ function install_argocd() {
   local admin_password=$4
   echo "Installing ArgoCD using Helm..."
   BCRYPT_HASH=$(htpasswd -nbBC 10 "" "$admin_password" | tr -d ':\n' | sed 's/$2y/$2a/')
-  helm upgrade --install --kube-context "$context" -n "$namespace" -f "$values_file" argocd argocd/argo-cd --version 6.1.0 --wait --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH"
+  helm upgrade --install --kube-context "$context" -n "$namespace" -f "$values_file" argocd argocd/argo-cd --version 6.9.2 --wait --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH"
 }
 
 function deploy_app_of_apps() {
@@ -123,10 +123,11 @@ EOF
 }
 
 # Variables Initialization
+# example: ./scripts/install.sh enterprise minikube https://github.com/kuberise/kuberise-enterprise.git main $GITHUB_TOKEN
 
 CONTEXT=${1:-}                                          # example: platform-cluster
 PLATFORM_NAME=${2:-local}                               # example: local, dta, azure etc. (default: local)
-REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
+REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise-enterprise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
 REPOSITORY_TOKEN=${5:-}
 

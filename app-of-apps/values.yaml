@@ -27,7 +27,7 @@ applications:
     path: apps/raw/minikube
 
   cnpg-database:
-    enabled: true
+    enabled: false
     namespace: cloudnative-pg
     path: apps/cnpg-database/minikube
 
@@ -42,10 +42,7 @@ helmCharts:
     syncWave: 1
 
   keycloak:
-    enabled: true
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: keycloak
-    targetRevision: 19.1.0
+    enabled: false
     syncWave: 1
 
   sealed-secrets:
@@ -61,27 +58,27 @@ helmCharts:
     chart: airflow
 
   ingress-nginx:
-    enabled: true
+    enabled: false
     repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.9.1
+    targetRevision: 4.10.1
     chart: ingress-nginx
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
     repoURL: https://prometheus-community.github.io/helm-charts
     namespace: monitoring
     targetRevision: 56.7.0
     chart: kube-prometheus-stack
 
   loki:
-    enabled: true
+    enabled: false
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
     targetRevision: 0.78.2
     chart: loki-distributed
 
   promtail:
-    enabled: true
+    enabled: false
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
     targetRevision: 6.15.5
@@ -124,7 +121,7 @@ helmCharts:
 
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
     repoURL: https://cloudnative-pg.github.io/charts
     namespace: cloudnative-pg
     targetRevision: 0.20.1

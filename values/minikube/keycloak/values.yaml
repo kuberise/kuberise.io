@@ -1,80 +1,16 @@
-postgresql:
-  enabled: false
+keycloak:
 
-externalDatabase:
-  host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
-  user: app
-  database: app
-  existingSecret: pg-secret
-  existingSecretPasswordKey: password
+  externalDatabase:
+    host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+    user: app
+    database: app
+    existingSecret: pg-secret
+    existingSecretPasswordKey: password
 
-auth:
-  ## @param auth.adminUser Keycloak administrator user
-  ##
-  adminUser: admin
-  ## @param auth.adminPassword Keycloak administrator password for the new user
-  ##
-  # adminPassword: ""
-  ## @param auth.existingSecret Existing secret containing Keycloak admin password
-  ##
-  existingSecret: pg-secret
-  ## @param auth.passwordSecretKey Key where the Keycloak admin password is being stored inside the existing secret.
-  ##
-  passwordSecretKey: password
+  auth:
+    adminUser: admin
+    existingSecret: pg-secret
+    passwordSecretKey: password
 
-
-  # port: 5432
-  # password: ""
-  # existingSecretHostKey: ""
-  # existingSecretPortKey: ""
-  # existingSecretUserKey: ""
-  # existingSecretDatabaseKey: ""
-
-ingress:
-  ## @param ingress.enabled Enable ingress record generation for Keycloak
-  ##
-  enabled: true
-  ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
-  ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
-  ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
-  ##
-  ingressClassName: "nginx"
-  ## @param ingress.pathType Ingress path type
-  ##
-  pathType: ImplementationSpecific
-  ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
-  ##
-  apiVersion: ""
-  ## @param ingress.hostname Default host for the ingress record (evaluated as template)
-  ##
-  hostname: keycloak.127.0.0.1.nip.io
-  ## @param ingress.path [string] Default path for the ingress record (evaluated as template)
-  ##
-  path: "{{ .Values.httpRelativePath }}"
-  ## @param ingress.servicePort Backend service port to use
-  ## Default is http. Alternative is https.
-  ##
-  servicePort: http
-  ## @param ingress.annotations [object] Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
-  ## Use this parameter to set the required annotations for cert-manager, see
-  ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
-  ## e.g:
-  ## annotations:
-  ##   kubernetes.io/ingress.class: nginx
-  ##   cert-manager.io/cluster-issuer: cluster-issuer-name
-  ##
-  annotations: {}
-  ## @param ingress.labels Additional labels for the Ingress resource.
-  ## e.g:
-  ## labels:
-  ##   app: keycloak
-  ##
-  labels: {}
-  ## @param ingress.tls Enable TLS configuration for the host defined at `ingress.hostname` parameter
-  ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" (tpl .Values.ingress.hostname .) }}`
-  ## You can:
-  ##   - Use the `ingress.secrets` parameter to create this TLS secret
-  ##   - Rely on cert-manager to create it by setting the corresponding annotations
-  ##   - Rely on Helm to create self-signed certificates by setting `ingress.selfSigned=true`
-  ##
-  tls: false
+  ingress:
+    hostname: keycloak.127.0.0.1.nip.io
