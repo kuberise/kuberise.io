@@ -10,7 +10,7 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 
 ## Installation
 
-- Fork the repo in your github account (or clone the project and push it in any other code repository). Now your new repository address is `RepoURL`
+- Fork the repo in your github account (or clone the repository and push it in any other code repository). Now your new repository address is `RepoURL`
 - Clone the repository in your computer and enter to the kuberise folder. (`cd kuberise`)
 - Choose a name for your platform like `PlatformName`
 - Create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-minikube.yaml file `cp values-minikube.yaml values-PlatformName.yaml`)
