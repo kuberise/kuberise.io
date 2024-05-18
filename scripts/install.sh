@@ -168,7 +168,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_ARGOCD"
 create_namespace "$CONTEXT" "$NAMESPACE_CNPG"
 create_namespace "$CONTEXT" "$NAMESPACE_KEYCLOAK"
 create_namespace "$CONTEXT" "$NAMESPACE_BACKSTAGE"
-create_namespace "$CONTEXT" "$NAMESPACE_MOITORING"
+create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
