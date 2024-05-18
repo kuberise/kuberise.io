@@ -17,6 +17,11 @@ grafana:
     hosts:
       - grafana.127.0.0.1.nip.io
     path: /
+  adminPassword: ""
+  admin:
+    existingSecret: grafana-admin
+    existingSecretPasswordKey: admin-password
+
 
 prometheus:
   ingress:
