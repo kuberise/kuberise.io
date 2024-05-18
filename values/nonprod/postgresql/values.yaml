@@ -1,0 +1,11 @@
+
+auth:
+  postgresPassword: "password"
+
+global:
+  postgresql:
+    auth:
+      postgresPassword: "password"
+      username: "keycloak"
+      database: "keycloak"
+      password: "password"
