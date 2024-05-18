@@ -45,6 +45,7 @@ fi
 NAMESPACE=argocd
 kubectl delete --context $CONTEXT -n $NAMESPACE application app-of-apps-$PLATFORM_NAME
 kubectl delete --context $CONTEXT -n $NAMESPACE appproject $PLATFORM_NAME
+
 helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE
 
 namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring")
