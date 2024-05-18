@@ -13,6 +13,7 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 Assume that you have a kubernetes cluster with context called 'minikube' and also you name your platform cluster minikube. Then you can run this command to install kuberise platform on your minikube cluster.
 
 ```sh
+minikube start
 curl -sSL https://raw.githubusercontent.com/kuberise/kuberise/main/scripts/install.sh | bash -s -- minikube minikube https://github.com/kuberise/kuberise.git main
 ```
 
@@ -46,11 +47,23 @@ export PG_SUPERUSER_PASSWORD=kFHEkjf323kfsW
 
 ## Minikube and local installation
 
-- After deploying to a minikube local cluster, you can run `sudo minikube tunnel` command to use the local ingress to access services. For example to go to argocd and keycloak and grafana you can use these urls and you don't need to do port-forward:
+After deploying to a minikube local cluster, you can run `sudo minikube tunnel` command to use the local ingress to access services. For example to go to argocd and keycloak and grafana you can use these urls and you don't need to do port-forward:
 
-  - [http://argocd.127.0.0.1.nip.io](http://argocd.127.0.0.1.nip.io)
-  - [http://grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
-  - [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
+- [http://argocd.127.0.0.1.nip.io](http://argocd.127.0.0.1.nip.io)
+- [http://grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
+- [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
+
+For minikube tunnel to work, the minikube config information should be in ~/.kube/config file which is the default kubeconfig location. If you can not use minikube tunnel, you can use prot-forward to be able to access the dashboard of different services:
+
+```sh
+kubectl port-forward svc/argocd-server -n argocd 8081:80 &
+kubectl port-forward svc/kube-prometheus-stack-grafana -n monitoring 8082:80 &
+kubectl  port-forward svc/keycloak -n keycloak 8083:80 &
+```
+
+- ArgoCD dashboard: [http://localhost:8081](http://localhost:8081)
+- Grafana dashboard: [http://localhost:8082](http://localhost:8082)
+- Keycloak dashboard: [http://localhost:8083](http://localhost:8083)
 
 ## Architecture
 
