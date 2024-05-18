@@ -20,7 +20,8 @@ grafana:
   adminPassword: ""
   admin:
     existingSecret: grafana-admin
-    existingSecretPasswordKey: admin-password
+    PasswordKey: admin-password
+    userKey: admin-user
 
 
 prometheus:
