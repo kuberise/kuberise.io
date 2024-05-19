@@ -19,7 +19,7 @@ grafana:
     path: /
   adminPassword: ""
   admin:
-    existingSecret: grafana-admin-a
+    existingSecret: grafana-admin
     passwordKey: admin-password
     userKey: admin-user
 
