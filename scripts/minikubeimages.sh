@@ -1,4 +1,13 @@
 #!/bin/bash
+# Usage:
+# $ ./scripts/minikubeimages.sh save minikube1
+# $ ./scripts/minikubeimages.sh load minikube2
+#
+# This script saves all the Docker images from the Minikube cluster named minikube1
+# and loads them into a new Minikube cluster named minikube2.
+
+
+
 
 # Function to save images from the current Minikube cluster
 save_images() {
@@ -24,10 +33,3 @@ elif [ "$1" == "load" ]; then
 else
   echo "Usage: $0 {save|load}"
 fi
-
-# Usage:
-# $ ./scripts/minikubeimages.sh save minikube1
-# $ ./scripts/minikubeimages.sh load minikube2
-#
-# This script saves all the Docker images from the Minikube cluster named minikube1
-# and loads them into a new Minikube cluster named minikube2.

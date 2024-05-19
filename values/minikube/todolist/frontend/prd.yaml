@@ -1,1 +1,6 @@
 replicaCount: 3
+
+ingress:
+  enabled: true
+  hosts:
+    - host: frontend.127.0.0.1.nip.io
