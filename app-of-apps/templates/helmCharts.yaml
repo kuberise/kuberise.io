@@ -18,12 +18,18 @@ spec:
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
     {{- if hasKey . "chart"}}
     chart: {{ .chart }}
+    {{- else if hasKey . "path"}}
+    path: {{ .path }}
     {{- else }}
     path: apps/{{ default $name .name }}
     {{- end }}
     helm:
       valueFiles:
+    {{- if hasKey . "values"}}
+      - $valuesRepo/values/{{ $.Values.global.platformName }}/{{ .values }}
+    {{- else }}
       - $valuesRepo/values/{{ $.Values.global.platformName }}/{{ default $name .name }}/values.yaml
+    {{- end }}
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo
