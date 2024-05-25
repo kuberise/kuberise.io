@@ -131,14 +131,14 @@ helmCharts:
   todolist-frontend-dev:
     enabled: false
     path: apps/todolist-frontend
-    values: todolist/frontend/dev.yaml
+    values: microservices/dev/todolist/frontend/values.yaml
 
   todolist-frontend-tst:
     enabled: false
     path: apps/todolist-frontend
-    values: todolist/frontend/tst.yaml
+    values: microservices/tst/todolist/frontend/values.yaml
 
   todolist-frontend-prd:
     enabled: false
     path: apps/todolist-frontend
-    values: todolist/frontend/prd.yaml
+    values: microservices/prd/todolist/frontend/values.yaml

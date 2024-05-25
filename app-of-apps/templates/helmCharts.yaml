@@ -26,7 +26,7 @@ spec:
     helm:
       valueFiles:
     {{- if hasKey . "values"}}
-      - $valuesRepo/values/{{ $.Values.global.platformName }}/{{ .values }}
+      - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
     {{- else }}
       - $valuesRepo/values/{{ $.Values.global.platformName }}/{{ default $name .name }}/values.yaml
     {{- end }}

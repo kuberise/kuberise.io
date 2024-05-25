@@ -104,6 +104,10 @@ For multiple platform cluster scenario, you should create one value file for eac
       └── argocd
 ```
 
+In app-of-apps folder there is one `values.yaml` which is a default value file and there should be one value file for each separate platform cluster, because you have to install the app-of-apps once per platform cluster. This is equal to the number of argocd instances you have. This argocd is managing the platform services and also the microservices. Even if the miroservices are deployed into another cluster, they are deployed and managed by the argocd inside the platform cluster. 
+
+For example, assume that you have your platform cluster in azure and you call your platform "PlatformAzure", you have only one platform cluster that manages all environments of microservices and you have 3 separate clusters for your microservcies (dev,tst,prd). Then in your app-of-apps folder you will have only two value files: `values.yaml` for defaults and `values-PlatformAzure.yaml` for your one platform cluster. 
+
 ## How to uninstall
 
 ```sh

@@ -26,3 +26,6 @@ helmCharts:
 
   todolist-frontend-tst:
     enabled: true
+
+  todolist-frontend-prd:
+    enabled: true
