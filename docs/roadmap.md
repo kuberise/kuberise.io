@@ -10,18 +10,18 @@ Kuberise is an internal developer platform and it helps developers to focus on t
 3. Create an open source community and contributors around kuberise 
 4. Support companies to adopt 
 5. Grow the software based on community feedbacks
-    
+
 
 # References
 
 - [https://github.com/kuberise/kuberise](https://github.com/kuberise/kuberise) 
 - [https://www.gartner.com/en/articles/gartner-top-10-strategic-technology-trends-for-2024](https://www.gartner.com/en/articles/gartner-top-10-strategic-technology-trends-for-2024) 
-    
-# Competitors
 
-1. ## [Otomi](https://otomi.io/)
-2. ## [Pionative](https://www.pionative.com/) 
-3. ## [OKD](https://www.okd.io/)  
+# Some of the competitors
+
+1. [Otomi](https://otomi.io/)
+2. [Pionative](https://www.pionative.com/) 
+3. [OKD](https://www.okd.io/)  
 
 # Possible scenarios 
 
@@ -29,44 +29,45 @@ I am a developer. I have a todo list application that has a frontend and backend
 
 ## Repository for application
 
-### Option 1 
-My code is in my GitHub and I like kuberise get the repo address and a token and do the rest 
-### Option 2 
-My code is in my laptop and I want Kuberise to create a repo and host my code and do the rest. 
+- ### Option 1 
+	My code is in my GitHub and I like kuberise get the repo address and a token and do the rest 
+- ### Option 2 
+	My code is in my laptop and I want Kuberise to create a repo and host my code and do the rest. 
 
-  
+
 ## Repository for the platform
-### Option 1 
-Kuberise install.sh script installs a Gitea in the cluster, pushes the Kuberise code, installs ArgoCD and app-of-apps and then deploys everything from Gitea. 
-### Option 2
-I have to fork the kuberise repo and install.sh script will deploy the platform from my GitHub repo. 
+
+- ### Option 1 
+	Kuberise install.sh script installs a Gitea in the cluster, pushes the Kuberise code, installs ArgoCD and app-of-apps and then deploys everything from Gitea. 
+- ### Option 2
+	I have to fork the kuberise repo and install.sh script will deploy the platform from my GitHub repo. 
 
 ## Registry 
 
-### Option 1
-I build my Dockerfile and push the image to docker hub myself. Then I have to change the revision in the helm chart manually. 
-### Option 2
-My code is in Gitea or Github and when I change the code and push it, kuberise builds it and pushes it to the docker hub or internal harbor and updates the helm chart automatically and deploys it. 
+- ### Option 1
+	I build my Dockerfile and push the image to docker hub myself. Then I have to change the revision in the helm chart manually. 
+- ### Option 2
+	My code is in Gitea or Github and when I change the code and push it, kuberise builds it and pushes it to the docker hub or internal harbor and updates the helm chart automatically and deploys it. 
 
-  
-  
-  
+
+
+
 
 # Roadmap
 
-# [released] Installation script 
+# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#4CAF50; color:white;">Done</span> Installation script 
 
 I can run an install.sh script to deploy kuberise to my kubernetes cluster. I have a kubernetes cluster and I have admin access to it using the kubectl command line. This install.sh script installs ArgoCD and uses app-of-apps patterns to install and configure all platform services and all application microservice for all environments. For each platform cluster, I have to run install.sh separately. It is idempotent, which means that if I run install.sh multiple times, it doesn’t hurt and doesn’t change the end result. 
 
-# [released] Cloudnative-pg for PostgreSQL database
+# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#4CAF50; color:white;">Done</span> Cloudnative-pg for PostgreSQL database
 
 I have postgresql in the cluster and I can use it for my application.
 
-# [released] Logs, Metrics, Dashboards 
+# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#4CAF50; color:white;">Done</span> Logs, Metrics, Dashboards 
 
 I have Grafana/Loki to see and search logs of all pods, and also create dashboards in Grafana to monitor metrics of all microservice or kubernetes resources. 
 
-# Application deployment helm chart
+# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#FFA500; color:white;">In Progress</span> Application deployment helm chart
 
 I fork kuberise to my GitHub and I deploy kuberise from my GitHub repo. 
 
@@ -106,7 +107,7 @@ The reason that SSL is a high priority is that there would be lots of unnecessar
 
 # Kuberise.io Website and Linkedin page
 
-Kuberise has a website kuberise.io and a linkedin page containing the introduction, user feedbacks and links to the repo, documentation, supporting companies, success stories, and blog section. 
+Kuberise has a website kuberise.io and a linkedin page containing the introduction, user feedbacks and links to the repo, documentation, supporting companies, success stories, and blog section.
 
 # Login for applications 
 
@@ -116,7 +117,7 @@ I can create a realm for my todo app and my users will redirect to Keycloak and 
 
 There is an internal realm where I can define internal users and then they can login to all platform services. There is single sign on and single logout for platform services and also the keycloak is connected to my LDAP and Active Directory. 
 
-  
+
 
 # Gitea for applications 
 
@@ -142,38 +143,36 @@ It is possible that I host my images in the harbor registry and don’t use any 
 
 The cluster is scanned frequently by Trivy and also monitored and protected by Falco for run time attacks. 
 
-  
+
 
 # More features
 
 - Code and Kubernetes scan by Trivy 
 
 - CICD pipeline templates 
-    
-- Action runner, Gitlab runner
-    
-- Secret management by vault 
-    
-- Cilium
-    
-- Kafka
-    
-- Alert Manager 
-    
-- EKS support 
-    
-- GKS support 
-    
-- Metallb 
-    
-- OVHcloud support 
-    
-- Backstage and automatic application onboard
-    
-- K8sGPT 
-    
-- Apache Spark and Jupyter Notebook 
-    
-- Limit maximum resources of each namespace (one helm chart that creates namespace and define quota and owner of them)
-    
 
+- Action runner, Gitlab runner
+
+- Secret management by vault 
+
+- Cilium
+
+- Kafka
+
+- Alert Manager 
+
+- EKS support 
+
+- GKS support 
+
+- Metallb 
+
+- OVHcloud support 
+
+- Backstage and automatic application onboard
+
+- K8sGPT 
+
+- Apache Spark and Jupyter Notebook 
+
+- Limit maximum resources of each namespace (one helm chart that creates namespace and define quota and owner of them)
