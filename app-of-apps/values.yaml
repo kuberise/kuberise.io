@@ -44,6 +44,7 @@ helmCharts:
   keycloak:
     enabled: false
     syncWave: 0
+    path: apps/keycloak
 
   sealed-secrets:
     enabled: false
@@ -126,3 +127,18 @@ helmCharts:
     namespace: cloudnative-pg
     targetRevision: 0.20.1
     chart: cloudnative-pg
+
+  todolist-frontend-dev:
+    enabled: false
+    path: apps/todolist-frontend
+    values: microservices/dev/todolist/frontend/values.yaml
+
+  todolist-frontend-tst:
+    enabled: false
+    path: apps/todolist-frontend
+    values: microservices/tst/todolist/frontend/values.yaml
+
+  todolist-frontend-prd:
+    enabled: false
+    path: apps/todolist-frontend
+    values: microservices/prd/todolist/frontend/values.yaml

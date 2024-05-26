@@ -20,3 +20,12 @@ helmCharts:
 
   cloudnative-pg:
     enabled: true
+
+  todolist-frontend-dev:
+    enabled: true
+
+  todolist-frontend-tst:
+    enabled: true
+
+  todolist-frontend-prd:
+    enabled: true
