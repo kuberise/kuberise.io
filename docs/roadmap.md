@@ -55,19 +55,19 @@ I am a developer. I have a todo list application that has a frontend and backend
 
 # Roadmap
 
-# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#4CAF50; color:white;">Done</span> Installation script 
+#  ![Done](https://img.shields.io/badge/status-done-brightgreen) Installation script 
 
 I can run an install.sh script to deploy kuberise to my kubernetes cluster. I have a kubernetes cluster and I have admin access to it using the kubectl command line. This install.sh script installs ArgoCD and uses app-of-apps patterns to install and configure all platform services and all application microservice for all environments. For each platform cluster, I have to run install.sh separately. It is idempotent, which means that if I run install.sh multiple times, it doesn’t hurt and doesn’t change the end result. 
 
-# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#4CAF50; color:white;">Done</span> Cloudnative-pg for PostgreSQL database
+# ![Done](https://img.shields.io/badge/status-done-brightgreen) Cloudnative-pg for PostgreSQL database
 
 I have postgresql in the cluster and I can use it for my application.
 
-# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#4CAF50; color:white;">Done</span> Logs, Metrics, Dashboards 
+# ![Done](https://img.shields.io/badge/status-done-brightgreen) Logs, Metrics, Dashboards 
 
 I have Grafana/Loki to see and search logs of all pods, and also create dashboards in Grafana to monitor metrics of all microservice or kubernetes resources. 
 
-# <span style="display:inline-block; padding:2px 8px; border-radius:4px; background-color:#FFA500; color:white;">In Progress</span> Application deployment helm chart
+# ![Progressing](https://img.shields.io/badge/status-progressing-yellow) Application deployment helm chart
 
 I fork kuberise to my GitHub and I deploy kuberise from my GitHub repo. 
 
