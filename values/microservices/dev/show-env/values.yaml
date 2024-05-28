@@ -9,5 +9,5 @@ ingress:
           pathType: ImplementationSpecific
 
 env:
-  EXAMPLE_ENV_VAR: HelloWorld
-  ANOTHER_ENV_VAR: AnotherValue
+  Environment: dev
+  name: env-show
