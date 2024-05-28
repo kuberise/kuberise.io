@@ -13,4 +13,4 @@ env:
   name: env-show
 
 image:
-  tag: c7d61f8146c3
+  tag: sha256:8313713c0f3f7d10781c8551f18e5e435014462d0c0d017e641fa3d76d7a3b4e
