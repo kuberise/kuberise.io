@@ -29,3 +29,6 @@ helmCharts:
 
   todolist-frontend-prd:
     enabled: true
+
+  show-env-dev:
+    enabled: true

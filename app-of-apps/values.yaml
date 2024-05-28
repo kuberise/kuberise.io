@@ -142,3 +142,8 @@ helmCharts:
     enabled: false
     path: apps/todolist-frontend
     values: microservices/prd/todolist/frontend/values.yaml
+
+  show-env-dev:
+    enabled: false
+    path: apps/show-env
+    values: microservices/dev/show-env/values.yaml
