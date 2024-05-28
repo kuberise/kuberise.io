@@ -11,3 +11,6 @@ ingress:
 env:
   Environment: dev
   name: env-show
+
+image:
+  tag: c7d61f8146c3
