@@ -7,3 +7,7 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+env:
+  EXAMPLE_ENV_VAR: HelloWorld
+  ANOTHER_ENV_VAR: AnotherValue
