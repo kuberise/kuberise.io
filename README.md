@@ -10,16 +10,19 @@ kuberise is a free opensource internal developer platform for Kubernetes environ
 
 ## Quick Installation (with pre-defined set of tools)
 
-Assume that you have a kubernetes cluster with context called 'minikube' and also you name your platform cluster minikube. Then you can run this command to install kuberise platform on your minikube cluster.
+This instruction is only for demo and it will deploy a set of default tools and you can not modify or change any value or configuration.
+Assume that you have a kubernetes cluster with kubernetes config context called 'minikube' and also you name your platform cluster minikube. Then you can run this command to install kuberise platform on your minikube cluster.
 
 ```sh
-export CONTEXT=<Your kubernetes context>
+export CONTEXT=$(kubectl config current-context)
 git clone https://github.com/kuberise/kuberise.git
 cd kuberise
-./script/install.sh $CONTEXT minikube https://github.com/kuberise/kuberise.git main
+./scripts/install.sh $CONTEXT minikube https://github.com/kuberise/kuberise.git main
 ```
 
-## Installation
+## Full Installation
+
+This is a full installation and after installation you can add or remove any tools or services and also you can change values and configuration.
 
 - Fork the repo in your github account (or clone the repository and push it in any other code repository). Now your new repository address is `RepoURL`
 - Clone the repository in your computer and enter to the kuberise folder. (`cd kuberise`)
