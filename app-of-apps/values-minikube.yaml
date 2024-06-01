@@ -32,3 +32,15 @@ helmCharts:
 
   show-env-dev:
     enabled: true
+
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: true
+
+  gitea:
+    enabled: true
+
+  harbor:
+    enabled: true

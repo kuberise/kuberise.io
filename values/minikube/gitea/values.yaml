@@ -3,6 +3,10 @@ persistence:
 service:
   type: LoadBalancer
 ingress:
+  tls:
+  - hosts:
+    - "*.127.0.0.1.nip.io"
+    secretName: wildcard-cert-tls
   enabled: true
   className: nginx
   hosts:

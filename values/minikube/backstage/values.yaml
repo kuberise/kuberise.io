@@ -9,10 +9,11 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+  - hosts:
+    - "*.127.0.0.1.nip.io"
+    secretName: wildcard-cert-tls
+
 service:
   type: ClusterIP
   port: 7007

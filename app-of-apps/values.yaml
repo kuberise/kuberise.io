@@ -17,10 +17,6 @@ applications:
     enabled: false
     path: values/minikube/hello
 
-  raw:
-    enabled: false
-    path: apps/raw/minikube
-
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
@@ -35,7 +31,7 @@ helmCharts:
 
   backstage:
     enabled: false
-    syncWave: 1
+    # syncWave: 1
 
   keycloak:
     enabled: false
@@ -84,10 +80,7 @@ helmCharts:
 
   cert-manager:
     enabled: false
-    repoURL: https://charts.jetstack.io
     namespace: cert-manager
-    targetRevision: v1.14.3
-    chart: cert-manager
 
   actions-runner-controller:
     enabled: false

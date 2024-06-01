@@ -2,6 +2,10 @@ replicaCount: 1
 
 ingress:
   enabled: true
+  tls:
+  - hosts:
+    - "*.dev.127.0.0.1.nip.io"
+    secretName: wildcard-cert-tls
   hosts:
     - host: frontend.dev.127.0.0.1.nip.io
       paths:
