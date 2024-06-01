@@ -17,19 +17,17 @@ grafana:
     hosts:
       - grafana.127.0.0.1.nip.io
     path: /
-  adminPassword: ""
-  admin:
-    existingSecret: grafana-admin
-    passwordKey: admin-password
-    userKey: admin-user
+  # adminPassword: ""
+  # admin:
+  #   existingSecret: grafana-admin
+  #   passwordKey: admin-password
+  #   userKey: admin-user
 
   grafana.ini:
     auth.anonymous:
       enabled: true
-      org_name: Main Org.
+      org_name: Kuberise
       org_role: Admin
-    security:
-      disable_initial_admin_creation: true
     auth.basic:
       enabled: false
 
