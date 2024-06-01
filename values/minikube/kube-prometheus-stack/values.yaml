@@ -28,6 +28,8 @@ grafana:
       enabled: true
       org_name: Kuberise
       org_role: Admin
+    security:
+      disable_initial_admin_creation: true
     auth.basic:
       enabled: false
 
