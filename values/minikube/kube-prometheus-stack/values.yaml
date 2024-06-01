@@ -8,11 +8,6 @@ grafana:
         access: proxy
         url: http://loki-loki-distributed-gateway
         isDefault: false
-      - name: Prometheus
-        type: prometheus
-        access: proxy
-        url: http://kube-prometheus-stack-prometheus:9090
-        isDefault: true
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -28,15 +23,6 @@ grafana:
     passwordKey: admin-password
     userKey: admin-user
 
-  grafana.ini:
-    auth.anonymous:
-      enabled: true
-      org_name: Main Org.
-      org_role: Admin
-    security:
-      disable_initial_admin_creation: true
-    auth.basic:
-      enabled: false
 
 prometheus:
   ingress:
@@ -47,3 +33,8 @@ prometheus:
     paths:
       - /
     pathType: Prefix
+
+grafana:
+  grafana.ini:
+    security:
+      disable_initial_admin_creation: true
