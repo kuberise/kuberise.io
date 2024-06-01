@@ -23,7 +23,6 @@ grafana:
     passwordKey: admin-password
     userKey: admin-user
 
-
 prometheus:
   ingress:
     enabled: true

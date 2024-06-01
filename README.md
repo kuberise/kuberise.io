@@ -58,6 +58,7 @@ After deploying to a minikube local cluster, you can run `sudo minikube tunnel` 
 - [http://grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
 - [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
 
+In default minikube configuration, all services admin username and passwords are admin.  
 For minikube tunnel to work, the minikube config information should be in ~/.kube/config file which is the default kubeconfig location. If you can not use minikube tunnel, you can use prot-forward to be able to access the dashboard of different services:
 
 ```sh

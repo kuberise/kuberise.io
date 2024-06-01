@@ -17,11 +17,6 @@ applications:
     enabled: false
     path: values/minikube/hello
 
-  helm-guestbook:
-    enabled: false
-    name: helm-guestbook
-    namespace: guestbook
-
   raw:
     enabled: false
     path: apps/raw/minikube
@@ -33,6 +28,7 @@ applications:
 
 
 helmCharts:
+
   teams-namespaces:
     enabled: false
     namespace: default
@@ -119,7 +115,6 @@ helmCharts:
     namespace: gitea
     targetRevision: 10.1.1
     chart: gitea
-
 
   cloudnative-pg:
     enabled: false
