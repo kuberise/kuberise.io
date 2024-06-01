@@ -8,6 +8,6 @@ postgresql:
   enabled: false
   usePasswordFile: false
   external:
-    host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+    host: cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432
     user: app
     password: admin
