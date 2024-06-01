@@ -35,3 +35,6 @@ helmCharts:
 
   cert-manager:
     enabled: true
+
+  backstage:
+    enabled: true

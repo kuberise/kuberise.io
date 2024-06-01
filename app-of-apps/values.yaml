@@ -31,7 +31,7 @@ helmCharts:
 
   backstage:
     enabled: false
-    syncWave: 1
+    # syncWave: 1
 
   keycloak:
     enabled: false
