@@ -17,9 +17,9 @@ applications:
     enabled: false
     path: values/minikube/hello
 
-  raw:
+  cert-manager-raw:
     enabled: false
-    path: apps/raw/minikube
+    path: apps/raw/minikube/cert-manager
 
   cnpg-database:
     enabled: false
@@ -84,6 +84,10 @@ helmCharts:
 
   cert-manager:
     enabled: false
+    repoURL: https://charts.jetstack.io
+    namespace: cert-manager
+    targetRevision: v1.14.5
+    chart: cert-manager
 
   actions-runner-controller:
     enabled: false
