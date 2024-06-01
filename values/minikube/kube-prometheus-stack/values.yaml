@@ -23,6 +23,15 @@ grafana:
     passwordKey: admin-password
     userKey: admin-user
 
+  grafana.ini:
+    auth.anonymous:
+      enabled: true
+      org_name: Main Org.
+      org_role: Admin
+    security:
+      disable_initial_admin_creation: true
+    auth.basic:
+      enabled: false
 
 prometheus:
   ingress:

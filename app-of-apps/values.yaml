@@ -120,7 +120,6 @@ helmCharts:
     targetRevision: 10.1.1
     chart: gitea
 
-
   cloudnative-pg:
     enabled: false
     repoURL: https://cloudnative-pg.github.io/charts
