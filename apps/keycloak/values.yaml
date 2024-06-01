@@ -10,4 +10,3 @@ keycloak:
     apiVersion: ""
     path: "{{ .Values.httpRelativePath }}"
     servicePort: http
-    tls: true
