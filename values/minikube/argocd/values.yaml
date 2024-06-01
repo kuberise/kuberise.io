@@ -34,3 +34,7 @@ server:
       - /
     pathType: Prefix
     https: false
+    tls:
+    - hosts:
+      - "*.127.0.0.1.nip.io"
+      secretName: wildcard-cert-tls
