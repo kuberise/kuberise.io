@@ -1,5 +1,5 @@
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
   name: selfsigned-issuer
 spec:
@@ -14,13 +14,13 @@ spec:
   isCA: true
   issuerRef:
     name: selfsigned-issuer
-    kind: ClusterIssuer
+    kind: Issuer
   secretName: ca-key-pair
   duration: 24000h # 1000 days
   renewBefore: 360h # 15 days
 ---
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
   name: ca-issuer
 spec:
@@ -44,5 +44,5 @@ spec:
   - "*.acc.127.0.0.1.nip.io"
   issuerRef:
     name: ca-issuer
-    kind: ClusterIssuer
+    kind: Issuer
     group: cert-manager.io
