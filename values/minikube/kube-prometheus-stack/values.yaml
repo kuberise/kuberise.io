@@ -23,10 +23,6 @@ grafana:
     passwordKey: admin-password
     userKey: admin-user
 
-  grafana.ini:
-    users:
-      password_reset_disable: true
-
 prometheus:
   ingress:
     enabled: true
