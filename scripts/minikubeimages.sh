@@ -15,6 +15,7 @@ save_images() {
   echo "Saving Docker images from Minikube..."
   minikube -p $profile ssh -- "docker save -o images.tar \$(docker images -q)"
   minikube -p $profile cp $profile:/home/docker/images.tar images.tar
+  minikube -p $profile ssh -- "rm images.tar"
 }
 
 # Function to load images into a new Minikube cluster
@@ -23,6 +24,7 @@ load_images() {
   echo "Loading Docker images into new Minikube..."
   minikube -p $profile cp images.tar $profile:/home/docker/images.tar
   minikube -p $profile ssh -- "docker load -i images.tar"
+  minikube -p $profile ssh -- "rm images.tar"
 }
 
 # Main script execution
