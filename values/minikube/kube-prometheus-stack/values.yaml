@@ -8,6 +8,11 @@ grafana:
         access: proxy
         url: http://loki-loki-distributed-gateway
         isDefault: false
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://kube-prometheus-stack-prometheus:9090
+        isDefault: true
   ingress:
     enabled: true
     ingressClassName: nginx
