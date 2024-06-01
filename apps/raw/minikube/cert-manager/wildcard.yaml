@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-cert
+spec:
+  secretName: wildcard-cert-tls
+  duration: 24000h # 1000 days
+  renewBefore: 360h # 15 days
+  commonName: "*.127.0.0.1.nip.io"
+  dnsNames:
+  - "*.127.0.0.1.nip.io"
+  - "*.*.127.0.0.1.nip.io"
+  issuerRef:
+    name: ca-issuer
