@@ -38,3 +38,9 @@ helmCharts:
 
   backstage:
     enabled: true
+
+  gitea:
+    enabled: true
+
+  harbor:
+    enabled: true

@@ -1,7 +1,5 @@
 expose:
   type: ingress
-  tls:
-    enabled: false
   ingress:
     tls:
     - hosts:

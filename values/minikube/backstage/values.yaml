@@ -13,9 +13,7 @@ ingress:
   - hosts:
     - "*.127.0.0.1.nip.io"
     secretName: wildcard-cert-tls
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+
 service:
   type: ClusterIP
   port: 7007
