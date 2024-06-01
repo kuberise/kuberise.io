@@ -84,10 +84,6 @@ helmCharts:
 
   cert-manager:
     enabled: false
-    repoURL: https://charts.jetstack.io
-    namespace: cert-manager
-    targetRevision: v1.14.3
-    chart: cert-manager
 
   actions-runner-controller:
     enabled: false
