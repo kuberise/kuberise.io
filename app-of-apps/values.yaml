@@ -75,7 +75,7 @@ helmCharts:
     enabled: false
     repoURL: https://helm.goharbor.io
     namespace: harbor
-    targetRevision: 1.14.0
+    targetRevision: 1.14.2
     chart: harbor
 
   cert-manager:
@@ -100,7 +100,7 @@ helmCharts:
     enabled: false
     repoURL: https://dl.gitea.io/charts
     namespace: gitea
-    targetRevision: 10.1.1
+    targetRevision: 10.1.4
     chart: gitea
 
   cloudnative-pg:

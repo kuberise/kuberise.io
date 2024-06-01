@@ -40,7 +40,7 @@ helmCharts:
     enabled: true
 
   gitea:
-    enabled: true
+    enabled: false
 
   harbor:
-    enabled: true
+    enabled: false
