@@ -20,6 +20,7 @@ applications:
   cert-manager-raw:
     enabled: false
     path: apps/raw/minikube/cert-manager
+    namespace: cert-manager
 
   cnpg-database:
     enabled: false
