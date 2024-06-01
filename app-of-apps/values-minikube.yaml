@@ -2,10 +2,6 @@ applications:
   cnpg-database:
     enabled: true
 
-  cert-manager-raw:
-    enabled: true
-
-
 helmCharts:
   keycloak:
     enabled: true
