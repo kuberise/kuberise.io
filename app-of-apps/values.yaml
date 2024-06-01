@@ -80,6 +80,7 @@ helmCharts:
 
   cert-manager:
     enabled: false
+    namespace: cert-manager
 
   actions-runner-controller:
     enabled: false
