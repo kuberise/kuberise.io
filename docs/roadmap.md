@@ -117,8 +117,6 @@ I can create a realm for my todo app and my users will redirect to Keycloak and 
 
 There is an internal realm where I can define internal users and then they can login to all platform services. There is single sign on and single logout for platform services and also the keycloak is connected to my LDAP and Active Directory. 
 
-
-
 # Gitea for applications 
 
 There is Gitea with CICD inside kuberise available and I can use that to host my micro services and building, scanning and pushing and helm version updates are done automatically. All pull requests trigger scanning the code by Trivy for vulnerabilities. 
@@ -142,7 +140,6 @@ It is possible that I host my images in the harbor registry and don’t use any 
 # Security 
 
 The cluster is scanned frequently by Trivy and also monitored and protected by Falco for run time attacks. 
-
 
 
 # More features

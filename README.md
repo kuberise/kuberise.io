@@ -1,11 +1,11 @@
 ![kuberise logo](docs/images/kuberise%20logo1%20-%20horizontal.png)
-# kuberise
+# Kuberise
 
-kuberise is a free opensource internal developer platform for Kubernetes environment.
+Kuberise is a free opensource internal developer platform for Kubernetes environment.
 
 ## Prerequisites
 
-- kubectl,helm,htpasswd,git command line tools
+- kubectl, helm, htpasswd, git command line tools
 - git repository
 
 ## Quick Installation (with pre-defined set of tools)
@@ -22,15 +22,15 @@ cd kuberise
 
 ## Full Installation
 
-This is a full installation and after installation you can add or remove any tools or services and also you can change values and configuration.
+This is a full installation and after installation you can add or remove any tools or services and also you can change values and configurations.
 
-- Fork the repo in your github account (or clone the repository and push it in any other code repository). Now your new repository address is `RepoURL`
-- Clone the repository in your computer and enter to the kuberise folder. (`cd kuberise`)
+- Fork this repository into your Github account (or clone this repository and push it in any other code repository). Now your new repository address is `RepoURL`
+- Clone the new repository in your computer and enter to the kuberise folder. (`cd kuberise`)
 - Choose a name for your platform like `PlatformName`
 - Create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-minikube.yaml file `cp ./app-of-apps/values-minikube.yaml ./app-of-apps/values-PlatformName.yaml`)
 - In values folder create a new folder (or copy minikube sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp -r ./values/minikube ./values/PlatformName`)
-- Commit and push changes to your fork or your repository.
-- Choose admin password and also postgres super admin password
+- Commit and push changes to your new repository.
+- Choose admin password and also postgresql super admin password
 
 ```sh
 export ADMIN_PASSWORD=<Enter a password for admin>
@@ -41,13 +41,13 @@ export ADMIN_PASSWORD=eiKJFhjd34fks
 export PG_SUPERUSER_PASSWORD=kFHEkjf323kfsW
 ```
 
-- Install kuberise (if you are using fork or your repository is public, you don't need to add Token at the end of command)
+- Install kuberise (if you are using fork or your repository is public, you don't need to add a token at the end of this command)
 
 ```sh
 ./scripts/install.sh <KubernetesContext> <PlatformName> <RepoURL> <BranchName> <RepoToken>
 
 # example:
-./scripts/install.sh minikube minikube https://github.com/kuberise/kuberise.git main
+./scripts/install.sh minikube minikube https://github.com/yourUserName/kuberise.git main
 ```
 
 ## Minikube and local installation

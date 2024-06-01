@@ -14,4 +14,4 @@ env:
   PROTOCOL: HTTP
 
 image:
-  tag: f497e8cc2ef53cd3d7e3bba1caa41766cee1ed33
+  tag: latest
