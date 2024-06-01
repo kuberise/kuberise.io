@@ -32,6 +32,3 @@ helmCharts:
 
   show-env-dev:
     enabled: true
-
-  guestbook-dev:
-    enabled: true

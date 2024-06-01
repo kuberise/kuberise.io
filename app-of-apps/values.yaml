@@ -142,10 +142,3 @@ helmCharts:
     enabled: false
     path: apps/show-env
     values: microservices/dev/show-env/values.yaml
-
-  guestbook-dev:
-    enabled: false
-    repoURL: https://jakuboskera.github.io/charts
-    targetRevision: 0.1.5
-    values: microservices/dev/guestbook/values.yaml
-    chart: guestbook
