@@ -14,5 +14,4 @@ expose:
       ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      cert-manager.io/cluster-issuer: ca-clusterissuer
 externalURL: http://core.harbor.172.19.0.5.nip.io
