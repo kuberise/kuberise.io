@@ -13,10 +13,9 @@ keycloak:
     passwordSecretKey: password
 
   tls:
-    enabled: true
-    existingSecret: wildcard-cert-tls
+    enabled: false
 
-  production: true
+  production: false
 
   # ingress:
   #   enabled: true
