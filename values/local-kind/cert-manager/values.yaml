@@ -8,7 +8,6 @@ namespaces:
   - todolist-frontend-tst
   - todolist-frontend-prd
   - show-env-dev
-  - backstage
 
 certificate:
   commonName: "*.172.19.0.5.nip.io"
