@@ -33,7 +33,7 @@ server:
     paths:
       - /
     pathType: Prefix
-    https: false
+    https: true
     tls:
     - hosts:
       - "*.127.0.0.1.nip.io"
