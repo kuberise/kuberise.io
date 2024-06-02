@@ -1,4 +1,5 @@
 {{- if .Values.selfSignedCertificate.enabled }}
+{{- if .Values.selfSignedCertificate.createCaCertificate }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -19,6 +20,7 @@ spec:
   secretName: ca-key-pair
   duration: 24000h # 1000 days
   renewBefore: 360h # 15 days
+{{- end }}
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
