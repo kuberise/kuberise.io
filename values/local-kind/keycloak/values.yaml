@@ -20,8 +20,12 @@ keycloak:
   ingress:
     enabled: true
     ingressClassName: "nginx"
-    tls: false
+    tls: true
     hostname: keycloak.172.19.0.5.nip.io
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       cert-manager.io/cluster-issuer: ca-clusterissuer
+    extraTls:
+    - hosts:
+      - "keycloak.172.19.0.5.nip.io"
+      secretName: wildcard-cert-tls
