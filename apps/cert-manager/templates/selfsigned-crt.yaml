@@ -45,6 +45,10 @@ spec:
   {{- range $.Values.certificate.dnsNames }}
   - "{{ . }}"
   {{- end }}
+  issuerRef:
+    name: ca-clusterissuer
+    kind: ClusterIssuer
+    group: cert-manager.io
 ---
 {{- end }}
 {{- end }}
