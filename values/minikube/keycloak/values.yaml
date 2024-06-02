@@ -12,10 +12,17 @@ keycloak:
     existingSecret: pg-secret
     passwordSecretKey: password
 
+  tls:
+    enabled: false
+
+  production: false
+
   ingress:
-    tls: true
+    enabled: true
+    ingressClassName: "nginx"
+    path: /
+    servicePort: http
+    tls: false
     hostname: keycloak.127.0.0.1.nip.io
-    extraTls:
-    - hosts:
-      - "*.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
