@@ -16,6 +16,8 @@ keycloak:
     enabled: true
     existingSecret: wildcard-cert-tls
 
+  production: true
+
   # ingress:
   #   enabled: true
   #   ingressClassName: "nginx"
