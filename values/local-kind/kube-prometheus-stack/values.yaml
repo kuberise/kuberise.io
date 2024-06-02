@@ -10,16 +10,19 @@ grafana:
         isDefault: false
   ingress:
     enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: ca-clusterissuer
+    ingressClassName: nginx
     tls:
     - hosts:
       - "grafana.172.19.0.5.nip.io"
       secretName: wildcard-cert-tls
-    annotations:
-      cert-manager.io/cluster-issuer: ca-clusterissuer
-    ingressClassName: nginx
     hosts:
       - grafana.172.19.0.5.nip.io
-    path: /
+    path:
+      - /
+    pathType: Prefix
+
   adminPassword: ""
   admin:
     existingSecret: grafana-admin
