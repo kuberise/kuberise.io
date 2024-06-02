@@ -41,6 +41,16 @@ then
   exit 2
 fi
 
+# Prompt for confirmation
+read -p "This script will remove the $PLATFORM_NAME platform from the $CONTEXT Kubernetes context. It will also delete multiple namespaces. Are you sure you want to continue? (yes/no): " answer
+
+# Check if the answer is "yes"
+if [ "$answer" != "yes" ]; then
+  echo "Aborting uninstallation."
+  exit 0
+fi
+
+# Continue with uninstallation
 # namespace
 NAMESPACE=argocd
 kubectl delete --context $CONTEXT -n $NAMESPACE application app-of-apps-$PLATFORM_NAME
@@ -48,7 +58,7 @@ kubectl delete --context $CONTEXT -n $NAMESPACE appproject $PLATFORM_NAME
 
 helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE
 
-namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring")
+namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring" "harbor" "gitea" "todolist-frontend-dev" "todolist-frontend-prd" "todolist-frontend-tst" "show-env-dev" "cert-manager")
 for namespace in "${namespaces[@]}"
 do
   echo "Deleting namespace: $namespace"
