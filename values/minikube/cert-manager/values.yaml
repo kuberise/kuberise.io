@@ -1,0 +1,24 @@
+selfSignedCertificate:
+  enabled: true
+
+namespaces:
+  - argocd
+  - monitoring
+  - keycloak
+  - todolist-frontend-dev
+  - todolist-frontend-tst
+  - todolist-frontend-prd
+  - show-env-dev
+  - backstage
+  - ingress-nginx
+
+certificate:
+  commonName: "*.127.0.0.1.nip.io"
+  dnsNames:
+    - "127.0.0.1.nip.io"
+    - "*.127.0.0.1.nip.io"
+    - "*.dev.127.0.0.1.nip.io"
+    - "*.tst.127.0.0.1.nip.io"
+    - "*.acc.127.0.0.1.nip.io"
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days

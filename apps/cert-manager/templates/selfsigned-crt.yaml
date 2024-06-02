@@ -1,0 +1,48 @@
+{{- if .Values.selfSignedCertificate.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ca-certificate
+spec:
+  commonName: ca.example.com
+  isCA: true
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+  secretName: ca-key-pair
+  duration: 24000h # 1000 days
+  renewBefore: 360h # 15 days
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-clusterissuer
+spec:
+  ca:
+    secretName: ca-key-pair
+---
+{{- range .Values.namespaces }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-cert
+  namespace: {{ . }}
+spec:
+  secretName: wildcard-cert-tls
+  duration: {{ $.Values.certificate.duration }}
+  renewBefore: {{ $.Values.certificate.renewBefore }}
+  commonName: {{ $.Values.certificate.commonName }}
+  dnsNames:
+  {{- range $.Values.certificate.dnsNames }}
+  - {{ . }}
+  {{- end }}
+---
+{{- end }}
+{{- end }}
