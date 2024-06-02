@@ -10,7 +10,6 @@ namespaces:
   - todolist-frontend-prd
   - show-env-dev
   - backstage
-  - ingress-nginx
 
 certificate:
   commonName: "*.127.0.0.1.nip.io"
