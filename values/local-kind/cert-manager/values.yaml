@@ -1,13 +1,13 @@
 selfSignedCertificate:
   enabled: true
 
-namespaces:
-  - argocd
-  - monitoring
-  - todolist-frontend-dev
-  - todolist-frontend-tst
-  - todolist-frontend-prd
-  - show-env-dev
+# namespaces:
+#   - argocd
+#   - monitoring
+#   - todolist-frontend-dev
+#   - todolist-frontend-tst
+#   - todolist-frontend-prd
+#   - show-env-dev
 
 certificate:
   commonName: "*.172.19.0.5.nip.io"
