@@ -4,10 +4,10 @@ ingress:
   enabled: true
   tls:
   - hosts:
-    - "*.dev.127.0.0.1.nip.io"
+    - "*.dev.172.19.0.5.nip.io"
     secretName: wildcard-cert-tls
   hosts:
-    - host: frontend.dev.127.0.0.1.nip.io
+    - host: frontend.dev.172.19.0.5.nip.io
       paths:
         - path: /
           pathType: ImplementationSpecific

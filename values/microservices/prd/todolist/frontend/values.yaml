@@ -3,11 +3,11 @@ replicaCount: 3
 ingress:
   tls:
   - hosts:
-    - "*.127.0.0.1.nip.io"
+    - "*.172.19.0.5.nip.io"
     secretName: wildcard-cert-tls
   enabled: true
   hosts:
-    - host: frontend.127.0.0.1.nip.io
+    - host: frontend.172.19.0.5.nip.io
       paths:
         - path: /
           pathType: ImplementationSpecific
