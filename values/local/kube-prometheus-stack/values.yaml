@@ -12,12 +12,9 @@ grafana:
     enabled: true
     tls:
     - hosts:
-      - "*.127.0.0.1.nip.io"
+      - "grafana.127.0.0.1.nip.io"
       secretName: wildcard-cert-tls
     ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     hosts:
       - grafana.127.0.0.1.nip.io
     path: /
@@ -33,7 +30,7 @@ prometheus:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.127.0.0.1.nip.io"
+      - "prometheus.127.0.0.1.nip.io"
       secretName: wildcard-cert-tls
     hosts:
       - prometheus.127.0.0.1.nip.io

@@ -15,12 +15,12 @@ applications:
   # A Kustomize application
   hello:
     enabled: false
-    path: values/minikube/hello
+    path: values/local/hello
 
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: apps/cnpg-database/minikube
+    path: apps/cnpg-database/local
 
 
 helmCharts:

@@ -53,7 +53,7 @@ selfSignedCertificate:
 If you want to provide a CA from outside the cluster, you first need to generate your CA certificate and key pair, then create a Kubernetes Secret in your cluster in the cert-manager namespace with the generated CA certificate and key.
 
 ```bash
-openssl req -x509 -new -nodes -keyout ca.key -out ca.crt -subj "/CN=ca.example.com"
+openssl req -x509 -new -nodes -keyout ca.key -out ca.crt -subj "/CN=ca.kuberise.local"
 kubectl create secret tls ca-key-pair --cert=ca.crt --key=ca.key
 ```
 

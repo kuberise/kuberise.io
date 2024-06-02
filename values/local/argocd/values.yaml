@@ -28,6 +28,7 @@ server:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: "nginx"
     hostname: argocd.127.0.0.1.nip.io
     paths:

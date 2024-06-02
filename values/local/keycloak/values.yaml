@@ -20,8 +20,6 @@ keycloak:
   ingress:
     enabled: true
     ingressClassName: "nginx"
-    path: /
-    servicePort: http
     tls: false
     hostname: keycloak.127.0.0.1.nip.io
     annotations:
