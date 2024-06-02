@@ -8,38 +8,38 @@ grafana:
         access: proxy
         url: http://loki-loki-distributed-gateway
         isDefault: false
-  ingress:
-    enabled: true
-    tls:
-    - hosts:
-      - "grafana.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls
-    ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    hosts:
-      - grafana.127.0.0.1.nip.io
-    path: /
+  # ingress:
+  #   enabled: true
+  #   tls:
+  #   - hosts:
+  #     - "grafana.127.0.0.1.nip.io"
+  #     secretName: wildcard-cert-tls
+  #   ingressClassName: nginx
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/rewrite-target: /
+  #     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  #     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  #   hosts:
+  #     - grafana.127.0.0.1.nip.io
+  #   path: /
   adminPassword: ""
   admin:
     existingSecret: grafana-admin
     passwordKey: admin-password
     userKey: admin-user
 
-prometheus:
-  ingress:
-    enabled: true
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    ingressClassName: nginx
-    tls:
-    - hosts:
-      - "prometheus.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls
-    hosts:
-      - prometheus.127.0.0.1.nip.io
-    paths:
-      - /
-    pathType: Prefix
+# prometheus:
+#   ingress:
+#     enabled: true
+#     annotations:
+#       nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#     ingressClassName: nginx
+#     tls:
+#     - hosts:
+#       - "prometheus.127.0.0.1.nip.io"
+#       secretName: wildcard-cert-tls
+#     hosts:
+#       - prometheus.127.0.0.1.nip.io
+#     paths:
+#       - /
+#     pathType: Prefix

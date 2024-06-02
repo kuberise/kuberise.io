@@ -7,7 +7,7 @@ The Kubernetes API server needs to trust the Certificate Authority (CA) that sig
 First, you need to get the CA certificate from the Secret where it's stored. You can do this by running the following command:
 
 ```bash
-kubectl get secret ca-key-pair -o jsonpath="{.data.tls\.crt}" | base64 --decode > ca.crt
+kubectl get secret ca-key-pair -o jsonpath="{.data.tls\.crt}" -n cert-manager | base64 --decode > ca.crt
 ```
 
 This command will output the CA certificate and save it to a file named `ca.crt`.
