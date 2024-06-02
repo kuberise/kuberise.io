@@ -18,6 +18,7 @@ grafana:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hosts:
       - grafana.127.0.0.1.nip.io
     path: /
@@ -30,6 +31,8 @@ grafana:
 prometheus:
   ingress:
     enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: nginx
     tls:
     - hosts:
