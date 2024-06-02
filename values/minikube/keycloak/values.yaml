@@ -34,19 +34,19 @@ keycloak:
   #   #   - "*.127.0.0.1.nip.io"
   #   #   secretName: wildcard-cert-tls
 
-  adminIngress:
-    enabled: true
-    ingressClassName: "nginx"
-    path: /
-    servicePort: https
-    tls: true
-    hostname: keycloak-admin.127.0.0.1.nip.io
-    secrets:
-    - name: wildcard-cert-tls
-      secretName: wildcard-cert-tls
-      hosts:
-      - "keycloak-admin.127.0.0.1.nip.io"
-    # extraTls:
-    # - hosts:
-    #   - "*.127.0.0.1.nip.io"
-    #   secretName: wildcard-cert-tls
+  # adminIngress:
+  #   enabled: true
+  #   ingressClassName: "nginx"
+  #   path: /
+  #   servicePort: https
+  #   tls: true
+  #   hostname: keycloak-admin.127.0.0.1.nip.io
+  #   secrets:
+  #   - name: wildcard-cert-tls
+  #     secretName: wildcard-cert-tls
+  #     hosts:
+  #     - "keycloak-admin.127.0.0.1.nip.io"
+  #   # extraTls:
+  #   # - hosts:
+  #   #   - "*.127.0.0.1.nip.io"
+  #   #   secretName: wildcard-cert-tls
