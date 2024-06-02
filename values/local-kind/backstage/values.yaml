@@ -1,0 +1,29 @@
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: backstage.172.19.0.5.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+  - hosts:
+    - "*.172.19.0.5.nip.io"
+    secretName: wildcard-cert-tls
+
+service:
+  type: ClusterIP
+  port: 7007
+
+backstage:
+  appConfig:
+    db:
+      connection:
+        host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+        port: 5432
+        user: app
+        existingSecret: pg-secret
+        existingSecretPasswordKey: password
