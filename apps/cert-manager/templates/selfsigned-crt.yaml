@@ -40,10 +40,10 @@ spec:
   secretName: wildcard-cert-tls
   duration: {{ $.Values.certificate.duration }}
   renewBefore: {{ $.Values.certificate.renewBefore }}
-  commonName: {{ $.Values.certificate.commonName }}
+  commonName: "{{ $.Values.certificate.commonName }}"
   dnsNames:
   {{- range $.Values.certificate.dnsNames }}
-  - {{ . }}
+  - "{{ . }}"
   {{- end }}
 ---
 {{- end }}
