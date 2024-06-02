@@ -41,8 +41,17 @@ then
   exit 2
 fi
 
+namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring" "harbor" "gitea" "todolist-frontend-dev" "todolist-frontend-prd" "todolist-frontend-tst" "show-env-dev" "cert-manager")
+
+# Convert the array to a string with each namespace on a new line
+namespaces_str=$(IFS=$'\n'; echo "${namespaces[*]}")
+
 # Prompt for confirmation
-read -p "This script will remove the $PLATFORM_NAME platform from the $CONTEXT Kubernetes context. It will also delete multiple namespaces. Are you sure you want to continue? (yes/no): " answer
+read -p "This script will remove the $PLATFORM_NAME platform from the $CONTEXT Kubernetes context. It will also delete the following namespaces:
+
+$namespaces_str
+
+Are you sure you want to continue? (yes/no): " answer
 
 # Check if the answer is "yes"
 if [ "$answer" != "yes" ]; then
@@ -58,7 +67,6 @@ kubectl delete --context $CONTEXT -n $NAMESPACE appproject $PLATFORM_NAME
 
 helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE
 
-namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring" "harbor" "gitea" "todolist-frontend-dev" "todolist-frontend-prd" "todolist-frontend-tst" "show-env-dev" "cert-manager")
 for namespace in "${namespaces[@]}"
 do
   echo "Deleting namespace: $namespace"

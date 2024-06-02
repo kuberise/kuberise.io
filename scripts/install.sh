@@ -154,6 +154,13 @@ if [ -z "$ADMIN_PASSWORD" ]; then
   exit 1
 fi
 
+# Namespace Definitions
+NAMESPACE_ARGOCD="argocd"
+NAMESPACE_CNPG="cloudnative-pg"
+NAMESPACE_KEYCLOAK="keycloak"
+NAMESPACE_BACKSTAGE="backstage"
+NAMESPACE_MONITORING="monitoring"
+
 # Warning Message
 echo "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. The following namespaces and applications will be installed:"
 echo "- Namespace: $NAMESPACE_ARGOCD"
@@ -164,6 +171,7 @@ echo "- Namespace: $NAMESPACE_MONITORING"
 echo "- Application: argocd-server"
 echo "- Application: app-of-apps-$PLATFORM_NAME"
 echo "Please confirm that you want to proceed by typing 'yes':"
+
 read confirmation
 if [ "$confirmation" != "yes" ]; then
   echo "Installation aborted."
@@ -172,12 +180,6 @@ fi
 
 check_required_tools
 
-# Namespace Definitions
-NAMESPACE_ARGOCD="argocd"
-NAMESPACE_CNPG="cloudnative-pg"
-NAMESPACE_KEYCLOAK="keycloak"
-NAMESPACE_BACKSTAGE="backstage"
-NAMESPACE_MONITORING="monitoring"
 
 # Create Namespaces
 create_namespace "$CONTEXT" "$NAMESPACE_ARGOCD"
