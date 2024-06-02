@@ -16,30 +16,29 @@ keycloak:
     enabled: true
     existingSecret: wildcard-cert-tls
 
-  ingress:
-    enabled: true
-    ingressClassName: "nginx"
-    path: "{{ .Values.httpRelativePath }}"
-    servicePort: http
-    # ingress.annotations: {}
-    tls: true
-    hostname: keycloak.127.0.0.1.nip.io
-    secrets:
-    - name: wildcard-cert-tls
-      secretName: wildcard-cert-tls
-      hosts:
-      - "keycloak.127.0.0.1.nip.io"
-    # extraTls:
-    # - hosts:
-    #   - "*.127.0.0.1.nip.io"
-    #   secretName: wildcard-cert-tls
+  # ingress:
+  #   enabled: true
+  #   ingressClassName: "nginx"
+  #   path: "{{ .Values.httpRelativePath }}"
+  #   servicePort: http
+  #   # ingress.annotations: {}
+  #   tls: true
+  #   hostname: keycloak.127.0.0.1.nip.io
+  #   secrets:
+  #   - name: wildcard-cert-tls
+  #     secretName: wildcard-cert-tls
+  #     hosts:
+  #     - "keycloak.127.0.0.1.nip.io"
+  #   # extraTls:
+  #   # - hosts:
+  #   #   - "*.127.0.0.1.nip.io"
+  #   #   secretName: wildcard-cert-tls
 
   adminIngress:
     enabled: true
     ingressClassName: "nginx"
-    path: "{{ .Values.httpRelativePath }}"
-    servicePort: http
-    # ingress.annotations: {}
+    path: /
+    servicePort: https
     tls: true
     hostname: keycloak-admin.127.0.0.1.nip.io
     secrets:
