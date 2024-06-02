@@ -1,3 +1,13 @@
 cert-manager:
   installCRDs: true
   namespace: cert-manager
+
+selfSignedCertificate:
+  enabled: false
+  createCaCertificate: true
+
+# list of namespaces to create the certificate
+namespaces: []
+
+# certificate configuration
+certificate: {}
