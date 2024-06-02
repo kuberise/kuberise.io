@@ -11,13 +11,13 @@ Kuberise is a free opensource internal developer platform for Kubernetes environ
 ## Quick Installation (with pre-defined set of tools)
 
 This instruction is only for demo and it will deploy a set of default tools and you can not modify or change any value or configuration.
-Assume that you have a kubernetes cluster with kubernetes config context called 'minikube' and also you name your platform cluster minikube. Then you can run this command to install kuberise platform on your minikube cluster.
+Assume that you have a kubernetes cluster with kubernetes config context called 'minikube' and you name your platform cluster "local". Then you can run this command to install kuberise platform on your minikube cluster.
 
 ```sh
 export CONTEXT=$(kubectl config current-context)
 git clone https://github.com/kuberise/kuberise.git
 cd kuberise
-./scripts/install.sh $CONTEXT minikube https://github.com/kuberise/kuberise.git main
+./scripts/install.sh $CONTEXT local https://github.com/kuberise/kuberise.git main
 ```
 
 ## Full Installation
@@ -27,8 +27,8 @@ This is a full installation and after installation you can add or remove any too
 - Fork this repository into your Github account (or clone this repository and push it in any other code repository). Now your new repository address is `RepoURL`
 - Clone the new repository in your computer and enter to the kuberise folder. (`cd kuberise`)
 - Choose a name for your platform like `PlatformName`
-- Create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-minikube.yaml file `cp ./app-of-apps/values-minikube.yaml ./app-of-apps/values-PlatformName.yaml`)
-- In values folder create a new folder (or copy minikube sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp -r ./values/minikube ./values/PlatformName`)
+- Create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-local.yaml file `cp ./app-of-apps/values-local.yaml ./app-of-apps/values-PlatformName.yaml`)
+- In values folder create a new folder (or copy local sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp -r ./values/local ./values/PlatformName`)
 - Commit and push changes to your new repository.
 - Choose admin password and also postgresql super admin password
 
@@ -47,7 +47,7 @@ export PG_SUPERUSER_PASSWORD=kFHEkjf323kfsW
 ./scripts/install.sh <KubernetesContext> <PlatformName> <RepoURL> <BranchName> <RepoToken>
 
 # example:
-./scripts/install.sh minikube minikube https://github.com/yourUserName/kuberise.git main
+./scripts/install.sh minikube local https://github.com/yourUserName/kuberise.git main
 ```
 
 ## Minikube and local installation
@@ -58,7 +58,7 @@ After deploying to a minikube local cluster, you can run `sudo minikube tunnel` 
 - [http://grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
 - [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
 
-In default minikube configuration, all services admin username and passwords are admin.  
+In default minikube configuration, all services admin username and passwords are admin.
 For minikube tunnel to work, the minikube config information should be in ~/.kube/config file which is the default kubeconfig location. If you can not use minikube tunnel, you can use prot-forward to be able to access the dashboard of different services:
 
 ```sh
