@@ -17,10 +17,10 @@ keycloak:
 
   production: false
 
-  ingress:
-    enabled: true
-    ingressClassName: "nginx"
-    tls: false
-    hostname: keycloak.127.0.0.1.nip.io
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  # ingress:
+  #   enabled: true
+  #   ingressClassName: "nginx"
+  #   tls: false
+  #   hostname: keycloak.127.0.0.1.nip.io
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/ssl-redirect: "false"
