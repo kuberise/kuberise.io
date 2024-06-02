@@ -4,7 +4,6 @@ selfSignedCertificate:
 namespaces:
   - argocd
   - monitoring
-  - keycloak
   - todolist-frontend-dev
   - todolist-frontend-tst
   - todolist-frontend-prd
