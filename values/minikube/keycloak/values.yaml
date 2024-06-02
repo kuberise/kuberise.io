@@ -13,7 +13,12 @@ keycloak:
     passwordSecretKey: password
 
   ingress:
-    tls: true
+    enabled: true
+    ingressClassName: "nginx"
+    pathType: ImplementationSpecific
+    apiVersion: ""
+    path: "{{ .Values.httpRelativePath }}"
+    servicePort: http
     hostname: keycloak.127.0.0.1.nip.io
     extraTls:
     - hosts:
