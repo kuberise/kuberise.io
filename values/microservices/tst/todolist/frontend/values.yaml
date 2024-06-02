@@ -2,10 +2,8 @@ replicaCount: 2
 
 ingress:
   enabled: true
-  tls:
-  - hosts:
-    - "*.tst.172.19.0.5.nip.io"
-    secretName: wildcard-cert-tls
+  annotations:
+    cert-manager.io/cluster-issuer: ca-clusterissuer
   hosts:
     - host: frontend.tst.172.19.0.5.nip.io
       paths:
