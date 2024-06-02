@@ -19,8 +19,7 @@ grafana:
       secretName: wildcard-cert-tls
     hosts:
       - grafana.172.19.0.5.nip.io
-    path:
-      - /
+    path: /
     pathType: Prefix
 
   adminPassword: ""
