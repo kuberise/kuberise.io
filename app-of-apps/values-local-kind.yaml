@@ -21,18 +21,6 @@ helmCharts:
   cloudnative-pg:
     enabled: true
 
-  todolist-frontend-dev:
-    enabled: true
-
-  todolist-frontend-tst:
-    enabled: true
-
-  todolist-frontend-prd:
-    enabled: true
-
-  show-env-dev:
-    enabled: true
-
   cert-manager:
     enabled: true
 
@@ -44,3 +32,26 @@ helmCharts:
 
   harbor:
     enabled: false
+
+  # Microservice helm charts for the dev environment
+
+  todolist-frontend-dev:
+    enabled: true
+    values: microservices-kind/dev/todolist/frontend/values.yaml
+
+  show-env-dev:
+    enabled: true
+    values: microservices-kind/dev/show-env/values.yaml
+
+# Microservice helm charts for the tst environment
+
+  todolist-frontend-tst:
+    enabled: true
+    values: microservices-kind/tst/todolist/frontend/values.yaml
+
+
+# Microservice helm charts for the prd environment
+
+  todolist-frontend-prd:
+    enabled: true
+    values: microservices-kind/prd/todolist/frontend/values.yaml

@@ -1,4 +1,4 @@
-replicaCount: 1
+replicaCount: 2
 
 ingress:
   enabled: true
@@ -6,18 +6,10 @@ ingress:
       cert-manager.io/cluster-issuer: ca-clusterissuer
   tls:
   - hosts:
-    - "*.dev.127.0.0.1.nip.io"
+    - "*.tst.172.19.0.5.nip.io"
     secretName: wildcard-cert-tls
   hosts:
-    - host: show-env.dev.127.0.0.1.nip.io
+    - host: frontend.tst.172.19.0.5.nip.io
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-env:
-  Environment: dev
-  name: env-show
-  PROTOCOL: HTTP
-
-image:
-  tag: latest
