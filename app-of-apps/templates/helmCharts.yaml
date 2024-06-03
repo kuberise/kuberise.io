@@ -35,7 +35,7 @@ spec:
     ref: valuesRepo
   destination:
     namespace: {{ default $name .namespace }}
-    server: {{ $.Values.global.spec.destination.server }}
+    server: {{ default $.Values.global.spec.destination.server .destinationServer }}
   syncPolicy:
     {{- if default $.Values.global.automated .automated }}
     automated:
