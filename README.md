@@ -164,4 +164,4 @@ These tools are currently included in kuberise and more tools will be included i
 
 - Ingress-nginx
 
-To read more please refer to the [docs here](docs/main.md)
+To read more please refer to the [docs here](docs/README.md)
