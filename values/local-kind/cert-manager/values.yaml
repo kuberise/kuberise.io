@@ -12,12 +12,12 @@ selfSignedCertificate:
 #   - backstage
 
 certificate:
-  commonName: "*.172.19.0.5.nip.io"
+  commonName: "*.172.19.0.3.nip.io"
   dnsNames:
-    - "172.19.0.5.nip.io"
-    - "*.172.19.0.5.nip.io"
-    - "*.dev.172.19.0.5.nip.io"
-    - "*.tst.172.19.0.5.nip.io"
-    - "*.acc.172.19.0.5.nip.io"
+    - "172.19.0.3.nip.io"
+    - "*.172.19.0.3.nip.io"
+    - "*.dev.172.19.0.3.nip.io"
+    - "*.tst.172.19.0.3.nip.io"
+    - "*.acc.172.19.0.3.nip.io"
   duration: 2160h # 90 days
   renewBefore: 360h # 15 days

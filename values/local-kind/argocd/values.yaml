@@ -31,12 +31,12 @@ server:
       cert-manager.io/cluster-issuer: ca-clusterissuer
       # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: "nginx"
-    hostname: argocd.172.19.0.5.nip.io
+    hostname: argocd.172.19.0.3.nip.io
     paths:
       - /
     pathType: Prefix
     https: true
     tls:
     - hosts:
-      - "*.172.19.0.5.nip.io"
+      - "*.172.19.0.3.nip.io"
       secretName: wildcard-cert-tls
