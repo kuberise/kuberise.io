@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: keycloak.172.19.0.5.nip.io
+  - host: keycloak.172.19.0.3.nip.io
     http:
       paths:
       - backend:

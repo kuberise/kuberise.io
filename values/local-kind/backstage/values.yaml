@@ -6,13 +6,13 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: ca-clusterissuer
   hosts:
-    - host: backstage.172.19.0.5.nip.io
+    - host: backstage.172.19.0.3.nip.io
       paths:
         - path: /
           pathType: Prefix
   tls:
   - hosts:
-    - "*.172.19.0.5.nip.io"
+    - "*.172.19.0.3.nip.io"
     secretName: wildcard-cert-tls
 
 service:
