@@ -21,10 +21,11 @@ git clone $repoURL
 cd kuberise
 
 export CONTEXT=$(kubectl config current-context)
+export REVISION=main # this is branch name, or tag, or commit SHA
 export ADMIN_PASSWORD=admin
 export PG_SUPERUSER_PASSWORD=admin
 
-./scripts/install.sh $CONTEXT local $repoURL main
+./scripts/install.sh $CONTEXT local $repoURL $REVISION
 ```
 
 To read more please refer to the [docs here](docs/README.md)

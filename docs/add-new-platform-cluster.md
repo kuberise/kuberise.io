@@ -1,6 +1,6 @@
-# How to add a new platform cluster 
+# How to add a new platform cluster
 
-Assuming you have forked the kuberise repository into your github account and then cloned that repository in your local computer, follow these instructions to add a new platform to your environment: 
+Assuming you have forked the kuberise repository into your github account and then cloned that repository in your local computer, follow these instructions to add a new platform to your environment:
 
 - Choose a name for your platform like `PlatformName`
 - Clone the forked repository and create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-local.yaml file `cp ./app-of-apps/values-local.yaml ./app-of-apps/values-PlatformName.yaml`)
@@ -11,6 +11,8 @@ Assuming you have forked the kuberise repository into your github account and th
 ```sh
 export repoURL=https://github.com/[yourUserName]/kuberise.git
 export PLATFORM=platformName
+export REVISION=main # this is branch name, or tag, or commit SHA
+
 git clone $repoURL
 cd kuberise
 
@@ -18,17 +20,18 @@ export CONTEXT=$(kubectl config current-context)
 export ADMIN_PASSWORD=admin
 export PG_SUPERUSER_PASSWORD=admin
 
-./scripts/install.sh $CONTEXT $PLATFORM $repoURL main
+./scripts/install.sh $CONTEXT $PLATFORM $repoURL $REVISION
 ```
 
 ## Private Repository
 
-You can clone the kuberise repository and push it to your private repository. In that case you need to add a token to your Github account at the end of the installation command: 
+You can clone the kuberise repository and push it to your private repository. In that case you need to add a token to your Github account at the end of the installation command:
 
 ```sh
 export repoURL=https://github.com/[yourUserName]/kuberise.git
 export PLATFORM=platformName
 export TOKEN=[your git repo token]
+export REVISION=main # this is branch name, or tag, or commit SHA
 git clone $repoURL
 cd kuberise
 
@@ -36,6 +39,5 @@ export CONTEXT=$(kubectl config current-context)
 export ADMIN_PASSWORD=admin
 export PG_SUPERUSER_PASSWORD=admin
 
-./scripts/install.sh $CONTEXT $PLATFORM $repoURL main $TOKEN
+./scripts/install.sh $CONTEXT $PLATFORM $repoURL $REVISION $TOKEN
 ```
-
