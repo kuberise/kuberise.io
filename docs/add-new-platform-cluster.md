@@ -11,7 +11,7 @@ Assuming you have forked the kuberise repository into your github account and th
 ```sh
 export repoURL=https://github.com/[yourUserName]/kuberise.git
 export PLATFORM=platformName
-export REVISION=main # this is branch name, or tag, or commit SHA
+export REVISION=main
 
 git clone $repoURL
 cd kuberise
@@ -31,7 +31,7 @@ You can clone the kuberise repository and push it to your private repository. In
 export repoURL=https://github.com/[yourUserName]/kuberise.git
 export PLATFORM=platformName
 export TOKEN=[your git repo token]
-export REVISION=main # this is branch name, or tag, or commit SHA
+export REVISION=main
 git clone $repoURL
 cd kuberise
 
@@ -41,3 +41,5 @@ export PG_SUPERUSER_PASSWORD=admin
 
 ./scripts/install.sh $CONTEXT $PLATFORM $repoURL $REVISION $TOKEN
 ```
+
+REVISION can be branch name, or tag, or commit SHA
