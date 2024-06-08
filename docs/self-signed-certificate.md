@@ -11,34 +11,6 @@ selfSignedCertificate:
   enabled: true
 ```
 
-## Adding Namespaces
-
-You can add namespaces to the `namespaces` list in the `values.yaml` file. Each namespace should be added as a new item in the list. These are the namespaces where a copy of the secret containing the generated certificate will be created.
-
-```yaml
-namespaces:
-  - argocd
-  - monitoring
-  - keycloak
-  # Add more namespaces as needed
-```
-
-## Adding DNS Names and other settings
-
-You can add commonName, dnsNames, valid duration and renewBefore parameters to the certificate object in values.
-
-```yaml
-certificate:
-  commonName: "*.127.0.0.1.nip.io"
-  dnsNames:
-    - "127.0.0.1.nip.io"
-    - "*.127.0.0.1.nip.io"
-    - "*.dev.127.0.0.1.nip.io"
-    # Add more DNS names as needed
-  duration: 2160h # 90 days
-  renewBefore: 360h # 15 days
-```
-
 ## Enabling/Disabling the Certificate
 
 You can enable or disable the use of the certificate by changing the `enabled` field under `selfSignedCertificate` in the `values.yaml` file. Set it to `true` to enable and `false` to disable.

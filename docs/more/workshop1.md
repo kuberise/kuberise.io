@@ -19,6 +19,7 @@ The goal is to create an internal developer platform (IDP) in a local kubernetes
 
 - Make a fork from the repository in your github account and follow the instruction [here](../../README.md) and do a full installation of kuberise in your local cluster.
 - Run `sudo minikube tunnel` for minikube to run a local tunnel to your kubernetes node
+- or run `sudo cloud-provider-kind` for kind to run a local tunnel to your kubernetes node
 - Try to open the ingress address of different services:
 
   Platform Services:

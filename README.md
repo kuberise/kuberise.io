@@ -8,7 +8,8 @@ Kuberise is a free opensource internal developer platform for Kubernetes environ
 - CLI tools: kubectl, helm, htpasswd, git
 - A Github account or another git repository system
 - [K9s](https://k9scli.io/topics/install/) for dashboard (recommended)
-- A [minikube](https://minikube.sigs.k8s.io/docs/start) kubernetes cluster for local installation (`minikube start`)
+- A [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) kubernetes cluster for local installation (`kind create cluster`)
+- [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) for loadBalancer services and ingresses.
 
 ## Installation
 
