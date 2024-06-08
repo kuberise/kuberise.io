@@ -4,7 +4,7 @@ expose:
     tls:
     - hosts:
       - "*.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls
+      secretName: wildcard-cert-tls-letsencrypt-staging
     hosts:
       core: core.harbor.127.0.0.1.nip.io
       notary: notary.harbor.127.0.0.1.nip.io

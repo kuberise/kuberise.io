@@ -13,7 +13,7 @@ grafana:
     tls:
     - hosts:
       - "grafana.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls
+      secretName: wildcard-cert-tls-letsencrypt-staging
     ingressClassName: nginx
     hosts:
       - grafana.127.0.0.1.nip.io
@@ -31,7 +31,7 @@ prometheus:
     tls:
     - hosts:
       - "prometheus.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls
+      secretName: wildcard-cert-tls-letsencrypt-staging
     hosts:
       - prometheus.127.0.0.1.nip.io
     paths:

@@ -6,7 +6,7 @@ ingress:
   tls:
   - hosts:
     - "*.nip.io"
-    secretName: wildcard-cert-tls
+    secretName: wildcard-cert-tls-letsencrypt-staging
   enabled: true
   className: nginx
   hosts:

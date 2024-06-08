@@ -7,7 +7,7 @@ ingress:
   tls:
   - hosts:
     - "*.nip.io"
-    secretName: wildcard-cert-tls
+    secretName: wildcard-cert-tls-letsencrypt-staging
   hosts:
     - host: frontend-dev-172-19-0-3.nip.io
       paths:

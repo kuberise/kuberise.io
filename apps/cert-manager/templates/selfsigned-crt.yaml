@@ -37,7 +37,7 @@ metadata:
   name: wildcard-cert
   namespace: {{ . }}
 spec:
-  secretName: wildcard-cert-tls
+  secretName: wildcard-cert-tls-letsencrypt-staging
   duration: {{ $.Values.certificate.duration }}
   renewBefore: {{ $.Values.certificate.renewBefore }}
   commonName: "{{ $.Values.certificate.commonName }}"

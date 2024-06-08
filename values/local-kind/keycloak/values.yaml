@@ -28,4 +28,4 @@ keycloak:
     extraTls:
     - hosts:
       - "*.nip.io"
-      secretName: wildcard-cert-tls
+      secretName: wildcard-cert-tls-letsencrypt-staging

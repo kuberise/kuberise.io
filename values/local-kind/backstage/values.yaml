@@ -13,7 +13,7 @@ ingress:
   tls:
   - hosts:
     - "*.nip.io"
-    secretName: wildcard-cert-tls
+    secretName: wildcard-cert-tls-letsencrypt-staging
 
 service:
   type: ClusterIP
