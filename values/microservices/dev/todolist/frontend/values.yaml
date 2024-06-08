@@ -3,7 +3,7 @@ replicaCount: 1
 ingress:
   enabled: true
   annotations:
-      cert-manager.io/cluster-issuer: ca-clusterissuer
+      cert-manager.io/issuer: "letsencrypt-staging"
   tls:
   - hosts:
     - "*.dev.127.0.0.1.nip.io"

@@ -11,14 +11,14 @@ grafana:
   ingress:
     enabled: true
     annotations:
-      cert-manager.io/cluster-issuer: ca-clusterissuer
+      cert-manager.io/issuer: "letsencrypt-staging"
     ingressClassName: nginx
     tls:
     - hosts:
-      - "grafana.172.19.0.3.nip.io"
+      - "*.nip.io"
       secretName: wildcard-cert-tls
     hosts:
-      - grafana.172.19.0.3.nip.io
+      - grafana-172-19-0-3.nip.io
     path: /
     pathType: Prefix
 
@@ -32,14 +32,14 @@ prometheus:
   ingress:
     enabled: true
     annotations:
-      cert-manager.io/cluster-issuer: ca-clusterissuer
+      cert-manager.io/issuer: "letsencrypt-staging"
     ingressClassName: nginx
     tls:
     - hosts:
-      - "prometheus.172.19.0.3.nip.io"
+      - "*.nip.io"
       secretName: wildcard-cert-tls
     hosts:
-      - prometheus.172.19.0.3.nip.io
+      - prometheus-172-19-0-3.nip.io
     paths:
       - /
     pathType: Prefix

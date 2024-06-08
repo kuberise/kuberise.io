@@ -1,23 +1,12 @@
 selfSignedCertificate:
+  enabled: false
+
+letsencryptStagingCertificate:
   enabled: true
 
-# namespaces:
-#   - argocd
-#   - monitoring
-#   - keycloak
-#   - todolist-frontend-dev
-#   - todolist-frontend-tst
-#   - todolist-frontend-prd
-#   - show-env-dev
-#   - backstage
-
 certificate:
-  commonName: "*.172.19.0.3.nip.io"
+  commonName: "*.nip.io"
   dnsNames:
-    - "172.19.0.3.nip.io"
-    - "*.172.19.0.3.nip.io"
-    - "*.dev.172.19.0.3.nip.io"
-    - "*.tst.172.19.0.3.nip.io"
-    - "*.acc.172.19.0.3.nip.io"
+    - "*.nip.io"
   duration: 2160h # 90 days
   renewBefore: 360h # 15 days

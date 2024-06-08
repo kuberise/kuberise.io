@@ -21,11 +21,11 @@ keycloak:
     enabled: true
     ingressClassName: "nginx"
     tls: false
-    hostname: keycloak.172.19.0.3.nip.io
+    hostname: keycloak-172-19-0-3.nip.io
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      cert-manager.io/cluster-issuer: ca-clusterissuer
+      cert-manager.io/issuer: "letsencrypt-staging"
     extraTls:
     - hosts:
-      - "keycloak.172.19.0.3.nip.io"
+      - "*.nip.io"
       secretName: wildcard-cert-tls
