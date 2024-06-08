@@ -14,5 +14,5 @@ expose:
       ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      cert-manager.io/issuer: "letsencrypt-staging"
+      cert-manager.io/cluster-issuer: "letsencrypt-staging"
 externalURL: http://core.harbor-172-19-0-3.nip.io
