@@ -1,0 +1,39 @@
+grafana:
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-loki-distributed-gateway
+        isDefault: false
+  ingress:
+    enabled: true
+    tls:
+    - hosts:
+      - "grafana.127.0.0.1.nip.io"
+      secretName: wildcard-cert-tls
+    ingressClassName: nginx
+    hosts:
+      - grafana.127.0.0.1.nip.io
+    path: /
+  adminPassword: ""
+  admin:
+    existingSecret: grafana-admin
+    passwordKey: admin-password
+    userKey: admin-user
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - "prometheus.127.0.0.1.nip.io"
+      secretName: wildcard-cert-tls
+    hosts:
+      - prometheus.127.0.0.1.nip.io
+    paths:
+      - /
+    pathType: Prefix

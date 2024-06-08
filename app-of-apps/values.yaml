@@ -15,31 +15,23 @@ applications:
   # A Kustomize application
   hello:
     enabled: false
-    path: values/minikube/hello
-
-  helm-guestbook:
-    enabled: false
-    name: helm-guestbook
-    namespace: guestbook
-
-  raw:
-    enabled: false
-    path: apps/raw/minikube
+    path: values/local/hello
 
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: apps/cnpg-database/minikube
+    path: apps/cnpg-database/local
 
 
 helmCharts:
+
   teams-namespaces:
     enabled: false
     namespace: default
 
   backstage:
     enabled: false
-    syncWave: 1
+    # syncWave: 1
 
   keycloak:
     enabled: false
@@ -51,12 +43,6 @@ helmCharts:
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 1.8.5
     chart: sealed-secrets
-
-  airflow:
-    enabled: false
-    repoURL: https://airflow.apache.org
-    targetRevision: 1.12.0
-    chart: airflow
 
   ingress-nginx:
     enabled: false
@@ -89,15 +75,12 @@ helmCharts:
     enabled: false
     repoURL: https://helm.goharbor.io
     namespace: harbor
-    targetRevision: 1.14.0
+    targetRevision: 1.14.2
     chart: harbor
 
   cert-manager:
     enabled: false
-    repoURL: https://charts.jetstack.io
     namespace: cert-manager
-    targetRevision: v1.14.3
-    chart: cert-manager
 
   actions-runner-controller:
     enabled: false
@@ -117,9 +100,8 @@ helmCharts:
     enabled: false
     repoURL: https://dl.gitea.io/charts
     namespace: gitea
-    targetRevision: 10.1.1
+    targetRevision: 10.1.4
     chart: gitea
-
 
   cloudnative-pg:
     enabled: false
@@ -128,15 +110,27 @@ helmCharts:
     targetRevision: 0.20.1
     chart: cloudnative-pg
 
+  # Microservice helm charts for the dev environment
+
   todolist-frontend-dev:
     enabled: false
     path: apps/todolist-frontend
     values: microservices/dev/todolist/frontend/values.yaml
 
+  show-env-dev:
+    enabled: false
+    path: apps/show-env
+    values: microservices/dev/show-env/values.yaml
+
+# Microservice helm charts for the tst environment
+
   todolist-frontend-tst:
     enabled: false
     path: apps/todolist-frontend
     values: microservices/tst/todolist/frontend/values.yaml
+
+
+# Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
