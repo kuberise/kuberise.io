@@ -21,7 +21,7 @@ keycloak:
     enabled: true
     ingressClassName: "nginx"
     tls: false
-    hostname: keycloak-127-0-0-1.nip.io
+    hostname: keycloak-172-19-0-3.nip.io
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       cert-manager.io/cluster-issuer: "ca-clusterissuer"

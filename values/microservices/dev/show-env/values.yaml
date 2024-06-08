@@ -9,7 +9,7 @@ ingress:
     - "*.nip.io"
     secretName: wildcard-cert-tls
   hosts:
-    - host: show-env-dev-127-0-0-1.nip.io
+    - host: show-env-dev-172-19-0-3.nip.io
       paths:
         - path: /
           pathType: ImplementationSpecific

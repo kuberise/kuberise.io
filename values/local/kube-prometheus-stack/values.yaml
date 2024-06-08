@@ -18,7 +18,7 @@ grafana:
       - "*.nip.io"
       secretName: wildcard-cert-tls
     hosts:
-      - grafana-127-0-0-1.nip.io
+      - grafana-172-19-0-3.nip.io
     path: /
     pathType: Prefix
 
@@ -39,7 +39,7 @@ prometheus:
       - "*.nip.io"
       secretName: wildcard-cert-tls
     hosts:
-      - prometheus-127-0-0-1.nip.io
+      - prometheus-172-19-0-3.nip.io
     paths:
       - /
     pathType: Prefix

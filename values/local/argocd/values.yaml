@@ -31,7 +31,7 @@ server:
       cert-manager.io/cluster-issuer: "ca-clusterissuer"
       # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: "nginx"
-    hostname: argocd-127-0-0-1.nip.io
+    hostname: argocd-172-19-0-3.nip.io
     paths:
       - /
     pathType: Prefix
