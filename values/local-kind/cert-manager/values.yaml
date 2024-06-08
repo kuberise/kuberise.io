@@ -1,12 +1,5 @@
 selfSignedCertificate:
-  enabled: false
-
-letsencryptStagingCertificate:
   enabled: true
 
-certificate:
-  commonName: "*.nip.io"
-  dnsNames:
-    - "*.nip.io"
-  duration: 2160h # 90 days
-  renewBefore: 360h # 15 days
+letsencryptStagingCertificate:
+  enabled: false

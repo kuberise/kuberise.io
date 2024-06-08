@@ -20,14 +20,14 @@ spec:
 ---
 {{- end }}
 
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: wildcard-cert-tls-letsencrypt-staging
-spec:
-  secretName: wildcard-cert-tls-letsencrypt-staging
-  issuerRef:
-    name: letsencrypt-staging
-    kind: ClusterIssuer
-  dnsNames:
-  - '*.nip.io'
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: wildcard-cert-tls-letsencrypt-staging
+# spec:
+#   secretName: wildcard-cert-tls-letsencrypt-staging
+#   issuerRef:
+#     name: letsencrypt-staging
+#     kind: ClusterIssuer
+#   dnsNames:
+#   - '*.nip.io'
