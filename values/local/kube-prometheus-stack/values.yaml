@@ -10,14 +10,18 @@ grafana:
         isDefault: false
   ingress:
     enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+    ingressClassName: nginx
     tls:
     - hosts:
-      - "grafana.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls-letsencrypt-staging
-    ingressClassName: nginx
+      - "*.nip.io"
+      secretName: wildcard-cert-tls
     hosts:
-      - grafana.127.0.0.1.nip.io
+      - grafana-127-0-0-1.nip.io
     path: /
+    pathType: Prefix
+
   adminPassword: ""
   admin:
     existingSecret: grafana-admin
@@ -27,13 +31,15 @@ grafana:
 prometheus:
   ingress:
     enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
     ingressClassName: nginx
     tls:
     - hosts:
-      - "prometheus.127.0.0.1.nip.io"
-      secretName: wildcard-cert-tls-letsencrypt-staging
+      - "*.nip.io"
+      secretName: wildcard-cert-tls
     hosts:
-      - prometheus.127.0.0.1.nip.io
+      - prometheus-127-0-0-1.nip.io
     paths:
       - /
     pathType: Prefix

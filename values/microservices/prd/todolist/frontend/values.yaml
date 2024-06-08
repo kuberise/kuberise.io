@@ -5,11 +5,11 @@ ingress:
       cert-manager.io/cluster-issuer: "ca-clusterissuer"
   tls:
   - hosts:
-    - "*.127.0.0.1.nip.io"
-    secretName: wildcard-cert-tls-letsencrypt-staging
+    - "*.nip.io"
+    secretName: wildcard-cert-tls
   enabled: true
   hosts:
-    - host: frontend.127.0.0.1.nip.io
+    - host: frontend-127-0-0-1.nip.io
       paths:
         - path: /
           pathType: ImplementationSpecific

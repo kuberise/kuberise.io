@@ -25,7 +25,7 @@ spec:
 # metadata:
 #   name: wildcard-cert-tls-letsencrypt-staging
 # spec:
-#   secretName: wildcard-cert-tls-letsencrypt-staging
+#   secretName: wildcard-cert-tls
 #   issuerRef:
 #     name: letsencrypt-staging
 #     kind: ClusterIssuer
