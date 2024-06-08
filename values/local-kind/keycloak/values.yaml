@@ -24,7 +24,7 @@ keycloak:
     hostname: keycloak-172-19-0-3.nip.io
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
     extraTls:
     - hosts:
       - "*.nip.io"
