@@ -21,7 +21,7 @@ keycloakx:
     - name: KC_DB_USERNAME
       value: application
     - name: KC_DB_PASSWORD
-      value: admin
+      value: apppassword
 
 # keycloakx:
 #   command:
