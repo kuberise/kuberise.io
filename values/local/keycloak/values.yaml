@@ -28,7 +28,6 @@ keycloakx:
     annotations:
       # nginx.ingress.kubernetes.io/ssl-redirect: "false"
       cert-manager.io/cluster-issuer: "ca-clusterissuer"
-      nginx.ingress.kubernetes.io/rewrite-target: /auth/$2
     rules:
       -
         # Ingress host
