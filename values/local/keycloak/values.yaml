@@ -16,10 +16,10 @@ keycloakx:
       value: app
 
   extraEnvFrom:
-    - secretRef:
-        name: pg-secret
-    - secretRef:
-        name: admin-secret
+  - secretRef:
+      name: pg-secret
+  # - secretRef:
+  #     name: admin-secret
 
 
   ingress:
