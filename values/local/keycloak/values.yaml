@@ -6,19 +6,19 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
-  extraEnv: |
-    - name: KEYCLOAK_ADMIN
-      value: admin
-    - name: KEYCLOAK_ADMIN_PASSWORD
-      value: admin
-    - name: JAVA_OPTS_APPEND
-      value: >-
-        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-    - name:KC_DB_URL
-      value: cnpg-database-rw.cloudnative-pg.svc.cluster.local
-    - name: KC_DB
-      value: postgres
-    - name: KC_DB_USERNAME
-      value: admin
-    - name: KC_DB_PASSWORD
-      value: admin
+  # extraEnv: |
+  #   - name: KEYCLOAK_ADMIN
+  #     value: admin
+  #   - name: KEYCLOAK_ADMIN_PASSWORD
+  #     value: admin
+  #   - name: JAVA_OPTS_APPEND
+  #     value: >-
+  #       -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+  #   - name:KC_DB_URL
+  #     value: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+  #   - name: KC_DB
+  #     value: postgres
+  #   - name: KC_DB_USERNAME
+  #     value: admin
+  #   - name: KC_DB_PASSWORD
+  #     value: admin
