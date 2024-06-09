@@ -6,6 +6,7 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
+    - "--db-url=jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432"
   extraEnv: |
     - name: KEYCLOAK_ADMIN
       value: admin
