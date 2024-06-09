@@ -10,28 +10,28 @@ helmCharts:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
     enabled: true
 
   todolist-frontend-dev:
-    enabled: true
+    enabled: false
 
   todolist-frontend-tst:
-    enabled: true
+    enabled: false
 
   todolist-frontend-prd:
-    enabled: true
+    enabled: false
 
   show-env-dev:
-    enabled: true
+    enabled: false
 
   cert-manager:
     enabled: true
