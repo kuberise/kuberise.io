@@ -14,7 +14,8 @@ Assume that you have a local minikube kubernetes cluster created by command `min
 ```sh
 export CONTEXT=$(kubectl config current-context)
 export ADMIN_PASSWORD=admin
-
+export PG_SUPERUSER_PASSWORD=superpassword
+export PG_APP_PASSWORD=apppassword
 git clone https://github.com/kuberise/kuberise.git
 cd kuberise
 ./scripts/install.sh $CONTEXT local https://github.com/kuberise/kuberise.git main

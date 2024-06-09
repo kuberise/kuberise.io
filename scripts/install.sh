@@ -132,10 +132,10 @@ TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, m
 REPOSITORY_TOKEN=${5:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-$(openssl rand -base64 40)}
+PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-superpassword}
 # Generate random password for PG_APP_PASSWORD which is database password used by the platform services
 PG_APP_USERNAME=application
-PG_APP_PASSWORD=$(openssl rand -base64 20)
+PG_APP_PASSWORD=${PG_APP_PASSWORD:-apppassword}
 
 if [ -z "$REPO_URL" ]; then
     echo "REPO_URL is undefined" 1>&2
