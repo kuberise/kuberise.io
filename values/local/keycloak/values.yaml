@@ -14,11 +14,11 @@ keycloakx:
     # - name: JAVA_OPTS_APPEND
     #   value: >-
     #     -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-    # - name:KC_DB_URL
-    #   value: cnpg-database-rw.cloudnative-pg.svc.cluster.local
-    # - name: KC_DB
-    #   value: postgres
-    # - name: KC_DB_USERNAME
-    #   value: admin
-    # - name: KC_DB_PASSWORD
-    #   value: admin
+    - name:KC_DB_URL
+      value: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+    - name: KC_DB
+      value: postgres
+    - name: KC_DB_USERNAME
+      value: admin
+    - name: KC_DB_PASSWORD
+      value: admin
