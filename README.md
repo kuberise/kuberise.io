@@ -24,7 +24,6 @@ cd kuberise
 export CONTEXT=$(kubectl config current-context)
 export REVISION=main
 export ADMIN_PASSWORD=admin
-export PG_SUPERUSER_PASSWORD=admin
 
 ./scripts/install.sh $CONTEXT local $repoURL $REVISION
 ```

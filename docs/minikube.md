@@ -1,15 +1,15 @@
-# Minikube 
+# Minikube
 
-Minikube is a tool to install a light kubernetes cluster in you local computer. 
+Minikube is a tool to install a light kubernetes cluster in you local computer.
 
 After deploying to a minikube local cluster, you can run `sudo minikube tunnel` command to use the local ingress to access services. For example to go to argocd and keycloak and grafana you can use these urls and you don't need to do port-forward:
 
-- [argocd.127.0.0.1.nip.io](argocd.127.0.0.1.nip.io)
-- [grafana.127.0.0.1.nip.io](grafana.127.0.0.1.nip.io)
-- [http://keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
+- [argocd-172-19-0-3.nip.io](argocd-172-19-0-3.nip.io)
+- [grafana-172-19-0-3.nip.io](grafana-172-19-0-3.nip.io)
+- [http://keycloak-172-19-0-3.nip.io](http://keycloak-172-19-0-3.nip.io)
 
 In default minikube configuration, all services admin username and passwords are admin.
-For minikube tunnel to work, the minikube config information should be in ~/.kube/config file which is the default kubeconfig location. 
+For minikube tunnel to work, the minikube config information should be in ~/.kube/config file which is the default kubeconfig location.
 
 If you can not use minikube tunnel, you can use port-forward to be able to access the dashboard of different services:
 

@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: hello.127.0.0.1.nip.io
+  - host: hello-172-19-0-3.nip.io
     http:
       paths:
       - backend:

@@ -18,7 +18,6 @@ cd kuberise
 
 export CONTEXT=$(kubectl config current-context)
 export ADMIN_PASSWORD=admin
-export PG_SUPERUSER_PASSWORD=admin
 
 ./scripts/install.sh $CONTEXT $PLATFORM $repoURL $REVISION
 ```
@@ -37,7 +36,6 @@ cd kuberise
 
 export CONTEXT=$(kubectl config current-context)
 export ADMIN_PASSWORD=admin
-export PG_SUPERUSER_PASSWORD=admin
 
 ./scripts/install.sh $CONTEXT $PLATFORM $repoURL $REVISION $TOKEN
 ```

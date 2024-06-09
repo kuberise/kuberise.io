@@ -14,7 +14,6 @@ Assume that you have a local minikube kubernetes cluster created by command `min
 ```sh
 export CONTEXT=$(kubectl config current-context)
 export ADMIN_PASSWORD=admin
-export PG_SUPERUSER_PASSWORD=admin
 
 git clone https://github.com/kuberise/kuberise.git
 cd kuberise
@@ -28,7 +27,7 @@ sudo minikube tunnel
 ```
 
 Then you can see the dashboard of the installed service:
-[https://argocd.127.0.0.1.nip.io/](https://argocd.127.0.0.1.nip.io/)
-[https://backstage.127.0.0.1.nip.io/](https://backstage.127.0.0.1.nip.io/)
-[http://keycloak.127.0.0.1.nip.io/](http://keycloak.127.0.0.1.nip.io/)
-[https://grafana.127.0.0.1.nip.io/](https://grafana.127.0.0.1.nip.io/)
+[https://argocd-172-19-0-3.nip.io/](https://argocd-172-19-0-3.nip.io/)
+[https://backstage-172-19-0-3.nip.io/](https://backstage-172-19-0-3.nip.io/)
+[http://keycloak-172-19-0-3.nip.io/](http://keycloak-172-19-0-3.nip.io/)
+[https://grafana-172-19-0-3.nip.io/](https://grafana-172-19-0-3.nip.io/)

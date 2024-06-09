@@ -23,17 +23,17 @@ The goal is to create an internal developer platform (IDP) in a local kubernetes
 - Try to open the ingress address of different services:
 
   Platform Services:
-  - [argocd.127.0.0.1.nip.io](http://argocd.127.0.0.1.nip.io)
-  - [keycloak.127.0.0.1.nip.io](http://keycloak.127.0.0.1.nip.io)
-  - [grafana.127.0.0.1.nip.io](http://grafana.127.0.0.1.nip.io)
-  - [prometheus.127.0.0.1.nip.io](http://prometheus.127.0.0.1.nip.io)
-  - [backstage.127.0.0.1.nip.io](http://backstage.127.0.0.1.nip.io)
+  - [argocd-172-19-0-3.nip.io](http://argocd-172-19-0-3.nip.io)
+  - [keycloak-172-19-0-3.nip.io](http://keycloak-172-19-0-3.nip.io)
+  - [grafana-172-19-0-3.nip.io](http://grafana-172-19-0-3.nip.io)
+  - [prometheus-172-19-0-3.nip.io](http://prometheus-172-19-0-3.nip.io)
+  - [backstage-172-19-0-3.nip.io](http://backstage-172-19-0-3.nip.io)
 
   Application microservices:
-  - [frontend.dev.127.0.0.1.nip.io](http://frontend.dev.127.0.0.1.nip.io)
-  - [frontend.tst.127.0.0.1.nip.io](http://frontend.tst.127.0.0.1.nip.io)
-  - [frontend.127.0.0.1.nip.io](http://frontend.127.0.0.1.nip.io)
-  - [show-env.dev.127.0.0.1.nip.io](http://show-env.dev.127.0.0.1.nip.io)
+  - [frontend.dev-172-19-0-3.nip.io](http://frontend.dev-172-19-0-3.nip.io)
+  - [frontend.tst-172-19-0-3.nip.io](http://frontend.tst-172-19-0-3.nip.io)
+  - [frontend-172-19-0-3.nip.io](http://frontend-172-19-0-3.nip.io)
+  - [show-env.dev-172-19-0-3.nip.io](http://show-env.dev-172-19-0-3.nip.io)
 
 - Check grafana node exporter dashboard about your kubernetes metrics and resources
 - How was your experience of installing kuberise? Write a feedback in miro board.
