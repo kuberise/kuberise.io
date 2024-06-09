@@ -37,7 +37,7 @@ helmCharts:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   gitea:
     enabled: false
