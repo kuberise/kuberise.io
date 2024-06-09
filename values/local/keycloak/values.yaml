@@ -19,7 +19,7 @@ keycloakx:
     - name: KC_DB
       value: postgres
     - name: KC_DB_USERNAME
-      value: admin
+      value: postgres
     - name: KC_DB_PASSWORD
       value: admin
 
