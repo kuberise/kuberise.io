@@ -21,10 +21,13 @@ keycloakx:
     - name: KC_DB_USERNAME
       value: admin
     - name: KC_DB_PASSWORD
-      valuefrom:
-        secretkeyref:
-          name: pg-secret
-          key: password
+      value: admin
+
+
+# valuefrom:
+#   secretkeyref:
+#     name: pg-secret
+#     key: password
 
 
 #   externalDatabase:
