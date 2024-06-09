@@ -15,11 +15,11 @@ keycloakx:
     - name: KC_DB
       value: app
 
-  extraEnvFrom:
-  - secretRef:
-      name: pg-secret
-  # - secretRef:
-  #     name: admin-secret
+  extraEnvFrom: |
+    - secretRef:
+        name: pg-secret
+    - secretRef:
+        name: admin-secret
 
 
   ingress:
