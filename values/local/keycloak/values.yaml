@@ -6,38 +6,62 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
-  extraEnv: |
+  extraEnv: |    - name: KEYCLOAK_ADMIN
+      value: admin
+    - name: KEYCLOAK_ADMIN_PASSWORD
+      value: admin
     - name: JAVA_OPTS_APPEND
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_URL
       value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/"
     - name: KC_DB
-      value: app
+      value: postgres
+    - name: KC_DB_USERNAME
+      value: application
+    - name: KC_DB_PASSWORD
+      value: admin
 
-  extraEnvFrom: |
-    - secretRef:
-        name: pg-secret
-    - secretRef:
-        name: admin-secret
+# keycloakx:
+#   command:
+#     - "/opt/keycloak/bin/kc.sh"
+#     - "start-dev"
+#     - "--http-enabled=true"
+#     - "--http-port=8080"
+#     - "--hostname-strict=false"
+#     - "--hostname-strict-https=false"
+#   extraEnv: |
+#     - name: JAVA_OPTS_APPEND
+#       value: >-
+#         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+#     - name: KC_DB_URL
+#       value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/"
+#     - name: KC_DB
+#       value: app
+
+#   extraEnvFrom: |
+#     - secretRef:
+#         name: pg-secret
+#     - secretRef:
+#         name: admin-secret
 
 
-  ingress:
-    enabled: true
-    ingressClassName: "nginx"
-    annotations:
-      # nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
-    rules:
-      -
-        # Ingress host
-        host: keycloak-172-19-0-3.nip.io
-        # Paths for the host
-        paths:
-          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
-            pathType: Prefix
-    # TLS configuration
-    tls:
-    - hosts:
-      - "*.nip.io"
-      secretName: wildcard-cert-tls
+#   ingress:
+#     enabled: true
+#     ingressClassName: "nginx"
+#     annotations:
+#       # nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#       cert-manager.io/cluster-issuer: "ca-clusterissuer"
+#     rules:
+#       -
+#         # Ingress host
+#         host: keycloak-172-19-0-3.nip.io
+#         # Paths for the host
+#         paths:
+#           - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+#             pathType: Prefix
+#     # TLS configuration
+#     tls:
+#     - hosts:
+#       - "*.nip.io"
+#       secretName: wildcard-cert-tls
