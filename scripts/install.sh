@@ -132,7 +132,10 @@ TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, m
 REPOSITORY_TOKEN=${5:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-superpassword}
+PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-$(openssl rand -base64 40)}
+# Generate random password for PG_APP_PASSWORD which is database password used by the platform services
+PG_APP_USERNAME=application
+PG_APP_PASSWORD=$(openssl rand -base64 20)
 
 if [ -z "$REPO_URL" ]; then
     echo "REPO_URL is undefined" 1>&2
@@ -200,12 +203,13 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
 fi
 
 # Secrets for PostgreSQL
-create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-app" "--from-literal=dbname=app --from-literal=host=cnpg-database-rw --from-literal=username=app --from-literal=user=app --from-literal=port=5432 --from-literal=password=$ADMIN_PASSWORD --type=kubernetes.io/basic-auth"
+create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-app" "--from-literal=dbname=app --from-literal=host=cnpg-database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-superuser" "--from-literal=dbname=* --from-literal=host=cnpg-database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
 
 # Keycloak and Backstage and Grafana secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=password=$ADMIN_PASSWORD"
-create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$ADMIN_PASSWORD"
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME" "--from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "admin-secret" "--from-literal=KEYCLOAK_ADMIN=admin" "--from-literal=KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD"
+create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$PG_APP_USERNAME"
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
 # Install ArgoCD with custom values and admin password

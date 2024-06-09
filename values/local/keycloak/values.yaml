@@ -7,54 +7,37 @@ keycloakx:
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
   extraEnv: |
-    - name: KEYCLOAK_ADMIN
-      value: admin
-    - name: KEYCLOAK_ADMIN_PASSWORD
-      value: admin
     - name: JAVA_OPTS_APPEND
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_URL
       value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/"
     - name: KC_DB
-      value: postgres
-    - name: KC_DB_USERNAME
       value: app
-    - name: KC_DB_PASSWORD
-      value: admin
 
-# valuefrom:
-#   secretkeyref:
-#     name: pg-secret
-#     key: password
+  extraEnvFrom:
+    - secretRef:
+        name: pg-secret
+    - secretRef:
+        name: admin-secret
 
 
-#   externalDatabase:
-#     host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
-#     user: app
-#     database: app
-#     existingSecret: pg-secret
-#     existingSecretPasswordKey: password
-
-#   auth:
-#     adminUser: admin
-#     existingSecret: pg-secret
-#     passwordSecretKey: password
-
-#   tls:
-#     enabled: false
-
-#   production: false
-
-#   ingress:
-#     enabled: true
-#     ingressClassName: "nginx"
-#     tls: false
-#     hostname: keycloak-172-19-0-3.nip.io
-#     annotations:
-#       nginx.ingress.kubernetes.io/ssl-redirect: "false"
-#       # cert-manager.io/cluster-issuer: "ca-clusterissuer"
-#     # extraTls:
-#     # - hosts:
-#     #   - "*.nip.io"
-#     #   secretName: wildcard-cert-tls
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    annotations:
+      # nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+    rules:
+      -
+        # Ingress host
+        host: keycloak-172-19-0-3.nip.io
+        # Paths for the host
+        paths:
+          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+            pathType: Prefix
+    # TLS configuration
+    tls:
+    - hosts:
+      - "*.nip.io"
+      secretName: wildcard-cert-tls
