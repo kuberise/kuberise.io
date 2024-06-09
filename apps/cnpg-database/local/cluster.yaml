@@ -9,7 +9,7 @@ spec:
   bootstrap:
     initdb:
       database: app
-      owner: app
+      owner: application
       secret:
         name: cnpg-database-app
 
@@ -25,7 +25,7 @@ spec:
 
   managed:
     roles:
-    - name: app
+    - name: application
       createdb: true
       login: true
       connectionLimit: -1
