@@ -6,7 +6,6 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
-    - "--db-url=jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432"
   extraEnv: |
     - name: KEYCLOAK_ADMIN
       value: admin
@@ -16,7 +15,7 @@ keycloakx:
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_URL
-      value: jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432
+      value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/"
     - name: KC_DB
       value: postgres
     - name: KC_DB_USERNAME
