@@ -25,6 +25,6 @@ backstage:
       connection:
         host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
         port: 5432
-        user: app
+        user: application
         existingSecret: pg-secret
         existingSecretPasswordKey: password
