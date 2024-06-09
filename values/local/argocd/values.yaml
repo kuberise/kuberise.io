@@ -28,14 +28,15 @@ server:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
       # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: "nginx"
-    hostname: argocd.127.0.0.1.nip.io
+    hostname: argocd-172-19-0-3.nip.io
     paths:
       - /
     pathType: Prefix
     https: true
     tls:
     - hosts:
-      - "*.127.0.0.1.nip.io"
+      - "*.nip.io"
       secretName: wildcard-cert-tls

@@ -3,15 +3,16 @@ expose:
   ingress:
     tls:
     - hosts:
-      - "*.127.0.0.1.nip.io"
+      - "*.nip.io"
       secretName: wildcard-cert-tls
     hosts:
-      core: core.harbor.127.0.0.1.nip.io
-      notary: notary.harbor.127.0.0.1.nip.io
+      core: core.harbor-172-19-0-3.nip.io
+      notary: notary.harbor-172-19-0-3.nip.io
     className: nginx
     annotations:
       ingress.kubernetes.io/ssl-redirect: "false"
       ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
-externalURL: http://core.harbor.127.0.0.1.nip.io
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+externalURL: http://core.harbor-172-19-0-3.nip.io

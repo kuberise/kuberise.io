@@ -5,15 +5,16 @@ service:
 ingress:
   tls:
   - hosts:
-    - "*.127.0.0.1.nip.io"
+    - "*.nip.io"
     secretName: wildcard-cert-tls
   enabled: true
   className: nginx
   hosts:
-    - host: gitea.127.0.0.1.nip.io
+    - host: gitea-172-19-0-3.nip.io
       paths:
         - path: /
           pathType: Prefix
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    cert-manager.io/cluster-issuer: "ca-clusterissuer"

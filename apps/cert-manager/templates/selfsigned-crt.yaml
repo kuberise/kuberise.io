@@ -30,25 +30,4 @@ spec:
   ca:
     secretName: ca-key-pair
 ---
-{{- range .Values.namespaces }}
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: wildcard-cert
-  namespace: {{ . }}
-spec:
-  secretName: wildcard-cert-tls
-  duration: {{ $.Values.certificate.duration }}
-  renewBefore: {{ $.Values.certificate.renewBefore }}
-  commonName: "{{ $.Values.certificate.commonName }}"
-  dnsNames:
-  {{- range $.Values.certificate.dnsNames }}
-  - "{{ . }}"
-  {{- end }}
-  issuerRef:
-    name: ca-clusterissuer
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-{{- end }}
 {{- end }}

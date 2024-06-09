@@ -3,13 +3,13 @@ replicaCount: 1
 ingress:
   enabled: true
   annotations:
-      cert-manager.io/cluster-issuer: ca-clusterissuer
+      cert-manager.io/cluster-issuer: "ca-clusterissuer"
   tls:
   - hosts:
-    - "*.dev.127.0.0.1.nip.io"
+    - "*.nip.io"
     secretName: wildcard-cert-tls
   hosts:
-    - host: frontend.dev.127.0.0.1.nip.io
+    - host: frontend-dev-172-19-0-3.nip.io
       paths:
         - path: /
           pathType: ImplementationSpecific

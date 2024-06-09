@@ -4,14 +4,15 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "ca-clusterissuer"
   hosts:
-    - host: backstage.127.0.0.1.nip.io
+    - host: backstage-172-19-0-3.nip.io
       paths:
         - path: /
           pathType: Prefix
   tls:
   - hosts:
-    - "*.127.0.0.1.nip.io"
+    - "*.nip.io"
     secretName: wildcard-cert-tls
 
 service:
