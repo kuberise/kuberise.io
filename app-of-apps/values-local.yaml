@@ -4,7 +4,7 @@ applications:
 
 helmCharts:
   keycloak:
-    enabled: false
+    enabled: true
 
   ingress-nginx:
     enabled: true
@@ -19,7 +19,7 @@ helmCharts:
     enabled: true
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
 
   todolist-frontend-dev:
     enabled: true
