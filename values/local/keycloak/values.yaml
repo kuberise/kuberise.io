@@ -15,7 +15,7 @@ keycloakx:
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_URL
-      value: cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432
+      value: jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432
     - name: KC_DB
       value: postgres
     - name: KC_DB_USERNAME
