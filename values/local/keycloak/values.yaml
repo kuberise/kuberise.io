@@ -6,6 +6,7 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
+    - "--verbose"
   extraEnv: |
     - name: KEYCLOAK_ADMIN
       value: admin
