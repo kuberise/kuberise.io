@@ -4,7 +4,7 @@ applications:
 
 helmCharts:
   keycloak:
-    enabled: false
+    enabled: true
 
   ingress-nginx:
     enabled: true

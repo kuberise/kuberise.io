@@ -1,31 +1,58 @@
 keycloak:
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start-dev"
+    - "--http-enabled=true"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+    - "--hostname-strict-https=false"
+  extraEnv: |
+    - name: KEYCLOAK_ADMIN
+      value: admin
+    - name: KEYCLOAK_ADMIN_PASSWORD
+      value: admin
+    - name: JAVA_OPTS_APPEND
+      value: >-
+        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    - name:KC_DB_URL
+      value: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+    - name: KC_DB
+      value: postgres
+    - name: KC_DB_USERNAME
+      value: admin
+    - name: KC_DB_PASSWORD
+      valuefrom:
+        secretkeyref:
+          name: pg-secret
+          key: password
 
-  externalDatabase:
-    host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
-    user: app
-    database: app
-    existingSecret: pg-secret
-    existingSecretPasswordKey: password
 
-  auth:
-    adminUser: admin
-    existingSecret: pg-secret
-    passwordSecretKey: password
+#   externalDatabase:
+#     host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+#     user: app
+#     database: app
+#     existingSecret: pg-secret
+#     existingSecretPasswordKey: password
 
-  tls:
-    enabled: false
+#   auth:
+#     adminUser: admin
+#     existingSecret: pg-secret
+#     passwordSecretKey: password
 
-  production: false
+#   tls:
+#     enabled: false
 
-  ingress:
-    enabled: true
-    ingressClassName: "nginx"
-    tls: false
-    hostname: keycloak-172-19-0-3.nip.io
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      # cert-manager.io/cluster-issuer: "ca-clusterissuer"
-    # extraTls:
-    # - hosts:
-    #   - "*.nip.io"
-    #   secretName: wildcard-cert-tls
+#   production: false
+
+#   ingress:
+#     enabled: true
+#     ingressClassName: "nginx"
+#     tls: false
+#     hostname: keycloak-172-19-0-3.nip.io
+#     annotations:
+#       nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#       # cert-manager.io/cluster-issuer: "ca-clusterissuer"
+#     # extraTls:
+#     # - hosts:
+#     #   - "*.nip.io"
+#     #   secretName: wildcard-cert-tls
