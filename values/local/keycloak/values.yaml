@@ -11,9 +11,6 @@ keycloakx:
       value: admin
     - name: KEYCLOAK_ADMIN_PASSWORD
       value: admin
-    # - name: JAVA_OPTS_APPEND
-    #   value: >-
-    #     -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name:KC_DB_URL
       value: cnpg-database-rw.cloudnative-pg.svc.cluster.local
     - name: KC_DB
