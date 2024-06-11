@@ -1,6 +1,3 @@
 selfSignedCertificate:
   enabled: true
   createCaCertificate: false
-
-letsencryptStagingCertificate:
-  enabled: false
