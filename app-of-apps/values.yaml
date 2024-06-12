@@ -110,6 +110,9 @@ helmCharts:
     targetRevision: 0.20.1
     chart: cloudnative-pg
 
+  pgadmin:
+    enabled: false
+
   # Microservice helm charts for the dev environment
 
   todolist-frontend-dev:
