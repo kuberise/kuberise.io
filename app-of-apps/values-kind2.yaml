@@ -25,10 +25,10 @@ helmCharts:
     enabled: true
 
   todolist-frontend-tst:
-    enabled: true
+    enabled: false
 
   todolist-frontend-prd:
-    enabled: true
+    enabled: false
 
   show-env-dev:
     enabled: true
