@@ -1,5 +1,9 @@
 replicaCount: 1
 
+image:
+  tag: "latest"
+
+
 ingress:
   enabled: true
   annotations:
