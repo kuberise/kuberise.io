@@ -1,3 +1,0 @@
-selfSignedCertificate:
-  enabled: true
-  createCaCertificate: false
