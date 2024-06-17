@@ -38,3 +38,6 @@ helmCharts:
 
   backstage:
     enabled: false
+
+  aws-lb-controller:
+    enabled: true

@@ -1,0 +1,6 @@
+aws-load-balancer-controller:
+  clusterName: eks-miVcYghZ
+  cluster:
+    dnsDomain: cluster.local
+  vpcId: vpc-07dd049eecbdca98e
+  region: eu-central-1
