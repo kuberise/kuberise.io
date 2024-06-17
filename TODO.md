@@ -1,1 +1,5 @@
 - [ ] external dns should set the cname in cloudflare or route53
+- [ ] Change the backend to get configurations from environment variables (by alipour)
+- [ ] Double check the values like db host and backend url etc.
+- [ ] read db host and user/pass from secrets
+- [ ] deploy and debug
