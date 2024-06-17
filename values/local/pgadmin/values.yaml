@@ -3,7 +3,7 @@ pgadmin4:
     enabled: true
     ingressClassName: nginx
     annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
     hosts:
       - host: pgadmin-172-19-0-3.nip.io
         paths:
