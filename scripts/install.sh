@@ -40,18 +40,19 @@ function label_secret() {
 }
 
 generate_ca_cert_and_key() {
-  # Accept PLATFORM_NAME as an input parameter
-  PLATFORM_NAME=$1
-  NAMESPACE=$2
 
-  # Validate PLATFORM_NAME is provided
-  if [ -z "$PLATFORM_NAME" ]; then
-    echo "PLATFORM_NAME is required as an input parameter."
+  local context=$1
+  local platform_name=$2
+  local namespace=$3
+
+  # Validate platform_name is provided
+  if [ -z "$platform_name" ]; then
+    echo "platform_name is required as an input parameter."
     return 1
   fi
 
   # Define the directory and file paths
-  DIR=".env/$PLATFORM_NAME"
+  DIR=".env/$platform_name"
   CERT="$DIR/ca.crt"
   KEY="$DIR/ca.key"
 
@@ -64,7 +65,7 @@ generate_ca_cert_and_key() {
 
     # Generate the CA certificate and private key
     openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
-      -keyout "$KEY" -out "$CERT" -subj "/CN=Self-Signed CA/O=My Org/C=US"
+      -keyout "$KEY" -out "$CERT" -subj "/CN=ca.kuberise.io CA/O=KUBERISE/C=NL"
 
     echo "CA certificate and key generated."
   else
@@ -75,10 +76,10 @@ generate_ca_cert_and_key() {
   kubectl create secret tls ca-key-pair-external \
     --cert="$CERT" \
     --key="$KEY" \
-    --namespace="$NAMESPACE" \
-    --dry-run=client -o yaml | kubectl apply -f -
+    --namespace="$namespace" \
+    --dry-run=client -o yaml | kubectl apply --namespace="$namespace" --context="$context" -f -
 
-  echo "Secret with CA certificate and key created in the $NAMESPACE namespace."
+  echo "Secret with CA certificate and key created in the $namespace namespace."
 }
 
 function install_argocd() {
@@ -247,7 +248,7 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
-generate_ca_cert_and_key $PLATFORM_NAME $NAMESPACE_CERTMANAGER
+generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME" "$NAMESPACE_CERTMANAGER"
 
 # Secrets for PostgreSQL
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-app" "--from-literal=dbname=app --from-literal=host=cnpg-database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"

@@ -2,7 +2,7 @@ replicaCount: 3
 
 ingress:
   annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
     - "*.nip.io"
