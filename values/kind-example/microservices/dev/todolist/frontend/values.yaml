@@ -1,6 +1,7 @@
 replicaCount: 1
 
 image:
+  repository: ghcr.io/kuberise/todolist-webapp
   tag: "latest"
 
 
@@ -17,3 +18,6 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
+env:
+  REACT_APP_BACKEND_URL: http://backend-dev.todolist-dev.svc.cluster.local

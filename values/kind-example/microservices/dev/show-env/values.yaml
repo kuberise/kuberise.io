@@ -20,4 +20,5 @@ env:
   PROTOCOL: HTTP
 
 image:
+  repository: mojtabaimani/env-viewer
   tag: latest

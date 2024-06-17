@@ -9,39 +9,25 @@ applications:
 
 helmCharts:
   keycloak:
-    enabled: true
+    enabled: false
 
   ingress-nginx:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
     enabled: true
 
   pgadmin:
     enabled: true
-
-  todolist-frontend-dev:
-    enabled: false
-
-  todolist-frontend-tst:
-    enabled: false
-
-  todolist-frontend-prd:
-    enabled: false
-
-  show-env-dev:
-    enabled: true
-    path: apps/show-env
-    values: eks-example/microservices/dev/show-env/values.yaml
 
   cert-manager:
     enabled: true
@@ -51,3 +37,22 @@ helmCharts:
 
   aws-lb-controller:
     enabled: false # deployed by the terraform code that created the eks cluster
+
+# microservices
+
+  todolist-frontend-dev:
+    enabled: false
+
+  todolist-frontend-tst:
+    enabled: false
+
+  todolist-backend-dev:
+    enabled: true
+
+  todolist-frontend-prd:
+    enabled: false
+
+  show-env-dev:
+    enabled: true
+    path: apps/show-env
+    values: eks-example/microservices/dev/show-env/values.yaml
