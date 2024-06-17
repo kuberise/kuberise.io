@@ -1,0 +1,21 @@
+replicaCount: 1
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+  hosts:
+    - host: xxxxxxxx.eu-central-1.elb.amazonaws.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+env:
+  Environment: dev
+  name: env-show
+  PROTOCOL: HTTP
+
+image:
+  tag: latest

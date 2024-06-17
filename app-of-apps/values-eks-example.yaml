@@ -32,6 +32,8 @@ helmCharts:
 
   show-env-dev:
     enabled: true
+    path: apps/show-env
+    values: eks-example/microservices/dev/show-env/values.yaml
 
   cert-manager:
     enabled: false
