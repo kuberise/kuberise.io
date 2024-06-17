@@ -4,7 +4,6 @@ cert-manager:
 
 selfSignedCertificate:
   enabled: false
-  createCaCertificate: false
 
 letsencryptStagingCertificate:
   enabled: false

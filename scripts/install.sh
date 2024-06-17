@@ -39,6 +39,48 @@ function label_secret() {
   kubectl label secret "$secret_name" "$label" --context "$context" -n "$namespace"
 }
 
+generate_ca_cert_and_key() {
+  # Accept PLATFORM_NAME as an input parameter
+  PLATFORM_NAME=$1
+  NAMESPACE=$2
+
+  # Validate PLATFORM_NAME is provided
+  if [ -z "$PLATFORM_NAME" ]; then
+    echo "PLATFORM_NAME is required as an input parameter."
+    return 1
+  fi
+
+  # Define the directory and file paths
+  DIR=".env/$PLATFORM_NAME"
+  CERT="$DIR/ca.crt"
+  KEY="$DIR/ca.key"
+
+  # Check if both the certificate and key files exist
+  if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
+    echo "One or both of the CA certificate/key files do not exist. Generating..."
+
+    # Create the directory structure if it doesn't exist
+    mkdir -p "$DIR"
+
+    # Generate the CA certificate and private key
+    openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+      -keyout "$KEY" -out "$CERT" -subj "/CN=Self-Signed CA/O=My Org/C=US"
+
+    echo "CA certificate and key generated."
+  else
+    echo "CA certificate and key already exist."
+  fi
+
+  # Create a secret in the cert-manager namespace with the CA certificate
+  kubectl create secret tls ca-key-pair-external \
+    --cert="$CERT" \
+    --key="$KEY" \
+    --namespace="$NAMESPACE" \
+    --dry-run=client -o yaml | kubectl apply -f -
+
+  echo "Secret with CA certificate and key created in the $NAMESPACE namespace."
+}
+
 function install_argocd() {
   local context=$1
   local namespace=$2
@@ -163,6 +205,7 @@ NAMESPACE_CNPG="cloudnative-pg"
 NAMESPACE_KEYCLOAK="keycloak"
 NAMESPACE_BACKSTAGE="backstage"
 NAMESPACE_MONITORING="monitoring"
+NAMESPACE_CERTMANAGER="cert-manager"
 
 # Warning Message
 echo "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. The following namespaces and applications will be installed:"
@@ -171,6 +214,7 @@ echo "- Namespace: $NAMESPACE_CNPG"
 echo "- Namespace: $NAMESPACE_KEYCLOAK"
 echo "- Namespace: $NAMESPACE_BACKSTAGE"
 echo "- Namespace: $NAMESPACE_MONITORING"
+echo "- Namespace: $NAMESPACE_CERTMANAGER"
 echo "- Application: argocd-server"
 echo "- Application: app-of-apps-$PLATFORM_NAME"
 echo "Please confirm that you want to proceed by typing 'yes':"
@@ -190,6 +234,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_CNPG"
 create_namespace "$CONTEXT" "$NAMESPACE_KEYCLOAK"
 create_namespace "$CONTEXT" "$NAMESPACE_BACKSTAGE"
 create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
+create_namespace "$CONTEXT" "$NAMESPACE_CERTMANAGER"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
@@ -201,6 +246,8 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
   # TODO: Generation of teams and their repositories and projects will be done later by backstage
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
+
+generate_ca_cert_and_key $PLATFORM_NAME $NAMESPACE_CERTMANAGER
 
 # Secrets for PostgreSQL
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-app" "--from-literal=dbname=app --from-literal=host=cnpg-database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
