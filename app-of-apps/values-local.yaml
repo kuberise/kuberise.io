@@ -38,3 +38,6 @@ helmCharts:
 
   backstage:
     enabled: true
+
+  pgadmin:
+    enabled: true

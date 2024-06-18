@@ -1,0 +1,12 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: pgadmin
+#   data:
+#     KEYCLOAK_CLIENT_ID: pgadmin
+#     KEYCLOAK_CLIENT_SECRET: <your-client-secret>
+#     KEYCLOAK_REALM: <your-realm>
+#     KEYCLOAK_AUTH_URL: https://keycloak-172-19-0-3.nip.io/auth/realms/<your-realm>/protocol/openid-connect/auth
+#     KEYCLOAK_TOKEN_URL: https://keycloak-172-19-0-3.nip.io/auth/realms/<your-realm>/protocol/openid-connect/token
+#     KEYCLOAK_USERINFO_URL: https://keycloak-172-19-0-3.nip.io/auth/realms/<your-realm>/protocol/openid-connect/userinfo
+#     KEYCLOAK_LOGOUT_URL: https://keycloak-172-19-0-3.nip.io/auth/realms/<your-realm>/protocol/openid-connect/logout

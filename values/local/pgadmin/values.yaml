@@ -9,3 +9,7 @@ pgadmin4:
         paths:
           - path: /
             pathType: Prefix
+    tls:
+    - hosts:
+      - "*.nip.io"
+      secretName: wildcard-cert-tls
