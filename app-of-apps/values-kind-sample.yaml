@@ -1,0 +1,55 @@
+applications:
+  cnpg-database:
+    enabled: true
+
+helmCharts:
+  keycloak:
+    enabled: true
+
+  ingress-nginx:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  cloudnative-pg:
+    enabled: true
+
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: true
+
+  pgadmin:
+    enabled: true
+
+
+  # Microservice helm charts for the dev environment
+
+  todolist-frontend-dev:
+    enabled: true
+    values: kind-sample/microservices/dev/todolist/frontend/values.yaml
+
+  show-env-dev:
+    enabled: true
+    values: kind-sample/microservices/dev/show-env/values.yaml
+
+# Microservice helm charts for the tst environment
+
+  todolist-frontend-tst:
+    enabled: false
+    values: kind-sample/microservices/tst/todolist/frontend/values.yaml
+
+
+# Microservice helm charts for the prd environment
+
+  todolist-frontend-prd:
+    enabled: false
+    values: kind-sample/microservices/prd/todolist/frontend/values.yaml

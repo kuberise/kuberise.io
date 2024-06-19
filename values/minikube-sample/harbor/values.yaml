@@ -1,0 +1,18 @@
+expose:
+  type: ingress
+  ingress:
+    tls:
+    - hosts:
+      - "*.kuberise.dev"
+      secretName: wildcard-cert-tls
+    hosts:
+      core: core.harbor.kuberise.dev
+      notary: notary.harbor.kuberise.dev
+    className: nginx
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "false"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+externalURL: http://core.harbor.kuberise.dev

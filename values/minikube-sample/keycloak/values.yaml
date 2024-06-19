@@ -1,0 +1,42 @@
+keycloakx:
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start-dev"
+    - "--http-enabled=true"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+    - "--hostname-strict-https=false"
+  extraEnv: |
+    - name: JAVA_OPTS_APPEND
+      value: >-
+        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    - name: KC_DB_URL
+      value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/app"
+    - name: KC_DB
+      value: postgres
+
+  extraEnvFrom: |
+    - secretRef:
+        name: pg-secret
+    - secretRef:
+        name: admin-secret
+
+
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+    rules:
+      -
+        # Ingress host
+        host: keycloak.kuberise.dev
+        # Paths for the host
+        paths:
+          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+            pathType: Prefix
+    # TLS configuration
+    tls:
+    - hosts:
+      - "*.kuberise.dev"
+      secretName: wildcard-cert-tls

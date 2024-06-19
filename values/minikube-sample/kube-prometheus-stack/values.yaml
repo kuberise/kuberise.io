@@ -1,0 +1,45 @@
+grafana:
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-loki-distributed-gateway
+        isDefault: false
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - "*.kuberise.dev"
+      secretName: wildcard-cert-tls
+    hosts:
+      - grafana.kuberise.dev
+    path: /
+    pathType: Prefix
+
+  adminPassword: ""
+  admin:
+    existingSecret: grafana-admin
+    passwordKey: admin-password
+    userKey: admin-user
+
+prometheus:
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - "*.kuberise.dev"
+      secretName: wildcard-cert-tls
+    hosts:
+      - prometheus.kuberise.dev
+    paths:
+      - /
+    pathType: Prefix
