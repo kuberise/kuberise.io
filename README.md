@@ -17,17 +17,19 @@ Kuberise is a free opensource internal developer platform for Kubernetes environ
 2. Run these commands (first modify the url of the repository to point to your new repository):
 
 ```bash
-export repoURL=https://github.com/[yourUserName]/kuberise.git
-git clone $repoURL
+export GITHUB_USER=[yourUserName]
+export REPO_URL=https://github.com/$GITHUB_USER/kuberise.git
+git clone $REPO_URL
 cd kuberise
 
 export CONTEXT=$(kubectl config current-context)
+export PLATFORM_NAME=kind-sample
 export REVISION=main
 export ADMIN_PASSWORD=admin
 export PG_SUPERUSER_PASSWORD=superpassword
 export PG_APP_PASSWORD=apppassword
 
-./scripts/install.sh $CONTEXT local $repoURL $REVISION
+./scripts/install.sh $CONTEXT $PLATFORM_NAME $REPO_URL $REVISION
 ```
 
 To read more please refer to the [docs here](docs/README.md)
