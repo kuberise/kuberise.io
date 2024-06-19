@@ -1,45 +1,61 @@
 applications:
   cnpg-database:
-    enabled: false
+    enabled: true
 
 helmCharts:
   keycloak:
-    enabled: false
+    enabled: true
 
   ingress-nginx:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   cloudnative-pg:
-    enabled: false
-
-  todolist-frontend-dev:
-    enabled: false
-
-  todolist-frontend-tst:
-    enabled: false
-
-  todolist-frontend-prd:
-    enabled: false
+    enabled: true
 
   cert-manager:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   pgadmin:
-    enabled: false
+    enabled: true
+
+  sealed-secrets:
+    enabled: true
+
+  # Microservice helm charts for the dev environment
+
+  todolist-frontend-dev:
+    enabled: true
+    path: apps/todolist-frontend
+    values: minikube-sample/microservices/dev/todolist/frontend/values.yaml
 
   show-env-dev:
     enabled: true
     path: apps/show-env
     values: minikube-sample/microservices/dev/show-env/values.yaml
+
+# Microservice helm charts for the tst environment
+
+  todolist-frontend-tst:
+    enabled: false
+    path: apps/todolist-frontend
+    values: minikube-sample/microservices/tst/todolist/frontend/values.yaml
+
+
+# Microservice helm charts for the prd environment
+
+  todolist-frontend-prd:
+    enabled: false
+    path: apps/todolist-frontend
+    values: minikube-sample/microservices/prd/todolist/frontend/values.yaml
