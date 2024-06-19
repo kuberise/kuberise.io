@@ -30,28 +30,26 @@ helmCharts:
   pgadmin:
     enabled: true
 
-  sealed-secrets:
-    enabled: true
 
   # Microservice helm charts for the dev environment
 
   todolist-frontend-dev:
     enabled: true
-    values: minikube-sample/microservices/dev/todolist/frontend/values.yaml
+    values: kind-sample/microservices/dev/todolist/frontend/values.yaml
 
   show-env-dev:
     enabled: true
-    values: minikube-sample/microservices/dev/show-env/values.yaml
+    values: kind-sample/microservices/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
-    values: minikube-sample/microservices/tst/todolist/frontend/values.yaml
+    values: kind-sample/microservices/tst/todolist/frontend/values.yaml
 
 
 # Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
-    values: minikube-sample/microservices/prd/todolist/frontend/values.yaml
+    values: kind-sample/microservices/prd/todolist/frontend/values.yaml
