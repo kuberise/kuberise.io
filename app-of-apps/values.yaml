@@ -118,19 +118,19 @@ helmCharts:
   todolist-frontend-dev:
     enabled: false
     path: apps/todolist-frontend
-    values: minikube-sample/microservices/dev/todolist/frontend/values.yaml
+    values: microservices/dev/todolist/frontend/values.yaml
 
   show-env-dev:
     enabled: false
     path: apps/show-env
-    values: minikube-sample/microservices/dev/show-env/values.yaml
+    values: microservices/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
     path: apps/todolist-frontend
-    values: minikube-sample/microservices/tst/todolist/frontend/values.yaml
+    values: microservices/tst/todolist/frontend/values.yaml
 
 
 # Microservice helm charts for the prd environment
@@ -138,4 +138,4 @@ helmCharts:
   todolist-frontend-prd:
     enabled: false
     path: apps/todolist-frontend
-    values: minikube-sample/microservices/prd/todolist/frontend/values.yaml
+    values: microservices/prd/todolist/frontend/values.yaml

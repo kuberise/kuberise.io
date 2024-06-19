@@ -30,9 +30,6 @@ helmCharts:
   todolist-frontend-prd:
     enabled: false
 
-  show-env-dev:
-    enabled: true
-
   cert-manager:
     enabled: true
 
@@ -41,3 +38,8 @@ helmCharts:
 
   pgadmin:
     enabled: false
+
+  show-env-dev:
+    enabled: true
+    path: apps/show-env
+    values: minikube-sample/microservices/dev/show-env/values.yaml
