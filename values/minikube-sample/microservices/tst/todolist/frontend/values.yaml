@@ -1,0 +1,15 @@
+replicaCount: 2
+
+ingress:
+  enabled: true
+  annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+  tls:
+  - hosts:
+    - "*.nip.io"
+    secretName: wildcard-cert-tls
+  hosts:
+    - host: frontend-tst.kuberise.dev
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
