@@ -1,0 +1,15 @@
+pgadmin4:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+    hosts:
+      - host: pgadmin.kuberise.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+    - hosts:
+      - "*.kuberise.dev"
+      secretName: wildcard-cert-tls

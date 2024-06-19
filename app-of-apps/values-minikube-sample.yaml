@@ -1,0 +1,43 @@
+applications:
+  cnpg-database:
+    enabled: false
+
+helmCharts:
+  keycloak:
+    enabled: false
+
+  ingress-nginx:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: false
+
+  loki:
+    enabled: false
+
+  promtail:
+    enabled: false
+
+  cloudnative-pg:
+    enabled: false
+
+  todolist-frontend-dev:
+    enabled: false
+
+  todolist-frontend-tst:
+    enabled: false
+
+  todolist-frontend-prd:
+    enabled: false
+
+  show-env-dev:
+    enabled: true
+
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: false
+
+  pgadmin:
+    enabled: false

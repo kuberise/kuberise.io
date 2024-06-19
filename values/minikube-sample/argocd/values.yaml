@@ -1,0 +1,42 @@
+configs:
+  cm:
+    timeout.reconciliation: 5s
+    resource.customizations: |
+      argoproj.io/Application:
+        health.lua: |
+          hs = {}
+          hs.status = "Progressing"
+          hs.message = ""
+          if obj.status ~= nil then
+            if obj.status.health ~= nil then
+              hs.status = obj.status.health.status
+              if obj.status.health.message ~= nil then
+                hs.message = obj.status.health.message
+              end
+            end
+          end
+          return hs
+  params:
+    server.insecure: true
+controller:
+  metrics:
+    enabled: true
+server:
+  insecure: true
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+      # nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    ingressClassName: "nginx"
+    hostname: argocd.kuberise.dev
+    paths:
+      - /
+    pathType: Prefix
+    https: true
+    tls:
+    - hosts:
+      - "*.kuberise.dev"
+      secretName: wildcard-cert-tls
