@@ -20,5 +20,5 @@ image:
   tag: latest
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
