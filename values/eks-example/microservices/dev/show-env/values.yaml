@@ -6,7 +6,7 @@ ingress:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
   hosts:
-    - host: show-env.k8s-showenvd-showenvd-7882095507-664608012.eu-central-1.elb.amazonaws.com/
+    - host: show-env.k8s-showenvd-showenvd-7882095507-664608012.eu-central-1.elb.amazonaws.com
       paths:
         - path: /
           pathType: ImplementationSpecific
