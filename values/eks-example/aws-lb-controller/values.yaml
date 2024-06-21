@@ -4,3 +4,6 @@ aws-load-balancer-controller:
     dnsDomain: cluster.local
   vpcId: vpc-07dd049eecbdca98e
   region: eu-central-1
+  serviceAccount:
+    create: false
+    name: aws-load-balancer-controller
