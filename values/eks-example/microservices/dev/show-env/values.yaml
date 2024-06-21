@@ -5,7 +5,11 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
-
+  hosts:
+    - host: show-env.xxxx.eu-central-1.elb.amazonaws.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
 
 env:
   Environment: dev
