@@ -1,8 +1,8 @@
 aws-load-balancer-controller:
-  clusterName: eks-miVcYghZ
+  clusterName: eks-kjik8OOV
   cluster:
     dnsDomain: cluster.local
-  vpcId: vpc-07dd049eecbdca98e
+  vpcId: vpc-0296f647d60df6188
   region: eu-central-1
   serviceAccount:
     create: false
