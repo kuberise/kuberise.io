@@ -7,7 +7,7 @@ helmCharts:
     enabled: false
 
   ingress-nginx:
-    enabled: false
+    enabled: false # deployed by the terraform code that created the eks cluster
 
   kube-prometheus-stack:
     enabled: false
@@ -36,10 +36,10 @@ helmCharts:
     values: eks-example/microservices/dev/show-env/values.yaml
 
   cert-manager:
-    enabled: false
+    enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   aws-lb-controller:
-    enabled: false # I deployed aws-lb-controller by the terraform code that created the eks cluster
+    enabled: false # deployed by the terraform code that created the eks cluster
