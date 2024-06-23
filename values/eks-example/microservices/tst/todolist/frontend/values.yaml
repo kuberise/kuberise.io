@@ -2,14 +2,15 @@ replicaCount: 2
 
 ingress:
   enabled: true
+  className: external-nginx
   annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
-    - "*.nip.io"
+    - "*.eks.kuberise.dev"
     secretName: wildcard-cert-tls
   hosts:
-    - host: frontend-tst-172-19-0-3.nip.io
+    - host: frontend-tst.eks.kuberise.dev
       paths:
         - path: /
           pathType: ImplementationSpecific

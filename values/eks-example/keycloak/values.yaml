@@ -24,13 +24,13 @@ keycloakx:
 
   ingress:
     enabled: true
-    ingressClassName: "nginx"
+    ingressClassName: external-nginx
     annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
     rules:
       -
         # Ingress host
-        host: keycloak-172-19-0-3.nip.io
+        host: keycloak.eks.kuberise.dev
         # Paths for the host
         paths:
           - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
@@ -38,5 +38,5 @@ keycloakx:
     # TLS configuration
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.eks.kuberise.dev"
       secretName: wildcard-cert-tls

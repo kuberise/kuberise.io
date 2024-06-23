@@ -2,6 +2,7 @@ replicaCount: 1
 
 ingress:
   enabled: true
+  className: external-nginx
   annotations:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: "internet-facing"

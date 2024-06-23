@@ -1,18 +1,18 @@
 ingress:
   enabled: true
-  className: "nginx"
+  className: external-nginx
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: "ca-clusterissuer"
+    cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   hosts:
-    - host: backstage-172-19-0-3.nip.io
+    - host: backstage.eks.kuberise.dev
       paths:
         - path: /
           pathType: Prefix
   tls:
   - hosts:
-    - "*.nip.io"
+    - "*.eks.kuberise.dev"
     secretName: wildcard-cert-tls
 
 service:

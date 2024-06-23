@@ -1,0 +1,1 @@
+- [ ] external dns should set the cname in cloudflare or route53

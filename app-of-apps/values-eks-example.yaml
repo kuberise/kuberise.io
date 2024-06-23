@@ -42,4 +42,4 @@ helmCharts:
     enabled: false
 
   aws-lb-controller:
-    enabled: true
+    enabled: false # I deployed aws-lb-controller by the terraform code that created the eks cluster

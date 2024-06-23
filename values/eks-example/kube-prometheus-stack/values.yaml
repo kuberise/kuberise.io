@@ -11,14 +11,14 @@ grafana:
   ingress:
     enabled: true
     annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
-    ingressClassName: nginx
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+    ingressClassName: external-nginx
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.eks.kuberise.dev"
       secretName: wildcard-cert-tls
     hosts:
-      - grafana-172-19-0-3.nip.io
+      - grafana.eks.kuberise.dev
     path: /
     pathType: Prefix
 
@@ -32,14 +32,14 @@ prometheus:
   ingress:
     enabled: true
     annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
-    ingressClassName: nginx
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+    ingressClassName: external-nginx
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.eks.kuberise.dev"
       secretName: wildcard-cert-tls
     hosts:
-      - prometheus-172-19-0-3.nip.io
+      - prometheus.eks.kuberise.dev
     paths:
       - /
     pathType: Prefix
