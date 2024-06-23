@@ -23,18 +23,3 @@ controller:
     enabled: true
 server:
   insecure: true
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-      # nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    ingressClassName: external-nginx
-    hostname: argocd.eks.kuberise.dev
-    paths:
-      - /
-    pathType: Prefix
-    https: true
-    tls:
-    - hosts:
-      - "argocd.eks.kuberise.dev"
-      secretName: wildcard-cert-tls
