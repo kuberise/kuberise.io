@@ -5,12 +5,12 @@ service:
 ingress:
   tls:
   - hosts:
-    - "*.nip.io"
+    - "*.{{ .Values.global.domain }}"
     secretName: wildcard-cert-tls
   enabled: true
   className: nginx
   hosts:
-    - host: gitea-172-19-0-3.nip.io
+    - host: gitea.{{ .Values.global.domain }}
       paths:
         - path: /
           pathType: Prefix

@@ -2,6 +2,10 @@ applications:
   cnpg-database:
     enabled: true
 
+  raw:
+    enabled: true
+    path: values/minikube-example/raw
+
 helmCharts:
   keycloak:
     enabled: true

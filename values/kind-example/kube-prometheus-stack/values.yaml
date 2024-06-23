@@ -15,10 +15,10 @@ grafana:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.{{ .Values.global.domain }}"
       secretName: wildcard-cert-tls
     hosts:
-      - grafana-172-19-0-3.nip.io
+      - grafana.{{ .Values.global.domain }}
     path: /
     pathType: Prefix
 
@@ -36,10 +36,10 @@ prometheus:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.{{ .Values.global.domain }}"
       secretName: wildcard-cert-tls
     hosts:
-      - prometheus-172-19-0-3.nip.io
+      - prometheus.{{ .Values.global.domain }}
     paths:
       - /
     pathType: Prefix

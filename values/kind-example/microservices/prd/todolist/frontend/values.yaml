@@ -5,11 +5,11 @@ ingress:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
-    - "*.nip.io"
+    - "*.{{ .Values.global.domain }}"
     secretName: wildcard-cert-tls
   enabled: true
   hosts:
-    - host: frontend-172-19-0-3.nip.io
+    - host: frontend.{{ .Values.global.domain }}
       paths:
         - path: /
           pathType: ImplementationSpecific

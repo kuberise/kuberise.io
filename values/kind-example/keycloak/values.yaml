@@ -30,7 +30,7 @@ keycloakx:
     rules:
       -
         # Ingress host
-        host: keycloak-172-19-0-3.nip.io
+        host: keycloak.{{ .Values.global.domain }}
         # Paths for the host
         paths:
           - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
@@ -38,5 +38,5 @@ keycloakx:
     # TLS configuration
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.{{ .Values.global.domain }}"
       secretName: wildcard-cert-tls
