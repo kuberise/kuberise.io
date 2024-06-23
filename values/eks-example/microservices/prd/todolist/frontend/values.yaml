@@ -4,7 +4,7 @@ ingress:
   enabled: true
   className: external-nginx
   annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+      cert-manager.io/cluster-issuer: http-01-production
   tls:
   - hosts:
     - "*.eks.kuberise.dev"

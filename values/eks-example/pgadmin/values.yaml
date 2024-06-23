@@ -3,7 +3,7 @@ pgadmin4:
     enabled: true
     ingressClassName: external-nginx
     annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+      cert-manager.io/cluster-issuer: http-01-production
     hosts:
       - host: pgadmin.eks.kuberise.dev
         paths:

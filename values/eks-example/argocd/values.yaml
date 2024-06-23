@@ -26,9 +26,7 @@ server:
   ingress:
     enabled: true
     annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+      cert-manager.io/cluster-issuer: http-01-production
       # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingressClassName: external-nginx
     hostname: argocd.eks.kuberise.dev

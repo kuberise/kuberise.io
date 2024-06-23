@@ -7,6 +7,7 @@ ingress:
     kubernetes.io/ingress.class: "external-nginx"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
     alb.ingress.kubernetes.io/target-type: "ip"
+
   hosts:
     - host: show-env.eks.kuberise.dev
       paths:

@@ -1,3 +1,6 @@
 selfSignedCertificate:
   enabled: true
   createCaCertificate: false
+
+letsencryptProductionCertificate:
+  enabled: true
