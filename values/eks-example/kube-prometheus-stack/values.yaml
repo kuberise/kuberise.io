@@ -16,7 +16,7 @@ grafana:
     tls:
     - hosts:
       - "grafana.eks.kuberise.dev"
-      secretName: wildcard-cert-tls
+      secretName: wildcard-cert-tls-grafana
     hosts:
       - grafana.eks.kuberise.dev
     path: /
@@ -37,7 +37,7 @@ prometheus:
     tls:
     - hosts:
       - "prometheus.eks.kuberise.dev"
-      secretName: wildcard-cert-tls
+      secretName: wildcard-cert-tls-prometheus
     hosts:
       - prometheus.eks.kuberise.dev
     paths:
