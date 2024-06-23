@@ -4,7 +4,7 @@ ingress:
   enabled: true
   className: external-nginx
   annotations:
-    kubernetes.io/ingress.class: "alb"
+    kubernetes.io/ingress.class: "external-nginx"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
   hosts:
     - host: show-env.kuberise.net
