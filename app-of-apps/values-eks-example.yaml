@@ -1,6 +1,7 @@
 applications:
   cnpg-database:
     enabled: true
+    path: values/eks-example/database
 
 helmCharts:
   keycloak:
