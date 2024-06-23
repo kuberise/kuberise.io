@@ -8,7 +8,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: "internet-facing"
     alb.ingress.kubernetes.io/target-type: "ip"
   hosts:
-    - host: show-env.kuberise.net
+    - host: show-env.eks.kuberise.dev
       paths:
         - path: /
           pathType: ImplementationSpecific
