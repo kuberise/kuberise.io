@@ -14,4 +14,4 @@ pgadmin4:
       - "pgadmin.eks.kuberise.dev"
       secretName: wildcard-cert-tls
   persistentVolume:
-    storageClassName: gp2
+    storageClass: gp2
