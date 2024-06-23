@@ -4,7 +4,7 @@ applications:
 
   raw:
     enabled: true
-    path: values/minikube-example/raw
+    path: values/kind-example/raw
 
 helmCharts:
   keycloak:
