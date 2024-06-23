@@ -5,12 +5,12 @@ service:
 ingress:
   tls:
   - hosts:
-    - "*.{{ .Values.global.domain }}"
+    - "*.kind.kuberise.dev"
     secretName: wildcard-cert-tls
   enabled: true
   className: nginx
   hosts:
-    - host: gitea.{{ .Values.global.domain }}
+    - host: gitea.kind.kuberise.dev
       paths:
         - path: /
           pathType: Prefix

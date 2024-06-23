@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: {{ printf "argocd.%s" .Values.global.domain | quote }}
+  - host: argocd.kind.kuberise.dev
     http:
       paths:
       - backend:
@@ -20,5 +20,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - {{ printf "argocd.%s" .Values.global.domain | quote }}
+    - argocd.kind.kuberise.dev
     secretName: argocd-server-tls
