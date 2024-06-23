@@ -5,7 +5,7 @@ service:
 ingress:
   tls:
   - hosts:
-    - "*.eks.kuberise.dev"
+    - "gitea.eks.kuberise.dev"
     secretName: wildcard-cert-tls
   enabled: true
   className: external-nginx

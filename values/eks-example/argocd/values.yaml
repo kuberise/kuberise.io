@@ -36,5 +36,5 @@ server:
     https: true
     tls:
     - hosts:
-      - "*.eks.kuberise.dev"
+      - "argocd.eks.kuberise.dev"
       secretName: wildcard-cert-tls

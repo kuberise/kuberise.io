@@ -38,5 +38,5 @@ keycloakx:
     # TLS configuration
     tls:
     - hosts:
-      - "*.eks.kuberise.dev"
+      - "keycloak.eks.kuberise.dev"
       secretName: wildcard-cert-tls

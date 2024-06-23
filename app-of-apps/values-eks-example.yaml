@@ -1,25 +1,28 @@
 applications:
   cnpg-database:
-    enabled: false
+    enabled: true
 
 helmCharts:
   keycloak:
-    enabled: false
+    enabled: true
 
   ingress-nginx:
     enabled: false # deployed by the terraform code that created the eks cluster
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
+
+  pgadmin:
+    enabled: true
 
   todolist-frontend-dev:
     enabled: false

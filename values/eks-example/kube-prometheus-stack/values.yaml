@@ -15,7 +15,7 @@ grafana:
     ingressClassName: external-nginx
     tls:
     - hosts:
-      - "*.eks.kuberise.dev"
+      - "grafana.eks.kuberise.dev"
       secretName: wildcard-cert-tls
     hosts:
       - grafana.eks.kuberise.dev
@@ -36,7 +36,7 @@ prometheus:
     ingressClassName: external-nginx
     tls:
     - hosts:
-      - "*.eks.kuberise.dev"
+      - "prometheus.eks.kuberise.dev"
       secretName: wildcard-cert-tls
     hosts:
       - prometheus.eks.kuberise.dev

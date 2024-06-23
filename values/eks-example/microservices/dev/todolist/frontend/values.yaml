@@ -7,7 +7,7 @@ ingress:
       cert-manager.io/cluster-issuer: http-01-production
   tls:
   - hosts:
-    - "*.eks.kuberise.dev"
+    - "frontend-dev.eks.kuberise.dev"
     secretName: wildcard-cert-tls
   hosts:
     - host: frontend-dev.eks.kuberise.dev
