@@ -4,10 +4,7 @@ ingress:
   enabled: true
   className: external-nginx
   annotations:
-    kubernetes.io/ingress.class: "external-nginx"
-    alb.ingress.kubernetes.io/scheme: "internet-facing"
-    alb.ingress.kubernetes.io/target-type: "ip"
-
+    cert-manager.io/cluster-issuer: http-01-production
   hosts:
     - host: show-env.eks.kuberise.dev
       paths:
