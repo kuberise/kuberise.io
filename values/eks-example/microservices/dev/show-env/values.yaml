@@ -12,7 +12,7 @@ ingress:
           pathType: ImplementationSpecific
   tls:
   - hosts:
-    - "*.eks.kuberise.dev"
+    - show-env.eks.kuberise.dev
     secretName: wildcard-cert-tls
 image:
   tag: latest
