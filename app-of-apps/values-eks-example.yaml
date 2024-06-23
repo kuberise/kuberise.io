@@ -39,7 +39,7 @@ helmCharts:
     enabled: true
 
   backstage:
-    enabled: true
+    enabled: false
 
   aws-lb-controller:
     enabled: false # deployed by the terraform code that created the eks cluster
