@@ -3,9 +3,9 @@ applications:
     enabled: true
     path: values/eks-example/database
 
-  argocd-ingress:
+  raw:
     enabled: true
-    path: values/eks-example/argocd/argocd-ingress.yaml
+    path: values/eks-example/raw
 
 helmCharts:
   keycloak:
