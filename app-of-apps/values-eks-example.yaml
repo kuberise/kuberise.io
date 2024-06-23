@@ -36,7 +36,7 @@ helmCharts:
     values: eks-example/microservices/dev/show-env/values.yaml
 
   cert-manager:
-    enabled: false
+    enabled: false # deployed by the terraform code that created the eks cluster
 
   backstage:
     enabled: false
