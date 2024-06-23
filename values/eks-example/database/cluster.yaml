@@ -15,7 +15,7 @@ spec:
 
   storage:
     size: 2Gi
-    storageClassName: gp2
+    storageClass: gp2
   monitoring:
     enablePodMonitor: true
 
