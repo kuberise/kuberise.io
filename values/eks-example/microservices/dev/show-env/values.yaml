@@ -18,7 +18,3 @@ env:
 
 image:
   tag: latest
-
-service:
-  type: NodePort
-  port: 80
