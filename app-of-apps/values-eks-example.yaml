@@ -8,7 +8,7 @@ helmCharts:
     enabled: true
 
   ingress-nginx:
-    enabled: false # deployed by the terraform code that created the eks cluster
+    enabled: true
 
   kube-prometheus-stack:
     enabled: true
@@ -40,7 +40,7 @@ helmCharts:
     values: eks-example/microservices/dev/show-env/values.yaml
 
   cert-manager:
-    enabled: false # deployed by the terraform code that created the eks cluster
+    enabled: true
 
   backstage:
     enabled: false
