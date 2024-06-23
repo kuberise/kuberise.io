@@ -23,7 +23,7 @@ git clone $REPO_URL
 cd kuberise.io
 
 export CONTEXT=$(kubectl config current-context)
-export PLATFORM_NAME=kind-sample
+export PLATFORM_NAME=kind-example
 export REVISION=main
 export ADMIN_PASSWORD=admin
 export PG_SUPERUSER_PASSWORD=superpassword
