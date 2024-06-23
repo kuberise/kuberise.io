@@ -1,0 +1,22 @@
+replicaCount: 1
+
+ingress:
+  enabled: true
+  className: external-nginx
+  annotations:
+    cert-manager.io/cluster-issuer: http-01-production
+  hosts:
+    - host: show-env.eks.kuberise.dev
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - show-env.eks.kuberise.dev
+    secretName: wildcard-cert-tls
+image:
+  tag: latest
+env:
+  Environment: dev
+  name: env-show
+  PROTOCOL: HTTP

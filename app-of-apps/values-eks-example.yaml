@@ -1,0 +1,53 @@
+applications:
+  cnpg-database:
+    enabled: true
+    path: values/eks-example/database
+
+  raw:
+    enabled: true
+    path: values/eks-example/raw
+
+helmCharts:
+  keycloak:
+    enabled: true
+
+  ingress-nginx:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  cloudnative-pg:
+    enabled: true
+
+  pgadmin:
+    enabled: true
+
+  todolist-frontend-dev:
+    enabled: false
+
+  todolist-frontend-tst:
+    enabled: false
+
+  todolist-frontend-prd:
+    enabled: false
+
+  show-env-dev:
+    enabled: true
+    path: apps/show-env
+    values: eks-example/microservices/dev/show-env/values.yaml
+
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: false
+
+  aws-lb-controller:
+    enabled: false # deployed by the terraform code that created the eks cluster

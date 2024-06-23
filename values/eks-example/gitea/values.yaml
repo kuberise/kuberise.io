@@ -1,0 +1,20 @@
+persistence:
+  enabled: true
+service:
+  type: LoadBalancer
+ingress:
+  tls:
+  - hosts:
+    - "gitea.eks.kuberise.dev"
+    secretName: wildcard-cert-tls
+  enabled: true
+  className: external-nginx
+  hosts:
+    - host: gitea.eks.kuberise.dev
+      paths:
+        - path: /
+          pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    cert-manager.io/cluster-issuer: http-01-production

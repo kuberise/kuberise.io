@@ -1,0 +1,30 @@
+ingress:
+  enabled: true
+  className: external-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: http-01-production
+  hosts:
+    - host: backstage.eks.kuberise.dev
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+  - hosts:
+    - "backstage.eks.kuberise.dev"
+    secretName: wildcard-cert-tls
+
+service:
+  type: ClusterIP
+  port: 7007
+
+backstage:
+  appConfig:
+    db:
+      connection:
+        host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+        port: 5432
+        user: application
+        existingSecret: pg-secret
+        existingSecretPasswordKey: password

@@ -89,7 +89,17 @@ function install_argocd() {
   local admin_password=$4
   echo "Installing ArgoCD using Helm..."
   BCRYPT_HASH=$(htpasswd -nbBC 10 "" "$admin_password" | tr -d ':\n' | sed 's/$2y/$2a/')
-  helm upgrade --install --kube-context "$context" --wait --atomic -n "$namespace" --create-namespace  -f "$values_file" --version 6.9.2 --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" --repo https://argoproj.github.io/argo-helm argocd argo-cd > /dev/null
+  helm upgrade \
+    --install \
+    --kube-context "$context" \
+    -n "$namespace" \
+    --create-namespace  \
+    --wait \
+    -f "$values_file" \
+    --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" \
+    --repo https://argoproj.github.io/argo-helm \
+    --version 6.9.2 \
+    argocd argo-cd > /dev/null
 }
 
 function deploy_app_of_apps() {
