@@ -15,10 +15,10 @@ grafana:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.kuberise.dev"
-      secretName: wildcard-cert-tls
+      - "*.minikube.kuberise.dev"
+      secretName: wildcard-cert-tls-grafana
     hosts:
-      - grafana.kuberise.dev
+      - grafana.minikube.kuberise.dev
     path: /
     pathType: Prefix
 
@@ -36,10 +36,10 @@ prometheus:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.kuberise.dev"
-      secretName: wildcard-cert-tls
+      - "*.minikube.kuberise.dev"
+      secretName: wildcard-cert-tls-prometheus
     hosts:
-      - prometheus.kuberise.dev
+      - prometheus.minikube.kuberise.dev
     paths:
       - /
     pathType: Prefix

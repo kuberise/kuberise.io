@@ -6,10 +6,10 @@ ingress:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
-    - "*.kuberise.dev"
+    - "*.minikube.kuberise.dev"
     secretName: wildcard-cert-tls
   hosts:
-    - host: show-env-dev.kuberise.dev
+    - host: show-env-dev.minikube.kuberise.dev
       paths:
         - path: /
           pathType: ImplementationSpecific

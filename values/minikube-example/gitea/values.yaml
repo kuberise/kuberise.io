@@ -5,12 +5,12 @@ service:
 ingress:
   tls:
   - hosts:
-    - "*.kuberise.dev"
+    - "*.minikube.kuberise.dev"
     secretName: wildcard-cert-tls
   enabled: true
   className: nginx
   hosts:
-    - host: gitea.kuberise.dev
+    - host: gitea.minikube.kuberise.dev
       paths:
         - path: /
           pathType: Prefix

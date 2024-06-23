@@ -6,13 +6,13 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   hosts:
-    - host: backstage.kuberise.dev
+    - host: backstage.minikube.kuberise.dev
       paths:
         - path: /
           pathType: Prefix
   tls:
   - hosts:
-    - "*.kuberise.dev"
+    - "*.minikube.kuberise.dev"
     secretName: wildcard-cert-tls
 
 service:
