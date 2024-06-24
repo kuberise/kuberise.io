@@ -1,10 +1,13 @@
-replicaCount: 1
+fullnameOverride: todolist-frontend-dev
 
 image:
   repository: ghcr.io/kuberise/todolist-webapp
   tag: "latest"
-fullnameOverride: todolist-frontend-dev
 
+env:
+  REACT_APP_BACKEND_URL: http://todolist-backend-dev.todolist-backend-dev.svc.cluster.local
+
+replicaCount: 1
 
 ingress:
   enabled: true
@@ -20,6 +23,3 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-env:
-  REACT_APP_BACKEND_URL: http://todolist-backend-dev.todolist-backend-dev.svc.cluster.local

@@ -1,15 +1,25 @@
+fullnameOverride: todolist-frontend-dev
+
+image:
+  repository: ghcr.io/kuberise/todolist-webapp
+  tag: "latest"
+
+env:
+  REACT_APP_BACKEND_URL: http://todolist-backend-dev.todolist-backend-dev.svc.cluster.local
+
 replicaCount: 1
 
 ingress:
   enabled: true
+  className: nginx
   annotations:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
-    - "*.minikube.kuberise.dev"
+    - "todolist-frontend-dev.minikube.kuberise.dev"
     secretName: wildcard-cert-tls
   hosts:
-    - host: frontend-dev.minikube.kuberise.dev
+    - host: todolist-frontend-dev.minikube.kuberise.dev
       paths:
         - path: /
           pathType: ImplementationSpecific

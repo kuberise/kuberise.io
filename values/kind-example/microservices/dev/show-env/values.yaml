@@ -1,5 +1,15 @@
-replicaCount: 1
 fullnameOverride: show-env-dev
+
+image:
+  repository: ghcr.io/kuberise/show-env
+  tag: latest
+
+replicaCount: 1
+
+env:
+  Environment: dev
+  name: env-show
+  PROTOCOL: HTTP
 
 ingress:
   enabled: true
@@ -15,12 +25,3 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-env:
-  Environment: dev
-  name: env-show
-  PROTOCOL: HTTP
-
-image:
-  repository: ghcr.io/kuberise/show-env
-  tag: latest
