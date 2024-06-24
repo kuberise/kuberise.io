@@ -6,7 +6,7 @@ ingress:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
-    - "*.kind.kuberise.dev"
+    - "show-env-dev.kind.kuberise.dev"
     secretName: wildcard-cert-tls
   hosts:
     - host: show-env-dev.kind.kuberise.dev
