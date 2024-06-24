@@ -8,7 +8,7 @@ image:
 ingress:
   enabled: true
   annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer"
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
     - "todolist-backend-dev.kind.kuberise.dev"
