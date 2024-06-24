@@ -41,6 +41,11 @@ helmCharts:
     enabled: true
     values: kind-example/microservices/dev/todolist/frontend/values.yaml
 
+
+  todolist-backend-dev:
+    enabled: true
+    values: kind-example/microservices/dev/todolist/backend/values.yaml
+
   show-env-dev:
     enabled: true
     values: kind-example/microservices/dev/show-env/values.yaml
