@@ -3,6 +3,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/kuberise/todolist-webapp
   tag: "latest"
+fullnameOverride: todolist-frontend-dev
 
 
 ingress:

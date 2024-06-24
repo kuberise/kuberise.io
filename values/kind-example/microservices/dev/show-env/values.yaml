@@ -1,4 +1,5 @@
 replicaCount: 1
+fullnameOverride: show-env-dev
 
 ingress:
   enabled: true
