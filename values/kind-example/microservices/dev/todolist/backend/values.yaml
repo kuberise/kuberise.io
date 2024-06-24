@@ -22,9 +22,9 @@ ingress:
 env:
     TODOLIST_HTTP__PORT: 80
     TODOLIST_HTTP__SHUTDOWN_TIMEOUT: 10
-    TODOLIST_POSTGRES__HOST: http://cnpg-database-rw.cloudnative-pg.svc.cluster.local
+    TODOLIST_POSTGRES__HOST: cnpg-database-rw.cloudnative-pg.svc.cluster.local
     TODOLIST_POSTGRES__PORT: 5432
-    TODOLIST_POSTGRES__USER: postgres
-    TODOLIST_POSTGRES__PASSWORD: supperpassword
-    TODOLIST_POSTGRES__DB_NAME: todosdb
+    TODOLIST_POSTGRES__USER: application
+    TODOLIST_POSTGRES__PASSWORD: apppassword
+    TODOLIST_POSTGRES__DB_NAME: app
     TODOLIST_POSTGRES__SSL_MODE: disable
