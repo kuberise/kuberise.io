@@ -12,13 +12,13 @@ ingress:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
-    - "*.kind.kuberise.dev"
+    - "todolist-frontend-dev.kind.kuberise.dev"
     secretName: wildcard-cert-tls
   hosts:
-    - host: frontend-dev.kind.kuberise.dev
+    - host: todolist-frontend-dev.kind.kuberise.dev
       paths:
         - path: /
           pathType: ImplementationSpecific
 
 env:
-  REACT_APP_BACKEND_URL: http://backend-dev.todolist-dev.svc.cluster.local
+  REACT_APP_BACKEND_URL: http://todolist-backend-dev.todolist-backend-dev.svc.cluster.local
