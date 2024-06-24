@@ -7,6 +7,7 @@ image:
 
 ingress:
   enabled: true
+  className: nginx
   annotations:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
