@@ -30,6 +30,7 @@ spec:
     {{- else }}
       - $valuesRepo/values/{{ $.Values.global.platformName }}/{{ default $name .name }}/values.yaml
     {{- end }}
+      - $valuesRepo/values/{{ $.Values.global.platformName }}/global/values.yaml
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo

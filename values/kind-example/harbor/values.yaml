@@ -3,11 +3,11 @@ expose:
   ingress:
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.kind.kuberise.dev"
       secretName: wildcard-cert-tls
     hosts:
-      core: core.harbor-172-19-0-3.nip.io
-      notary: notary.harbor-172-19-0-3.nip.io
+      core: core.harbor.kind.kuberise.dev
+      notary: notary.harbor.kind.kuberise.dev
     className: nginx
     annotations:
       ingress.kubernetes.io/ssl-redirect: "false"
@@ -15,4 +15,4 @@ expose:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
-externalURL: http://core.harbor-172-19-0-3.nip.io
+externalURL: http://core.harbor.kind.kuberise.dev

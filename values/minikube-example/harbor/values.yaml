@@ -3,7 +3,7 @@ expose:
   ingress:
     tls:
     - hosts:
-      - "*.kuberise.dev"
+      - "*.minikube.kuberise.dev"
       secretName: wildcard-cert-tls
     hosts:
       core: core.harbor.kuberise.dev

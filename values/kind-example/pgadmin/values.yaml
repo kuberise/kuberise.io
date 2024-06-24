@@ -5,11 +5,11 @@ pgadmin4:
     annotations:
       cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
     hosts:
-      - host: pgadmin-172-19-0-3.nip.io
+      - host: pgadmin.kind.kuberise.dev
         paths:
           - path: /
             pathType: Prefix
     tls:
     - hosts:
-      - "*.nip.io"
+      - "*.kind.kuberise.dev"
       secretName: wildcard-cert-tls

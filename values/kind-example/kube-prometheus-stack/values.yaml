@@ -15,10 +15,10 @@ grafana:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.nip.io"
-      secretName: wildcard-cert-tls
+      - "*.kind.kuberise.dev"
+      secretName: wildcard-cert-tls-grafana
     hosts:
-      - grafana-172-19-0-3.nip.io
+      - grafana.kind.kuberise.dev
     path: /
     pathType: Prefix
 
@@ -36,10 +36,10 @@ prometheus:
     ingressClassName: nginx
     tls:
     - hosts:
-      - "*.nip.io"
-      secretName: wildcard-cert-tls
+      - "*.kind.kuberise.dev"
+      secretName: wildcard-cert-tls-prometheus
     hosts:
-      - prometheus-172-19-0-3.nip.io
+      - prometheus.kind.kuberise.dev
     paths:
       - /
     pathType: Prefix

@@ -30,7 +30,7 @@ keycloakx:
     rules:
       -
         # Ingress host
-        host: keycloak.kuberise.dev
+        host: keycloak.minikube.kuberise.dev
         # Paths for the host
         paths:
           - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
@@ -38,5 +38,5 @@ keycloakx:
     # TLS configuration
     tls:
     - hosts:
-      - "*.kuberise.dev"
+      - "*.minikube.kuberise.dev"
       secretName: wildcard-cert-tls

@@ -2,6 +2,10 @@ applications:
   cnpg-database:
     enabled: true
 
+  raw:
+    enabled: true
+    path: values/kind-example/raw
+
 helmCharts:
   keycloak:
     enabled: true
