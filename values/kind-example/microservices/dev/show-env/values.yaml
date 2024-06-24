@@ -20,5 +20,5 @@ env:
   PROTOCOL: HTTP
 
 image:
-  repository: mojtabaimani/env-viewer
+  repository: ghcr.io/kuberise/show-env
   tag: latest
