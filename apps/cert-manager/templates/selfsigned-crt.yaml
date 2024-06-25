@@ -40,7 +40,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: wildcard-default-crt
-  namespace: default
+  namespace: cert-manager
 spec:
   secretName: wildcard-tls
   dnsNames:
