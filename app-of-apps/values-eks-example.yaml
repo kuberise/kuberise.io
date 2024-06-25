@@ -29,10 +29,24 @@ helmCharts:
   pgadmin:
     enabled: true
 
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: false
+
+  aws-lb-controller:
+    enabled: false # deployed by the terraform code that created the eks cluster
+
+# microservices
+
   todolist-frontend-dev:
     enabled: false
 
   todolist-frontend-tst:
+    enabled: false
+
+  todolist-backend-dev:
     enabled: false
 
   todolist-frontend-prd:
@@ -42,12 +56,3 @@ helmCharts:
     enabled: true
     path: apps/show-env
     values: eks-example/microservices/dev/show-env/values.yaml
-
-  cert-manager:
-    enabled: true
-
-  backstage:
-    enabled: false
-
-  aws-lb-controller:
-    enabled: false # deployed by the terraform code that created the eks cluster

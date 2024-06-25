@@ -1,4 +1,4 @@
-# Default values for todolist-frontend.
+# Default values for generic-deployment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -45,7 +45,7 @@ service:
 
 ingress:
   enabled: false
-  className: "nginx"
+  className: nginx
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -96,3 +96,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env: {}
+  # varName1: value1
+  # varName2: value2

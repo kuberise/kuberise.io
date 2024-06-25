@@ -1,0 +1,32 @@
+fullnameOverride: todolist-backend-dev
+
+image:
+  repository: ghcr.io/kuberise/todolist
+  tag: "latest"
+
+replicaCount: 1
+
+env:
+    TODOLIST_HTTP__PORT: 80
+    TODOLIST_HTTP__SHUTDOWN_TIMEOUT: 10
+    TODOLIST_POSTGRES__HOST: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+    TODOLIST_POSTGRES__PORT: 5432
+    TODOLIST_POSTGRES__USER: application
+    TODOLIST_POSTGRES__PASSWORD: apppassword
+    TODOLIST_POSTGRES__DB_NAME: app
+    TODOLIST_POSTGRES__SSL_MODE: disable
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
+  tls:
+  - hosts:
+    - "todolist-backend-dev.kind.kuberise.dev"
+    secretName: wildcard-cert-tls
+  hosts:
+    - host: todolist-backend-dev.kind.kuberise.dev
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

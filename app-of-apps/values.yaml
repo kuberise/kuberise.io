@@ -117,25 +117,24 @@ helmCharts:
 
   todolist-frontend-dev:
     enabled: false
-    path: apps/todolist-frontend
-    values: microservices/dev/todolist/frontend/values.yaml
+    path: apps/generic-deployment
+
+  todolist-backend-dev:
+    enabled: false
+    path: apps/generic-deployment
 
   show-env-dev:
     enabled: false
-    path: apps/show-env
-    values: microservices/dev/show-env/values.yaml
+    path: apps/generic-deployment
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
-    path: apps/todolist-frontend
-    values: microservices/tst/todolist/frontend/values.yaml
-
+    path: apps/generic-deployment
 
 # Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
-    path: apps/todolist-frontend
-    values: microservices/prd/todolist/frontend/values.yaml
+    path: apps/generic-deployment

@@ -1,1 +1,2 @@
-- [ ] external dns should set the cname in cloudflare or route53
+
+- [ ] read db host and user/pass from secrets in todolist app
