@@ -9,19 +9,19 @@ applications:
 
 helmCharts:
   keycloak:
-    enabled: false
+    enabled: true
 
   ingress-nginx:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   cloudnative-pg:
     enabled: true
@@ -47,7 +47,7 @@ helmCharts:
     enabled: false
 
   todolist-backend-dev:
-    enabled: true
+    enabled: false
 
   todolist-frontend-prd:
     enabled: false
