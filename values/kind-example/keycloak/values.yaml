@@ -25,8 +25,6 @@ keycloakx:
   ingress:
     enabled: true
     ingressClassName: "nginx"
-    annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
     rules:
       -
         # Ingress host
@@ -39,4 +37,3 @@ keycloakx:
     tls:
     - hosts:
       - "*.kind.kuberise.dev"
-      secretName: wildcard-cert-tls

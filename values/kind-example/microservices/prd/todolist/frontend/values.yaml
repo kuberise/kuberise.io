@@ -1,12 +1,9 @@
 replicaCount: 3
 
 ingress:
-  annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
     - "*.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
   enabled: true
   hosts:
     - host: frontend.kind.kuberise.dev

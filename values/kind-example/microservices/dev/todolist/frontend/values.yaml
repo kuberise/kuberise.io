@@ -12,12 +12,9 @@ replicaCount: 1
 ingress:
   enabled: true
   className: nginx
-  annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
     - "todolist-frontend-dev.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
   hosts:
     - host: todolist-frontend-dev.kind.kuberise.dev
       paths:

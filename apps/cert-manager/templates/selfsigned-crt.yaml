@@ -36,4 +36,17 @@ spec:
   ca:
     secretName: ca-key-pair-external
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-default-crt
+  namespace: default
+spec:
+  secretName: wildcard-tls
+  dnsNames:
+    - "*.{{ .Values.global.domain }}"
+  issuerRef:
+    name: ca-clusterissuer-external
+    kind: ClusterIssuer
+---
 {{- end }}

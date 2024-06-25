@@ -6,7 +6,6 @@ ingress:
   tls:
   - hosts:
     - "*.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
   enabled: true
   className: nginx
   hosts:
@@ -14,7 +13,3 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    cert-manager.io/cluster-issuer: "ca-clusterissuer-external"

@@ -14,12 +14,9 @@ env:
 ingress:
   enabled: true
   className: nginx
-  annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   tls:
   - hosts:
     - "show-env-dev.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
   hosts:
     - host: show-env-dev.kind.kuberise.dev
       paths:

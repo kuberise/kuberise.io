@@ -10,13 +10,10 @@ grafana:
         isDefault: false
   ingress:
     enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
     ingressClassName: nginx
     tls:
     - hosts:
       - "*.kind.kuberise.dev"
-      secretName: wildcard-cert-tls-grafana
     hosts:
       - grafana.kind.kuberise.dev
     path: /
@@ -31,13 +28,10 @@ grafana:
 prometheus:
   ingress:
     enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
     ingressClassName: nginx
     tls:
     - hosts:
       - "*.kind.kuberise.dev"
-      secretName: wildcard-cert-tls-prometheus
     hosts:
       - prometheus.kind.kuberise.dev
     paths:

@@ -1,10 +1,6 @@
 ingress:
   enabled: true
   className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
   hosts:
     - host: backstage.kind.kuberise.dev
       paths:
@@ -13,7 +9,6 @@ ingress:
   tls:
   - hosts:
     - "*.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
 
 service:
   type: ClusterIP
