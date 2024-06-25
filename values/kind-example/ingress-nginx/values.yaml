@@ -6,5 +6,5 @@ controller:
       https: 443
 
 
-extraArgs:
-  default-ssl-certificate: cert-manager/wildcard-tls
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
