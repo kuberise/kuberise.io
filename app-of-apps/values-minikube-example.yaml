@@ -6,7 +6,7 @@ applications:
 
   cnpg-database:
     enabled: true
-    path: values/database/
+    path: values/minikube-example/database/
 
   raw:
     enabled: true
