@@ -8,9 +8,9 @@ The architecture of Kuberise is designed to be modular and scalable, allowing fo
 
 1. **Platform Services**: These are common services that are used across different applications, such as Gitea and Cloudnative-pg and Grafana. Usually these services are deployed once and used for multiple environments. For example microservices that are deployed in different environments (like dev, tst, prd) use the same Grafana that is deployed in platform cluster. Or platform services can be deployed twice, one for non production environments and one dedicated to production environment to be safer in production.
 
-The folder structure for platform services are `values/platform_name/service_name/values.yaml`. For example if you deploy your platform services in a cluster called minikube and you have a gitea service then the values for that service is in `values/minikube/gitea/values.yaml` file. Assume you want to have one platform cluster for non-prod environments and one platform cluster for prod and your platform is minikube. Then you need to copy the whole `values/minikube` folder and call them `values/minikube-nonprod` and `values/minikube-prod`
+The folder structure for platform services are `values/platform_name/platform/service_name/values.yaml`. For example if you deploy your platform services in a cluster called minikube and you have a gitea service then the values for that service is in `values/minikube/platform/gitea/values.yaml` file. Assume you want to have one platform cluster for non-prod environments and one platform cluster for prod and your platform is minikube. Then you need to copy the whole `values/minikube` folder and call them `values/minikube-nonprod` and `values/minikube-prod`
 
-2. **Microservices**: These are application-specific services developed by your company as the business applications, such as the `todolist-frontend` service. The values folder for these services are separated from the values folder of the platform services. The folder structure is `values/microservices/dev/todolist/backend/values.yaml` and then you will add all values for all microservices here then when you want to start a new environment like `tst` you need to duplicate the `values/microservices/dev` and rename it to `values/microservices/tst` and then modify the values for this environment and then repeat this for more environments like `prd`
+2. **Microservices**: These are application-specific services developed by your company as the business applications, such as the `todolist-frontend` service. The values folder for these services are separated from the values folder of the platform services. The folder structure is `values/platformName/applications/dev/todolist/backend/values.yaml` and then you will add all values for all microservices here then when you want to start a new environment like `tst` you need to duplicate the `values/platformName/applications/dev` and rename it to `values/platformName/applications/tst` and then modify the values for this environment and then repeat this for more environments like `prd`
 
 ## Configuration
 
@@ -28,12 +28,12 @@ gitea:
 todolist-frontend-dev:
   enabled: false
   path: templates/todolist-frontend
-  values: microservices/dev/todolist/frontend/values.yaml
+  values: platformName/applications/dev/todolist/frontend/values.yaml
 
 todolist-frontend-prd:
   enabled: false
   path: templates/todolist-frontend
-  values: microservices/prd/todolist/frontend/values.yaml
+  values: platformName/applications/prd/todolist/frontend/values.yaml
 ```
 
 Then you can overwrite those default values for each platform cluster. For example assume that I have a minikube platform cluster in my local computer for dev environment and an azure platform cluster for production. I would like to enable gitea in my local minikube and disable it in my production platform cluster in azure. I would like to deploy all microservices in the same cluster as platform (They could be deployed to separate cluster as well). Then I will add two more values file in my app-of-apps folder for each platform cluster.

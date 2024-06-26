@@ -41,26 +41,26 @@ helmCharts:
 
   todolist-frontend-dev:
     enabled: false
-    values: kind-example/microservices/dev/todolist/frontend/values.yaml
+    values: kind-example/applications/dev/todolist/frontend/values.yaml
 
 
   todolist-backend-dev:
     enabled: false
-    values: kind-example/microservices/dev/todolist/backend/values.yaml
+    values: kind-example/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
     enabled: true
-    values: kind-example/microservices/dev/show-env/values.yaml
+    values: kind-example/applications/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
-    values: kind-example/microservices/tst/todolist/frontend/values.yaml
+    values: kind-example/applications/tst/todolist/frontend/values.yaml
 
 
 # Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
-    values: kind-example/microservices/prd/todolist/frontend/values.yaml
+    values: kind-example/applications/prd/todolist/frontend/values.yaml

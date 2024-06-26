@@ -57,4 +57,4 @@ helmCharts:
 
   show-env-dev:
     enabled: true
-    values: eks-example/microservices/dev/show-env/values.yaml
+    values: eks-example/applications/dev/show-env/values.yaml

@@ -271,7 +271,7 @@ create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=pass
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
 # Install ArgoCD with custom values and admin password
-VALUES_FILE="values/$PLATFORM_NAME/argocd/values.yaml"
+VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD"
 
 # Apply ArgoCD project and app of apps configuration
