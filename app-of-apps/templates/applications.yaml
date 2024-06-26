@@ -19,7 +19,7 @@ spec:
     {{- if hasKey . "path"}}
     path: {{ .path }}
     {{- else }}
-    path: apps/{{ default $name .name }}
+    path: templates/{{ default $name .name }}
     {{- end }}
   destination:
     namespace: {{ default $name .namespace }}

@@ -4,7 +4,7 @@ Assuming you have forked the kuberise repository into your github account and th
 
 - Choose a name for your platform like `PlatformName`
 - Clone the forked repository and create a value file in app-of-apps folder with the name of `values-PlatformName.yaml` (In this file you can define which tools you want to install in your platform. This file will override default values.yaml file in that folder. You can copy current values-local.yaml file `cp ./app-of-apps/values-local.yaml ./app-of-apps/values-PlatformName.yaml`)
-- In values folder create a new folder (or copy local sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp -r ./values/local ./values/PlatformName`)
+- In values folder create a new folder (or copy local sample folder) and call it `PlatformName`. This is the folder for values for each tool that you install in your platform. For each tool that you install there should be a folder with the same name and values.yaml inside that folder. (`cp -r ./values/kind-example ./values/PlatformName`)
 - Commit and push changes to your repository.
 - Choose admin password and also postgresql super admin password
 

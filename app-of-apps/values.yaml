@@ -15,12 +15,12 @@ applications:
   # A Kustomize application
   hello:
     enabled: false
-    path: values/local/hello
+    path: values/kind-example/platform/hello
 
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: apps/cnpg-database/local
+    path: templates/cnpg-database/local
 
   raw:
     enabled: true
@@ -39,7 +39,7 @@ helmCharts:
   keycloak:
     enabled: false
     syncWave: 0
-    path: apps/keycloak
+    path: templates/keycloak
 
   sealed-secrets:
     enabled: false
@@ -123,24 +123,24 @@ helmCharts:
 
   todolist-frontend-dev:
     enabled: false
-    path: apps/generic-deployment
+    path: templates/generic-deployment
 
   todolist-backend-dev:
     enabled: false
-    path: apps/generic-deployment
+    path: templates/generic-deployment
 
   show-env-dev:
     enabled: false
-    path: apps/generic-deployment
+    path: templates/generic-deployment
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
-    path: apps/generic-deployment
+    path: templates/generic-deployment
 
 # Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
-    path: apps/generic-deployment
+    path: templates/generic-deployment

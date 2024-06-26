@@ -4,7 +4,7 @@ applications:
 
   raw:
     enabled: true
-    path: values/minikube-example/raw
+    path: values/minikube-example/platform/raw
 
 helmCharts:
   keycloak:
@@ -44,21 +44,21 @@ helmCharts:
 
   todolist-frontend-dev:
     enabled: true
-    values: minikube-example/microservices/dev/todolist/frontend/values.yaml
+    values: minikube-example/applications/dev/todolist/frontend/values.yaml
 
   show-env-dev:
     enabled: true
-    values: minikube-example/microservices/dev/show-env/values.yaml
+    values: minikube-example/applications/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
-    values: minikube-example/microservices/tst/todolist/frontend/values.yaml
+    values: minikube-example/applications/tst/todolist/frontend/values.yaml
 
 
 # Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
-    values: minikube-example/microservices/prd/todolist/frontend/values.yaml
+    values: minikube-example/applications/prd/todolist/frontend/values.yaml
