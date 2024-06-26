@@ -14,7 +14,7 @@ metadata:
   namespace: keycloak-operator
 spec:
   secret: keycloak-access             # Secret name
-  url: https://keycloak.minikube.kuberise.dev   # Keycloak URL
+  url: http://keycloak-keycloakx-http.keycloak.svc.cluster.local   # Keycloak URL
 ---
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealm
