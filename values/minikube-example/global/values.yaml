@@ -1,2 +1,2 @@
 global:
-  domain: kind.kuberise.dev
+  domain: minikube.kuberise.dev
