@@ -1,4 +1,9 @@
 applications:
+
+  hello:
+    enabled: true
+    path: values/minikube-example/applications/dev/hello
+
   cnpg-database:
     enabled: true
 

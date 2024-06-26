@@ -19,4 +19,4 @@ services:
     serviceName: pgadmin-pgadmin4
   - name: show-env-dev
   - name: todolist-frontend-dev
-  - name: todolist-backend-dev
+  # - name: todolist-backend-dev

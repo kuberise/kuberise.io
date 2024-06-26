@@ -12,10 +12,9 @@ global:
       targetRevision: x
 
 applications:
-  # A Kustomize application
+  # A Kustomize application example
   hello:
     enabled: false
-    path: values/kind-example/platform/hello
 
   cnpg-database:
     enabled: false
