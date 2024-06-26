@@ -6,3 +6,14 @@ letsencryptProductionCertificate:
   enabled: true
 
 # TODO: try staging certificate
+
+subdomains:
+  - "argocd"
+  - "gitea"
+  - "pgadmin"
+  - "show-env"
+  - "grafana"
+  - "prometheus"
+  - "keycloak"
+  - "pgadmin"
+  - "grafana"
