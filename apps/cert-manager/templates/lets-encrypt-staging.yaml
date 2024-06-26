@@ -22,7 +22,9 @@ metadata:
 spec:
   secretName: wildcard-tls-letsencrypt-staging
   dnsNames:
-  - "*.{{ .Values.global.domain }}"
+  {{- range .Values.subdomains }}
+  - "{{ . }}.{{ $.Values.global.domain }}"
+  {{- end }}
   issuerRef:
     name: http-01-staging
     kind: ClusterIssuer
