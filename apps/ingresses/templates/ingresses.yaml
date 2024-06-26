@@ -19,7 +19,7 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - {{ .subdomain }}.{{ $.Values.global.domain }}
+    - {{ default .name .subdomain }}.{{ $.Values.global.domain }}
 ---
 {{- end }}
 
