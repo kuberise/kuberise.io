@@ -49,8 +49,12 @@ helmCharts:
   # Microservice helm charts for the dev environment
 
   todolist-frontend-dev:
-    enabled: true
+    enabled: false
     values: minikube-example/applications/dev/todolist/frontend/values.yaml
+
+  todolist-backend-dev:
+    enabled: false
+    values: kind-example/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
     enabled: true

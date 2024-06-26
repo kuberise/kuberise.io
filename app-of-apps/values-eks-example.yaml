@@ -12,7 +12,6 @@ applications:
     enabled: true
     path: values/eks-example/platform/raw
 
-
 helmCharts:
   keycloak:
     enabled: true
@@ -41,26 +40,38 @@ helmCharts:
   backstage:
     enabled: false
 
+  sealed-secrets:
+    enabled: true
+
   ingresses:
     enabled: true
 
   aws-lb-controller:
     enabled: false # deployed by the terraform code that created the eks cluster
 
-# microservices
+  # Microservice helm charts for the dev environment
 
   todolist-frontend-dev:
     enabled: false
-
-  todolist-frontend-tst:
-    enabled: false
+    values: eks-example/applications/dev/todolist/frontend/values.yaml
 
   todolist-backend-dev:
     enabled: false
-
-  todolist-frontend-prd:
-    enabled: false
+    values: eks-example/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
     enabled: true
     values: eks-example/applications/dev/show-env/values.yaml
+
+# Microservice helm charts for the tst environment
+
+  todolist-frontend-tst:
+    enabled: false
+    values: eks-example/applications/tst/todolist/frontend/values.yaml
+
+
+# Microservice helm charts for the prd environment
+
+  todolist-frontend-prd:
+    enabled: false
+    values: eks-example/applications/prd/todolist/frontend/values.yaml

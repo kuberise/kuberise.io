@@ -31,13 +31,16 @@ helmCharts:
   cloudnative-pg:
     enabled: true
 
+  pgadmin:
+    enabled: true
+
   cert-manager:
     enabled: true
 
   backstage:
     enabled: true
 
-  pgadmin:
+  sealed-secrets:
     enabled: true
 
   ingresses:
@@ -48,7 +51,6 @@ helmCharts:
   todolist-frontend-dev:
     enabled: false
     values: kind-example/applications/dev/todolist/frontend/values.yaml
-
 
   todolist-backend-dev:
     enabled: false
