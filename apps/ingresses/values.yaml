@@ -1,6 +1,7 @@
-services:
-  - name: argocd-server
-    subdomain: argocd
-    port: 80
-    ingressClassName: nginx
-    path: /
+  # - name: grafana
+  #   namespace: monitoring
+  #   subdomain: grafana
+  #   serviceName: kube-prometheus-stack-grafana
+  #   port: 80
+  #   path: /
+  #   ingressClassName: nginx

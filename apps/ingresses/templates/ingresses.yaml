@@ -5,7 +5,7 @@ metadata:
   name: {{ .name }}
   namespace: {{ default .name .namespace }}
 spec:
-  ingressClassName: {{ default nginx .ingressClassName }}
+  ingressClassName: {{ default "nginx" .ingressClassName }}
   rules:
   - host: {{ default .name .subdomain }}.{{ $.Values.global.domain }}
     http:
@@ -15,7 +15,7 @@ spec:
             name: {{ default .name .serviceName }}
             port:
               number: {{ default 80 .port }}
-        path: {{ default / .path }}
+        path: {{ default "/"" .path }}
         pathType: Prefix
   tls:
   - hosts:
