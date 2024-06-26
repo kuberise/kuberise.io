@@ -19,4 +19,7 @@ services:
     serviceName: pgadmin-pgadmin4
   - name: show-env-dev
   - name: todolist-frontend-dev
+  - name: hello
+    port: 8080
+
   # - name: todolist-backend-dev
