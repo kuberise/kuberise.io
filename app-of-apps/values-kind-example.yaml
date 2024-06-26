@@ -1,6 +1,12 @@
 applications:
+
+  hello:
+    enabled: true
+    path: values/kind-example/applications/dev/hello
+
   cnpg-database:
     enabled: true
+    path: values/kind-example/platform/database/
 
   raw:
     enabled: true
