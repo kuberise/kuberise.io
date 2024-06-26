@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name:  keycloak-access
+type: Opaque
+data:
+  username: YWRtaW4K   # base64-encoded value of "admin"
+  password: YWRtaW4K   # base64-encoded value of "admin"
+---
+apiVersion: v1.edp.epam.com/v1
+kind: Keycloak
+metadata:
+  name: keycloak-instance
+spec:
+  secret: keycloak-access             # Secret name
+  url: https://keycloak.minikube.kuberise.dev   # Keycloak URL
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealm
+metadata:
+ name: platform
+spec:
+ realmName: realm-sample
+ keycloakRef:
+   name: keycloak-instance
+   kind: Keycloak
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmGroup
+metadata:
+  name: platform-admins
+spec:
+  name: PlatformAdmins
+  realmRef:
+    name: platform
+    kind: KeycloakRealm
