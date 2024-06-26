@@ -1,11 +1,3 @@
 expose:
   type: ingress
-  ingress:
-    tls:
-    - hosts:
-      - "*.kind.kuberise.dev"
-    hosts:
-      core: core.harbor.kind.kuberise.dev
-      notary: notary.harbor.kind.kuberise.dev
-    className: nginx
 externalURL: http://core.harbor.kind.kuberise.dev

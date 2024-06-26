@@ -34,6 +34,8 @@ helmCharts:
   pgadmin:
     enabled: true
 
+  ingresses:
+    enabled: true
 
   # Microservice helm charts for the dev environment
 

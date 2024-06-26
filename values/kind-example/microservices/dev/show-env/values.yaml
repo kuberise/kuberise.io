@@ -10,15 +10,3 @@ env:
   Environment: dev
   name: env-show
   PROTOCOL: HTTP
-
-ingress:
-  enabled: true
-  className: nginx
-  tls:
-  - hosts:
-    - "show-env-dev.kind.kuberise.dev"
-  hosts:
-    - host: show-env-dev.kind.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific

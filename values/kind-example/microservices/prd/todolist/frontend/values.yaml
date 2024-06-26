@@ -1,16 +1,5 @@
 replicaCount: 3
 
-ingress:
-  tls:
-  - hosts:
-    - "*.kind.kuberise.dev"
-  enabled: true
-  hosts:
-    - host: frontend.kind.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
 image:
   repository: ghcr.io/kuberise/todolist-webapp
   tag: "latest"

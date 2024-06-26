@@ -15,15 +15,3 @@ env:
     TODOLIST_POSTGRES__PASSWORD: apppassword
     TODOLIST_POSTGRES__DB_NAME: app
     TODOLIST_POSTGRES__SSL_MODE: disable
-
-ingress:
-  enabled: true
-  className: nginx
-  tls:
-  - hosts:
-    - "todolist-backend-dev.kind.kuberise.dev"
-  hosts:
-    - host: todolist-backend-dev.kind.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific

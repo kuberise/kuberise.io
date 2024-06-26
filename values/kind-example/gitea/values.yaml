@@ -2,14 +2,3 @@ persistence:
   enabled: true
 service:
   type: LoadBalancer
-ingress:
-  tls:
-  - hosts:
-    - "*.kind.kuberise.dev"
-  enabled: true
-  className: nginx
-  hosts:
-    - host: gitea.kind.kuberise.dev
-      paths:
-        - path: /
-          pathType: Prefix

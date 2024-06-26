@@ -1,0 +1,6 @@
+services:
+  - name: argocd-server
+    subdomain: argocd
+    port: 80
+    ingressClassName: nginx
+    path: /
