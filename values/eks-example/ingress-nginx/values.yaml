@@ -7,4 +7,4 @@ controller:
       service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
       service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
   extraArgs:
-    default-ssl-certificate: cert-manager/wildcard-tls
+    default-ssl-certificate: cert-manager/wildcard-tls-letsencrypt-production

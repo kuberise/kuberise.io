@@ -18,4 +18,4 @@ namespaces: []
 # certificate configuration
 certificate: {}
 
-email: user@kuberise.com
+email: contact@kuberise.com

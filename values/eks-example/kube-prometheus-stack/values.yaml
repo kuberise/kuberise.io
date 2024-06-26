@@ -8,38 +8,9 @@ grafana:
         access: proxy
         url: http://loki-loki-distributed-gateway
         isDefault: false
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-    ingressClassName: external-nginx
-    tls:
-    - hosts:
-      - "grafana.eks.kuberise.dev"
-      secretName: wildcard-cert-tls-grafana
-    hosts:
-      - grafana.eks.kuberise.dev
-    path: /
-    pathType: Prefix
 
   adminPassword: ""
   admin:
     existingSecret: grafana-admin
     passwordKey: admin-password
     userKey: admin-user
-
-prometheus:
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-    ingressClassName: external-nginx
-    tls:
-    - hosts:
-      - "prometheus.eks.kuberise.dev"
-      secretName: wildcard-cert-tls-prometheus
-    hosts:
-      - prometheus.eks.kuberise.dev
-    paths:
-      - /
-    pathType: Prefix

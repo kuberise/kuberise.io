@@ -1,6 +1,8 @@
 selfSignedCertificate:
-  enabled: true
+  enabled: false
   createCaCertificate: false
 
 letsencryptProductionCertificate:
   enabled: true
+
+# TODO: try staging certificate

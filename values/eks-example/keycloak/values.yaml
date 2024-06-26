@@ -20,23 +20,3 @@ keycloakx:
         name: pg-secret
     - secretRef:
         name: admin-secret
-
-
-  ingress:
-    enabled: true
-    ingressClassName: external-nginx
-    annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-    rules:
-      -
-        # Ingress host
-        host: keycloak.eks.kuberise.dev
-        # Paths for the host
-        paths:
-          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
-            pathType: Prefix
-    # TLS configuration
-    tls:
-    - hosts:
-      - "keycloak.eks.kuberise.dev"
-      secretName: wildcard-cert-tls
