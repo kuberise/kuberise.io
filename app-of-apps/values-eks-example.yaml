@@ -1,11 +1,11 @@
 applications:
   cnpg-database:
     enabled: true
-    path: values/eks-example/database
+    path: values/eks-example/platform/database
 
   raw:
     enabled: true
-    path: values/eks-example/raw
+    path: values/eks-example/platform/raw
 
 helmCharts:
   keycloak:

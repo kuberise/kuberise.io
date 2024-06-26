@@ -4,7 +4,7 @@ applications:
 
   raw:
     enabled: true
-    path: values/kind-example/raw
+    path: values/kind-example/platform/raw
 
 helmCharts:
   keycloak:

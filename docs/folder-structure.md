@@ -24,37 +24,37 @@ gitea:
   namespace: gitea
   targetRevision: 10.1.1
   chart: gitea
-  
+
 todolist-frontend-dev:
   enabled: false
-  path: apps/todolist-frontend
+  path: templates/todolist-frontend
   values: microservices/dev/todolist/frontend/values.yaml
 
 todolist-frontend-prd:
   enabled: false
-  path: apps/todolist-frontend
+  path: templates/todolist-frontend
   values: microservices/prd/todolist/frontend/values.yaml
 ```
 
-Then you can overwrite those default values for each platform cluster. For example assume that I have a minikube platform cluster in my local computer for dev environment and an azure platform cluster for production. I would like to enable gitea in my local minikube and disable it in my production platform cluster in azure. I would like to deploy all microservices in the same cluster as platform (They could be deployed to separate cluster as well). Then I will add two more values file in my app-of-apps folder for each platform cluster. 
+Then you can overwrite those default values for each platform cluster. For example assume that I have a minikube platform cluster in my local computer for dev environment and an azure platform cluster for production. I would like to enable gitea in my local minikube and disable it in my production platform cluster in azure. I would like to deploy all microservices in the same cluster as platform (They could be deployed to separate cluster as well). Then I will add two more values file in my app-of-apps folder for each platform cluster.
 
- `values-PlatformMinikube.yaml` for the local minikube cluster as my dev environment: 
+ `values-PlatformMinikube.yaml` for the local minikube cluster as my dev environment:
 
 ```yaml
 gitea:
   enabled: true
-  
+
 todolist-frontend-dev:
   enabled: true
 ```
 
-You can see that the `enabled` value in default file is false, it means that I need to enable them for each platform I need. Here I need to enable gitea and todolist-frontend-dev. 
+You can see that the `enabled` value in default file is false, it means that I need to enable them for each platform I need. Here I need to enable gitea and todolist-frontend-dev.
 
- `values-PlatformAzure.yaml` for the Azure AKS cluster as my production environment: 
+ `values-PlatformAzure.yaml` for the Azure AKS cluster as my production environment:
 
 ```yaml
 todolist-frontend-prd:
   enabled: true
 ```
 
-For production I don't need gitea, so I don't enable it and I just need to enable my microservices for production. 
+For production I don't need gitea, so I don't enable it and I just need to enable my microservices for production.
