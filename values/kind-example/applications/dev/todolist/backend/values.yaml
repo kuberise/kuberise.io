@@ -2,7 +2,7 @@ fullnameOverride: todolist-backend-dev
 
 image:
   repository: ghcr.io/kuberise/todolist
-  tag: "latest"
+  tag: latest
 
 replicaCount: 1
 

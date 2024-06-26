@@ -8,5 +8,5 @@ replicaCount: 1
 
 env:
   Environment: dev
-  name: env-show
+  name: show-env-dev
   PROTOCOL: HTTP

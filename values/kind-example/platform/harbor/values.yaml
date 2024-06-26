@@ -1,3 +1,4 @@
 expose:
   type: ingress
+
 externalURL: http://core.harbor.kind.kuberise.dev

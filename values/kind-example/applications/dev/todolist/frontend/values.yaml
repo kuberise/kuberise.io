@@ -2,7 +2,7 @@ fullnameOverride: todolist-frontend-dev
 
 image:
   repository: ghcr.io/kuberise/todolist-webapp
-  tag: "latest"
+  tag: latest
 
 env:
   REACT_APP_BACKEND_URL: http://todolist-backend-dev.todolist-backend-dev.svc.cluster.local

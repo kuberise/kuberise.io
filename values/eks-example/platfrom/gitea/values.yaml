@@ -1,4 +1,2 @@
 persistence:
   enabled: true
-service:
-  type: LoadBalancer

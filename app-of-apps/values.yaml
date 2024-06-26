@@ -39,6 +39,9 @@ helmCharts:
     syncWave: 0
     path: templates/keycloak
 
+  keycloak-operator:
+    enabled: false
+
   sealed-secrets:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami
