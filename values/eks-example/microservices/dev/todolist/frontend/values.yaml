@@ -8,18 +8,3 @@ env:
   REACT_APP_BACKEND_URL: http://todolist-backend-dev.todolist-backend-dev.svc.cluster.local
 
 replicaCount: 1
-
-ingress:
-  enabled: true
-  className: external-nginx
-  annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-  hosts:
-    - host: todolist-frontend-dev.eks.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - todolist-frontend-dev.eks.kuberise.dev
-    secretName: wildcard-cert-tls

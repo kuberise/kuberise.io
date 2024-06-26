@@ -1,17 +1,3 @@
 pgadmin4:
-  ingress:
-    enabled: true
-    ingressClassName: external-nginx
-    annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-    hosts:
-      - host: pgadmin.eks.kuberise.dev
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-    - hosts:
-      - "pgadmin.eks.kuberise.dev"
-      secretName: wildcard-cert-tls
   persistentVolume:
     storageClass: gp2

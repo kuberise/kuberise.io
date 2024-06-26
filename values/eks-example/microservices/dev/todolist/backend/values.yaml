@@ -15,18 +15,3 @@ env:
     TODOLIST_POSTGRES__PASSWORD: apppassword
     TODOLIST_POSTGRES__DB_NAME: app
     TODOLIST_POSTGRES__SSL_MODE: disable
-
-ingress:
-  enabled: true
-  className: external-nginx
-  annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-  hosts:
-    - host: todolist-backend-dev.eks.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - todolist-backend-dev.eks.kuberise.dev
-    secretName: wildcard-cert-tls

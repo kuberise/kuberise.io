@@ -1,6 +1,19 @@
 selfSignedCertificate:
-  enabled: true
+  enabled: false
   createCaCertificate: false
 
 letsencryptProductionCertificate:
   enabled: true
+
+# TODO: try staging certificate
+
+subdomains:
+  - "argocd"
+  - "gitea"
+  - "pgadmin"
+  - "show-env-dev"
+  - "grafana"
+  - "prometheus"
+  - "keycloak"
+  - "pgadmin"
+  - "grafana"

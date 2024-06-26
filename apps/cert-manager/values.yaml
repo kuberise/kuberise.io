@@ -4,6 +4,7 @@ cert-manager:
 
 selfSignedCertificate:
   enabled: false
+  generageCA: false
 
 letsencryptStagingCertificate:
   enabled: false
@@ -17,4 +18,4 @@ namespaces: []
 # certificate configuration
 certificate: {}
 
-email: user@kuberise.com
+email: contact@kuberise.com

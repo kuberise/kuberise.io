@@ -1,19 +1,5 @@
 replicaCount: 2
 
-ingress:
-  enabled: true
-  annotations:
-      cert-manager.io/cluster-issuer: "ca-clusterissuer-external"
-  tls:
-  - hosts:
-    - "*.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
-  hosts:
-    - host: frontend-tst.kind.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
 image:
   repository: ghcr.io/kuberise/todolist-webapp
   tag: "latest"

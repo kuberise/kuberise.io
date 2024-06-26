@@ -5,13 +5,27 @@ metadata:
   name: http-01-production
 spec:
   acme:
-    email: certmanagerproduction@kuberise.dev
+    email: {{ .Values.email }}
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: http-01-production-cluster-issuer
+      name: http-01-production
     solvers:
       - http01:
           ingress:
             ingressClassName: external-nginx
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-default-crt-letsencrypt-production
+  namespace: cert-manager
+spec:
+  secretName: wildcard-tls-letsencrypt-production
+  dnsNames:
+  {{- range .Values.subdomains }}
+  - "{{ . }}.{{ $.Values.global.domain }}"
+  {{- end }}
+  issuerRef:
+    name: http-01-production
+    kind: ClusterIssuer
 {{- end }}

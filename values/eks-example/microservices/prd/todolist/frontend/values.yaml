@@ -1,16 +1,1 @@
 replicaCount: 3
-
-ingress:
-  enabled: true
-  className: external-nginx
-  annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-  tls:
-  - hosts:
-    - "frontend.eks.kuberise.dev"
-    secretName: wildcard-cert-tls
-  hosts:
-    - host: frontend.eks.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific

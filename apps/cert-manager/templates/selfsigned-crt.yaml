@@ -1,4 +1,5 @@
 {{- if .Values.selfSignedCertificate.enabled }}
+{{- if .Values.selfSignedCertificate.generateCA }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -20,20 +21,26 @@ spec:
   duration: 24000h # 1000 days
   renewBefore: 360h # 15 days
 ---
+{{- end }}
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: ca-clusterissuer
+  name: selfsigned-clusterissuer
 spec:
   ca:
-    secretName: ca-key-pair
+    secretName: {{ if .Values.selfSignedCertificate.generateCA }}ca-key-pair{{ else }}ca-key-pair-external{{ end }}
 ---
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Certificate
 metadata:
-  name: ca-clusterissuer-external
+  name: wildcard-default-crt
+  namespace: cert-manager
 spec:
-  ca:
-    secretName: ca-key-pair-external
+  secretName: wildcard-tls
+  dnsNames:
+    - "*.{{ .Values.global.domain }}"
+  issuerRef:
+    name: selfsigned-clusterissuer
+    kind: ClusterIssuer
 ---
 {{- end }}

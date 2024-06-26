@@ -2,19 +2,3 @@ persistence:
   enabled: true
 service:
   type: LoadBalancer
-ingress:
-  tls:
-  - hosts:
-    - "*.kind.kuberise.dev"
-    secretName: wildcard-cert-tls
-  enabled: true
-  className: nginx
-  hosts:
-    - host: gitea.kind.kuberise.dev
-      paths:
-        - path: /
-          pathType: Prefix
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    cert-manager.io/cluster-issuer: "ca-clusterissuer-external"

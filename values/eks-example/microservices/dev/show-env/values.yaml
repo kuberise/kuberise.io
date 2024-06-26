@@ -10,18 +10,3 @@ env:
   Environment: dev
   name: show-env-dev
   PROTOCOL: HTTP
-
-ingress:
-  enabled: true
-  className: external-nginx
-  annotations:
-      cert-manager.io/cluster-issuer: http-01-production
-  hosts:
-    - host: show-env-dev.eks.kuberise.dev
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - show-env-dev.eks.kuberise.dev
-    secretName: wildcard-cert-tls

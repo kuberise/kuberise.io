@@ -4,3 +4,7 @@ controller:
     ports:
       http: 80
       https: 443
+
+
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
