@@ -11,7 +11,7 @@ subdomains:
   - "argocd"
   - "gitea"
   - "pgadmin"
-  - "show-env"
+  - "show-env-dev"
   - "grafana"
   - "prometheus"
   - "keycloak"
