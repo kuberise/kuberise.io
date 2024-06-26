@@ -37,6 +37,9 @@ helmCharts:
   sealed-secrets:
     enabled: true
 
+  ingresses:
+    enabled: true
+
   # Microservice helm charts for the dev environment
 
   todolist-frontend-dev:
