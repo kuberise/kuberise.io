@@ -19,7 +19,6 @@ applications:
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
-    path: templates/cnpg-database/local
 
   raw:
     enabled: true

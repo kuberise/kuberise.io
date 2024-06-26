@@ -6,6 +6,7 @@ applications:
 
   cnpg-database:
     enabled: true
+    path: values/database/
 
   raw:
     enabled: true
