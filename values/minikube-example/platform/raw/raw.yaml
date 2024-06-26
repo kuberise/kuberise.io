@@ -11,6 +11,7 @@ apiVersion: v1.edp.epam.com/v1
 kind: Keycloak
 metadata:
   name: keycloak-instance
+  namespace: keycloak-operator
 spec:
   secret: keycloak-access             # Secret name
   url: https://keycloak.minikube.kuberise.dev   # Keycloak URL
@@ -18,7 +19,8 @@ spec:
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealm
 metadata:
- name: platform
+  name: platform
+  namespace: keycloak-operator
 spec:
  realmName: realm-sample
  keycloakRef:
@@ -28,6 +30,7 @@ spec:
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealmGroup
 metadata:
+  namespace: keycloak-operator
   name: platform-admins
 spec:
   name: PlatformAdmins
