@@ -23,7 +23,7 @@ metadata:
   name: platform
   namespace: keycloak-operator
 spec:
- realmName: realm-sample
+ realmName: platform
  keycloakRef:
    name: keycloak-instance
    kind: Keycloak
