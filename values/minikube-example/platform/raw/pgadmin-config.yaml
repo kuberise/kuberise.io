@@ -1,0 +1,29 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: pgadmin-keycloak-config
+#   namespace: your-namespace
+# data:
+#   KEYCLOAK_URL: 'http://keycloak-keycloakx-http.keycloak.svc.cluster.local/auth/'
+#   KEYCLOAK_REALM: 'keycloakrealm-sample'
+#   KEYCLOAK_CLIENT_ID: 'pgadmin'
+#   KEYCLOAK_SECRET: '$client-secret-pgadmin:client-secret-key'
+#   OAUTH2_CONFIG: |
+#     issuer: http://keycloak-keycloakx-http.keycloak.svc.cluster.local/auth/realms/keycloakrealm-sample
+#     client_id: pgadmin
+#     client_secret: $client-secret-pgadmin:client-secret-key
+#     redirect_uri: http://pgadmin.example.com/oauth2/callback
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin
+  namespace: pgadmin
+  data:
+    KEYCLOAK_CLIENT_ID: pgadmin
+    KEYCLOAK_CLIENT_SECRET: <your-client-secret>
+    KEYCLOAK_REALM: platform
+    KEYCLOAK_AUTH_URL: https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/auth
+    KEYCLOAK_TOKEN_URL: https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/token
+    KEYCLOAK_USERINFO_URL: https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/userinfo
+    KEYCLOAK_LOGOUT_URL: https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/logout
