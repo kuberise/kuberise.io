@@ -1,3 +1,4 @@
+pgadmin4:
   extraConfigmapMounts:
     - name: configmap
       configMap: pgadmin
