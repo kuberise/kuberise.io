@@ -6,7 +6,6 @@ services:
     port: 7007
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-    path: /auth/
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
