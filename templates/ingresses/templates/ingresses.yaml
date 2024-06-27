@@ -4,6 +4,12 @@ kind: Ingress
 metadata:
   name: {{ .name }}
   namespace: {{ default .name .namespace }}
+  {{- if .annotations }}
+  annotations:
+    {{- range $key, $value := .annotations }}
+    {{ $key }}: {{ $value }}
+    {{- end }}
+  {{- end }}
 spec:
   ingressClassName: {{ default "nginx" .ingressClassName }}
   rules:
