@@ -19,7 +19,7 @@ data:
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
         'OAUTH2_ICON': 'fa-key',
         'OAUTH2_CLIENT_ID': 'pgadmin',
-        'OAUTH2_CLIENT_SECRET': os.environ['OAUTH2_CLIENT_SECRET'],
+        'OAUTH2_CLIENT_SECRET': 'B0N03NVbG0t1ACHYeRUDbyWRxpmGfeoe',
         'OAUTH2_TOKEN_URL': 'http://keycloak-keycloakx-http.keycloak.svc.cluster.local/auth/realms/platform/protocol/openid-connect/token',
         'OAUTH2_AUTHORIZATION_URL': 'http://keycloak-keycloakx-http.keycloak.svc.cluster.local/auth/realms/platform/protocol/openid-connect/auth',
         'OAUTH2_API_BASE_URL': 'https://keycloak.minikube.kuberise.dev',
