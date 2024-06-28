@@ -29,7 +29,7 @@ helmCharts:
     enabled: false
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
 
   pgadmin:
     enabled: true
