@@ -1,0 +1,12 @@
+fullnameOverride: show-env-dev
+
+image:
+  repository: ghcr.io/kuberise/show-env
+  tag: latest
+
+replicaCount: 1
+
+env:
+  Environment: dev
+  name: show-env-dev
+  PROTOCOL: HTTP

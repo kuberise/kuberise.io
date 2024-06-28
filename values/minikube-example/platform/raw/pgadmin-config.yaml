@@ -29,7 +29,7 @@ data:
         'OAUTH2_SCOPE': 'openid email profile',
         'OAUTH2_USERNAME_CLAIM': None,
         'OAUTH2_BUTTON_COLOR': '#f44242',
-        'OAUTH2_SSL_CERT_VERIFICATION': True,
+        'OAUTH2_SSL_CERT_VERIFICATION': False,
 
       }
     ]
