@@ -22,7 +22,7 @@ data:
         'OAUTH2_CLIENT_SECRET': 'B0N03NVbG0t1ACHYeRUDbyWRxpmGfeoe',
         'OAUTH2_TOKEN_URL': 'https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/token',
         'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/auth',
-        'OAUTH2_API_BASE_URL': 'https://keycloak.minikube.kuberise.dev',
+        'OAUTH2_API_BASE_URL': 'https://keycloak.minikube.kuberise.dev/auth/',
         'OAUTH2_USERINFO_ENDPOINT': 'https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/userinfo',
         'OAUTH2_SERVER_METADATA_URL': 'https://keycloak.minikube.kuberise.dev/auth/realms/platform/.well-known/openid-configuration',
         'OAUTH2_LOGOUT_URL': 'https://keycloak.minikube.kuberise.dev/auth/realms/platform/protocol/openid-connect/logout?client_id=pgadmin',
