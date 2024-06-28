@@ -2,8 +2,6 @@ controller:
   ingressClassResource:
     name: external-nginx
   service:
-    annotations:
-      service.beta.kubernetes.io/azure-load-balancer-resource-group: platfrom-training-01
 
   extraArgs:
     default-ssl-certificate: cert-manager/wildcard-tls-letsencrypt-production
