@@ -9,11 +9,10 @@ letsencryptProductionCertificate:
 
 subdomains:
   - "argocd"
-  - "gitea"
   - "pgadmin"
   - "show-env-dev"
-  - "grafana"
-  - "prometheus"
   - "keycloak"
   - "pgadmin"
-  - "grafana"
+  # - "grafana"
+  # - "gitea"
+  # - "prometheus"
