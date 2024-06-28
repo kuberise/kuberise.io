@@ -1,7 +1,6 @@
 controller:
   ingressClassResource:
     name: external-nginx
-  service:
 
   extraArgs:
     default-ssl-certificate: cert-manager/wildcard-tls-letsencrypt-production
