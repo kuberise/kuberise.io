@@ -27,4 +27,5 @@ services:
   - name: show-env-dev
     ingressClassName: external-nginx
   - name: echo
+    ingressClassName: external-nginx
     port: 8080
