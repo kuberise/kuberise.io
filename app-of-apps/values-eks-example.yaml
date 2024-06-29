@@ -16,6 +16,9 @@ helmCharts:
   keycloak:
     enabled: true
 
+  keycloak-operator:
+    enabled: true
+
   ingress-nginx:
     enabled: true
 
