@@ -1,0 +1,40 @@
+# apiVersion: v1
+# data:
+#   password: YWRtaW4=
+#   username: YWRtaW4=
+# kind: Secret
+# metadata:
+#   creationTimestamp: null
+#   name: keycloak-access
+#   namespace: keycloak-operator
+# ---
+# apiVersion: v1.edp.epam.com/v1
+# kind: Keycloak
+# metadata:
+#   name: keycloak-instance
+#   namespace: keycloak-operator
+# spec:
+#   secret: keycloak-access             # Secret name
+#   url: http://keycloak-keycloakx-http.keycloak.svc.cluster.local/auth/   # Keycloak URL
+# ---
+# apiVersion: v1.edp.epam.com/v1
+# kind: KeycloakRealm
+# metadata:
+#   name: platform
+#   namespace: keycloak-operator
+# spec:
+#  realmName: platform
+#  keycloakRef:
+#    name: keycloak-instance
+#    kind: Keycloak
+# ---
+# apiVersion: v1.edp.epam.com/v1
+# kind: KeycloakRealmGroup
+# metadata:
+#   namespace: keycloak-operator
+#   name: platform-admins
+# spec:
+#   name: PlatformAdmins
+#   realmRef:
+#     name: platform
+#     kind: KeycloakRealm

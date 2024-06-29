@@ -1,0 +1,10 @@
+fullnameOverride: echo
+
+image:
+  repository: k8s.gcr.io/e2e-test-images/echoserver
+  tag: 2.5
+
+service:
+  port: 8080
+
+replicaCount: 1

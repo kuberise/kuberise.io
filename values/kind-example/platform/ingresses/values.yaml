@@ -6,7 +6,8 @@ services:
     port: 7007
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-    path: /auth/
+    annotations:
+      nginx.ingress.kubernetes.io/app-root: /auth/
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
@@ -18,3 +19,10 @@ services:
   - name: pgadmin
     serviceName: pgadmin-pgadmin4
   - name: show-env-dev
+  - name: todolist-frontend-dev
+  - name: hello
+    port: 8080
+  - name: echo
+    port: 8080
+
+  # - name: todolist-backend-dev

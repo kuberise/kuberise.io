@@ -1,0 +1,13 @@
+service:
+  type: ClusterIP
+  port: 7007
+
+backstage:
+  appConfig:
+    db:
+      connection:
+        host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+        port: 5432
+        user: application
+        existingSecret: pg-secret
+        existingSecretPasswordKey: password
