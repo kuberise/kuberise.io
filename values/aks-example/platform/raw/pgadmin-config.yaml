@@ -25,7 +25,7 @@ data:
         'OAUTH2_API_BASE_URL': 'https://keycloak.aks.kuberise.dev/auth/',
         'OAUTH2_USERINFO_ENDPOINT': 'https://keycloak.aks.kuberise.dev/auth/realms/platform/protocol/openid-connect/userinfo',
         'OAUTH2_SERVER_METADATA_URL': 'https://keycloak.aks.kuberise.dev/auth/realms/platform/.well-known/openid-configuration',
-        'OAUTH2_LOGOUT_URL': 'https://keycloak.aks.kuberise.dev/auth/realms/platform/protocol/openid-connect/logout?client_id=pgadmin',
+        'OAUTH2_LOGOUT_URL': 'https://keycloak.aks.kuberise.dev/auth/realms/platform/protocol/openid-connect/logout?post_logout_redirect_uri={redirect_uri}&id_token_hint={id_token}',
         'OAUTH2_SCOPE': 'openid email profile',
         'OAUTH2_USERNAME_CLAIM': None,
         'OAUTH2_BUTTON_COLOR': '#f44242',
