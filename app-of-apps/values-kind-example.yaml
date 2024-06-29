@@ -48,6 +48,10 @@ helmCharts:
 
   # Microservice helm charts for the dev environment
 
+  echo:
+    enabled: true
+    values: kind-example/applications/dev/echo/values.yaml
+
   todolist-frontend-dev:
     enabled: false
     values: kind-example/applications/dev/todolist/frontend/values.yaml

@@ -16,3 +16,4 @@ subdomains:
   - "keycloak"
   - "pgadmin"
   - "grafana"
+  - "echo"
