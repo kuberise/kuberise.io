@@ -13,6 +13,5 @@ subdomains:
   - "show-env-dev"
   - "keycloak"
   - "pgadmin"
-  # - "grafana"
-  # - "gitea"
-  # - "prometheus"
+  - "grafana"
+  - "prometheus"
