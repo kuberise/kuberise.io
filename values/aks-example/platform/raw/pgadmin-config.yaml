@@ -11,7 +11,7 @@ data:
     FILE_LOG_LEVEL = logging.INFO
     SERVER_MODE = True
     CONSOLE_LOG_LEVEL = logging.INFO
-    MASTER_PASSWORD_REQUIRED = True
+    MASTER_PASSWORD_REQUIRED = False
     AUTHENTICATION_SOURCES = ['internal', 'oauth2']
     OAUTH2_CONFIG = [
       {
