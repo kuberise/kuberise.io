@@ -3,9 +3,9 @@ services:
     namespace: argocd
     subdomain: argocd
     ingressClassName: external-nginx
-  - name: backstage
-    port: 7007
-    ingressClassName: external-nginx
+  # - name: backstage
+  #   port: 7007
+  #   ingressClassName: external-nginx
   - name: keycloak
     serviceName: keycloak-keycloakx-http
     path: /auth/
