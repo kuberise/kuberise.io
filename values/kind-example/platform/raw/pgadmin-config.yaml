@@ -19,7 +19,7 @@ data:
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
         'OAUTH2_ICON': 'fa-key',
         'OAUTH2_CLIENT_ID': 'pgadmin',
-        'OAUTH2_CLIENT_SECRET': 'put-your-client-secret-here',
+        'OAUTH2_CLIENT_SECRET': 'JujJkkQ5s6Wlyd5Bo1eqzTe6I8ET6Uzo',
         'OAUTH2_TOKEN_URL': 'https://keycloak.kind.kuberise.dev/auth/realms/platform/protocol/openid-connect/token',
         'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.kind.kuberise.dev/auth/realms/platform/protocol/openid-connect/auth',
         'OAUTH2_API_BASE_URL': 'https://keycloak.kind.kuberise.dev/auth/',

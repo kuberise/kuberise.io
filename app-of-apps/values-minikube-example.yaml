@@ -52,7 +52,7 @@ helmCharts:
   # Microservice helm charts for the dev environment
 
   echo:
-    enabled: true
+    enabled: false
     values: minikube-example/applications/dev/echo/values.yaml
 
   todolist-frontend-dev:
