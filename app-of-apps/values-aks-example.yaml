@@ -37,9 +37,6 @@ helmCharts:
   cert-manager:
     enabled: true
 
-  backstage:
-    enabled: true
-
   sealed-secrets:
     enabled: true
 
