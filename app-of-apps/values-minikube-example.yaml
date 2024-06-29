@@ -34,13 +34,13 @@ helmCharts:
   cloudnative-pg:
     enabled: true
 
+  pgadmin:
+    enabled: true
+
   cert-manager:
     enabled: true
 
   backstage:
-    enabled: true
-
-  pgadmin:
     enabled: true
 
   sealed-secrets:

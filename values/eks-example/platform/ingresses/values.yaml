@@ -3,12 +3,13 @@ services:
     namespace: argocd
     subdomain: argocd
     ingressClassName: external-nginx
-  - name: backstage
-    port: 7007
-    ingressClassName: external-nginx
+  # - name: backstage
+  #   port: 7007
+  #   ingressClassName: external-nginx
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-    path: /auth/
+    annotations:
+      nginx.ingress.kubernetes.io/app-root: /auth/
     ingressClassName: external-nginx
   - name: grafana
     namespace: monitoring
@@ -26,4 +27,5 @@ services:
   - name: show-env-dev
     ingressClassName: external-nginx
   - name: echo
+    ingressClassName: external-nginx
     port: 8080

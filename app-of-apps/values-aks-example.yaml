@@ -16,6 +16,9 @@ helmCharts:
   keycloak:
     enabled: true
 
+  keycloak-operator:
+    enabled: true
+
   ingress-nginx:
     enabled: true
 
@@ -36,6 +39,9 @@ helmCharts:
 
   cert-manager:
     enabled: true
+
+  backstage:
+    enabled: false
 
   sealed-secrets:
     enabled: true
