@@ -180,7 +180,7 @@ EOF
 }
 
 # Variables Initialization
-# example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main $GITHUB_TOKEN
+# example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
 CONTEXT=${1:-}                                          # example: platform-cluster
 PLATFORM_NAME=${2:-local}                               # example: local, dta, azure etc. (default: local)
