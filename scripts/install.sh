@@ -95,6 +95,7 @@ function install_argocd() {
     -n "$namespace" \
     --create-namespace  \
     --wait \
+    -f values/defaults/platform/argocd/values.yaml \
     -f "$values_file" \
     --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" \
     --repo https://argoproj.github.io/argo-helm \
