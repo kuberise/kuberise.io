@@ -2,7 +2,7 @@ applications:
 
   hello:
     enabled: true
-    path: values/default/applications/dev/hello
+    path: values/defaults/applications/dev/hello
 
   cnpg-database:
     enabled: true
@@ -10,7 +10,7 @@ applications:
 
   raw:
     enabled: true
-    path: values/default/platform/raw
+    path: values/defaults/platform/raw
 
 helmCharts:
   keycloak:
@@ -53,29 +53,29 @@ helmCharts:
 
   echo:
     enabled: false
-    values: default/applications/dev/echo/values.yaml
+    values: defaults/applications/dev/echo/values.yaml
 
   todolist-frontend-dev:
     enabled: false
-    values: default/applications/dev/todolist/frontend/values.yaml
+    values: defaults/applications/dev/todolist/frontend/values.yaml
 
   todolist-backend-dev:
     enabled: false
-    values: default/applications/dev/todolist/backend/values.yaml
+    values: defaults/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
     enabled: true
-    values: default/applications/dev/show-env/values.yaml
+    values: defaults/applications/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
 
   todolist-frontend-tst:
     enabled: false
-    values: default/applications/tst/todolist/frontend/values.yaml
+    values: defaults/applications/tst/todolist/frontend/values.yaml
 
 
 # Microservice helm charts for the prd environment
 
   todolist-frontend-prd:
     enabled: false
-    values: default/applications/prd/todolist/frontend/values.yaml
+    values: defaults/applications/prd/todolist/frontend/values.yaml

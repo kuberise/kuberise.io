@@ -1,7 +1,0 @@
-pgadmin4:
-  extraConfigmapMounts:
-    - name: configmap
-      configMap: pgadmin
-      mountPath: /pgadmin4/config_local.py
-      subPath: config_local.py
-      readOnly: true
