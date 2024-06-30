@@ -1,9 +1,5 @@
 applications:
 
-  hello:
-    enabled: true
-    path: values/defaults/applications/dev/hello
-
   cnpg-database:
     enabled: true
     path: values/aks-example/platform/database/
@@ -53,7 +49,7 @@ helmCharts:
 
   echo:
     enabled: true
-    values: defaults/applications/dev/echo/values.yaml
+    values: aks-example/applications/dev/echo/values.yaml
 
   todolist-frontend-dev:
     enabled: false

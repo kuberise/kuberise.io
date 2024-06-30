@@ -2,7 +2,7 @@ applications:
 
   hello:
     enabled: true
-    path: values/defaults/applications/dev/hello
+    path: values/local-example/applications/dev/hello
 
   cnpg-database:
     enabled: true
@@ -10,7 +10,7 @@ applications:
 
   raw:
     enabled: true
-    path: values/defaults/platform/raw
+    path: values/local-example/platform/raw
 
 helmCharts:
   keycloak:
@@ -50,10 +50,6 @@ helmCharts:
     enabled: true
 
   # Microservice helm charts for the dev environment
-
-  echo:
-    enabled: false
-    values: defaults/applications/dev/echo/values.yaml
 
   todolist-frontend-dev:
     enabled: false

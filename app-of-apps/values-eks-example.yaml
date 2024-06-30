@@ -1,16 +1,12 @@
 applications:
 
-  hello:
-    enabled: true
-    path: values/defaults/applications/dev/hello
-
   cnpg-database:
     enabled: true
     path: values/eks-example/platform/database/
 
   raw:
     enabled: true
-    path: values/defaults/platform/raw
+    path: values/eks-example/platform/raw
 
 helmCharts:
   keycloak:

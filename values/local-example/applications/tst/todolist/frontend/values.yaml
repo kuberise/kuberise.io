@@ -1,5 +1,0 @@
-replicaCount: 2
-
-image:
-  repository: ghcr.io/kuberise/todolist-webapp
-  tag: "latest"
