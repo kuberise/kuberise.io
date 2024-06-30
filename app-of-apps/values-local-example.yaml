@@ -1,12 +1,16 @@
 applications:
 
+  hello:
+    enabled: true
+    path: values/local-example/applications/dev/hello
+
   cnpg-database:
     enabled: true
-    path: values/aks-example/platform/database/
+    path: values/local-example/platform/database/
 
   raw:
     enabled: true
-    path: values/aks-example/platform/raw
+    path: values/local-example/platform/raw
 
 helmCharts:
   keycloak:
@@ -37,7 +41,7 @@ helmCharts:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   sealed-secrets:
     enabled: true
@@ -46,10 +50,6 @@ helmCharts:
     enabled: true
 
   # Microservice helm charts for the dev environment
-
-  echo:
-    enabled: true
-    values: aks-example/applications/dev/echo/values.yaml
 
   todolist-frontend-dev:
     enabled: false

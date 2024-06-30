@@ -1,9 +1,9 @@
 {{- range $name, $app := .Values.helmCharts -}}
-{{ if .enabled }}
+{{- if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ default $name .name }}
+  name: {{ $name }}
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "{{ default 0 .syncWave }}"
@@ -21,16 +21,19 @@ spec:
     {{- else if hasKey . "path"}}
     path: {{ .path }}
     {{- else }}
-    path: templates/{{ default $name .name }}
+    path: templates/{{ $name }}
     {{- end }}
     helm:
       valueFiles:
-    {{- if hasKey . "values"}}
-      - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
-    {{- else }}
-      - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ default $name .name }}/values.yaml
-    {{- end }}
-      - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/global/values.yaml # global values for all applications
+        {{- if hasKey . "values"}}
+        - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
+        {{- else }}
+        - "$valuesRepo/values/defaults/platform/{{ $name }}/values.yaml"
+        - "$valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml"
+        {{- end }}
+      parameters:
+        - name: domain
+          value: {{ $.Values.global.domain }}
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo

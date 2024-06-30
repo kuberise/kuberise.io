@@ -1,4 +1,0 @@
-expose:
-  type: ingress
-
-externalURL: http://core.harbor.aks.kuberise.dev

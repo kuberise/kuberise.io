@@ -1,9 +1,0 @@
-# aws-load-balancer-controller:
-#   clusterName: xxx
-#   cluster:
-#     dnsDomain: cluster.local
-#   vpcId: xxx
-#   region: eu-central-1
-#   serviceAccount:
-#     create: false
-#     name: aws-load-balancer-controller

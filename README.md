@@ -28,8 +28,9 @@ export REVISION=main
 export ADMIN_PASSWORD=admin
 export PG_SUPERUSER_PASSWORD=superpassword
 export PG_APP_PASSWORD=apppassword
+export DOMAIN=kind.kuberise.dev
 
-./scripts/install.sh $CONTEXT $PLATFORM_NAME $REPO_URL $REVISION
+./scripts/install.sh $CONTEXT $PLATFORM_NAME $REPO_URL $REVISION $DOMAIN
 ```
 
 To read more please refer to the [docs here](docs/README.md)
