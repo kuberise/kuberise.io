@@ -1,5 +1,6 @@
 global:
   platformName: x
+  domain: x
   automated: true
   spec:
     destination:

@@ -31,6 +31,9 @@ spec:
       - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ default $name .name }}/values.yaml
     {{- end }}
       - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/global/values.yaml # global values for all applications
+      parameters:
+        - name: domain
+          value: {{ $.Values.global.domain }}
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo

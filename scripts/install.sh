@@ -108,6 +108,7 @@ function deploy_app_of_apps() {
   local platform_name="$3"
   local git_repo="$4"
   local git_revision="$5"
+  local domain="$6"
 
 # create argocd project
 cat <<EOF | kubectl apply --context $context -n $namespace -f -
@@ -165,6 +166,8 @@ spec:
           value: $git_revision
         - name: global.platformName
           value: $platform_name
+        - name: global.domain
+          value: $domain
   destination:
     server: https://kubernetes.default.svc
     namespace: $namespace
@@ -182,7 +185,8 @@ CONTEXT=${1:-}                                          # example: platform-clus
 PLATFORM_NAME=${2:-local}                               # example: local, dta, azure etc. (default: local)
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
-REPOSITORY_TOKEN=${5:-}
+DOMAIN=${5:-kind.kuberise.dev}                          # example: kind.kuberise.dev
+REPOSITORY_TOKEN=${6:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
 PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-superpassword}
@@ -275,6 +279,6 @@ VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD"
 
 # Apply ArgoCD project and app of apps configuration
-deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION"
+deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
 
 echo "Installation completed successfully."
