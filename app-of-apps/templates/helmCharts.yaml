@@ -1,4 +1,3 @@
-{{- $valuesRepo := .Values.global.valuesRepo -}}
 {{- range $name, $app := .Values.helmCharts -}}
 {{- if .enabled }}
 apiVersion: argoproj.io/v1alpha1
@@ -30,10 +29,7 @@ spec:
         {{- if hasKey . "values"}}
         - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
         {{- else }}
-          {{- $glob := .Files.Glob (printf "%s/values/%s/platform/%s/values.yaml" $valuesRepo $.Values.global.platformName $name) }}
-          {{- if $glob }}
-        - {{ $.Files.Get $glob }}
-          {{- end }}
+        - "$valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml"
         {{- end }}
       parameters:
         - name: domain
