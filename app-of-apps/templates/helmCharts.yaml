@@ -30,7 +30,6 @@ spec:
     {{- else }}
       - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ default $name .name }}/values.yaml
     {{- end }}
-      - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/global/values.yaml # global values for all applications
       parameters:
         - name: domain
           value: {{ $.Values.global.domain }}
