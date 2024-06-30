@@ -29,7 +29,7 @@ spec:
     {{- if hasKey . "values"}}
       - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
     {{- else }}
-      {{- $glob := .Files.Glob (printf "%s/values/%s/platform/%s/values.yaml" $valuesRepo $.Values.global.platformName $name) }}
+      {{- $glob := .Files.Glob $valuesRepo/(printf "values/%s/platform/%s/values.yaml" $.Values.global.platformName $name) }}
       {{- if $glob }}
         - {{ $.Files.Get $glob }}
       {{- end }}
