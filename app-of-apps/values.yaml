@@ -76,13 +76,6 @@ helmCharts:
     targetRevision: 6.15.5
     chart: promtail
 
-  harbor:
-    enabled: false
-    repoURL: https://helm.goharbor.io
-    namespace: harbor
-    targetRevision: 1.14.2
-    chart: harbor
-
   cert-manager:
     enabled: false
     namespace: cert-manager

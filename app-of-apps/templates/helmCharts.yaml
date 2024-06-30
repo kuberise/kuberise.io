@@ -23,12 +23,17 @@ spec:
     {{- else }}
     path: templates/{{ default $name .name }}
     {{- end }}
-    helm:
-      valueFiles:
+      helm:
+        valueFiles:
+    {{- if fileExists "$valuesRepo/values/defaults/platform/{{ default $name .name }}/values.yaml" }}
+        - "$valuesRepo/values/defaults/platform/{{ default $name .name }}/values.yaml"
+    {{- end }}
     {{- if hasKey . "values"}}
       - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
     {{- else }}
-      - $valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ default $name .name }}/values.yaml
+      {{- if fileExists "$valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ default $name .name }}/values.yaml" }}
+        - "$valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ default $name .name }}/values.yaml"
+      {{- end }}
     {{- end }}
       parameters:
         - name: domain

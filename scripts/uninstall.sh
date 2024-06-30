@@ -41,7 +41,7 @@ then
   exit 2
 fi
 
-namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring" "harbor" "gitea" "todolist-frontend-dev" "todolist-frontend-prd" "todolist-frontend-tst" "show-env-dev" "cert-manager")
+namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring" "gitea" "todolist-frontend-dev" "todolist-frontend-prd" "todolist-frontend-tst" "show-env-dev" "cert-manager")
 
 # Convert the array to a string with each namespace on a new line
 namespaces_str=$(IFS=$'\n'; echo "${namespaces[*]}")
