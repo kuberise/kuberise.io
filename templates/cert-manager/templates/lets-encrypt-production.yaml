@@ -23,7 +23,7 @@ spec:
   secretName: wildcard-tls-letsencrypt-production
   dnsNames:
   {{- range .Values.subdomains }}
-  - "{{ . }}.{{ $.Values.global.domain }}"
+  - "{{ . }}.{{ $.Values.domain }}"
   {{- end }}
   issuerRef:
     name: http-01-production

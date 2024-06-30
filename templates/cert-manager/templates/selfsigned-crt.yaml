@@ -38,7 +38,7 @@ metadata:
 spec:
   secretName: wildcard-tls
   dnsNames:
-    - "*.{{ .Values.global.domain }}"
+    - "*.{{ .Values.domain }}"
   issuerRef:
     name: selfsigned-clusterissuer
     kind: ClusterIssuer
