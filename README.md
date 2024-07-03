@@ -17,7 +17,7 @@ kuberise.io is a free opensource internal developer platform for Kubernetes envi
 2. Run these commands (first modify the url of the repository to point to your new repository):
 
 ```bash
-export GITHUB_USER=appie2go
+export GITHUB_USER=oidcproxydotnet
 export REPO_URL=https://github.com/oidcproxydotnet/OidcProxy.Net.Dev.git
 
 export CONTEXT=$(kubectl config current-context)
