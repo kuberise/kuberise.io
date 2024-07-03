@@ -2,15 +2,15 @@ applications:
 
   hello:
     enabled: true
-    path: values/local-example/applications/dev/hello
+    path: values/oidcproxy-dev-env/applications/dev/hello
 
   cnpg-database:
     enabled: true
-    path: values/local-example/platform/database/
+    path: values/oidcproxy-dev-env/platform/database/
 
   raw:
     enabled: false
-    path: values/local-example/platform/raw
+    path: values/oidcproxy-dev-env/platform/raw
 
 helmCharts:
   keycloak:
