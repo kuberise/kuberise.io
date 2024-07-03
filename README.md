@@ -8,7 +8,7 @@ kuberise.io is a free opensource internal developer platform for Kubernetes envi
 - CLI tools: kubectl, helm, htpasswd, git, openssl
 - A Github account or another git repository system
 - [K9s](https://k9scli.io/topics/install/) for dashboard (recommended)
-- A [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) kubernetes cluster for local installation (`kind create cluster`)
+- A [minikube]([https://kind.sigs.k8s.io/docs/user/quick-start#installation](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fmacos%2Fx86-64%2Fstable%2Fbinary+download)) kubernetes cluster for local installation (`minikube start`)
 - [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) for loadBalancer services and ingresses.
 
 ## Installation
