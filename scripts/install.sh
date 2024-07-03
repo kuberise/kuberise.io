@@ -210,10 +210,10 @@ if [ -z "$CONTEXT" ]; then
   exit 2
 fi
 
-if [ -z "$ADMIN_PASSWORD" ]; then
-  echo "The ADMIN_PASSWORD environment variable is not set."
-  exit 1
-fi
+# if [ -z "$ADMIN_PASSWORD" ]; then
+#   echo "The ADMIN_PASSWORD environment variable is not set."
+#   exit 1
+# fi
 
 # Namespace Definitions
 NAMESPACE_ARGOCD="argocd"

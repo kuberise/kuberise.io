@@ -1,36 +1,34 @@
 ![kuberise logo](docs/images/full-logo.svg)
 # kuberise.io
 
-kuberise.io is a free opensource internal developer platform for Kubernetes environment. The goal is to provide tools and templates in Kubernetes environment by a fast and easy installation to help developers focus on the development of the business applications rather than installation and configuration of side tools and preparations of the environments and automation.
+kuberise.io is a free open source internal developer platform for Kubernetes environment. The goal is to provide tools and templates in Kubernetes environment by a fast and easy installation to help developers focus on the development of the business applications rather than installation and configuration of side tools and preparations of the environments and automation.
 
 ## Prerequisites
 
 - CLI tools: kubectl, helm, htpasswd, git, openssl
 - A Github account or another git repository system
 - [K9s](https://k9scli.io/topics/install/) for dashboard (recommended)
-- A [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) kubernetes cluster for local installation (`kind create cluster`)
-- [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) for loadBalancer services and ingresses.
+- A [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) kubernetes cluster for local installation (`kind create cluster`) or any other kubernetes cluster
+- [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) for loadBalancer services and ingresses in kind cluster.
 
 ## Installation
 
-1. Fork the current repository [https://github.com/kuberise/kuberise.io](https://github.com/kuberise/kuberise.io) into your Github account, or clone and push it to your other git repository.
-2. Run these commands (first modify the url of the repository to point to your new repository):
-
+1. Fork this repository [https://github.com/kuberise/kuberise.io](https://github.com/kuberise/kuberise.io) into your Github account.
+2. Clone your new repository in your local computer and enter to the folder.
+3. Run this command:
 ```bash
-export GITHUB_USER=[yourUserName]
-export REPO_URL=https://github.com/$GITHUB_USER/kuberise.io.git
-git clone $REPO_URL
-cd kuberise.io
+./scripts/install.sh [CONTEXT] [NAME] [REPO_URL] [REVISION] [DOMAIN] [TOKEN]
+```
+- [CONTEXT] This is your kubernetes context. You can find your current kubernetes context by running this command: `kubectl config current-context`
+- [NAME] This is the name of your platform. For this name there should be a values-[NAME].yaml in app-of-apps folder and also a [NAME] folder in values folder for all configurations.
+- [REPO_URL] This is the url of your forked repository.
+- [REVISION] This is the branch or commit sha or tag of the commit that you want to use for this installation. For example you can write "main" to deploy from the main branch. 
+- [DOMAIN] This is the domain for the cluster. All platform services and applications would be subdomain of this domain, for example: keycloak.[DOMAIN]. If you are deploying into minikube you can choose minikube.kuberise.dev for the domain then your keycloak address would be keycloak.minikube.kuberise.dev
+- [TOKEN] If you are pushing this code to a private repository, you have to put a token here so the ArgoCD can access your repository. If your repository is public, skip this parameter. 
 
-export CONTEXT=$(kubectl config current-context)
-export PLATFORM_NAME=kind-example
-export REVISION=main
-export ADMIN_PASSWORD=admin
-export PG_SUPERUSER_PASSWORD=superpassword
-export PG_APP_PASSWORD=apppassword
-export DOMAIN=kind.kuberise.dev
-
-./scripts/install.sh $CONTEXT $PLATFORM_NAME $REPO_URL $REVISION $DOMAIN
+Example: If you deployed a kubernetes cluster using `minikube start` and your platform name is `local-example` then this would be the installation command: 
+```bash 
+./scripts/install.sh minikube local-example https://github.com/kuberise/kuberise.git main minikube.kuberise.dev
 ```
 
-To read more please refer to the [docs here](docs/README.md)
+For more information please read documentations here: [kuberise.io](https://kuberise.io)
