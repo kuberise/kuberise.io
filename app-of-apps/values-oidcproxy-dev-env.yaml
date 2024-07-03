@@ -5,7 +5,7 @@ applications:
     path: values/local-example/applications/dev/hello
 
   cnpg-database:
-    enabled: false
+    enabled: true
     path: values/local-example/platform/database/
 
   raw:
@@ -20,7 +20,7 @@ helmCharts:
     enabled: true
 
   ingress-nginx:
-    enabled: false
+    enabled: true
 
   kube-prometheus-stack:
     enabled: false
@@ -32,13 +32,13 @@ helmCharts:
     enabled: false
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
 
   pgadmin:
     enabled: false
 
   cert-manager:
-    enabled: false
+    enabled: true
 
   backstage:
     enabled: false
@@ -47,7 +47,7 @@ helmCharts:
     enabled: false
 
   ingresses:
-    enabled: false
+    enabled: true
 
   # Microservice helm charts for the dev environment
 
