@@ -1,12 +1,16 @@
 applications:
 
-  cnpg-database:
+  hello:
     enabled: true
-    path: values/aks-example/platform/database/
+    path: values/local-example/applications/dev/hello
+
+  cnpg-database:
+    enabled: false
+    path: values/local-example/platform/database/
 
   raw:
-    enabled: true
-    path: values/aks-example/platform/raw
+    enabled: false
+    path: values/local-example/platform/raw
 
 helmCharts:
   keycloak:
@@ -16,40 +20,36 @@ helmCharts:
     enabled: true
 
   ingress-nginx:
-    enabled: true
+    enabled: false
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   cert-manager:
-    enabled: true
+    enabled: false
 
   backstage:
     enabled: false
 
   sealed-secrets:
-    enabled: true
+    enabled: false
 
   ingresses:
-    enabled: true
+    enabled: false
 
   # Microservice helm charts for the dev environment
-
-  echo:
-    enabled: true
-    values: aks-example/applications/dev/echo/values.yaml
 
   todolist-frontend-dev:
     enabled: false
@@ -60,7 +60,7 @@ helmCharts:
     values: defaults/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
-    enabled: true
+    enabled: false
     values: defaults/applications/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
