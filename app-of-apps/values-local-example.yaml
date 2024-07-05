@@ -9,7 +9,7 @@ applications:
     path: values/local-example/platform/database/
 
   raw:
-    enabled: true
+    enabled: false
     path: values/local-example/platform/raw
 
 helmCharts:
@@ -21,6 +21,11 @@ helmCharts:
 
   ingress-nginx:
     enabled: true
+    ignoreDifferences:
+      - group: ""
+        kind: Service
+        jqPathExpressions:
+          - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
     enabled: true
@@ -48,6 +53,9 @@ helmCharts:
 
   ingresses:
     enabled: true
+
+  vault:
+    enabled: false
 
   # Microservice helm charts for the dev environment
 

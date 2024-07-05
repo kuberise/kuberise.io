@@ -114,6 +114,13 @@ helmCharts:
   ingresses:
     enabled: false
 
+  vault:
+    enabled: false
+    repoURL: https://helm.releases.hashicorp.com
+    namespace: vault
+    targetRevision: 0.28.0
+    chart: vault
+
   # Microservice helm charts for the dev environment
 
   echo:

@@ -50,6 +50,10 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+  {{- if .ignoreDifferences }}
+  ignoreDifferences:
+    {{- toYaml .ignoreDifferences | nindent 4 }}
+  {{- end }}
 ---
 {{- end }}
 {{- end }}

@@ -24,5 +24,6 @@ services:
     port: 8080
   # - name: echo
   #   port: 8080
-
   # - name: todolist-backend-dev
+  - name: vault
+    port: 8200
