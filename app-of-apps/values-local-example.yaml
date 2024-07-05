@@ -55,12 +55,7 @@ helmCharts:
     enabled: true
 
   vault:
-    enabled: true
-    ignoreDifferences:
-      - group: "*"
-        kind: "*""
-        jqPathExpressions:
-          - .spec.template.volumeClaimTemplates
+    enabled: false
 
   # Microservice helm charts for the dev environment
 
