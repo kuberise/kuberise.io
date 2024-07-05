@@ -25,7 +25,7 @@ helmCharts:
       - group: ""
         kind: Service
         jqPathExpressions:
-          - .status.loadBalancer.ingress[0].ipMode
+          - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
     enabled: true
@@ -56,6 +56,11 @@ helmCharts:
 
   vault:
     enabled: true
+    ignoreDifferences:
+      - group: ""
+        kind: StatefulSet
+        jqPathExpressions:
+          - .spec.template.volumeClaimTemplates
 
   # Microservice helm charts for the dev environment
 
