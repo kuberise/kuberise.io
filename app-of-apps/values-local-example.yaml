@@ -25,7 +25,7 @@ helmCharts:
       - group: ""
         kind: Service
         jqPathExpressions:
-          - .status.loadBalancer.ingress[].ipMode
+          - .status.loadBalancer.ingress[0].ipMode
 
   kube-prometheus-stack:
     enabled: true
