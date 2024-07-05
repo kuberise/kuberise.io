@@ -49,6 +49,9 @@ helmCharts:
   ingresses:
     enabled: true
 
+  vault:
+    enabled: true
+
   # Microservice helm charts for the dev environment
 
   todolist-frontend-dev:
