@@ -9,7 +9,7 @@ applications:
     path: values/local-example/platform/database/
 
   raw:
-    enabled: true
+    enabled: false
     path: values/local-example/platform/raw
 
 helmCharts:
