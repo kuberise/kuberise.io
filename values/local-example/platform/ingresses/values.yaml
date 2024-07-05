@@ -27,3 +27,5 @@ services:
   # - name: todolist-backend-dev
   - name: vault
     port: 8200
+  - name: vault-internal
+    port: 8201
