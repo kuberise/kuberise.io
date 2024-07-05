@@ -55,7 +55,7 @@ helmCharts:
     enabled: true
 
   vault:
-    enabled: true
+    enabled: false
     ignoreDifferences:
       - group: ""
         kind: StatefulSet
