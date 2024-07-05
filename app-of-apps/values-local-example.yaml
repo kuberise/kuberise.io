@@ -21,6 +21,11 @@ helmCharts:
 
   ingress-nginx:
     enabled: true
+    ignoreDifferences:
+      - group: ""
+        kind: Service
+        jqPathExpressions:
+          - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
     enabled: true
