@@ -1,0 +1,7 @@
+fullnameOverride: identityserver
+
+image:
+  repository: https://hub.docker.com/repository/docker/albertstarreveld/identityserver
+  tag: latest
+
+replicaCount: 1

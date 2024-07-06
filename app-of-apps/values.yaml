@@ -13,9 +13,6 @@ global:
       targetRevision: x
 
 applications:
-  # A Kustomize application example
-  hello:
-    enabled: false
 
   cnpg-database:
     enabled: false
@@ -27,27 +24,12 @@ applications:
 
 helmCharts:
 
-  teams-namespaces:
-    enabled: false
-    namespace: default
-
-  backstage:
-    enabled: false
-    # syncWave: 1
-
   keycloak:
     enabled: false
-    syncWave: 0
     path: templates/keycloak
 
   keycloak-operator:
     enabled: false
-
-  sealed-secrets:
-    enabled: false
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 2.3.5
-    chart: sealed-secrets
 
   ingress-nginx:
     enabled: false
@@ -80,27 +62,6 @@ helmCharts:
     enabled: false
     namespace: cert-manager
 
-  actions-runner-controller:
-    enabled: false
-    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
-    namespace: actions-runner-system
-    targetRevision: 0.22.0
-    chart: actions-runner-controller
-    syncWave: 0
-
-  actions-runner:
-    enabled: false
-    repoURL: https://github.com/kuberise/kuberise.git
-    namespace: actions-runner-system
-    syncWave: 1
-
-  gitea:
-    enabled: false
-    repoURL: https://dl.gitea.io/charts
-    namespace: gitea
-    targetRevision: 10.1.4
-    chart: gitea
-
   cloudnative-pg:
     enabled: false
     repoURL: https://cloudnative-pg.github.io/charts
@@ -114,32 +75,10 @@ helmCharts:
   ingresses:
     enabled: false
 
-  # Microservice helm charts for the dev environment
-
-  echo:
+  identityserver:
     enabled: false
     path: templates/generic-deployment
 
-  todolist-frontend-dev:
-    enabled: false
-    path: templates/generic-deployment
-
-  todolist-backend-dev:
-    enabled: false
-    path: templates/generic-deployment
-
-  show-env-dev:
-    enabled: false
-    path: templates/generic-deployment
-
-# Microservice helm charts for the tst environment
-
-  todolist-frontend-tst:
-    enabled: false
-    path: templates/generic-deployment
-
-# Microservice helm charts for the prd environment
-
-  todolist-frontend-prd:
+  openiddictserver:
     enabled: false
     path: templates/generic-deployment
