@@ -1,7 +1,7 @@
 fullnameOverride: identityserver
 
 image:
-  repository: https://hub.docker.com/repository/docker/albertstarreveld/openiddictserver/general
+  repository: albertstarreveld/openiddictserver
   tag: latest
 
 replicaCount: 1
