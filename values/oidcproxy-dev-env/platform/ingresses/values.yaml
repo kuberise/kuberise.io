@@ -6,9 +6,6 @@ services:
   - name: argocd-server
     namespace: argocd
     subdomain: argocd
-  - name: argocd-server
-    namespace: argocd
-    subdomain: argocd
   - name: keycloak
     serviceName: keycloak-keycloakx-http
     annotations:
