@@ -1,9 +1,14 @@
 services:
+  - name: openiddictserver
+    port: 8080
+  - name: identityserver
+    port: 8080
   - name: argocd-server
     namespace: argocd
     subdomain: argocd
-  # - name: backstage
-  #   port: 7007
+  - name: argocd-server
+    namespace: argocd
+    subdomain: argocd
   - name: keycloak
     serviceName: keycloak-keycloakx-http
     annotations:
