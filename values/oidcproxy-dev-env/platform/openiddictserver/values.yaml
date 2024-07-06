@@ -1,4 +1,4 @@
-fullnameOverride: identityserver
+fullnameOverride: openiddictserver
 
 image:
   repository: albertstarreveld/openiddictserver
