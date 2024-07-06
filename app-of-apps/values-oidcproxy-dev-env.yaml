@@ -46,8 +46,8 @@ helmCharts:
 
   identityserver:
     enabled: true
-    values: values/oidcproxy-dev-env/platform/identityserver/values.yaml
+    values: oidcproxy-dev-env/platform/identityserver/values.yaml
 
   openiddictserver:
     enabled: true
-    values: values/oidcproxy-dev-env/platform/openiddictserver/values.yaml
+    values: oidcproxy-dev-env/platform/openiddictserver/values.yaml
