@@ -2,6 +2,6 @@ fullnameOverride: identityserver
 
 image:
   repository: albertstarreveld/openiddictserver
-  tag: latest
+  tag: 1.0
 
 replicaCount: 1
