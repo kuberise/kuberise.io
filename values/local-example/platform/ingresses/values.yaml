@@ -6,8 +6,15 @@ services:
     port: 7007
   - name: keycloak
     serviceName: keycloak-keycloakx-http
+    port: 8443
     annotations:
       nginx.ingress.kubernetes.io/app-root: /auth/
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/secure-backends: "true"
+      nginx.ingress.kubernetes.io/auth-tls-secret: "cert-manager/ca-key-pair-external"
+      nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+      nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
+      nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana

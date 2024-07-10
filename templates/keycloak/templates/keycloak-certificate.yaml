@@ -1,0 +1,17 @@
+{{- if .Values.selfSignedCertificate }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keycloak-certificate
+  namespace: keycloak
+spec:
+  secretName: keycloak-tls-secret
+  duration: 2400h
+  renewBefore: 100h
+  dnsNames:
+  - keycloak-keycloakx-http.keycloak.svc.cluster.local
+  issuerRef:
+    name: selfsigned-clusterissuer
+    kind: ClusterIssuer
+---
+{{- end }}

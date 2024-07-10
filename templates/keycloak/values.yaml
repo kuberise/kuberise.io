@@ -1,4 +1,6 @@
 # Values for keycloak that are common for all clusters or environments
-keycloak:
+selfSignedCertificate: false
+
+keycloakx:
   postgresql:
     enabled: false
