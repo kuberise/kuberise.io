@@ -12,7 +12,6 @@ subdomains:
   - "pgadmin"
   - "show-env-dev"
   - "keycloak"
-  - "pgadmin"
   - "grafana"
   - "prometheus"
   - "echo"
