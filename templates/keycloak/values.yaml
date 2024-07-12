@@ -1,4 +1,14 @@
 # Values for keycloak that are common for all clusters or environments
-keycloak:
+selfSignedCertificate: false
+
+keycloakx:
   postgresql:
     enabled: false
+  extraVolumes: |
+    - name: keycloak-tls-volume
+      secret:
+        secretName: keycloak-tls-secret
+  extraVolumeMounts: |
+    - name: keycloak-tls-volume
+      mountPath: "/etc/x509/https"
+      readOnly: true

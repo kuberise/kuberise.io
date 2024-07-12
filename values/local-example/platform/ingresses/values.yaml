@@ -6,8 +6,11 @@ services:
     port: 7007
   - name: keycloak
     serviceName: keycloak-keycloakx-http
+    port: 8443
     annotations:
       nginx.ingress.kubernetes.io/app-root: /auth/
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/auth-tls-secret: "cert-manager/ca-key-pair-external"
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
@@ -25,5 +28,5 @@ services:
   # - name: echo
   #   port: 8080
   # - name: todolist-backend-dev
-  - name: vault
-    port: 8200
+  # - name: vault
+  #   port: 8200
