@@ -13,7 +13,7 @@ keycloakx:
 
   serviceMonitor:
     enabled: true
-    path: /auth/metrics
+    path: /metrics
 
   # prometheusRule:
   #   enabled: true
