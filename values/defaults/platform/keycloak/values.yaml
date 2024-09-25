@@ -6,7 +6,10 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
-    - "--metrics-enabled=true"
+
+  # serviceMonitor:
+  #   enabled: true
+  #   path: /metrics
   extraEnv: |
     - name: JAVA_OPTS_APPEND
       value: >-
