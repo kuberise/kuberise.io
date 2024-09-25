@@ -7,9 +7,10 @@ keycloakx:
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
 
-  # serviceMonitor:
-  #   enabled: true
-  #   path: /metrics
+  serviceMonitor:
+    enabled: true
+    path: /auth/metrics
+
   extraEnv: |
     - name: JAVA_OPTS_APPEND
       value: >-
