@@ -40,16 +40,16 @@ helmCharts:
     enabled: true
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   cert-manager:
     enabled: true
 
   backstage:
-    enabled: true
+    enabled: false
 
   sealed-secrets:
-    enabled: true
+    enabled: false
 
   ingresses:
     enabled: true
@@ -68,7 +68,7 @@ helmCharts:
     values: defaults/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
-    enabled: true
+    enabled: false
     values: defaults/applications/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
