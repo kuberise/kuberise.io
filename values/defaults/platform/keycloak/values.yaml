@@ -11,6 +11,9 @@ keycloakx:
     enabled: true
     path: /auth/metrics
 
+  prometheusRule:
+    enabled: true
+
   extraEnv: |
     - name: JAVA_OPTS_APPEND
       value: >-
