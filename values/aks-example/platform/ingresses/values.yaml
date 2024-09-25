@@ -8,8 +8,6 @@ services:
   #   ingressClassName: external-nginx
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-    annotations:
-      nginx.ingress.kubernetes.io/app-root: /auth/
     ingressClassName: external-nginx
   - name: grafana
     namespace: monitoring

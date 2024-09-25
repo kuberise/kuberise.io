@@ -6,8 +6,6 @@ services:
     port: 7007
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-    annotations:
-      nginx.ingress.kubernetes.io/app-root: /auth/
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
