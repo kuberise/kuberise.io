@@ -16,7 +16,8 @@ keycloakx:
     path: /auth/metrics
     namespace: monitoring
     namespaceSelector:
-      keycloak
+      matchNames:
+        - keycloak
 
   # prometheusRule:
   #   enabled: true
