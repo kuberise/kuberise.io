@@ -1,4 +1,4 @@
 keycloakx:
   serviceMonitor:
     enabled: true
-    path: /realms/master/metrics
+    path: /metrics
