@@ -1,3 +1,4 @@
 keycloakx:
   serviceMonitor:
     enabled: true
+    path: /metrics
