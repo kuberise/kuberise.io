@@ -1,0 +1,3 @@
+keycloakx:
+  serviceMonitor:
+    enabled: true

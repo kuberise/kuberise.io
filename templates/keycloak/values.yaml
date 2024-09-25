@@ -1,4 +1,2 @@
 # Values for keycloak that are common for all clusters or environments
-keycloak:
-  postgresql:
-    enabled: false
+# keycloakx:
