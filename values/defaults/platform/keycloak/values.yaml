@@ -8,11 +8,11 @@ keycloakx:
     - "--hostname-strict-https=false"
 
   serviceMonitor:
-    enabled: true
+    enabled: false
     path: /auth/metrics
 
-  prometheusRule:
-    enabled: true
+  # prometheusRule:
+  #   enabled: true
 
   extraEnv: |
     - name: JAVA_OPTS_APPEND
