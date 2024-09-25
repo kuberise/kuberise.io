@@ -14,10 +14,6 @@ keycloakx:
   serviceMonitor:
     enabled: true
     path: /auth/metrics
-    namespace: monitoring
-    namespaceSelector:
-      matchNames:
-        - keycloak
 
   # prometheusRule:
   #   enabled: true
