@@ -7,6 +7,10 @@ keycloakx:
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
 
+
+  metrics:
+    enabled: false
+
   serviceMonitor:
     enabled: false
     path: /auth/metrics
