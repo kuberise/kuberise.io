@@ -3628,9 +3628,7 @@ prometheus:
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
     ##
-    serviceMonitorSelector:
-      matchLabels:
-        prometheus: main
+    serviceMonitorSelector: {}
 
     ## Example which selects ServiceMonitors with label "prometheus" set to "somelabel"
     # serviceMonitorSelector:
