@@ -16,9 +16,8 @@ keycloakx:
   serviceMonitor:
     enabled: true
     path: /metrics
-    namespaceSelector:
-      matchNames:
-        - keycloak
+    labels:
+      app.kubernetes.io/part-of: kube-prometheus-stack
 
   # prometheusRule:
   #   enabled: true
