@@ -1,4 +1,6 @@
 keycloakx:
+  http:
+    relativePath: "/"
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "start-dev"
@@ -6,6 +8,17 @@ keycloakx:
     - "--http-port=8080"
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
+
+
+  metrics:
+    enabled: true
+
+  serviceMonitor:
+    enabled: true
+    path: /metrics
+    labels:
+      app.kubernetes.io/part-of: kube-prometheus-stack
+
   extraEnv: |
     - name: JAVA_OPTS_APPEND
       value: >-
