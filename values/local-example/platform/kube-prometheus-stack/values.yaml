@@ -3370,16 +3370,11 @@ prometheus:
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
     ##
-    serviceMonitorSelector:
-      matchLabels:
-        app.kubernetes.io/instance: keycloak
-
+    serviceMonitorSelector: {}
     ## Namespaces to be selected for ServiceMonitor discovery.
     ##
     ## Example which selects ServiceMonitors in namespaces with label "prometheus" set to "somelabel"
-    serviceMonitorNamespaceSelector:
-      matchLabels:
-        kubernetes.io/metadata.name: keycloak
+    serviceMonitorNamespaceSelector: {}
 
 
     ## If true, a nil or {} value for prometheus.prometheusSpec.podMonitorSelector will cause the
