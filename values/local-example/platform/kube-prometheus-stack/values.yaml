@@ -3653,11 +3653,9 @@ prometheus:
     ## PodMonitors to be selected for target discovery.
     ## If {}, select all PodMonitors
     ##
-    podMonitorSelector: {}
-    ## Example which selects PodMonitors with label "prometheus" set to "somelabel"
-    # podMonitorSelector:
-    #   matchLabels:
-    #     prometheus: somelabel
+    podMonitorSelector:
+      matchLabels:
+        prometheus: main
 
     ## If nil, select own namespace. Namespaces to be selected for PodMonitor discovery.
     podMonitorNamespaceSelector:
