@@ -3,6 +3,6 @@ prometheus:
     serviceMonitorSelector:
       matchLabels:
         app.kubernetes.io/part-of: kube-prometheus-stack
-    serviceMonitorNamespaceSelector:
-      matchLabels:
-        monitoring: prometheus
+    # serviceMonitorNamespaceSelector:
+    #   matchLabels:
+    #     monitoring: prometheus

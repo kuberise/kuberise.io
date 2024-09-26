@@ -19,9 +19,6 @@ keycloakx:
     labels:
       app.kubernetes.io/part-of: kube-prometheus-stack
 
-  # prometheusRule:
-  #   enabled: true
-
   extraEnv: |
     - name: JAVA_OPTS_APPEND
       value: >-
