@@ -32,6 +32,6 @@ controller:
 server:
   insecure: true
   metrics:
-  enabled: true
-  serviceMonitor:
     enabled: true
+    serviceMonitor:
+      enabled: true
