@@ -1,13 +1,3 @@
 monitoring:
   # -- Specifies whether the monitoring should be enabled. Requires Prometheus Operator CRDs.
   podMonitorEnabled: true
-  grafanaDashboard:
-    create: true
-    # -- Allows overriding the namespace where the ConfigMap will be created, defaulting to the same one as the Release.
-    namespace: "monitoring"
-    # -- The name of the ConfigMap containing the dashboard.
-    configMapName: "cnpg-grafana-dashboard"
-    # -- Label that ConfigMaps should have to be loaded as dashboards.
-    sidecarLabel: "grafana_dashboard"
-    # -- Label value that ConfigMaps should have to be loaded as dashboards.
-    sidecarLabelValue: "1"

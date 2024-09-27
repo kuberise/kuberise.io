@@ -8,6 +8,9 @@ configMapGenerator:
   - name: cloudnativepg-dashboards
     files:
       - json/cloudnativepg-dashboard.json
+  - name: cloudnativepg-operator-dashboards
+    files:
+      - json/cloudnativepg-operator-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
