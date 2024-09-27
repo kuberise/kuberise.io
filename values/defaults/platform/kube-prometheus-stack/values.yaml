@@ -17,6 +17,7 @@ grafana:
 
 prometheus:
   prometheusSpec:
-    serviceMonitorSelector:
-      matchLabels:
-        app.kubernetes.io/part-of: kube-prometheus-stack
+    # Select all ServiceMonitors
+    serviceMonitorSelector: {}
+    # Select all PodMonitors
+    podMonitorSelector: {}
