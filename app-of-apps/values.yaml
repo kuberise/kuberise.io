@@ -26,6 +26,7 @@ applications:
 
   dashboards:
     enabled: false
+    namespace: monitoring
 
 
 helmCharts:
