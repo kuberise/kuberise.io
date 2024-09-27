@@ -5416,10 +5416,7 @@
   "refresh": "5s",
   "schemaVersion": 39,
   "tags": [
-    "keycloak",
-    "keycloak x",
-    "quarkus",
-    "java"
+    "keycloak"
   ],
   "templating": {
     "list": [
