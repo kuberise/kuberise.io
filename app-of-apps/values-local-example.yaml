@@ -12,6 +12,9 @@ applications:
     enabled: false
     path: values/local-example/platform/raw
 
+  dashboards:
+    enabled: true
+
 helmCharts:
   keycloak:
     enabled: true

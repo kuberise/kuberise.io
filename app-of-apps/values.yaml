@@ -22,7 +22,10 @@ applications:
     namespace: cloudnative-pg
 
   raw:
-    enabled: true
+    enabled: false
+
+  dashboards:
+    enabled: false
 
 
 helmCharts:

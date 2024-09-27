@@ -1,5 +1,0 @@
-prometheus:
-  prometheusSpec:
-    serviceMonitorSelector:
-      matchLabels:
-        app.kubernetes.io/part-of: kube-prometheus-stack

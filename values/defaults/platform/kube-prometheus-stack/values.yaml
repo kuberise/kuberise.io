@@ -14,3 +14,9 @@ grafana:
     existingSecret: grafana-admin
     passwordKey: admin-password
     userKey: admin-user
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelector:
+      matchLabels:
+        app.kubernetes.io/part-of: kube-prometheus-stack
