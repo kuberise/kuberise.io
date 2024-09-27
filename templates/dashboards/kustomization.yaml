@@ -7,3 +7,5 @@ configMapGenerator:
       - json/keycloak-dashboard.json
     options:
       disableNameSuffixHash: true
+    labels:
+      grafana_dashboard: "1"  # Label to indicate this ConfigMap contains Grafana dashboards
