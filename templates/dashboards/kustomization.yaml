@@ -11,6 +11,9 @@ configMapGenerator:
   - name: cloudnativepg-operator-dashboards
     files:
       - json/cloudnativepg-operator-dashboard.json
+  - name: argocd-dashboards
+    files:
+      - json/argocd-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
