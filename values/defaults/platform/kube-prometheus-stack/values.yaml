@@ -21,3 +21,7 @@ prometheus:
     serviceMonitorSelector: {}
     # Select all PodMonitors
     podMonitorSelector: {}
+    # Select ServiceMonitors from all namespaces
+    serviceMonitorNamespaceSelector: {}
+    # Select PodMonitors from all namespaces
+    podMonitorNamespaceSelector: {}
