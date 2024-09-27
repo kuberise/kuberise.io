@@ -66,7 +66,7 @@ helmCharts:
     enabled: false
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 0.78.2
+    targetRevision: 0.79.3
     chart: loki-distributed
 
   promtail:
