@@ -14,3 +14,18 @@ grafana:
     existingSecret: grafana-admin
     passwordKey: admin-password
     userKey: admin-user
+
+prometheus:
+  prometheusSpec:
+    # Select all ServiceMonitors
+    serviceMonitorSelector: {}
+    # Select all PodMonitors
+    podMonitorSelector: {}
+    # Select ServiceMonitors from all namespaces
+    serviceMonitorNamespaceSelector: {}
+    # Select PodMonitors from all namespaces
+    podMonitorNamespaceSelector: {}
+    # Allow selection of ServiceMonitors from all namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    # Allow selection of PodMonitors from all namespaces
+    podMonitorSelectorNilUsesHelmValues: false

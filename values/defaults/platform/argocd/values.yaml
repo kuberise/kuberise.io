@@ -27,5 +27,11 @@ configs:
 controller:
   metrics:
     enabled: true
+    serviceMonitor:
+      enabled: true
 server:
   insecure: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
