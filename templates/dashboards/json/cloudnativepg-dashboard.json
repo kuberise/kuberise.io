@@ -9182,7 +9182,7 @@
     "nowDelay": ""
   },
   "timezone": "",
-  "title": "CloudNativePG",
+  "title": "CloudNativePG Cluster",
   "uid": "cloudnative-pg",
   "version": 2,
   "weekStart": ""
