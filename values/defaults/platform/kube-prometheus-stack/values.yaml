@@ -25,3 +25,7 @@ prometheus:
     serviceMonitorNamespaceSelector: {}
     # Select PodMonitors from all namespaces
     podMonitorNamespaceSelector: {}
+    # Allow selection of ServiceMonitors from all namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    # Allow selection of PodMonitors from all namespaces
+    podMonitorSelectorNilUsesHelmValues: false
