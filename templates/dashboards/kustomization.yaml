@@ -5,8 +5,10 @@ configMapGenerator:
   - name: keycloak-dashboards
     files:
       - json/keycloak-dashboard.json
-    options:
-      disableNameSuffixHash: true
+  - name: cloudnativepg-dashboards
+    files:
+      - json/cloudnativepg-dashboard.json
 generatorOptions:
+  disableNameSuffixHash: true
   labels:
     grafana_dashboard: "1"  # Label to indicate this ConfigMap contains Grafana dashboards
