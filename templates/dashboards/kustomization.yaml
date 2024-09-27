@@ -14,6 +14,9 @@ configMapGenerator:
   - name: argocd-dashboards
     files:
       - json/argocd-dashboard.json
+  - name: ingress-nginx-dashboards
+    files:
+      - json/ingress-nginx-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
