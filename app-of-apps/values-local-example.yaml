@@ -1,7 +1,7 @@
 applications:
 
   hello:
-    enabled: false
+    enabled: true
     path: values/local-example/applications/dev/hello
 
   cnpg-database:
@@ -43,13 +43,13 @@ helmCharts:
     enabled: true
 
   pgadmin:
-    enabled: false
+    enabled: true
 
   cert-manager:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   sealed-secrets:
     enabled: false
@@ -71,7 +71,7 @@ helmCharts:
     values: defaults/applications/dev/todolist/backend/values.yaml
 
   show-env-dev:
-    enabled: false
+    enabled: true
     values: defaults/applications/dev/show-env/values.yaml
 
 # Microservice helm charts for the tst environment
