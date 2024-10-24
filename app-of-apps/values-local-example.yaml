@@ -13,7 +13,7 @@ applications:
 
 helmCharts:
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -45,7 +45,7 @@ helmCharts:
     enabled: true
 
   backstage:
-    enabled: true
+    enabled: false
 
   sealed-secrets:
     enabled: false
