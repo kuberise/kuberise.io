@@ -1,3 +1,4 @@
+# some of the values will be filled by install.sh script
 global:
   platformName: x
   domain: x
