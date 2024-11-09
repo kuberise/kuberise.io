@@ -60,24 +60,10 @@ helm:
   vault:
     enabled: false
 
-  # Microservice helm charts for the dev environment
+  # Microservice examples
 
-  todolist-frontend-dev:
-    enabled: false
+  show-env:
+    enabled: true
 
-  todolist-backend-dev:
-    enabled: false
-
-  show-env-dev:
-    enabled: false
-
-# Microservice helm charts for the tst environment
-
-  todolist-frontend-tst:
-    enabled: false
-
-
-# Microservice helm charts for the prd environment
-
-  todolist-frontend-prd:
-    enabled: false
+  nginx:
+    enabled: true

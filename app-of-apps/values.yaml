@@ -126,38 +126,19 @@ helm:
     targetRevision: 0.28.0
     chart: vault
 
-  # Microservice helm charts for the dev environment
+  # Microservice examples
 
   echo:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
 
-  todolist-frontend-dev:
+  show-env:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
 
-  todolist-backend-dev:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-
-  show-env-dev:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-
-# Microservice helm charts for the tst environment
-
-  todolist-frontend-tst:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-
-# Microservice helm charts for the prd environment
-
-  todolist-frontend-prd:
+  backend:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
