@@ -67,6 +67,3 @@ helm:
 
   backend:
     enabled: true
-
-  hello:
-    enabled: true

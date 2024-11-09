@@ -128,11 +128,6 @@ helm:
 
   # Microservice examples
 
-  echo:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-
   show-env:
     enabled: false
     path: templates/generic-deployment
