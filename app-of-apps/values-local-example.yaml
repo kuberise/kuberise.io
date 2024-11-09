@@ -65,5 +65,8 @@ helm:
   show-env:
     enabled: true
 
-  nginx:
+  backend:
+    enabled: true
+
+  hello:
     enabled: true
