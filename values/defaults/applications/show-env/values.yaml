@@ -5,8 +5,3 @@ image:
   tag: latest
 
 replicaCount: 1
-
-env:
-  Environment: dev
-  name: show-env
-  PROTOCOL: HTTP

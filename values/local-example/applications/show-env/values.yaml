@@ -1,5 +1,3 @@
-fullnameOverride: show-env-dev
-
 image:
   tag: latest
 
