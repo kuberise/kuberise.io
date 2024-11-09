@@ -1,4 +1,4 @@
-{{- range $name, $app := .Values.helmCharts -}}
+{{- range $name, $app := .Values.helm -}}
 {{- if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
