@@ -13,7 +13,7 @@ global:
       repoURL: x
       targetRevision: x
 
-applications:
+kustomize: # kustomize applications and also raw folders
   # A Kustomize application example
   hello:
     enabled: false
@@ -30,7 +30,7 @@ applications:
     namespace: monitoring
 
 
-helmCharts:
+helm:
 
   teams-namespaces:
     enabled: false
@@ -51,34 +51,34 @@ helmCharts:
   sealed-secrets:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 2.3.5
+    targetRevision: 2.40.10
     chart: sealed-secrets
 
   ingress-nginx:
     enabled: false
     repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.10.1
+    targetRevision: 4.11.3
     chart: ingress-nginx
 
   kube-prometheus-stack:
     enabled: false
     repoURL: https://prometheus-community.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 56.7.0
+    targetRevision: 65.8.1
     chart: kube-prometheus-stack
 
   loki:
     enabled: false
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 0.79.3
+    targetRevision: 0.79.4
     chart: loki-distributed
 
   promtail:
     enabled: false
     repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 6.15.5
+    targetRevision: 6.16.6
     chart: promtail
 
   cert-manager:
@@ -126,32 +126,14 @@ helmCharts:
     targetRevision: 0.28.0
     chart: vault
 
-  # Microservice helm charts for the dev environment
+  # Microservice examples
 
-  echo:
+  show-env:
     enabled: false
     path: templates/generic-deployment
+    valuesFolder: applications
 
-  todolist-frontend-dev:
+  backend:
     enabled: false
     path: templates/generic-deployment
-
-  todolist-backend-dev:
-    enabled: false
-    path: templates/generic-deployment
-
-  show-env-dev:
-    enabled: false
-    path: templates/generic-deployment
-
-# Microservice helm charts for the tst environment
-
-  todolist-frontend-tst:
-    enabled: false
-    path: templates/generic-deployment
-
-# Microservice helm charts for the prd environment
-
-  todolist-frontend-prd:
-    enabled: false
-    path: templates/generic-deployment
+    valuesFolder: applications

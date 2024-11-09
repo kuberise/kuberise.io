@@ -1,4 +1,4 @@
-{{- range $name, $app := .Values.applications -}}
+{{- range $name, $app := .Values.kustomize -}}
 {{ if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application

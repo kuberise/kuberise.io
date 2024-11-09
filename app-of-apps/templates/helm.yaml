@@ -1,4 +1,4 @@
-{{- range $name, $app := .Values.helmCharts -}}
+{{- range $name, $app := .Values.helm -}}
 {{- if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -26,8 +26,11 @@ spec:
     helm:
       valueFiles:
         {{- if hasKey . "values"}}
-        - $valuesRepo/values/{{ .values }} # there can be several platform with their values but application values are separated and can be the same for all those platforms
-        {{- else }}
+        - "$valuesRepo/{{ .values }}"
+        {{- else if hasKey . "valuesFolder"}} # it means that the values are not in default folder (which is platform) [for example to use for applications folder]
+        - "$valuesRepo/values/defaults/{{ .valuesFolder }}/{{ $name }}/values.yaml"
+        - "$valuesRepo/values/{{ $.Values.global.platformName }}/{{ .valuesFolder }}/{{ $name }}/values.yaml"
+        {{- else }} # default values folder is platform folder
         - "$valuesRepo/values/defaults/platform/{{ $name }}/values.yaml"
         - "$valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml"
         {{- end }}
