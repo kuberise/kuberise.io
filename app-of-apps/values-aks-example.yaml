@@ -1,4 +1,4 @@
-applications:
+kustomize:
 
   cnpg-database:
     enabled: true
@@ -8,7 +8,7 @@ applications:
     enabled: true
     path: values/aks-example/platform/raw
 
-helmCharts:
+helm:
   keycloak:
     enabled: true
 
