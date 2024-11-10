@@ -1,0 +1,11 @@
+helm:
+  parameters:
+  - name: domain
+    value: minikube.kuberise.dev
+    forcestring: false
+  - name: image.name
+    value: ghcr.io/kuberise/show-env
+    forcestring: true
+  - name: image.tag
+    value: latest@sha256:3e73cf16b40c36a303c0083941ee5fa9ff12aec5196650235a25fe94bce56418
+    forcestring: true
