@@ -67,6 +67,7 @@ helm:
     annotations:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
+      argocd-image-updater.argoproj.io/write-back-method: git
 
   backend:
     enabled: true
