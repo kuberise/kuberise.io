@@ -7,6 +7,9 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "{{ default 0 .syncWave }}"
+    {{- if .annotations }}
+      {{- toYaml .annotations | nindent 4 }}
+    {{- end }}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   labels:
