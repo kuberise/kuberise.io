@@ -1,0 +1,3 @@
+extraArgs:
+  - --interval
+  - 10s

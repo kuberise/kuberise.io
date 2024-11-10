@@ -16,6 +16,10 @@ kustomize:
     enabled: true
 
 helm:
+
+  argocd-image-updater:
+    enabled: true
+
   keycloak:
     enabled: true
 
