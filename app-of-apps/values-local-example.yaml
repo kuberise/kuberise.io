@@ -64,9 +64,9 @@ helm:
 
   show-env:
     enabled: true
-    annotations:
-      argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
-      argocd-image-updater.argoproj.io/update-strategy: digest
+    # annotations:
+    #   argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
+    #   argocd-image-updater.argoproj.io/update-strategy: digest
 
   backend:
     enabled: true
