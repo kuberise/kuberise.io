@@ -68,7 +68,7 @@ helm:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
-      argocd-image-updater.argoproj.io/git-branch: :image-updater-{{.SHA256}}
+      # argocd-image-updater.argoproj.io/git-branch: :image-updater-{{.SHA256}}
 
   backend:
     enabled: true
