@@ -17,6 +17,9 @@ kustomize:
 
 helm:
 
+  external-dns:
+    enabled: false
+
   argocd-image-updater:
     enabled: true
 
