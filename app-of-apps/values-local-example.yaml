@@ -5,7 +5,7 @@ kustomize:
     path: values/local-example/applications/dev/hello
 
   cnpg-database:
-    enabled: true
+    enabled: false
     path: values/local-example/platform/database/
 
   raw:
@@ -13,7 +13,7 @@ kustomize:
     path: values/local-example/platform/raw
 
   dashboards:
-    enabled: true
+    enabled: false
 
 helm:
 
@@ -21,10 +21,10 @@ helm:
     enabled: false
 
   argocd-image-updater:
-    enabled: true
+    enabled: false
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -38,16 +38,16 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
     enabled: false
