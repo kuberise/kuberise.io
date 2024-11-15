@@ -29,6 +29,9 @@ helm:
   keycloak-operator:
     enabled: false
 
+  ingress-nginx-internal:
+    enabled: true
+
   ingress-nginx:
     enabled: true
     ignoreDifferences:

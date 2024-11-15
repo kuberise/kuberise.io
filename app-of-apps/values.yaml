@@ -73,6 +73,12 @@ helm:
     targetRevision: 4.11.3
     chart: ingress-nginx
 
+  ingress-nginx-internal:
+    enabled: false
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.3
+    chart: ingress-nginx
+
   kube-prometheus-stack:
     enabled: false
     repoURL: https://prometheus-community.github.io/helm-charts
