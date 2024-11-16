@@ -59,7 +59,7 @@ helm:
     enabled: false
 
   ingresses:
-    enabled: false
+    enabled: true
 
   vault:
     enabled: false
