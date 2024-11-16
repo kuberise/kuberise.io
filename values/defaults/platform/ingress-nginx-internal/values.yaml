@@ -1,4 +1,8 @@
 controller:
+
+  service:
+    type: ClusterIP
+
   metrics:
     enabled: true
     serviceMonitor:
