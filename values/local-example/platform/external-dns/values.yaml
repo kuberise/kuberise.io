@@ -28,6 +28,10 @@ txtOwnerId: default
 domainFilters:
   - mydomain.local
 
+## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
+##
+ingressClassFilters: []
+
 
 ## @param interval Interval update period to use
 ##
