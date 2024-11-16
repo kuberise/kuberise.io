@@ -144,3 +144,11 @@ helm:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+
+  identityserver:
+    enabled: false
+    path: templates/generic-deployment
+
+  openiddictserver:
+    enabled: false
+    path: templates/generic-deployment

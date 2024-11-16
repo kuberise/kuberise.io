@@ -1,0 +1,10 @@
+fullnameOverride: openiddictserver
+
+image:
+  repository: albertstarreveld/openiddictserver
+  tag: "2.0"
+
+replicaCount: 1
+
+service:
+  port: 8080

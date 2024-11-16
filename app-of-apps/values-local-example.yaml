@@ -75,3 +75,9 @@ helm:
 
   backend:
     enabled: true
+
+  identityserver:
+    enabled: true
+
+  openiddictserver:
+    enabled: true
