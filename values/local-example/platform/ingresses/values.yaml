@@ -5,9 +5,9 @@ services:
   - name: keycloak
     serviceName: keycloak-keycloakx-http
   - name: openiddictserver
-    port: 8080
+    port: 8081
   - name: identityserver
-    port: 8080
+    port: 8081
   # - name: grafana
   #   namespace: monitoring
   #   serviceName: kube-prometheus-stack-grafana
