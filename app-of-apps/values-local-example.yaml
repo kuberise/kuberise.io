@@ -27,7 +27,7 @@ helm:
     enabled: false
 
   ingress-nginx:
-    enabled: true
+    enabled: false
     ignoreDifferences:
       - group: ""
         kind: Service
@@ -59,7 +59,7 @@ helm:
     enabled: false
 
   ingresses:
-    enabled: true
+    enabled: false
 
   vault:
     enabled: false
