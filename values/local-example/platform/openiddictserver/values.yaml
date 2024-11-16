@@ -2,7 +2,7 @@ fullnameOverride: openiddictserver
 
 image:
   repository: albertstarreveld/openiddictserver
-  tag: "2.0"
+  tag: "3.0"
 
 replicaCount: 1
 
