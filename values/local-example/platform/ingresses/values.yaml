@@ -10,6 +10,8 @@ services:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   - name: identityserver
     port: 8081
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   # - name: grafana
   #   namespace: monitoring
   #   serviceName: kube-prometheus-stack-grafana
