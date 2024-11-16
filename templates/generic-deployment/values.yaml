@@ -105,6 +105,8 @@ env: {}
 # Liveness Probe Values
 livenessProbe:
   path: /
+  port: 8080
+  scheme: HTTP
   initialDelaySeconds: 10
   periodSeconds: 10
   failureThreshold: 3
@@ -114,6 +116,8 @@ livenessProbe:
 # Readiness Probe Values
 readinessProbe:
   path: /
+  port: 8080
+  scheme: HTTP
   initialDelaySeconds: 10
   periodSeconds: 10
   failureThreshold: 3
@@ -123,6 +127,8 @@ readinessProbe:
 # Startup Probe Values
 startupProbe:
   path: /
+  port: 8080
+  scheme: HTTP
   initialDelaySeconds: 10
   periodSeconds: 5
   failureThreshold: 5
