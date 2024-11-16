@@ -6,6 +6,8 @@ services:
     serviceName: keycloak-keycloakx-http
   - name: openiddictserver
     port: 8081
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   - name: identityserver
     port: 8081
   # - name: grafana
