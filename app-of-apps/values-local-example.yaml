@@ -18,7 +18,7 @@ kustomize:
 helm:
 
   argocd-image-updater:
-    enabled: true
+    enabled: false
 
   keycloak:
     enabled: true
@@ -35,13 +35,13 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
     enabled: true
@@ -67,14 +67,14 @@ helm:
   # Microservice examples
 
   show-env:
-    enabled: true
+    enabled: false
     annotations:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
   backend:
-    enabled: true
+    enabled: false
 
   identityserver:
     enabled: true
