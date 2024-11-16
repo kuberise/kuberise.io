@@ -66,15 +66,15 @@ spec:
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
             successThreshold: {{ .Values.livenessProbe.successThreshold }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-          startupProbe:
-            httpGet:
-              path: {{ .Values.startupProbe.path }}
-              port: http
-            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          # startupProbe:
+          #   httpGet:
+          #     path: {{ .Values.startupProbe.path }}
+          #     port: http
+          #   initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+          #   periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+          #   failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          #   successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          #   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
