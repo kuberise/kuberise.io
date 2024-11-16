@@ -4,21 +4,21 @@ services:
     subdomain: argocd
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-  - name: grafana
-    namespace: monitoring
-    serviceName: kube-prometheus-stack-grafana
-  - name: prometheus
-    namespace: monitoring
-    subdomain: prometheus
-    serviceName: kube-prometheus-stack-prometheus
-    port: 9090
-  # - name: backstage
-  #   port: 7007
-  # - name: pgadmin
-  #   serviceName: pgadmin-pgadmin4
-  - name: show-env
-  - name: backend
-  # - name: todolist-frontend-dev
+  # - name: grafana
+  #   namespace: monitoring
+  #   serviceName: kube-prometheus-stack-grafana
+  # - name: prometheus
+  #   namespace: monitoring
+  #   subdomain: prometheus
+  #   serviceName: kube-prometheus-stack-prometheus
+  #   port: 9090
+  # # - name: backstage
+  # #   port: 7007
+  # # - name: pgadmin
+  # #   serviceName: pgadmin-pgadmin4
+  # - name: show-env
+  # - name: backend
+  # # - name: todolist-frontend-dev
   # - name: hello
   #   port: 8080
   # - name: echo
