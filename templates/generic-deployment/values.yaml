@@ -100,3 +100,31 @@ affinity: {}
 env: {}
   # varName1: value1
   # varName2: value2
+
+
+# Liveness Probe Values
+livenessProbe:
+  path: /
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+  timeoutSeconds: 1
+
+# Readiness Probe Values
+readinessProbe:
+  path: /
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+  timeoutSeconds: 1
+
+# Startup Probe Values
+startupProbe:
+  path: /
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  failureThreshold: 5
+  successThreshold: 1
+  timeoutSeconds: 1
