@@ -40,44 +40,29 @@ spec:
             - name: {{ $name }}
               value: {{ $value | quote }}
             {{- end }}
-            {{- if .Values.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
-            {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- /* Determine port name and number based on useHttps */}}
+          {{- $portName := "http" }}
+          {{- $containerPort := .Values.containerPorts.http }}
+          {{- if .Values.useHttps }}
+            {{- $portName = "https" }}
+            {{- $containerPort = .Values.containerPorts.https }}
+          {{- end }}
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
+            - name: {{ $portName }}
+              containerPort: {{ $containerPort }}
+          {{- if .livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: {{ .Values.livenessProbe.path }}
-              port: {{ .Values.livenessProbe.port }}
-              scheme: {{ .Values.livenessProbe.scheme }}
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            {{- toYaml .livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: {{ .Values.readinessProbe.path }}
-              port: {{ .Values.livenessProbe.port }}
-              scheme: {{ .Values.readinessProbe.scheme }}
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            {{- toYaml .readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if  .startupProbe }}
           startupProbe:
-            httpGet:
-              path: {{ .Values.startupProbe.path }}
-              port: {{ .Values.livenessProbe.port }}
-              scheme: {{ .Values.startupProbe.scheme }}
-            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            {{- toYaml .startupProbe | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}

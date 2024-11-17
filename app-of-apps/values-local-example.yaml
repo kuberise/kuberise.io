@@ -18,7 +18,7 @@ kustomize:
 helm:
 
   argocd-image-updater:
-    enabled: false
+    enabled: true
 
   keycloak:
     enabled: true
@@ -35,13 +35,13 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   cloudnative-pg:
     enabled: true
@@ -67,7 +67,7 @@ helm:
   # Microservice examples
 
   show-env:
-    enabled: false
+    enabled: true
     annotations:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
@@ -75,4 +75,4 @@ helm:
 
   # an example of a service that receives traffic over HTTPS from ingress controller
   backend-https:
-    enabled: false
+    enabled: true

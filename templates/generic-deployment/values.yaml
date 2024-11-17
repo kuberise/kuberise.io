@@ -10,6 +10,19 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# based on the useHttps value, the container port will be set to http or https
+useHttps: false
+
+containerPorts:
+  http: 8080
+  https: 8443
+
+service:
+  type: ClusterIP
+  ports:
+    http: 80
+    https: 443
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -38,10 +51,6 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
 
 ingress:
   enabled: false
@@ -101,36 +110,56 @@ env: {}
   # varName1: value1
   # varName2: value2
 
+# # sample http probes
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: http
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 3
+# readinessProbe:
+#   httpGet:
+#     path: /ready
+#     port: http
+#   initialDelaySeconds: 5
+#   periodSeconds: 5
+#   timeoutSeconds: 1
+#   successThreshold: 1
+#   failureThreshold: 3
+# startupProbe:
+#   httpGet:
+#     path: /startup
+#     port: http
+#   initialDelaySeconds: 0
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 30
 
-# Liveness Probe Values
-livenessProbe:
-  path: /
-  port: 80
-  scheme: HTTP
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  failureThreshold: 3
-  successThreshold: 1
-  timeoutSeconds: 1
-
-# Readiness Probe Values
-readinessProbe:
-  path: /
-  port: 80
-  scheme: HTTP
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  failureThreshold: 3
-  successThreshold: 1
-  timeoutSeconds: 1
-
-# Startup Probe Values
-startupProbe:
-  path: /
-  port: 80
-  scheme: HTTP
-  initialDelaySeconds: 10
-  periodSeconds: 5
-  failureThreshold: 5
-  successThreshold: 1
-  timeoutSeconds: 1
+# # sample https probes
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: https
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 3
+# readinessProbe:
+#   httpGet:
+#     path: /ready
+#     port: https
+#   initialDelaySeconds: 5
+#   periodSeconds: 5
+#   timeoutSeconds: 1
+#   successThreshold: 1
+#   failureThreshold: 3
+# startupProbe:
+#   httpGet:
+#     path: /startup
+#     port: https
+#   initialDelaySeconds: 0
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 30
