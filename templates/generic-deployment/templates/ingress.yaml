@@ -1,6 +1,6 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "generic-deployment.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
+{{- $svcPort := .Values.service.ports.http -}}
 {{- if .Values.useHttps -}}
   {{- $svcPort := .Values.service.ports.https -}}
 {{- else -}}
