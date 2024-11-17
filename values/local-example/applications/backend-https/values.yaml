@@ -61,6 +61,7 @@ livenessProbe:
   httpGet:
     path: /health
     port: https
+    scheme: HTTPS
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 1
@@ -69,6 +70,7 @@ readinessProbe:
   httpGet:
     path: /ready
     port: https
+    scheme: HTTPS
   initialDelaySeconds: 5
   periodSeconds: 5
   timeoutSeconds: 1
@@ -78,6 +80,7 @@ startupProbe:
   httpGet:
     path: /startup
     port: https
+    scheme: HTTPS
   initialDelaySeconds: 0
   periodSeconds: 10
   timeoutSeconds: 1
