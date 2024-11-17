@@ -45,3 +45,13 @@ config:
         listen 80;
         return 301 https://$host$request_uri;
       }
+
+volumes:
+- name: tls-cert
+  secret:
+    secretName: backend-https-tls
+
+volumeMounts:
+- name: tls-cert
+  mountPath: /etc/nginx/certs
+  readOnly: true
