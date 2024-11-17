@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "generic-deployment.fullname" . }}
+  labels:
+    {{- include "generic-deployment.labels" . | nindent 4 }}
+{{- with .Values.config.data }}
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

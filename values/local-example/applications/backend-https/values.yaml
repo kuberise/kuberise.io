@@ -20,3 +20,28 @@ ingress:
    - secretName: "backend-https-tls"
      hosts:
        - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
+
+config:
+  mountPath: /etc/nginx/conf.d
+  data:
+    default.conf: |
+      server {
+        listen 8443 ssl;
+        server_name backend-https.minikube.kuberise.dev;
+
+        ssl_certificate /etc/nginx/certs/tls.crt;
+        ssl_certificate_key /etc/nginx/certs/tls.key;
+        ssl_trusted_certificate /etc/nginx/certs/ca.crt;
+
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+
+        error_page 403 404 500 502 503 504 /custom_50x.html;
+      }
+
+      server {
+        listen 80;
+        return 301 https://$host$request_uri;
+      }

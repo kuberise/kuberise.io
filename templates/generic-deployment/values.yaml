@@ -164,3 +164,7 @@ env: {}
 #   periodSeconds: 10
 #   timeoutSeconds: 1
 #   failureThreshold: 30
+
+config:
+  mountPath:
+  data: {}
