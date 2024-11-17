@@ -59,7 +59,7 @@ volumeMounts:
 # sample https probes
 livenessProbe:
   httpGet:
-    path: /health
+    path: /
     port: https
     scheme: HTTPS
   initialDelaySeconds: 10
@@ -68,7 +68,7 @@ livenessProbe:
   failureThreshold: 3
 readinessProbe:
   httpGet:
-    path: /ready
+    path: /
     port: https
     scheme: HTTPS
   initialDelaySeconds: 5
@@ -78,7 +78,7 @@ readinessProbe:
   failureThreshold: 3
 startupProbe:
   httpGet:
-    path: /startup
+    path: /
     port: https
     scheme: HTTPS
   initialDelaySeconds: 0
