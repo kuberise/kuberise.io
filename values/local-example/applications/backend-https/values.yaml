@@ -1,0 +1,22 @@
+image:
+  repository: nginx
+  tag: alpine
+
+useHttps: true
+
+containerPorts:
+  https: 8443
+
+service:
+  type: ClusterIP
+  ports:
+    https: 443
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: "selfsigned-clusterissuer"
+  tls:
+   - secretName: "backend-https-tls"
+     hosts:
+       - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
