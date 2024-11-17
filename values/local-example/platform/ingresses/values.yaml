@@ -16,13 +16,5 @@ services:
   #   port: 7007
   # - name: pgadmin
   #   serviceName: pgadmin-pgadmin4
-  - name: show-env
-  - name: backend
-  # - name: todolist-frontend-dev
-  # - name: hello
-  #   port: 8080
-  # - name: echo
-  #   port: 8080
-  # - name: todolist-backend-dev
   # - name: vault
   #   port: 8200

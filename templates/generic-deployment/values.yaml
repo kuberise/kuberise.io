@@ -10,6 +10,19 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# based on the useHttps value, the container port will be set to http or https
+useHttps: false
+
+containerPorts:
+  http: 8080
+  https: 8443
+
+service:
+  type: ClusterIP
+  ports:
+    http: 80
+    https: 443
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -39,25 +52,22 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
-
 ingress:
-  enabled: false
+  enabled: true
   className: nginx
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+    - host: '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+   - secretName: ""
+     hosts:
+       - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -72,9 +82,9 @@ resources: {}
   #   memory: 128Mi
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
@@ -100,3 +110,67 @@ affinity: {}
 env: {}
   # varName1: value1
   # varName2: value2
+
+# sample http probes
+# livenessProbe:
+#   httpGet:
+#     path: /
+#     port: http
+#     scheme: HTTP
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 3
+# readinessProbe:
+#   httpGet:
+#     path: /
+#     port: http
+#     scheme: HTTP
+#   initialDelaySeconds: 5
+#   periodSeconds: 5
+#   timeoutSeconds: 1
+#   successThreshold: 1
+#   failureThreshold: 3
+# startupProbe:
+#   httpGet:
+#     path: /
+#     port: http
+#     scheme: HTTP
+#   initialDelaySeconds: 0
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 30
+
+# # sample https probes
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: https
+#     scheme: HTTPS
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 3
+# readinessProbe:
+#   httpGet:
+#     path: /ready
+#     port: https
+#     scheme: HTTPS
+#   initialDelaySeconds: 5
+#   periodSeconds: 5
+#   timeoutSeconds: 1
+#   successThreshold: 1
+#   failureThreshold: 3
+# startupProbe:
+#   httpGet:
+#     path: /startup
+#     port: https
+#     scheme: HTTPS
+#   initialDelaySeconds: 0
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 30
+
+config:
+  mountPath:
+  data: {}
