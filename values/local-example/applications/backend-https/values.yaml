@@ -27,7 +27,6 @@ config:
     default.conf: |
       server {
         listen 8443 ssl;
-        server_name backend-https.minikube.kuberise.dev;
 
         ssl_certificate /etc/nginx/certs/tls.crt;
         ssl_certificate_key /etc/nginx/certs/tls.key;
