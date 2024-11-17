@@ -73,11 +73,6 @@ helm:
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
-  backend:
+  # an example of a service that receives traffic over HTTPS from ingress controller
+  backend-https:
     enabled: false
-
-  identityserver:
-    enabled: true
-
-  openiddictserver:
-    enabled: true
