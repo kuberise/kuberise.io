@@ -4,10 +4,6 @@ services:
     subdomain: argocd
   - name: keycloak
     serviceName: keycloak-keycloakx-http
-  # - name: backend-https
-  #   port: 4443
-  #   annotations:
-  #     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
