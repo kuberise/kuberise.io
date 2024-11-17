@@ -7,3 +7,13 @@ env:
   Environment: dev
   name: show-env
   PROTOCOL: HTTP
+
+useHttps: false
+
+containerPorts:
+  http: 80
+
+service:
+  type: ClusterIP
+  ports:
+    http: 80
