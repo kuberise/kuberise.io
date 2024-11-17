@@ -55,3 +55,30 @@ volumeMounts:
 - name: tls-cert
   mountPath: /etc/nginx/certs
   readOnly: true
+
+# sample https probes
+livenessProbe:
+  httpGet:
+    path: /health
+    port: https
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 3
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: https
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+startupProbe:
+  httpGet:
+    path: /startup
+    port: https
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 1
+  failureThreshold: 30
