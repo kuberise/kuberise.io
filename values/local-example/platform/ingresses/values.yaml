@@ -8,7 +8,6 @@ services:
     port: 4443
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-  - name: show-env
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
