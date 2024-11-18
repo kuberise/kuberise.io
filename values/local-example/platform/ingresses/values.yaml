@@ -12,6 +12,9 @@ services:
     subdomain: prometheus
     serviceName: kube-prometheus-stack-prometheus
     port: 9090
+  # - name: gitea
+  #   port: 3000
+  #   serviceName: gitea-http
   # - name: backstage
   #   port: 7007
   # - name: pgadmin
