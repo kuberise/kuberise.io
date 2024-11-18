@@ -152,7 +152,7 @@ helm:
     path: templates/generic-deployment
     valuesFolder: applications
 
-  backend-https:
+  frontend-https:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications

@@ -18,7 +18,7 @@ ingress:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "selfsigned-clusterissuer"
   tls:
-   - secretName: "backend-https-tls"
+   - secretName: "frontend-https-tls"
      hosts:
        - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
 
@@ -49,7 +49,7 @@ config:
 volumes:
 - name: tls-cert
   secret:
-    secretName: backend-https-tls
+    secretName: frontend-https-tls
 
 volumeMounts:
 - name: tls-cert

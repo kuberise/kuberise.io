@@ -79,5 +79,5 @@ helm:
       argocd-image-updater.argoproj.io/write-back-method: git
 
   # an example of a service that receives traffic over HTTPS from ingress controller
-  backend-https:
+  frontend-https:
     enabled: true
