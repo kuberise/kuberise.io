@@ -40,3 +40,10 @@ interval: "1m"
 ## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
 ##
 logLevel: debug
+
+coredns:
+  ## @param coredns.etcdEndpoints When using the CoreDNS provider, set etcd backend endpoints (comma-separated list)
+  ## Secure (https) endpoints can be used as well, in that case `etcdTLS` section
+  ## should be filled in accordingly
+  ##
+  etcdEndpoints: "http://10.108.119.201:2379"
