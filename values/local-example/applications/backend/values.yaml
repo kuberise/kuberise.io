@@ -18,3 +18,4 @@ ingress:
       paths:
         - path: /backend
           pathType: ImplementationSpecific
+  tls: []
