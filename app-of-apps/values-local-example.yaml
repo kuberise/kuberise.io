@@ -16,6 +16,8 @@ kustomize:
     enabled: false
 
 helm:
+  coredns:
+    enabled: true
 
   external-dns:
     enabled: true
