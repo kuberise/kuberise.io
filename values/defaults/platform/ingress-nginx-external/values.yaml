@@ -1,7 +1,8 @@
 controller:
-
-  service:
-    type: ClusterIP
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
   metrics:
     enabled: true
@@ -10,10 +11,10 @@ controller:
 
   ingressClassResource:
     # -- Name of the ingressClass
-    name: nginx-internal
+    name: nginx-external
     # -- Is this ingressClass enabled or not
     enabled: true
     # -- Is this the default ingressClass for the cluster
     default: true
 
-  ingressClass: nginx-internal
+  ingressClass: nginx-external

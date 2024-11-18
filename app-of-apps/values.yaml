@@ -67,7 +67,7 @@ helm:
     targetRevision: 2.40.10
     chart: sealed-secrets
 
-  ingress-nginx:
+  ingress-nginx-external:
     enabled: false
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.11.3

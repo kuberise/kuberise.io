@@ -13,6 +13,7 @@ service:
     https: 443
 
 ingress:
+  className: nginx-external
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "selfsigned-clusterissuer"

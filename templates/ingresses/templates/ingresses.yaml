@@ -11,7 +11,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  ingressClassName: {{ default "nginx" .ingressClassName }}
+  ingressClassName: {{ default "nginx-external" .ingressClassName }}
   rules:
   - host: {{ default .name .subdomain }}.{{ $.Values.domain }}
     http:

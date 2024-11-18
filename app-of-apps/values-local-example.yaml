@@ -31,7 +31,7 @@ helm:
   ingress-nginx-internal:
     enabled: true
 
-  ingress-nginx:
+  ingress-nginx-external:
     enabled: true
     ignoreDifferences:
       - group: ""
