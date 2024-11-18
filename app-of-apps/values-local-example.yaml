@@ -9,7 +9,7 @@ kustomize:
     path: values/local-example/platform/database/
 
   raw:
-    enabled: false
+    enabled: true
     path: values/local-example/platform/raw
 
   dashboards:
@@ -69,7 +69,7 @@ helm:
   vault:
     enabled: false
 
-  # Microservice examples
+  # Microservices
 
   show-env:
     enabled: true
@@ -78,6 +78,8 @@ helm:
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
-  # an example of a service that receives traffic over HTTPS from ingress controller
   frontend-https:
+    enabled: true
+
+  backend:
     enabled: true

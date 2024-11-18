@@ -147,12 +147,21 @@ helm:
 
   # Microservice examples
 
+  # http container example with external traffic
   show-env:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
 
+  # https container example with external traffic that receives traffic over https from ingress controller
+
   frontend-https:
+    enabled: false
+    path: templates/generic-deployment
+    valuesFolder: applications
+
+  # a sample of microservice with internal traffic
+  backend:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
