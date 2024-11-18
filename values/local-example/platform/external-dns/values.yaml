@@ -12,7 +12,7 @@ sources:
 ## Available providers are:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
-provider: coredns
+provider: cloudflare
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
@@ -40,10 +40,3 @@ interval: "1m"
 ## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
 ##
 logLevel: debug
-
-coredns:
-  ## @param coredns.etcdEndpoints When using the CoreDNS provider, set etcd backend endpoints (comma-separated list)
-  ## Secure (https) endpoints can be used as well, in that case `etcdTLS` section
-  ## should be filled in accordingly
-  ##
-  etcdEndpoints: "http://10.108.119.201:2379"

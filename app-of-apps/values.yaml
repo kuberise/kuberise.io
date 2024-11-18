@@ -145,12 +145,6 @@ helm:
     targetRevision: 0.28.0
     chart: vault
 
-  coredns:
-    enabled: false
-    repoURL: https://coredns.github.io/helm
-    targetRevision: 1.36.1
-    chart: coredns
-
   # Microservice examples
 
   show-env:
