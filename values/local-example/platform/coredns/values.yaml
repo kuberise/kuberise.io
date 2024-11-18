@@ -38,4 +38,4 @@ servers:
     configBlock: |-
       stubzones
       path /skydns
-      endpoint http://10.105.68.165:2379
+      endpoint http://10.108.119.201:2379
