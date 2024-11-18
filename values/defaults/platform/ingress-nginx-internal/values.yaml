@@ -2,12 +2,12 @@ controller:
 
   service:
     type: ClusterIP
-    external:
-      enabled: false
-    internal:
-      enabled: true
-      annotations:
-        service.beta.kubernetes.io/oci-load-balancer-internal: true
+    # external:
+    #   enabled: false
+    # internal:
+    #   enabled: true
+    #   annotations:
+    #     service.beta.kubernetes.io/oci-load-balancer-internal: true
 
   metrics:
     enabled: true
