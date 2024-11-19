@@ -17,3 +17,8 @@ controller:
     controllerValue: "k8s.io/ingress-nginx-internal"
 
   ingressClass: nginx-internal
+
+# to ensure controller knows which class to watch
+  watchIngressWithoutClass: false
+  electionID: ingress-controller-leader-internal
+  ingressClassByName: true  # This ensures exact matching of class names

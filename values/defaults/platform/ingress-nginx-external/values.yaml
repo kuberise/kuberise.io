@@ -15,3 +15,7 @@ controller:
     controllerValue: "k8s.io/ingress-nginx-external"
 
   ingressClass: nginx-external
+
+  watchIngressWithoutClass: false
+  electionID: ingress-controller-leader-external
+  ingressClassByName: true  # This ensures exact matching of class names
