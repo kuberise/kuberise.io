@@ -62,7 +62,7 @@ ingress:
     - host: '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls:
    - secretName: ""
      hosts:
