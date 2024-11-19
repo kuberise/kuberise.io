@@ -15,7 +15,6 @@ service:
 ingress:
   className: nginx-external
   annotations:
-    kubernetes.io/ingress.class: nginx-external
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "selfsigned-clusterissuer"
   tls:

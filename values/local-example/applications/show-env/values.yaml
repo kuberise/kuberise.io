@@ -47,5 +47,3 @@ startupProbe:
 
 ingress:
   className: nginx-external
-  annotations:
-    kubernetes.io/ingress.class: nginx-external

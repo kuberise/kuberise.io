@@ -4,9 +4,6 @@ controller:
     serviceMonitor:
       enabled: true
 
-  extraArgs:
-    watch-ingress-without-class: false
-
   service:
     type: ClusterIP
 
@@ -18,7 +15,6 @@ controller:
 
   ingressClass: nginx-internal
 
-# to ensure controller knows which class to watch
   watchIngressWithoutClass: false
   electionID: ingress-controller-leader-internal
-  ingressClassByName: true  # This ensures exact matching of class names
+  ingressClassByName: true

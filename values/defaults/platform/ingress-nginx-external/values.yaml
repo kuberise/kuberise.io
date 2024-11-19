@@ -6,7 +6,6 @@ controller:
 
   extraArgs:
     default-ssl-certificate: cert-manager/wildcard-tls
-    watch-ingress-without-class: false
 
   ingressClassResource:
     enabled: true
@@ -18,4 +17,4 @@ controller:
 
   watchIngressWithoutClass: false
   electionID: ingress-controller-leader-external
-  ingressClassByName: true  # This ensures exact matching of class names
+  ingressClassByName: true
