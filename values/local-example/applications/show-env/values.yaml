@@ -44,3 +44,6 @@ startupProbe:
   periodSeconds: 10
   timeoutSeconds: 1
   failureThreshold: 30
+
+ingress:
+  className: nginx-external

@@ -32,6 +32,12 @@ kustomize: # kustomize applications and also raw folders
 
 helm:
 
+  external-dns:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 8.5.1
+    chart: external-dns
+
   argocd-image-updater:
     enabled: false
     repoURL: https://argoproj.github.io/argo-helm
@@ -61,7 +67,13 @@ helm:
     targetRevision: 2.40.10
     chart: sealed-secrets
 
-  ingress-nginx:
+  ingress-nginx-external:
+    enabled: false
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.3
+    chart: ingress-nginx
+
+  ingress-nginx-internal:
     enabled: false
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.11.3
@@ -135,12 +147,21 @@ helm:
 
   # Microservice examples
 
+  # http container example with external traffic
   show-env:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
 
-  backend-https:
+  # https container example with external traffic that receives traffic over https from ingress controller
+
+  frontend-https:
+    enabled: false
+    path: templates/generic-deployment
+    valuesFolder: applications
+
+  # a sample of microservice with internal traffic
+  backend:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications

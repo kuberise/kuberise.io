@@ -1,0 +1,20 @@
+controller:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+  service:
+    type: ClusterIP
+
+  ingressClassResource:
+    enabled: true
+    name: nginx-internal
+    default: false
+    controllerValue: "k8s.io/ingress-nginx-internal"
+
+  ingressClass: nginx-internal
+
+  watchIngressWithoutClass: false
+  electionID: ingress-controller-leader-internal
+  ingressClassByName: true

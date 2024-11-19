@@ -15,7 +15,10 @@ helm:
   keycloak-operator:
     enabled: true
 
-  ingress-nginx:
+  ingress-nginx-external:
+    enabled: true
+
+  ingress-nginx-internal:
     enabled: true
 
   kube-prometheus-stack:

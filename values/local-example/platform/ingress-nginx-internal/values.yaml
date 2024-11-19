@@ -1,6 +1,7 @@
 controller:
-  hostPort:
-    enabled: true
+#   hostPort:
+#     enabled: true
+  watchIngressWithoutClass: false
 
   extraArgs:
     default-ssl-certificate: cert-manager/wildcard-tls

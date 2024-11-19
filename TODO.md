@@ -2,6 +2,9 @@
 - [ ] read db host and user/pass from secrets in todolist app
 - [ ] read pgadmin client secret from secrets
 - [ ] docs:
+
+## docs: how to create a service
+
 how to create a service:
 - app-of-apps/values.yaml
 - app-of-apps/values-platformName.yaml

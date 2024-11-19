@@ -9,13 +9,15 @@ kustomize:
     path: values/local-example/platform/database/
 
   raw:
-    enabled: false
+    enabled: true
     path: values/local-example/platform/raw
 
   dashboards:
     enabled: true
 
 helm:
+  external-dns:
+    enabled: false
 
   argocd-image-updater:
     enabled: true
@@ -26,7 +28,10 @@ helm:
   keycloak-operator:
     enabled: false
 
-  ingress-nginx:
+  ingress-nginx-internal:
+    enabled: true
+
+  ingress-nginx-external:
     enabled: true
     ignoreDifferences:
       - group: ""
@@ -35,13 +40,13 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
     enabled: true
@@ -64,7 +69,7 @@ helm:
   vault:
     enabled: false
 
-  # Microservice examples
+  # Microservices
 
   show-env:
     enabled: true
@@ -73,6 +78,8 @@ helm:
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
-  # an example of a service that receives traffic over HTTPS from ingress controller
-  backend-https:
+  frontend-https:
+    enabled: true
+
+  backend:
     enabled: true
