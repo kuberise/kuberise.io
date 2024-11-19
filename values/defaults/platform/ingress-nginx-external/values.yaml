@@ -4,12 +4,13 @@ controller:
     serviceMonitor:
       enabled: true
 
+  extraArgs:
+    watch-ingress-without-class: false
+
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
-  extraArgs:
-    watch-ingress-without-class: false
 
   ingressClassResource:
     # -- Name of the ingressClass

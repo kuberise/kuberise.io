@@ -4,6 +4,10 @@ controller:
     serviceMonitor:
       enabled: true
 
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
+    watch-ingress-without-class: false
+
   service:
     type: ClusterIP
     # external:
