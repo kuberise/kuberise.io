@@ -12,5 +12,6 @@ controller:
     enabled: true
     name: nginx-external
     default: false
+    controllerValue: "k8s.io/ingress-nginx-external"
 
   ingressClass: nginx-external
