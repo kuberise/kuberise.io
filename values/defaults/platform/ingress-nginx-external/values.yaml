@@ -5,19 +5,12 @@ controller:
       enabled: true
 
   extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
     watch-ingress-without-class: false
 
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: true
-
   ingressClassResource:
-    # -- Name of the ingressClass
-    name: nginx-external
-    # -- Is this ingressClass enabled or not
     enabled: true
-    # -- Is this the default ingressClass for the cluster
+    name: nginx-external
     default: false
 
   ingressClass: nginx-external

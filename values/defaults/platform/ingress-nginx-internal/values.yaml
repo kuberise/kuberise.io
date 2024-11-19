@@ -5,29 +5,14 @@ controller:
       enabled: true
 
   extraArgs:
-    default-ssl-certificate: cert-manager/wildcard-tls
     watch-ingress-without-class: false
 
   service:
     type: ClusterIP
-    # external:
-    #   enabled: false
-    # internal:
-    #   enabled: true
-    #   annotations:
-    #     service.beta.kubernetes.io/oci-load-balancer-internal: true
-
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: true
 
   ingressClassResource:
-    # -- Name of the ingressClass
-    name: nginx-internal
-    # -- Is this ingressClass enabled or not
     enabled: true
-    # -- Is this the default ingressClass for the cluster
+    name: nginx-internal
     default: false
 
   ingressClass: nginx-internal
