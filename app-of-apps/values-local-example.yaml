@@ -5,7 +5,7 @@ kustomize:
     path: values/local-example/applications/dev/hello
 
   cnpg-database:
-    enabled: false
+    enabled: true
     path: values/local-example/platform/database/
 
   raw:
@@ -13,17 +13,17 @@ kustomize:
     path: values/local-example/platform/raw
 
   dashboards:
-    enabled: false
+    enabled: true
 
 helm:
   external-dns:
     enabled: false
 
   argocd-image-updater:
-    enabled: false
+    enabled: true
 
   keycloak:
-    enabled: false
+    enabled: true
 
   keycloak-operator:
     enabled: false
@@ -49,7 +49,7 @@ helm:
     enabled: false
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
 
   pgadmin:
     enabled: false
