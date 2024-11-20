@@ -40,13 +40,13 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   cloudnative-pg:
     enabled: true
