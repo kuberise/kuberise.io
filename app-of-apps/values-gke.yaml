@@ -5,7 +5,7 @@ kustomize:
     path: values/gke/platform/database/
 
   raw:
-    enabled: true
+    enabled: false
     path: values/gke/platform/raw
 
   dashboards:
