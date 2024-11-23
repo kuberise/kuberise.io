@@ -1,9 +1,5 @@
 kustomize:
 
-  hello:
-    enabled: true
-    path: values/gke/applications/dev/hello
-
   cnpg-database:
     enabled: true
     path: values/gke/platform/database/
@@ -50,9 +46,6 @@ helm:
     enabled: true
 
   cert-manager:
-    enabled: true
-
-  backstage:
     enabled: true
 
   ingresses:
