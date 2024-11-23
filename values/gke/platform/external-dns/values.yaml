@@ -8,7 +8,14 @@ sources:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
 provider: cloudflare
-
+cloudflare:
+  ## @param cloudflare.secretName When using the Cloudflare provider, it's the name of the secret containing cloudflare_api_token or cloudflare_api_key.
+  ## This ignores cloudflare.apiToken, and cloudflare.apiKey
+  ##
+  secretName: "cloudflare_token"
+  ## @param cloudflare.proxied When using the Cloudflare provider, enable the proxy feature (DDOS protection, CDN...) (optional)
+  ##
+  proxied: false
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
 policy: sync
@@ -16,7 +23,7 @@ policy: sync
 ## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
 ## But other registry types might be added in the future.
 ##
-txtOwnerId: internal-dns
+txtOwnerId: public-dns
 
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##
@@ -35,25 +42,3 @@ interval: "1m"
 ## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
 ##
 logLevel: debug
-
-
-## ServiceAccount parameters
-## https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-##
-serviceAccount:
-  ## @param serviceAccount.create Determine whether a Service Account should be created or it should reuse a exiting one.
-  ##
-  create: true
-  ## @param serviceAccount.name ServiceAccount to use. A name is generated using the external-dns.fullname template if it is not set
-  ##
-  name: ""
-  ## @param serviceAccount.annotations Additional Service Account annotations
-  ##
-  annotations:
-    iam.gke.io/gcp-service-account: external-dns@kuberise.iam.gserviceaccount.com
-  ## @param serviceAccount.automountServiceAccountToken Automount API credentials for a service account.
-  ##
-  automountServiceAccountToken: false
-  ## @param serviceAccount.labels [object] Additional labels to be included on the service account
-  ##
-  labels: {}

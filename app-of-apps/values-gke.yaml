@@ -13,7 +13,7 @@ kustomize:
 
 helm:
   external-dns:
-    enabled: false
+    enabled: true
 
   internal-dns:
     enabled: true

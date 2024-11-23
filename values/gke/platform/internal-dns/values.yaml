@@ -28,7 +28,7 @@ policy: sync
 ## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
 ## But other registry types might be added in the future.
 ##
-txtOwnerId: internal-dns
+txtOwnerId: private-dns
 
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##
@@ -46,7 +46,7 @@ interval: "1m"
 
 ## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
 ##
-logLevel: debug
+logLevel: info
 
 
 ## ServiceAccount parameters
