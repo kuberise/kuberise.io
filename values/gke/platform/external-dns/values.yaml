@@ -1,0 +1,44 @@
+## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
+sources:
+  # - service
+  - ingress
+
+## @param provider DNS provider where the DNS records will be created.
+## Available providers are:
+## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
+##
+provider: cloudflare
+cloudflare:
+  ## @param cloudflare.secretName When using the Cloudflare provider, it's the name of the secret containing cloudflare_api_token or cloudflare_api_key.
+  ## This ignores cloudflare.apiToken, and cloudflare.apiKey
+  ##
+  secretName: "cloudflare"
+  ## @param cloudflare.proxied When using the Cloudflare provider, enable the proxy feature (DDOS protection, CDN...) (optional)
+  ##
+  proxied: false
+## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
+##
+policy: sync
+
+## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
+## But other registry types might be added in the future.
+##
+txtOwnerId: public-dns
+
+## @param domainFilters Limit possible target zones by domain suffixes (optional)
+##
+domainFilters:
+  - kuberise.dev
+
+## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
+##
+ingressClassFilters: []
+
+
+## @param interval Interval update period to use
+##
+interval: "1m"
+
+## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
+##
+logLevel: debug

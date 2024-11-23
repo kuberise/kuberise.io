@@ -222,6 +222,7 @@ NAMESPACE_KEYCLOAK="keycloak"
 NAMESPACE_BACKSTAGE="backstage"
 NAMESPACE_MONITORING="monitoring"
 NAMESPACE_CERTMANAGER="cert-manager"
+NAMESPACE_EXTERNALDNS="external-dns"
 
 # Warning Message
 echo "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. "
@@ -247,6 +248,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_KEYCLOAK"
 create_namespace "$CONTEXT" "$NAMESPACE_BACKSTAGE"
 create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
 create_namespace "$CONTEXT" "$NAMESPACE_CERTMANAGER"
+create_namespace "$CONTEXT" "$NAMESPACE_EXTERNALDNS"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then

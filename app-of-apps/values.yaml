@@ -32,6 +32,12 @@ kustomize: # kustomize applications and also raw folders
 
 helm:
 
+  internal-dns:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 8.5.1
+    chart: external-dns
+
   external-dns:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami
