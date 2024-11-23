@@ -28,7 +28,7 @@ txtOwnerId: public-dns
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##
 domainFilters:
-  - gke.kuberise.dev
+  - kuberise.dev
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
 ##
