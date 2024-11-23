@@ -13,9 +13,11 @@ ingress:
   className: nginx-internal
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    external-dns.alpha.kubernetes.io/hostname: "kuberise.internal"
+    external-dns.alpha.kubernetes.io/internal-hostname: "true"
   hosts:
     - host: kuberise.internal
       paths:
         - path: /backend
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
