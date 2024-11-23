@@ -1,0 +1,74 @@
+kustomize:
+
+  hello:
+    enabled: true
+    path: values/gke/applications/dev/hello
+
+  cnpg-database:
+    enabled: true
+    path: values/gke/platform/database/
+
+  raw:
+    enabled: true
+    path: values/gke/platform/raw
+
+  dashboards:
+    enabled: true
+
+helm:
+  external-dns:
+    enabled: true
+
+  argocd-image-updater:
+    enabled: true
+
+  keycloak:
+    enabled: true
+
+  keycloak-operator:
+    enabled: false
+
+  ingress-nginx-internal:
+    enabled: true
+
+  ingress-nginx-external:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  cloudnative-pg:
+    enabled: true
+
+  pgadmin:
+    enabled: true
+
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: true
+
+  ingresses:
+    enabled: true
+
+  # Microservices
+
+  show-env:
+    enabled: true
+    annotations:
+      argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
+      argocd-image-updater.argoproj.io/update-strategy: digest
+      argocd-image-updater.argoproj.io/write-back-method: git
+
+  frontend-https:
+    enabled: true
+
+  backend:
+    enabled: true

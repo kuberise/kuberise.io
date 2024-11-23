@@ -18,3 +18,7 @@ controller:
   watchIngressWithoutClass: false
   electionID: ingress-controller-leader-internal
   ingressClassByName: true
+
+  service:
+    annotations:
+      cloud.google.com/load-balancer-type: Internal

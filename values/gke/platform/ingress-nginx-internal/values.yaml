@@ -1,0 +1,5 @@
+controller:
+  watchIngressWithoutClass: false
+
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
