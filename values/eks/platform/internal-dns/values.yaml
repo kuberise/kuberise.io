@@ -7,19 +7,15 @@ sources:
 ## Available providers are:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
-provider: google
-google:
-
-  # When using the Google provider, specify the Google project (required when provider=google)
-  project: kuberise
-
-  # # When using the Google provider, specify the existing secret which contains credentials.json (optional)
-  # serviceAccountSecret: external-dns-gcp-sa
-  # # When using the Google provider with an existing secret, specify the key name (optional)
-  # serviceAccountSecretKey: service-account.json
-  # # When using the Google provider, specify the service account key JSON file. In this case a new secret will be created holding this service account (optional)
-  # serviceAccountKey: service-account.json
-  zoneVisibility: private
+provider: aws
+aws:
+  region: "eu-central-1"
+  ## @param aws.zoneType When using the AWS provider, filter for zones of this type (optional, options: public, private)
+  ##
+  assumeRoleArn: ""
+  ## @param aws.roleArn Specify role ARN to the external-dns daemon
+  ##
+  roleArn: ""
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
