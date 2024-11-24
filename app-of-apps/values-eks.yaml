@@ -2,23 +2,36 @@ kustomize:
 
   cnpg-database:
     enabled: true
-    path: values/eks-example/platform/database/
+    path: values/eks/platform/database/
 
   raw:
+    enabled: false
+    path: values/eks/platform/raw
+
+  dashboards:
     enabled: true
-    path: values/eks-example/platform/raw
 
 helm:
+
+  external-dns:
+    enabled: true
+
+  internal-dns:
+    enabled: true
+
+  argocd-image-updater:
+    enabled: true
+
   keycloak:
     enabled: true
 
   keycloak-operator:
+    enabled: false
+
+  ingress-nginx-internal:
     enabled: true
 
   ingress-nginx-external:
-    enabled: true
-
-  ingress-nginx-internal:
     enabled: true
 
   kube-prometheus-stack:
@@ -39,14 +52,23 @@ helm:
   cert-manager:
     enabled: true
 
-  backstage:
-    enabled: false
-
-  sealed-secrets:
-    enabled: true
-
   ingresses:
     enabled: true
 
   aws-lb-controller:
     enabled: false # deployed by the terraform code that created the eks cluster
+
+  # Microservices
+
+  show-env:
+    enabled: true
+    annotations:
+      argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
+      argocd-image-updater.argoproj.io/update-strategy: digest
+      argocd-image-updater.argoproj.io/write-back-method: git
+
+  frontend-https:
+    enabled: true
+
+  backend:
+    enabled: true

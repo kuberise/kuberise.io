@@ -1,0 +1,9 @@
+controller:
+  watchIngressWithoutClass: false
+
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
+
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
