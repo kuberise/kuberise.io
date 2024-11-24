@@ -34,13 +34,11 @@ domainFilters:
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
 ##
-ingressClassFilters: []
+ingressClassFilters:
+- nginx-external
 
 registry: txt
-
-extraArgs:
-  - --annotation-filter=kubernetes.io/ingress.class=nginx-external
-  - --fqdn-template={{.Name}}.eks.kuberise.dev
+fqdnTemplates: "{{.Name}}.eks.kuberise.dev"
 
 
 ## @param interval Interval update period to use
