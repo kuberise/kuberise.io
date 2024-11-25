@@ -12,7 +12,7 @@ azure:
   ## When a secret to load azure.json is not specified, the host's /etc/kubernetes/azure.json will be used
   ## @param azure.secretName When using the Azure provider, set the secret containing the `azure.json` file
   ##
-  secretName: ""
+  secretName: "azure-creds"
   ## @param azure.cloud When using the Azure provider, set the Azure Cloud
   ##
   cloud: ""
