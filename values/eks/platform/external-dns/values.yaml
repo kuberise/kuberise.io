@@ -39,7 +39,7 @@ ingressClassFilters:
 - nginx-external
 
 registry: txt
-fqdnTemplates: "{{.Name}}.eks.kuberise.dev"
+fqdnTemplates: "*.eks.kuberise.dev"
 
 
 ## @param interval Interval update period to use
