@@ -27,7 +27,7 @@ azure:
   subscriptionId: ""
   ## @param azure.aadClientId When using the Azure provider, set the Azure AAD Client ID
   ##
-  aadClientId: ""
+  aadClientId: "0a5369e7-b3da-42b3-9def-e97db2515500"
   ## @param azure.aadClientSecret When using the Azure provider, set the Azure AAD Client Secret
   ##
   aadClientSecret: ""
