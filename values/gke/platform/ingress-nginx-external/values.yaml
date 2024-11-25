@@ -2,3 +2,6 @@ controller:
   service:
     annotations:
       cloud.google.com/load-balancer-type: External
+
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-tls
