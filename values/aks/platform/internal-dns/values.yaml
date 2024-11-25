@@ -7,12 +7,17 @@ sources:
 ## Available providers are:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
+
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: "0a5369e7-b3da-42b3-9def-e97db2515500"
+
 provider: azure
 azure:
   ## When a secret to load azure.json is not specified, the host's /etc/kubernetes/azure.json will be used
   ## @param azure.secretName When using the Azure provider, set the secret containing the `azure.json` file
   ##
-  secretName: "azure-creds"
+  secretName: ""
   ## @param azure.cloud When using the Azure provider, set the Azure Cloud
   ##
   cloud: ""
@@ -27,7 +32,7 @@ azure:
   subscriptionId: ""
   ## @param azure.aadClientId When using the Azure provider, set the Azure AAD Client ID
   ##
-  aadClientId: "0a5369e7-b3da-42b3-9def-e97db2515500"
+  aadClientId: ""
   ## @param azure.aadClientSecret When using the Azure provider, set the Azure AAD Client Secret
   ##
   aadClientSecret: ""
