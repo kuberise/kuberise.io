@@ -12,12 +12,12 @@ services:
     subdomain: prometheus
     serviceName: kube-prometheus-stack-prometheus
     port: 9090
+  - name: pgadmin
+    serviceName: pgadmin-pgadmin4
   # - name: gitea
   #   port: 3000
   #   serviceName: gitea-http
   # - name: backstage
   #   port: 7007
-  # - name: pgadmin
-  #   serviceName: pgadmin-pgadmin4
   # - name: vault
   #   port: 8200
