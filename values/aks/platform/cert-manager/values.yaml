@@ -1,5 +1,5 @@
 selfSignedCertificate:
-  enabled: false
+  enabled: true # used for internal applications that need to be accessed via HTTPS
   createCaCertificate: false
 
 letsencryptProductionCertificate:
@@ -10,8 +10,8 @@ letsencryptProductionCertificate:
 subdomains:
   - "argocd"
   - "pgadmin"
-  - "show-env-dev"
+  - "show-env"
   - "keycloak"
   - "grafana"
   - "prometheus"
-  - "echo"
+  - "frontend-https"

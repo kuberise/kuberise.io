@@ -15,6 +15,7 @@ spec:
 
   storage:
     size: 2Gi
+
   monitoring:
     enablePodMonitor: true
 
