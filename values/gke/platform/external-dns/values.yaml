@@ -1,7 +1,9 @@
-## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
+# the only source that should be used in external ingress-nginx service.
+# because it is the only one that is exposed to the internet
+# and there should be only one wildcard dns record for the external ingress-nginx service.
 sources:
-  # - service
-  - ingress
+  - service
+  # - ingress
 
 ## @param provider DNS provider where the DNS records will be created.
 ## Available providers are:
@@ -23,16 +25,15 @@ policy: sync
 ## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
 ## But other registry types might be added in the future.
 ##
-txtOwnerId: public-dns
-
-## @param domainFilters Limit possible target zones by domain suffixes (optional)
-##
-domainFilters:
-  - kuberise.dev
+txtOwnerId: "gke-externaldns"
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
 ##
-ingressClassFilters: []
+ingressClassFilters:
+- nginx-external
+
+txt-prefix: "externaldns"
+registry: txt
 
 
 ## @param interval Interval update period to use
@@ -41,4 +42,4 @@ interval: "1m"
 
 ## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
 ##
-logLevel: debug
+logLevel: info
