@@ -7,6 +7,7 @@ metadata:
 spec:
   selfSigned: {}
 ---
+# certificate for the CA
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -14,9 +15,13 @@ metadata:
 spec:
   commonName: ca.kuberise.local
   isCA: true
+  privateKey:
+    algorithm: ECDSA
+    size: 256
   issuerRef:
     name: selfsigned-issuer
     kind: Issuer
+    group: cert-manager.io
   secretName: ca-key-pair
   duration: 24000h # 1000 days
   renewBefore: 360h # 15 days
@@ -30,6 +35,7 @@ spec:
   ca:
     secretName: {{ if .Values.selfSignedCertificate.generateCA }}ca-key-pair{{ else }}ca-key-pair-external{{ end }}
 ---
+# certificate for the platform services and applications
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
