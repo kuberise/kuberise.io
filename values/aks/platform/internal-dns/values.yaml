@@ -14,37 +14,9 @@ serviceAccount:
 
 provider: azure
 azure:
-  ## When a secret to load azure.json is not specified, the host's /etc/kubernetes/azure.json will be used
-  ## @param azure.secretName When using the Azure provider, set the secret containing the `azure.json` file
-  ##
-  secretName: ""
-  ## @param azure.cloud When using the Azure provider, set the Azure Cloud
-  ##
-  cloud: ""
-  ## @param azure.resourceGroup When using the Azure provider, set the Azure Resource Group
-  ##
+  useWorkloadIdentityExtension: true
   resourceGroup: ""
-  ## @param azure.tenantId When using the Azure provider, set the Azure Tenant ID
-  ##
-  tenantId: ""
-  ## @param azure.subscriptionId When using the Azure provider, set the Azure Subscription ID
-  ##
   subscriptionId: ""
-  ## @param azure.aadClientId When using the Azure provider, set the Azure AAD Client ID
-  ##
-  aadClientId: ""
-  ## @param azure.aadClientSecret When using the Azure provider, set the Azure AAD Client Secret
-  ##
-  aadClientSecret: ""
-  ## @param azure.useWorkloadIdentityExtension When using the Azure provider, set if you use Workload Identity extension.
-  ##
-  useWorkloadIdentityExtension: false
-  ## @param azure.useManagedIdentityExtension When using the Azure provider, set if you use Azure MSI
-  ##
-  useManagedIdentityExtension: false
-  ## @param azure.userAssignedIdentityID When using the Azure provider with Azure MSI, set Client ID of Azure user-assigned managed identity (optional, otherwise system-assigned managed identity is used)
-  ##
-  userAssignedIdentityID: ""
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
