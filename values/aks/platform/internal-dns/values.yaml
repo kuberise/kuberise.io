@@ -8,18 +8,38 @@ sources:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
 provider: azure
-google:
-
-  # When using the Google provider, specify the Google project (required when provider=google)
-  project: kuberise
-
-  # # When using the Google provider, specify the existing secret which contains credentials.json (optional)
-  # serviceAccountSecret: external-dns-gcp-sa
-  # # When using the Google provider with an existing secret, specify the key name (optional)
-  # serviceAccountSecretKey: service-account.json
-  # # When using the Google provider, specify the service account key JSON file. In this case a new secret will be created holding this service account (optional)
-  # serviceAccountKey: service-account.json
-  zoneVisibility: private
+azure:
+  ## When a secret to load azure.json is not specified, the host's /etc/kubernetes/azure.json will be used
+  ## @param azure.secretName When using the Azure provider, set the secret containing the `azure.json` file
+  ##
+  secretName: ""
+  ## @param azure.cloud When using the Azure provider, set the Azure Cloud
+  ##
+  cloud: ""
+  ## @param azure.resourceGroup When using the Azure provider, set the Azure Resource Group
+  ##
+  resourceGroup: ""
+  ## @param azure.tenantId When using the Azure provider, set the Azure Tenant ID
+  ##
+  tenantId: ""
+  ## @param azure.subscriptionId When using the Azure provider, set the Azure Subscription ID
+  ##
+  subscriptionId: ""
+  ## @param azure.aadClientId When using the Azure provider, set the Azure AAD Client ID
+  ##
+  aadClientId: ""
+  ## @param azure.aadClientSecret When using the Azure provider, set the Azure AAD Client Secret
+  ##
+  aadClientSecret: ""
+  ## @param azure.useWorkloadIdentityExtension When using the Azure provider, set if you use Workload Identity extension.
+  ##
+  useWorkloadIdentityExtension: false
+  ## @param azure.useManagedIdentityExtension When using the Azure provider, set if you use Azure MSI
+  ##
+  useManagedIdentityExtension: false
+  ## @param azure.userAssignedIdentityID When using the Azure provider with Azure MSI, set Client ID of Azure user-assigned managed identity (optional, otherwise system-assigned managed identity is used)
+  ##
+  userAssignedIdentityID: ""
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
@@ -47,25 +67,3 @@ interval: "1m"
 ## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
 ##
 logLevel: info
-
-
-## ServiceAccount parameters
-## https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-##
-serviceAccount:
-  ## @param serviceAccount.create Determine whether a Service Account should be created or it should reuse a exiting one.
-  ##
-  create: true
-  ## @param serviceAccount.name ServiceAccount to use. A name is generated using the external-dns.fullname template if it is not set
-  ##
-  name: ""
-  ## @param serviceAccount.annotations Additional Service Account annotations
-  ##
-  annotations:
-    iam.gke.io/gcp-service-account: internal-dns@kuberise.iam.gserviceaccount.com
-  ## @param serviceAccount.automountServiceAccountToken Automount API credentials for a service account.
-  ##
-  automountServiceAccountToken: false
-  ## @param serviceAccount.labels [object] Additional labels to be included on the service account
-  ##
-  labels: {}
