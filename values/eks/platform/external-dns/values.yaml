@@ -1,5 +1,5 @@
 ## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
-sources:
+sources: []
   # - service
   # - ingress
 
@@ -39,7 +39,7 @@ ingressClassFilters:
 - nginx-external
 
 registry: txt
-fqdnTemplates: "*.eks.kuberise.dev"
+# fqdnTemplates: "*.eks.kuberise.dev"
 
 
 ## @param interval Interval update period to use
