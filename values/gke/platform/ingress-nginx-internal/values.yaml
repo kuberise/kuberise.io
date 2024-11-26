@@ -1,6 +1,0 @@
-controller:
-  watchIngressWithoutClass: false
-
-  service:
-    annotations:
-      cloud.google.com/load-balancer-type: Internal

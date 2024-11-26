@@ -1,0 +1,85 @@
+kustomize:
+
+  hello:
+    enabled: false
+    path: values/local-example/applications/dev/hello
+
+  cnpg-database:
+    enabled: true
+    path: values/local-example/platform/database/
+
+  raw:
+    enabled: true
+    path: values/local-example/platform/raw
+
+  dashboards:
+    enabled: true
+
+helm:
+  external-dns:
+    enabled: false
+
+  argocd-image-updater:
+    enabled: true
+
+  keycloak:
+    enabled: true
+
+  keycloak-operator:
+    enabled: false
+
+  ingress-nginx-internal:
+    enabled: true
+
+  ingress-nginx-external:
+    enabled: true
+    ignoreDifferences:
+      - group: ""
+        kind: Service
+        jqPathExpressions:
+          - .status.loadBalancer.ingress[].ipMode
+
+  kube-prometheus-stack:
+    enabled: false
+
+  loki:
+    enabled: false
+
+  promtail:
+    enabled: false
+
+  cloudnative-pg:
+    enabled: true
+
+  pgadmin:
+    enabled: false
+
+  cert-manager:
+    enabled: true
+
+  backstage:
+    enabled: false
+
+  sealed-secrets:
+    enabled: false
+
+  ingresses:
+    enabled: true
+
+  vault:
+    enabled: false
+
+  # Microservices
+
+  show-env:
+    enabled: true
+    annotations:
+      argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
+      argocd-image-updater.argoproj.io/update-strategy: digest
+      argocd-image-updater.argoproj.io/write-back-method: git
+
+  frontend-https:
+    enabled: true
+
+  backend:
+    enabled: true
