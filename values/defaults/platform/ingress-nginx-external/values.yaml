@@ -4,9 +4,6 @@ controller:
     serviceMonitor:
       enabled: true
 
-  extraArgs:
-    default-ssl-certificate: cert-manager/wildcard-tls
-
   ingressClassResource:
     enabled: true
     name: nginx-external

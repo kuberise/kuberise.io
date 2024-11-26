@@ -12,7 +12,7 @@ spec:
     solvers:
       - http01:
           ingress:
-            ingressClassName: external-nginx
+            ingressClassName: nginx-external
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

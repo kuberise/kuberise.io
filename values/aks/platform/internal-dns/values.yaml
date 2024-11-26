@@ -1,0 +1,57 @@
+## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
+sources:
+  # - service
+  - ingress
+
+## @param provider DNS provider where the DNS records will be created.
+## Available providers are:
+## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
+##
+provider: azure
+
+azure:
+  useWorkloadIdentityExtension: true
+  tenantId: 3beb2953-b9ca-4db1-bee4-e0c4259f660a
+  subscriptionId: 95d749b0-aaf0-495a-a5ab-1a310dcaa965
+  resourceGroup: kuberise
+
+podLabels:
+  azure.workload.identity/use: "true"
+
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: 7a8d5505-9916-43e2-bd08-e07137eecfbe
+  automountServiceAccountToken: true
+
+# azure:
+#   secretName: internal-dns-azure-config
+
+extraArgs:
+  txt-wildcard-replacement: wildcard
+
+## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
+##
+policy: sync
+
+## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
+## But other registry types might be added in the future.
+##
+txtOwnerId: private-dns
+
+## @param domainFilters Limit possible target zones by domain suffixes (optional)
+##
+domainFilters:
+  - kuberise.internal
+
+## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
+##
+ingressClassFilters: []
+
+
+## @param interval Interval update period to use
+##
+interval: "1m"
+
+## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
+##
+logLevel: debug

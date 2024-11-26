@@ -1,7 +1,8 @@
 controller:
   service:
     annotations:
-      cloud.google.com/load-balancer-type: External
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+      service.beta.kubernetes.io/azure-load-balancer-internal: "false"
       external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.domain }}"
       external-dns.alpha.kubernetes.io/owner: "gke-externaldns"
   extraArgs:

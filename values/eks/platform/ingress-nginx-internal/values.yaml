@@ -3,4 +3,4 @@ controller:
 
   service:
     annotations:
-      cloud.google.com/load-balancer-type: Internal
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"

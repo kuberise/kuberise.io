@@ -1,0 +1,7 @@
+controller:
+  watchIngressWithoutClass: false
+
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
