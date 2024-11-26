@@ -4,6 +4,6 @@ controller:
       service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
       service.beta.kubernetes.io/azure-load-balancer-internal: "false"
       external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.domain }}"
-      external-dns.alpha.kubernetes.io/owner: "gke-externaldns"
+      external-dns.alpha.kubernetes.io/owner: "prd-externaldns"
   extraArgs:
     default-ssl-certificate: cert-manager/wildcard-tls-letsencrypt-production
