@@ -15,6 +15,7 @@ serviceAccount:
 provider: azure
 azure:
   secretName: internal-dns-azure-config
+  aadClientId: "6c2c0e7b-ee7d-4e6a-b6af-c510cc9b9056"
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
