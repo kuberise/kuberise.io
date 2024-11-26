@@ -17,7 +17,7 @@ helm:
     enabled: true
 
   internal-dns:
-    enabled: true
+    enabled: false # internal DNS is managed by coredns inside AKS cluster.
 
   argocd-image-updater:
     enabled: true
