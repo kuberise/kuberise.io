@@ -5,7 +5,7 @@ kustomize:
     path: values/aks/platform/database/
 
   raw:
-    enabled: false
+    enabled: true
     path: values/aks/platform/raw
 
   dashboards:
