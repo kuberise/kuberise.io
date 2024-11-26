@@ -1,7 +1,7 @@
 helm:
   parameters:
   - name: domain
-    value: tst.kuberise.dev
+    value: dev.kuberise.dev
     forcestring: false
   - name: image.name
     value: ghcr.io/kuberise/show-env
