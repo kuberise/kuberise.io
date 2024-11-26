@@ -59,14 +59,14 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
+    - host: '{{ $.Values.fullnameOverride }}.{{ $.Values.domain }}'
       paths:
         - path: /
           pathType: Prefix
   tls:
    - secretName: ""
      hosts:
-       - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.domain }}'
+       - '{{ $.Values.fullnameOverride }}.{{ $.Values.domain }}'
 
 
 resources: {}
