@@ -8,9 +8,9 @@ sources:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
 
-# serviceAccount:
-#   annotations:
-#     azure.workload.identity/client-id: "6c2c0e7b-ee7d-4e6a-b6af-c510cc9b9056"
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: "6c2c0e7b-ee7d-4e6a-b6af-c510cc9b9056"
 
 provider: azure
 azure:
