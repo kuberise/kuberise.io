@@ -1,7 +1,7 @@
 kustomize:
 
   cnpg-database:
-    enabled: true
+    enabled: false
     path: values/aks/platform/database/
 
   raw:
@@ -9,7 +9,7 @@ kustomize:
     path: values/aks/platform/raw
 
   dashboards:
-    enabled: true
+    enabled: false
 
 helm:
 
@@ -23,7 +23,7 @@ helm:
     enabled: true
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -35,19 +35,19 @@ helm:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   cert-manager:
     enabled: true

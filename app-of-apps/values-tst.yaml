@@ -5,7 +5,7 @@ kustomize:
     path: values/local-example/applications/dev/hello
 
   cnpg-database:
-    enabled: true
+    enabled: false
     path: values/local-example/platform/database/
 
   raw:
@@ -23,7 +23,7 @@ helm:
     enabled: true
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -49,7 +49,7 @@ helm:
     enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
     enabled: false
