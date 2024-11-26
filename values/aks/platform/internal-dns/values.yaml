@@ -20,7 +20,7 @@ podLabels:
 
 serviceAccount:
   annotations:
-    azure.workload.identity/client-id: 466c619b-8147-423d-9b91-7804a1ddf7f4
+    azure.workload.identity/client-id: 7a8d5505-9916-43e2-bd08-e07137eecfbe
   automountServiceAccountToken: true
 
 # azure:
