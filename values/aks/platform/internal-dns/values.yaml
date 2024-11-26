@@ -20,7 +20,8 @@ podLabels:
 
 serviceAccount:
   annotations:
-    azure.workload.identity/client-id: 91cb80e0-d412-4e71-b711-c36a1f4a684d
+    azure.workload.identity/client-id: 466c619b-8147-423d-9b91-7804a1ddf7f4
+  automountServiceAccountToken: true
 
 # azure:
 #   secretName: internal-dns-azure-config
