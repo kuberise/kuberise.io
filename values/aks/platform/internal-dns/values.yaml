@@ -40,8 +40,8 @@ txtOwnerId: private-dns
 
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##
-# domainFilters:
-#   - kuberise.internal
+domainFilters:
+  - kuberise.internal
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
 ##
