@@ -7,20 +7,26 @@ sources:
 ## Available providers are:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
+provider: azure
+
+azure:
+  useWorkloadIdentityExtension: true
+  tenantId: 3beb2953-b9ca-4db1-bee4-e0c4259f660a
+  subscriptionId: 95d749b0-aaf0-495a-a5ab-1a310dcaa965
+  resourceGroup: kuberise
 
 podLabels:
   azure.workload.identity/use: "true"
 
 serviceAccount:
   annotations:
-    azure.workload.identity/client-id: "6c2c0e7b-ee7d-4e6a-b6af-c510cc9b9056"
+    azure.workload.identity/client-id: 54a3ad71-3b77-4e0b-a7cd-5814436957a5
 
-provider: azure
-azure:
-  secretName: internal-dns-azure-config
+# azure:
+#   secretName: internal-dns-azure-config
 
 extraArgs:
-  txt-wildcard-replacement: "wildcard"
+  txt-wildcard-replacement: wildcard
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
@@ -33,8 +39,8 @@ txtOwnerId: private-dns
 
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##
-domainFilters:
-  - kuberise.internal
+# domainFilters:
+#   - kuberise.internal
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
 ##
