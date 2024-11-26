@@ -4,7 +4,7 @@ image:
 replicaCount: 1
 
 env:
-  Environment: dev
+  Environment: prd
   name: show-env
   PROTOCOL: HTTP
 
