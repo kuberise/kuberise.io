@@ -8,6 +8,9 @@ sources:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
 
+podLabels:
+  azure.workload.identity/use: "true"
+
 serviceAccount:
   annotations:
     azure.workload.identity/client-id: "6c2c0e7b-ee7d-4e6a-b6af-c510cc9b9056"
@@ -16,6 +19,9 @@ provider: azure
 azure:
   secretName: internal-dns-azure-config
   aadClientId: "6c2c0e7b-ee7d-4e6a-b6af-c510cc9b9056"
+
+extraArgs:
+  txt-wildcard-replacement: "wildcard"
 
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
