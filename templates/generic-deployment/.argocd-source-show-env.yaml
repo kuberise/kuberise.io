@@ -1,11 +1,11 @@
 helm:
   parameters:
   - name: domain
-    value: dev.kuberise.dev
+    value: tst.kuberise.dev
     forcestring: false
   - name: image.name
     value: ghcr.io/kuberise/show-env
     forcestring: true
   - name: image.tag
-    value: latest@sha256:6805b1abbb6539c20f3c327cd736ded14acdd8cfe66e6e299ea2d22a858c3ec9
+    value: latest@sha256:69891f8e75f60c65424ef7ee3359c4d9f02e532dae57dcf890b10b391f1f814a
     forcestring: true
