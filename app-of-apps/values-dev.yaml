@@ -2,15 +2,15 @@ kustomize:
 
   hello:
     enabled: false
-    path: values/local-example/applications/dev/hello
+    path: values/dev/applications/dev/hello
 
   cnpg-database:
     enabled: false
-    path: values/local-example/platform/database/
+    path: values/dev/platform/database/
 
   raw:
     enabled: true
-    path: values/local-example/platform/raw
+    path: values/dev/platform/raw
 
   dashboards:
     enabled: true
