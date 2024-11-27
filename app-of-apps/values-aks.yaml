@@ -1,7 +1,7 @@
 kustomize:
 
   cnpg-database:
-    enabled: true
+    enabled: false
     path: values/aks/platform/database/
 
   raw:
@@ -16,14 +16,17 @@ helm:
   external-dns:
     enabled: true
 
-  internal-dns:
+  internal-dns: # bitnami chart doesn't work well with azure-private-dns provider
     enabled: true
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: 1.15.0
+    chart: external-dns
 
   argocd-image-updater:
     enabled: true
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -35,19 +38,19 @@ helm:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   cert-manager:
     enabled: true
