@@ -16,8 +16,11 @@ helm:
   external-dns:
     enabled: true
 
-  internal-dns:
+  internal-dns: # bitnami chart doesn't work well with azure-private-dns provider
     enabled: true
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: 1.15.0
+    chart: external-dns
 
   argocd-image-updater:
     enabled: true

@@ -1,21 +1,5 @@
-## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
-sources:
-  - service # only internal ingress service needs dns translation
-
-## @param provider DNS provider where the DNS records will be created.
-## Available providers are:
-## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
-##
-provider: azure-private-dns
-
-azure:
-  useWorkloadIdentityExtension: true
-  tenantId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-  subscriptionId: xxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-  resourceGroup: xxxxxxxx
-
-podLabels:
-  azure.workload.identity/use: "true"
+provider:
+  name: azure-private-dns
 
 serviceAccount:
   labels:
@@ -24,33 +8,31 @@ serviceAccount:
     azure.workload.identity/client-id: 240aaf4a-45b7-4b96-8c01-2d1b1000e068
   # automountServiceAccountToken: true
 
-azure:
-  secretName: azure-config-file
+podLabels:
+  azure.workload.identity/use: "true"
 
-extraArgs:
-  txt-wildcard-replacement: wildcard
+extraVolumes:
+  - name: azure-config-file
+    secret:
+      secretName: azure-config-file
 
-## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
-##
+extraVolumeMounts:
+  - name: azure-config-file
+    mountPath: /etc/kubernetes
+    readOnly: true
+
 policy: sync
 
-## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
-## But other registry types might be added in the future.
-##
-txtOwnerId: private-dns
-
-## @param domainFilters Limit possible target zones by domain suffixes (optional)
-##
-domainFilters:
-  - kuberise.internal
-
-## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
-# ingressClassFilters: # not needed because we are only using service as a source
-# - nginx-internal
-## @param interval Interval update period to use
-##
-interval: "1m"
-
-## @param logLevel Verbosity of the logs (options: panic, debug, info, warning, error, fatal, trace)
-##
 logLevel: debug
+
+interval: 1m
+
+sources:
+  - service # only internal ingress service needs dns translation
+
+domainFilters:
+- kuberise.internal
+
+txtOwnerId: "private-dns"
+
+txtPrefix: internaldns-
