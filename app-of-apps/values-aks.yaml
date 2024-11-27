@@ -1,7 +1,7 @@
 kustomize:
 
   cnpg-database:
-    enabled: true
+    enabled: false
     path: values/aks/platform/database/
 
   raw:
