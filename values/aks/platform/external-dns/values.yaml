@@ -6,7 +6,6 @@ sources:
 
 provider: cloudflare
 cloudflare:
-
   ## @param cloudflare.secretName When using the Cloudflare provider, it's the name of the secret containing cloudflare_api_token or cloudflare_api_key.
   ## This ignores cloudflare.apiToken, and cloudflare.apiKey
   secretName: "cloudflare"

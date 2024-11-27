@@ -6,24 +6,26 @@ sources:
 ## Available providers are:
 ## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
 ##
-provider: azure
+provider: azure-private-dns
 
-azure:
-  useWorkloadIdentityExtension: true
-  tenantId: 3beb2953-b9ca-4db1-bee4-e0c4259f660a
-  subscriptionId: 95d749b0-aaf0-495a-a5ab-1a310dcaa965
-  resourceGroup: kuberise
+# azure:
+#   useWorkloadIdentityExtension: true
+#   tenantId: 3beb2953-b9ca-4db1-bee4-e0c4259f660a
+#   subscriptionId: 95d749b0-aaf0-495a-a5ab-1a310dcaa965
+#   resourceGroup: kuberise
 
 podLabels:
   azure.workload.identity/use: "true"
 
 serviceAccount:
+  labels:
+    azure.workload.identity/use: "true"
   annotations:
-    azure.workload.identity/client-id: 7a8d5505-9916-43e2-bd08-e07137eecfbe
-  automountServiceAccountToken: true
+    azure.workload.identity/client-id: 240aaf4a-45b7-4b96-8c01-2d1b1000e068
+  # automountServiceAccountToken: true
 
-# azure:
-#   secretName: internal-dns-azure-config
+azure:
+  secretName: azure-config-file
 
 extraArgs:
   txt-wildcard-replacement: wildcard
