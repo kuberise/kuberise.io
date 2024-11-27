@@ -2,8 +2,7 @@
 # because it is the only one that is exposed to the internet
 # and there should be only one wildcard dns record for the external ingress-nginx service.
 sources:
-  - service
-  # - ingress
+  - service # only external ingress service needs dns translation
 
 provider: cloudflare
 cloudflare:
