@@ -5,7 +5,7 @@ controller:
       enabled: true
 
   service:
-    type: LoadBalancer
+    type: ClusterIP
 
   ingressClassResource:
     enabled: true
