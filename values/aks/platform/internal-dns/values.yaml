@@ -43,10 +43,8 @@ domainFilters:
   - kuberise.internal
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
-##
-ingressClassFilters: []
-
-
+# ingressClassFilters: # not needed because we are only using service as a source
+# - nginx-internal
 ## @param interval Interval update period to use
 ##
 interval: "1m"

@@ -25,8 +25,8 @@ txtOwnerId: "aks-externaldns"
 txt-prefix: "externaldns"
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
-ingressClassFilters:
-- nginx-external
+# ingressClassFilters: # not needed because we are only using service as a source
+# - nginx-external
 
 registry: txt
 
