@@ -8,11 +8,11 @@ sources:
 ##
 provider: azure-private-dns
 
-# azure:
-#   useWorkloadIdentityExtension: true
-#   tenantId: 3beb2953-b9ca-4db1-bee4-e0c4259f660a
-#   subscriptionId: 95d749b0-aaf0-495a-a5ab-1a310dcaa965
-#   resourceGroup: kuberise
+azure:
+  useWorkloadIdentityExtension: true
+  tenantId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  subscriptionId: xxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  resourceGroup: xxxxxxxx
 
 podLabels:
   azure.workload.identity/use: "true"
