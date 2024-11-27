@@ -6,7 +6,6 @@ serviceAccount:
     azure.workload.identity/use: "true"
   annotations:
     azure.workload.identity/client-id: 240aaf4a-45b7-4b96-8c01-2d1b1000e068
-  # automountServiceAccountToken: true
 
 podLabels:
   azure.workload.identity/use: "true"
