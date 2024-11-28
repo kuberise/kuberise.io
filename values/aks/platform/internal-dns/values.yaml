@@ -1,3 +1,7 @@
+
+sources:
+  - service # only internal ingress service needs dns translation
+
 provider:
   name: azure-private-dns
 
@@ -26,9 +30,6 @@ policy: sync
 logLevel: info
 
 interval: 1m
-
-sources:
-  - service # only internal ingress service needs dns translation
 
 domainFilters:
 - kuberise.internal
