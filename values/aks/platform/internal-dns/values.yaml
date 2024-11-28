@@ -23,7 +23,7 @@ extraVolumeMounts:
 
 policy: sync
 
-logLevel: debug
+logLevel: info
 
 interval: 1m
 
