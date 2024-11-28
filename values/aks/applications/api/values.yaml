@@ -16,6 +16,6 @@ ingress:
   hosts:
     - host: kuberise.internal
       paths:
-        - path: /backend
+        - path: /api
           pathType: Prefix
   tls: []

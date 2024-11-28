@@ -1,7 +1,6 @@
 ## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
 sources:
-  # - service
-  - ingress
+  - service # only internal ingress service needs dns translation
 
 ## @param provider DNS provider where the DNS records will be created.
 ## Available providers are:

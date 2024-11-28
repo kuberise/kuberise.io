@@ -2,8 +2,7 @@
 # because it is the only one that is exposed to the internet
 # and there should be only one wildcard dns record for the external ingress-nginx service.
 sources:
-  - service
-  # - ingress
+  - service # only external ingress service needs dns translation
 
 provider: cloudflare
 cloudflare:
@@ -26,8 +25,8 @@ txtOwnerId: "gke-externaldns"
 txt-prefix: "externaldns"
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
-ingressClassFilters:
-- nginx-external
+# ingressClassFilters: # not needed because we are only using service as a source
+# - nginx-external
 
 registry: txt
 

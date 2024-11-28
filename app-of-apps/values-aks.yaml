@@ -72,3 +72,6 @@ helm:
 
   backend:
     enabled: true
+
+  api:
+    enabled: true
