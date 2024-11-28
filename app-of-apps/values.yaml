@@ -171,3 +171,9 @@ helm:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+
+  # a sample of microservice with internal traffic
+  api:
+    enabled: false
+    path: templates/generic-deployment
+    valuesFolder: applications
