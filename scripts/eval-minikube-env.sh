@@ -1,13 +1,18 @@
 #!/bin/bash
 
+# This script loads all the Docker images into the minikube cluster.
+
+
+# This command configures your shell to use the Docker daemon inside the Minikube VM.
+# 'minikube -p minikube docker-env' prints out the necessary environment variables.
+# 'eval' executes the output of the 'minikube' command in the current shell.
 eval $(minikube -p minikube docker-env)
 
 # Define an array with all the Docker images
-
 # Command to generate the list of images:
-docker images --format '"{{.Repository}}:{{.Tag}}"' | awk '{printf "  %s\n", $0}' | sed '1i\
-images=(' | sed '$a\
-)'
+# docker images --format '"{{.Repository}}:{{.Tag}}"' | awk '{printf "  %s\n", $0}' | sed '1i\
+# images=(' | sed '$a\
+# )'
 
 images=(
   "nginx:alpine"
@@ -67,7 +72,7 @@ images=(
   "nginx:1.16.0"
 )
 
-# Load each image into the kind cluster
+# Load each image into the minikube cluster
 for image in "${images[@]}"; do
   echo "Pull image: $image"
   docker pull "$image"
