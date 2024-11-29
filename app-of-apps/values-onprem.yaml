@@ -1,7 +1,7 @@
 kustomize:
 
   cnpg-database:
-    enabled: true
+    enabled: false
     path: values/onprem/platform/database/
 
   raw:
@@ -19,7 +19,7 @@ helm:
     enabled: true
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -36,19 +36,19 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   cert-manager:
     enabled: true
