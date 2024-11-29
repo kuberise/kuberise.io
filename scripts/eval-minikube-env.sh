@@ -3,6 +3,12 @@
 eval $(minikube -p minikube docker-env)
 
 # Define an array with all the Docker images
+
+# Command to generate the list of images:
+# docker images --format '"{{.Repository}}:{{.Tag}}"' | awk '{printf "  %s\n", $0}' | sed '1i\
+# images=(' | sed '$a\
+# )'
+
 images=(
   "public.ecr.aws/docker/library/redis:7.2.4-alpine"
   "bitnami/keycloak:24.0.4-debian-12-r1"
