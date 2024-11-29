@@ -1,9 +1,5 @@
 kustomize:
 
-  hello:
-    enabled: true
-    path: values/onprem/applications/dev/hello
-
   cnpg-database:
     enabled: true
     path: values/onprem/platform/database/

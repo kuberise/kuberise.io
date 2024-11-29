@@ -17,5 +17,5 @@ ingress:
     - host: kuberise.internal
       paths:
         - path: /backend
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []

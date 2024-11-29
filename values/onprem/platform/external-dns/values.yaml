@@ -1,19 +1,17 @@
-
-
-## @param sources [array] K8s resources type to be observed for new DNS entries by ExternalDNS
+# the only source that should be used in external ingress-nginx service.
+# because it is the only one that is exposed to the internet
+# and there should be only one wildcard dns record for the external ingress-nginx service.
 sources:
-  # - crd
-  - service
-  - ingress
-  # - contour-httpproxy
+  - service # only external ingress service needs dns translation
 
-
-## @param provider DNS provider where the DNS records will be created.
-## Available providers are:
-## - akamai, alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, hetzner, infoblox, linode, rfc2136, transip, oci
-##
 provider: cloudflare
+cloudflare:
+  ## @param cloudflare.secretName When using the Cloudflare provider, it's the name of the secret containing cloudflare_api_token or cloudflare_api_key.
+  ## This ignores cloudflare.apiToken, and cloudflare.apiKey
+  secretName: "cloudflare"
 
+  ## @param cloudflare.proxied When using the Cloudflare provider, enable the proxy feature (DDOS protection, CDN...) (optional)
+  proxied: false
 ## @param policy Modify how DNS records are synchronized between sources and providers (options: sync, upsert-only )
 ##
 policy: sync
@@ -21,16 +19,15 @@ policy: sync
 ## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
 ## But other registry types might be added in the future.
 ##
-txtOwnerId: default
+txtOwnerId: "onprem-externaldns"
 
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##
-domainFilters:
-  - mydomain.local
+txt-prefix: "externaldns"
 
 ## @param ingressClassFilters Filter sources managed by external-dns via IngressClass (optional)
-##
-ingressClassFilters: []
+# ingressClassFilters: # not needed because we are only using service as a source
+# - nginx-external
 
 
 ## @param interval Interval update period to use
