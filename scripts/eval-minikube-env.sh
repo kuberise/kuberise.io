@@ -6,7 +6,7 @@
 # This command configures your shell to use the Docker daemon inside the Minikube VM.
 # 'minikube -p minikube docker-env' prints out the necessary environment variables.
 # 'eval' executes the output of the 'minikube' command in the current shell.
-eval $(minikube -p minikube docker-env)
+# eval $(minikube -p minikube docker-env)
 
 # Define an array with all the Docker images
 # Command to generate the list of images:
@@ -73,9 +73,18 @@ images=(
 )
 
 # Load each image into the minikube cluster
+# for image in "${images[@]}"; do
+#   echo "Pull image: $image"
+#   docker pull "$image"
+# done
+
+# echo "All images have been pulled locally."
+
+
+# Load each image into the minikube cluster
 for image in "${images[@]}"; do
-  echo "Pull image: $image"
-  docker pull "$image"
+  echo "Loading image into minikube: $image"
+  minikube -p minikube image load "$image"
 done
 
 echo "All images have been loaded into the minikube cluster."
