@@ -22,7 +22,7 @@ helm:
     enabled: true
 
   keycloak-operator:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: true
@@ -54,16 +54,16 @@ helm:
     enabled: true
 
   backstage:
-    enabled: true
+    enabled: false
 
   sealed-secrets:
-    enabled: true
+    enabled: false
 
   ingresses:
     enabled: true
 
   vault:
-    enabled: true
+    enabled: false
 
   # Microservices
 

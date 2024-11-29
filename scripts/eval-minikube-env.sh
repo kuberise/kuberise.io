@@ -5,20 +5,48 @@ eval $(minikube -p minikube docker-env)
 # Define an array with all the Docker images
 
 # Command to generate the list of images:
-# docker images --format '"{{.Repository}}:{{.Tag}}"' | awk '{printf "  %s\n", $0}' | sed '1i\
-# images=(' | sed '$a\
-# )'
+docker images --format '"{{.Repository}}:{{.Tag}}"' | awk '{printf "  %s\n", $0}' | sed '1i\
+images=(' | sed '$a\
+)'
 
 images=(
+  "nginx:alpine"
+  "ghcr.io/kuberise/show-env:latest"
+  "bitnami/external-dns:0.15.0-debian-12-r4"
+  "quay.io/argoprojlabs/argocd-image-updater:v0.15.0"
+  "grafana/grafana:11.3.0"
+  "quay.io/prometheus-operator/prometheus-config-reloader:v0.77.2"
+  "quay.io/prometheus-operator/prometheus-operator:v0.77.2"
+  "registry.k8s.io/ingress-nginx/controller:<none>"
+  "registry.k8s.io/ingress-nginx/kube-webhook-certgen:<none>"
+  "quay.io/kiwigrid/k8s-sidecar:1.28.0"
+  "grafana/loki:2.9.10"
+  "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.13.0"
+  "quay.io/prometheus/node-exporter:v1.8.2"
+  "quay.io/jetstack/cert-manager-controller:v1.15.0"
+  "quay.io/jetstack/cert-manager-startupapicheck:v1.15.0"
+  "quay.io/jetstack/cert-manager-webhook:v1.15.0"
+  "quay.io/jetstack/cert-manager-cainjector:v1.15.0"
+  "dpage/pgadmin4:8.8"
   "public.ecr.aws/docker/library/redis:7.2.4-alpine"
+  "epamedp/keycloak-operator:1.21.0"
   "bitnami/keycloak:24.0.4-debian-12-r1"
   "quay.io/argoproj/argocd:v2.11.0"
   "quay.io/jetstack/cert-manager-startupapicheck:v1.14.5"
   "quay.io/jetstack/cert-manager-webhook:v1.14.5"
   "quay.io/jetstack/cert-manager-controller:v1.14.5"
   "quay.io/jetstack/cert-manager-cainjector:v1.14.5"
+  "registry.k8s.io/kube-apiserver:v1.30.0"
+  "registry.k8s.io/kube-scheduler:v1.30.0"
+  "registry.k8s.io/kube-proxy:v1.30.0"
+  "registry.k8s.io/kube-controller-manager:v1.30.0"
+  "grafana/promtail:3.0.0"
+  "hashicorp/vault-k8s:1.4.1"
+  "hashicorp/vault:1.16.1"
+  "quay.io/prometheus/alertmanager:v0.27.0"
   "mojtabaimani/backstage:1.0"
   "ghcr.io/cloudnative-pg/postgresql:16.1"
+  "registry.k8s.io/etcd:3.5.12-0"
   "ghcr.io/cloudnative-pg/cloudnative-pg:1.22.1"
   "quay.io/prometheus-operator/prometheus-config-reloader:v0.71.2"
   "quay.io/prometheus-operator/prometheus-operator:v0.71.2"
@@ -29,7 +57,13 @@ images=(
   "quay.io/prometheus/node-exporter:v1.7.0"
   "grafana/loki:2.9.2"
   "quay.io/kiwigrid/k8s-sidecar:1.25.2"
+  "quay.io/keycloak/keycloak:22.0.4"
   "quay.io/prometheus/alertmanager:v0.26.0"
+  "registry.k8s.io/coredns/coredns:v1.11.1"
+  "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6"
+  "registry.k8s.io/pause:3.9"
+  "nginxinc/nginx-unprivileged:1.20.2-alpine"
+  "gcr.io/k8s-minikube/storage-provisioner:v5"
   "nginx:1.16.0"
 )
 
