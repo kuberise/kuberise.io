@@ -32,6 +32,9 @@ kustomize: # kustomize applications and also raw folders
 
 helm:
 
+  metallb:
+    enabled: false
+
   internal-dns:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami

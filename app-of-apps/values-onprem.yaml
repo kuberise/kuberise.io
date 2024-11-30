@@ -12,6 +12,10 @@ kustomize:
     enabled: true
 
 helm:
+
+  metallb:
+    enabled: true
+
   external-dns:
     enabled: true
 

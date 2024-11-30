@@ -41,17 +41,9 @@ images=(
   "quay.io/jetstack/cert-manager-webhook:v1.14.5"
   "quay.io/jetstack/cert-manager-controller:v1.14.5"
   "quay.io/jetstack/cert-manager-cainjector:v1.14.5"
-  "registry.k8s.io/kube-apiserver:v1.30.0"
-  "registry.k8s.io/kube-scheduler:v1.30.0"
-  "registry.k8s.io/kube-proxy:v1.30.0"
-  "registry.k8s.io/kube-controller-manager:v1.30.0"
   "grafana/promtail:3.0.0"
-  "hashicorp/vault-k8s:1.4.1"
-  "hashicorp/vault:1.16.1"
   "quay.io/prometheus/alertmanager:v0.27.0"
-  "mojtabaimani/backstage:1.0"
   "ghcr.io/cloudnative-pg/postgresql:16.1"
-  "registry.k8s.io/etcd:3.5.12-0"
   "ghcr.io/cloudnative-pg/cloudnative-pg:1.22.1"
   "quay.io/prometheus-operator/prometheus-config-reloader:v0.71.2"
   "quay.io/prometheus-operator/prometheus-operator:v0.71.2"
@@ -64,11 +56,7 @@ images=(
   "quay.io/kiwigrid/k8s-sidecar:1.25.2"
   "quay.io/keycloak/keycloak:22.0.4"
   "quay.io/prometheus/alertmanager:v0.26.0"
-  "registry.k8s.io/coredns/coredns:v1.11.1"
-  "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6"
-  "registry.k8s.io/pause:3.9"
   "nginxinc/nginx-unprivileged:1.20.2-alpine"
-  "gcr.io/k8s-minikube/storage-provisioner:v5"
   "nginx:1.16.0"
 )
 
@@ -84,7 +72,7 @@ images=(
 # Load each image into the minikube cluster
 for image in "${images[@]}"; do
   echo "Loading image into minikube: $image"
-  minikube -p minikube image load "$image"
+  minikube -p minikube image load "$image" --daemon # fetch the image directly from your local Docker daemon. to avoid unnecessary network transfers or registry operations.
 done
 
 echo "All images have been loaded into the minikube cluster."
