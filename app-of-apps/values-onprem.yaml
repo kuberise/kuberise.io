@@ -1,29 +1,29 @@
 kustomize:
 
-  hello:
-    enabled: false
-    path: values/local-example/applications/dev/hello
-
   cnpg-database:
-    enabled: true
-    path: values/local-example/platform/database/
+    enabled: false
+    path: values/onprem/platform/database/
 
   raw:
     enabled: true
-    path: values/local-example/platform/raw
+    path: values/onprem/platform/raw
 
   dashboards:
     enabled: true
 
 helm:
+
+  metallb:
+    enabled: true
+
   external-dns:
-    enabled: false
+    enabled: true
 
   argocd-image-updater:
     enabled: true
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
     enabled: false
@@ -49,7 +49,7 @@ helm:
     enabled: false
 
   cloudnative-pg:
-    enabled: true
+    enabled: false
 
   pgadmin:
     enabled: false

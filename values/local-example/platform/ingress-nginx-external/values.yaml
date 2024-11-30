@@ -1,6 +1,0 @@
-controller:
-  hostPort:
-    enabled: true
-
-  extraArgs:
-    default-ssl-certificate: cert-manager/wildcard-tls
