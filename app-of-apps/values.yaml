@@ -13,24 +13,25 @@ global:
       repoURL: x
       targetRevision: x
 
-kustomize: # kustomize applications and also raw folders
-  # A Kustomize application example
+# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
+ArgocdApplications:
   hello:
     enabled: false
+    type: kustomize
 
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
+    type: raw
 
   raw:
     enabled: false
+    type: raw
 
   dashboards:
     enabled: false
     namespace: monitoring
-
-
-helm:
+    type: kustomize
 
   metrics-server:
     enabled: false
