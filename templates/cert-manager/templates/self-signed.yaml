@@ -30,7 +30,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: selfSigned
+  name: selfsigned
 spec:
   ca:
     secretName: {{ if .Values.selfSignedCertificate.generateCA }}ca-key-pair{{ else }}ca-key-pair-external{{ end }}
@@ -46,7 +46,7 @@ spec:
   dnsNames:
     - "*.{{ .Values.domain }}"
   issuerRef:
-    name: selfSigned
+    name: selfsigned
     kind: ClusterIssuer
 ---
 {{- end }}
