@@ -1,7 +1,7 @@
 kustomize:
 
   cnpg-database:
-    enabled: false
+    enabled: true
     path: values/onprem/platform/database/
 
   raw:
@@ -26,7 +26,7 @@ helm:
     enabled: true
 
   keycloak:
-    enabled: false
+    enabled: true
 
   keycloak-operator:
     enabled: false
@@ -52,7 +52,7 @@ helm:
     enabled: false
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
 
   pgadmin:
     enabled: false

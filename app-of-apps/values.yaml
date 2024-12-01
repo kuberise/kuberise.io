@@ -71,7 +71,6 @@ helm:
   keycloak:
     enabled: false
     syncWave: 0
-    path: templates/keycloak
 
   keycloak-operator:
     enabled: false
