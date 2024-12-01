@@ -13,6 +13,9 @@ kustomize:
 
 helm:
 
+  metrics-server:
+    enabled: true
+
   metallb:
     enabled: true
 
