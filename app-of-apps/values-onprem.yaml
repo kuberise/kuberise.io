@@ -40,11 +40,11 @@ ArgocdApplications:
 
   ingress-nginx-external:
     enabled: true
-    ignoreDifferences:
-      - group: ""
-        kind: Service
-        jqPathExpressions:
-          - .status.loadBalancer.ingress[].ipMode
+    # ignoreDifferences:
+    #   - group: ""
+    #     kind: Service
+    #     jqPathExpressions:
+    #       - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
     enabled: true
