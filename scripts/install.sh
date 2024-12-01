@@ -155,6 +155,11 @@ spec:
     path: ./app-of-apps
     helm:
       valueFiles:
+        - tools/main.yaml
+        - tools/data.yaml
+        - tools/observability.yaml
+        - tools/security.yaml
+        - tools/network.yaml
         - values-$platform_name.yaml
       parameters:
         - name: global.spec.source.repoURL
