@@ -17,10 +17,10 @@ ArgocdApplications:
   metallb:
     enabled: true
     ignoreDifferences:
-      - group: ""
+      - group: apiextensions.k8s.io
         kind: CustomResourceDefinition
-        jqPathExpressions:
-          - .status
+        jsonPointers:
+          - /status
 
   external-dns:
     enabled: true
