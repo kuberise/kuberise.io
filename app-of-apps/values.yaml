@@ -32,11 +32,11 @@ kustomize: # kustomize applications and also raw folders
 
 helm:
 
-metrics-server:
-  enabled: false
-  repoURL: https://kubernetes-sigs.github.io/metrics-server
-  targetRevision: 3.12.2
-  chart: metrics-server
+  metrics-server:
+    enabled: false
+    repoURL: https://kubernetes-sigs.github.io/metrics-server
+    targetRevision: 3.12.2
+    chart: metrics-server
 
   metallb:
     enabled: false
