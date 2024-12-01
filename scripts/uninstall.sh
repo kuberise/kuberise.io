@@ -41,7 +41,7 @@ then
   exit 2
 fi
 
-namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx-internal" "ingress-nginx-external" "monitoring" "ingresses" "gitea" "frontend-https" "metallb" "raw" "show-env" "cert-manager")
+namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx-internal" "ingress-nginx-external" "monitoring" "ingresses" "gitea" "frontend-https" "metallb" "raw" "show-env" "cert-manager" "external-dns" "internal-dns" "backend" "metrics-server")
 
 # Convert the array to a string with each namespace on a new line
 namespaces_str=$(IFS=$'\n'; echo "${namespaces[*]}")
