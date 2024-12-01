@@ -43,7 +43,7 @@ helm:
           - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
     enabled: false
