@@ -1,5 +1,5 @@
-{{- $type := default "helm" .Values.type }}
 {{- range $name, $app := .Values.ArgocdApplications -}}
+{{- $applicationType := default "helm" .type }}
 {{- if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -20,7 +20,7 @@ spec:
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
-  {{- if eq $type "helm" }}
+  {{- if eq $applicationType "helm" }}
     {{- if hasKey . "chart"}}
     chart: {{ .chart }}
     {{- else if hasKey . "path"}}
