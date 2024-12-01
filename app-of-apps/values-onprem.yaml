@@ -16,6 +16,11 @@ ArgocdApplications:
 
   metallb:
     enabled: true
+    ignoreDifferences:
+      - group: ""
+        kind: CustomResourceDefinition
+        jqPathExpressions:
+          - .status
 
   external-dns:
     enabled: true

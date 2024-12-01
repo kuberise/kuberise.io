@@ -1,3 +1,6 @@
+# This file contains the list of all developer applications
+
+
 # There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
 ArgocdApplications:
   # Microservice examples
