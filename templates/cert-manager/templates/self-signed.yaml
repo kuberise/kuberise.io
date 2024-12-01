@@ -30,7 +30,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: selfsigned-clusterissuer
+  name: selfSigned
 spec:
   ca:
     secretName: {{ if .Values.selfSignedCertificate.generateCA }}ca-key-pair{{ else }}ca-key-pair-external{{ end }}
@@ -42,11 +42,11 @@ metadata:
   name: wildcard-default-crt
   namespace: cert-manager
 spec:
-  secretName: wildcard-tls
+  secretName: ssl-certificate-selfsigned
   dnsNames:
     - "*.{{ .Values.domain }}"
   issuerRef:
-    name: selfsigned-clusterissuer
+    name: selfSigned
     kind: ClusterIssuer
 ---
 {{- end }}

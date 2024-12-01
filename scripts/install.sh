@@ -277,9 +277,11 @@ create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "admin-secret" "--from-literal=KE
 create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$PG_APP_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
-# Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
+  # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
   create_secret "$CONTEXT" "$NAMESPACE_EXTERNALDNS" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
+  # Cloudflare API Token Secret for Cert-Manager DNS01 Challenge if CLOUDFLARE_API_TOKEN is provided
+  create_secret "$CONTEXT" "$NAMESPACE_CERTMANAGER" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
 fi
 
 # Install ArgoCD with custom values and admin password

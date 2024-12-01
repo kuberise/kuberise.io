@@ -5,4 +5,4 @@ controller:
       external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.domain }}"
       external-dns.alpha.kubernetes.io/owner: "gke-externaldns"
   extraArgs:
-    default-ssl-certificate: cert-manager/wildcard-tls-letsencrypt-production
+    default-ssl-certificate: cert-manager/ssl-certificate-letsencrypt
