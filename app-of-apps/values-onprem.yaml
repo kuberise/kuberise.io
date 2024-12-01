@@ -1,4 +1,4 @@
-kustomize:
+ArgocdApplications:
 
   cnpg-database:
     enabled: true
@@ -10,8 +10,6 @@ kustomize:
 
   dashboards:
     enabled: true
-
-helm:
 
   metrics-server:
     enabled: true
