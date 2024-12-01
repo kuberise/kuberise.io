@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsEncrypt
+  name: lets-encrypt
 spec:
   acme:
     email: {{ .Values.letsEncrypt.email }}
@@ -38,6 +38,6 @@ spec:
   - "{{ . }}.{{ $.Values.domain }}"
   {{- end }}
   issuerRef:
-    name: letsEncrypt
+    name: lets-encrypt
     kind: ClusterIssuer
 {{- end }}
