@@ -4,4 +4,4 @@ metadata:
   name: keycloak-access
 spec:
   secret: keycloak-access             # Secret name
-  url: http://keycloak-keycloakx-http.keycloak.svc.cluster.local   # Keycloak URL
+  url: http://keycloak-keycloakx-http   # Keycloak URL
