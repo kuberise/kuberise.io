@@ -30,10 +30,10 @@ ArgocdApplications:
     enabled: true
 
   keycloak:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: true
