@@ -59,7 +59,7 @@ ArgocdApplications:
     enabled: true
 
   pgadmin:
-    enabled: false
+    enabled: true
 
   cert-manager:
     enabled: true
