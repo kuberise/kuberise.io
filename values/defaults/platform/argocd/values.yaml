@@ -16,6 +16,11 @@ configs:
             end
           end
           return hs
+      apps/Deployment:
+        ignoreDifferences: |
+          jsonPointers:
+            - /spec/template/spec/containers/0/resources
+            - /webhooks/0/clientConfig/caBundle
     resource.compareoptions: |
       # disables status field diffing in specified resource types
       # 'crd' - CustomResourceDefinitions (default)
