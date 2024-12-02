@@ -1,4 +1,4 @@
-apiVersion: k8s.keycloak.org/v1alpha1
+apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
   name: keycloak-instance
