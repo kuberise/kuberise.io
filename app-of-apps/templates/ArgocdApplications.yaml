@@ -58,7 +58,7 @@ spec:
   syncPolicy:
     {{- if default $.Values.global.automated .automated }}
     automated:
-      prune: true
+      prune: false
       selfHeal: true
       allowEmpty: true
     {{- end }}
