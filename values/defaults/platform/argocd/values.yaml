@@ -20,6 +20,9 @@ configs:
         ignoreDifferences: |
           jsonPointers:
             - /spec/template/spec/containers/0/resources
+      admissionregistration.k8s.io/MutatingWebhookConfiguration:
+        ignoreDifferences: |
+          jsonPointers:
             - /webhooks/0/clientConfig/caBundle
     resource.compareoptions: |
       # disables status field diffing in specified resource types
