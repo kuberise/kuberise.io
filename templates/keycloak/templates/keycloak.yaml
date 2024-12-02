@@ -2,8 +2,5 @@ apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
   name: keycloak-instance
-  annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "1"
 spec:
   instances: 1
