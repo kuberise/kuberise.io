@@ -4,4 +4,4 @@ metadata:
   name: keycloak-access
 spec:
   secret: keycloak-access             # Secret name
-  url: https://keycloak.onprem.kuberise.dev/   # Keycloak URL
+  url: keycloak-keycloakx-http.keycloak.svc.cluster.local   # Keycloak URL
