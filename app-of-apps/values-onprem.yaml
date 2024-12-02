@@ -1,5 +1,8 @@
 ArgocdApplications:
 
+  olm:
+    enabled: true
+
   cnpg-database:
     enabled: true
     path: values/onprem/platform/database/
