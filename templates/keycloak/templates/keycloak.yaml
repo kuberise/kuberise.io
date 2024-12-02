@@ -7,26 +7,27 @@ spec:
   externalDatabase:
     enabled: true
   keycloakDeploymentSpec:
-    env:
-      - name: DB_VENDOR
-        value: postgres
-      - name: DB_DATABASE
-        valueFrom:
-          secretKeyRef:
-            name: keycloak-db-secret
-            key: POSTGRES_DATABASE
-      - name: DB_USER
-        valueFrom:
-          secretKeyRef:
-            name: keycloak-db-secret
-            key: POSTGRES_USERNAME
-      - name: DB_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: keycloak-db-secret
-            key: POSTGRES_PASSWORD
-      - name: DB_ADDR
-        valueFrom:
-          secretKeyRef:
-            name: keycloak-db-secret
-            key: POSTGRES_HOST
+    experimental:
+      env:
+        - name: DB_VENDOR
+          value: postgres
+        - name: DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-db-secret
+              key: POSTGRES_DATABASE
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-db-secret
+              key: POSTGRES_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-db-secret
+              key: POSTGRES_PASSWORD
+        - name: DB_ADDR
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-db-secret
+              key: POSTGRES_HOST
