@@ -3,8 +3,8 @@ kind: KeycloakClient
 metadata:
   name: pgadmin-client
 spec:
+  targetRealm: realm-platform  # Changed from 'realm' to 'targetRealm'
   clientId: pgadmin
-  realm: realm-platform  # Your realm
   public: false
   redirectUris:
     - "http://pgadmin-pgadmin4.pgadmin.svc.cluster.local/*"
@@ -13,8 +13,6 @@ spec:
   defaultClientScopes:
     - email
     - profile
-  attributes:
-    access.token.lifespan: "28800"
 ---
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealmRole
@@ -25,7 +23,8 @@ spec:
   realm: realm-platform
   composite: false
   attributes:
-    description: "PgAdmin Administrator Role"
+    - key: description
+      value: "PgAdmin Administrator Role"
 ---
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealmGroup
