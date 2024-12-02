@@ -18,12 +18,26 @@ configs:
           return hs
       apps/Deployment:
         ignoreDifferences: |
-          jsonPointers:
-            - /spec/template/spec/containers/0/resources
+          jqPathExpressions:
+            - .spec.template.spec.containers[].resources
+            - .spec.template.spec.initContainers[].resources
+      operators.coreos.com/ClusterServiceVersion:
+        ignoreDifferences: |
+          jqPathExpressions:
+            - .spec.install.spec.deployments[].spec.template.spec.containers[].ports[].protocol
+      apps/DaemonSet:
+        ignoreDifferences: |
+          jqPathExpressions:
+            - .spec.template.spec.containers[].resources
+            - .spec.template.spec.initContainers[].resources
       admissionregistration.k8s.io/MutatingWebhookConfiguration:
         ignoreDifferences: |
-          jsonPointers:
-            - /webhooks/0/clientConfig/caBundle
+          jqPathExpressions:
+            - .webhooks[].clientConfig.caBundle
+      admissionregistration.k8s.io/ValidatingWebhookConfiguration:
+        ignoreDifferences: |
+          jqPathExpressions:
+            - .webhooks[].clientConfig.caBundle
     resource.compareoptions: |
       # disables status field diffing in specified resource types
       # 'crd' - CustomResourceDefinitions (default)
