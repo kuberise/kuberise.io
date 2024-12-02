@@ -3,6 +3,9 @@ ArgocdApplications:
   keycloak:
     enabled: true
 
+  keycloak-operator:
+      enabled: true
+
   olm:
     enabled: true
 
