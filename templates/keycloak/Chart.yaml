@@ -1,3 +1,8 @@
 apiVersion: v2
 name: keycloak
 version: 1.0.0
+dependencies:
+- condition: subscription.enabled
+  name: subscription
+  repository: ""
+  version: 0.0.0
