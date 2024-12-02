@@ -181,6 +181,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
+      allowEmpty: true
 EOF
 }
 
