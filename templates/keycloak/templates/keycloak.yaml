@@ -1,21 +1,8 @@
-apiVersion: k8s.keycloak.org/v2alpha1
+apiVersion: k8s.keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
   name: keycloak-instance
 spec:
   instances: 1
-  db:
-    vendor: postgres
-    host: 'jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/app'
-    usernameSecret:
-      name: db-secret
-      key: username
-    passwordSecret:
-      name: db-secret
-      key: password
-  # http:
-  #   tlsSecret: example-tls-secret
-  # hostname:
-  #   hostname: test.keycloak.org
-  # proxy:
-  #   headers: xforwarded # double check your reverse proxy sets and overwrites the X-Forwarded-* headers
+  externalDatabase:
+    enabled: true
