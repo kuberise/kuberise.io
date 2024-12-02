@@ -4,6 +4,10 @@ metadata:
   name: keycloak-instance
 spec:
   instances: 1
+  unmanged: true
+  external:
+    enabled: true
+    url: keycloakx-http
   externalDatabase:
     enabled: true
   keycloakDeploymentSpec:

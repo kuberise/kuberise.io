@@ -32,4 +32,4 @@
 #     - secretRef:
 #         name: pg-secret
 #     - secretRef:
-        name: admin-secret
+#        name: admin-secret
