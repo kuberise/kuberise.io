@@ -8,6 +8,7 @@ ArgocdApplications:
   keycloak-operator:
     enabled: false
     namespace: keycloak
+    type: raw
 
   sealed-secrets:
     enabled: false

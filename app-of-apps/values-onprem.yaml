@@ -1,5 +1,8 @@
 ArgocdApplications:
 
+  keycloak-operator:
+    enabled: true
+
   olm:
     enabled: true
 
