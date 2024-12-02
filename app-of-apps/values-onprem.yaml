@@ -4,6 +4,9 @@ ArgocdApplications:
     enabled: true
     syncWave: 1
 
+  keycloakx:
+    enabled: true
+
   keycloak-operator:
       enabled: true
 

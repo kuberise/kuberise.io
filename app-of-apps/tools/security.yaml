@@ -4,6 +4,10 @@ ArgocdApplications:
   keycloak:
     enabled: false
 
+  keycloakx:
+    enabled: false
+    namespace: keycloak
+
   keycloak-operator:
     enabled: false
     type: raw
