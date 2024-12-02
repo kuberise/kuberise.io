@@ -3,5 +3,5 @@ name: keycloak-operator
 version: 1.0.0
 dependencies:
   - name: keycloak-operator
-    version: 1.23.0
+    version: 1.21.0
     repository: https://epam.github.io/edp-helm-charts/stable

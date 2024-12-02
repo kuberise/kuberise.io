@@ -7,6 +7,7 @@ ArgocdApplications:
 
   keycloak-operator:
     enabled: false
+    namespace: keycloak
 
   sealed-secrets:
     enabled: false
