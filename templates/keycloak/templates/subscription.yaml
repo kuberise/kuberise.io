@@ -3,6 +3,9 @@ kind: Subscription
 metadata:
   name: keycloak-operator-subscription
   namespace: keycloak
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "0"
 spec:
   channel: alpha
   name: keycloak-operator
