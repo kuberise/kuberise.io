@@ -27,7 +27,7 @@ ArgocdApplications:
     enabled: false
     type: raw
     repoURL: https://github.com/operator-framework/operator-lifecycle-manager.git
-    targetRevision: 0.30.0
+    targetRevision: v0.30.0
     path: deploy/upstream/quickstart/
     namespace: olm
 
