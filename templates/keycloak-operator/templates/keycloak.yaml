@@ -1,7 +1,23 @@
 apiVersion: v1.edp.epam.com/v1
 kind: Keycloak
 metadata:
-  name: keycloak-access
+  name: keycloak-sample
 spec:
   secret: keycloak-access             # Secret name
   url: http://keycloak-keycloakx-http   # Keycloak URL
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealm
+metadata:
+ name: keycloakrealm-sample
+spec:
+ realmName: realm-sample
+ keycloakOwner: keycloak-sample   # the name of `kind: Keycloak`
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmGroup
+metadata:
+  name: argocd-admins
+spec:
+  name: ArgoCDAdmins
+  realm: keycloakrealm-sample   # the name of `kind: KeycloakRealm`
