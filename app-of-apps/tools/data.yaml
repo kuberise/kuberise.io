@@ -13,4 +13,4 @@ ArgocdApplications:
     chart: cloudnative-pg
 
   pgadmin:
-    enabled: false
+    enabled: true
