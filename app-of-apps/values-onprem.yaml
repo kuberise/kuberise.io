@@ -33,7 +33,7 @@ ArgocdApplications:
     enabled: true
 
   keycloak-operator:
-    enabled: false
+    enabled: true
 
   ingress-nginx-internal:
     enabled: true
