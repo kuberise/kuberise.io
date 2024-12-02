@@ -1,6 +1,6 @@
 ArgocdApplications:
 
-  keycloak-operator:
+  keycloak:
     enabled: true
 
   olm:
@@ -34,12 +34,6 @@ ArgocdApplications:
 
   argocd-image-updater:
     enabled: true
-
-  keycloak:
-    enabled: false
-
-  keycloak-operator:
-    enabled: false
 
   ingress-nginx-internal:
     enabled: true

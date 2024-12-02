@@ -1,0 +1,6 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: keycloak-instance
+spec:
+  instances: 1

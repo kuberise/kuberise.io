@@ -3,12 +3,6 @@ ArgocdApplications:
 
   keycloak:
     enabled: false
-    syncWave: 0
-
-  keycloak-operator:
-    enabled: true
-    namespace: keycloak
-    type: raw
 
   sealed-secrets:
     enabled: false
