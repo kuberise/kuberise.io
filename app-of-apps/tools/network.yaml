@@ -1,0 +1,31 @@
+# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
+ArgocdApplications:
+  metallb:
+    enabled: false
+
+  internal-dns:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 8.5.1
+    chart: external-dns
+
+  external-dns:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 8.5.1
+    chart: external-dns
+
+  ingress-nginx-external:
+    enabled: false
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.3
+    chart: ingress-nginx
+
+  ingress-nginx-internal:
+    enabled: false
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.3
+    chart: ingress-nginx
+
+  ingresses:
+    enabled: false

@@ -1,7 +1,7 @@
-kustomize:
+ArgocdApplications:
 
   cnpg-database:
-    enabled: false
+    enabled: true
     path: values/onprem/platform/database/
 
   raw:
@@ -11,10 +11,17 @@ kustomize:
   dashboards:
     enabled: true
 
-helm:
+  metrics-server:
+    enabled: true
 
   metallb:
     enabled: true
+    ignoreDifferences:
+      - group: apiextensions.k8s.io
+        kind: CustomResourceDefinition
+        name: bgppeers.metallb.io
+        jsonPointers:
+          - /spec/conversion/webhook/clientConfig/caBundle
 
   external-dns:
     enabled: true
@@ -23,7 +30,7 @@ helm:
     enabled: true
 
   keycloak:
-    enabled: false
+    enabled: true
 
   keycloak-operator:
     enabled: false
@@ -33,14 +40,14 @@ helm:
 
   ingress-nginx-external:
     enabled: true
-    ignoreDifferences:
-      - group: ""
-        kind: Service
-        jqPathExpressions:
-          - .status.loadBalancer.ingress[].ipMode
+    # ignoreDifferences:
+    #   - group: ""
+    #     kind: Service
+    #     jqPathExpressions:
+    #       - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
     enabled: false
@@ -49,7 +56,7 @@ helm:
     enabled: false
 
   cloudnative-pg:
-    enabled: false
+    enabled: true
 
   pgadmin:
     enabled: false

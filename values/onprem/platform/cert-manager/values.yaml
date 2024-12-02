@@ -1,2 +1,4 @@
-selfSignedCertificate:
+letsEncrypt:
   enabled: true
+  server: production
+  challenge: dns01

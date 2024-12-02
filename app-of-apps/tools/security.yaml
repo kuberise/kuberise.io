@@ -1,0 +1,26 @@
+# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
+ArgocdApplications:
+
+  keycloak:
+    enabled: false
+    syncWave: 0
+
+  keycloak-operator:
+    enabled: false
+
+  sealed-secrets:
+    enabled: false
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 2.40.10
+    chart: sealed-secrets
+
+  cert-manager:
+    enabled: false
+    namespace: cert-manager
+
+  vault:
+    enabled: false
+    repoURL: https://helm.releases.hashicorp.com
+    namespace: vault
+    targetRevision: 0.28.0
+    chart: vault

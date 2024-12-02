@@ -1,0 +1,60 @@
+# some of the values will be filled by install.sh script
+global:
+  platformName: x
+  domain: x
+  automated: true
+  spec:
+    destination:
+      server: https://kubernetes.default.svc
+    source:
+      repoURL: x
+      targetRevision: x
+    values:
+      repoURL: x
+      targetRevision: x
+
+# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
+ArgocdApplications:
+  hello:
+    enabled: false
+    type: kustomize
+
+  raw:
+    enabled: false
+    type: raw
+
+  argocd-image-updater:
+    enabled: false
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 0.11.1
+    chart: argocd-image-updater
+    namespace: argocd
+
+  teams-namespaces:
+    enabled: false
+    namespace: default
+
+  backstage:
+    enabled: false
+    # syncWave: 1
+
+  actions-runner-controller:
+    enabled: false
+    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    namespace: actions-runner-system
+    targetRevision: 0.22.0
+    chart: actions-runner-controller
+    syncWave: 0
+
+  actions-runner:
+    enabled: false
+    repoURL: https://github.com/kuberise/kuberise.git
+    namespace: actions-runner-system
+    syncWave: 1
+
+  gitea:
+    enabled: false
+    repoURL: https://dl.gitea.io/charts
+    namespace: gitea
+    targetRevision: 10.1.4
+    chart: gitea

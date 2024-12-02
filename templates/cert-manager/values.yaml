@@ -6,11 +6,11 @@ selfSignedCertificate:
   enabled: false
   generateCA: false
 
-letsencryptStagingCertificate:
+letsEncrypt:
   enabled: false
-
-letsencryptProductionCertificate:
-  enabled: false
+  email: a@b.com
+  server: production # production or staging
+  challenge: http01 # http01 or dns01
 
 # list of namespaces to create the certificate
 namespaces: []
@@ -18,4 +18,4 @@ namespaces: []
 # certificate configuration
 certificate: {}
 
-email: contact@kuberise.com
+subdomains: [] # subdomains to include in the certificate

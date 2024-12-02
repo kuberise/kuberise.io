@@ -41,13 +41,14 @@ then
   exit 2
 fi
 
-namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx" "monitoring" "gitea" "todolist-frontend-dev" "todolist-frontend-prd" "todolist-frontend-tst" "show-env-dev" "cert-manager")
+# skip deleting the "cert-manager" namespace to keep the certificates and avoid issuing many times.
+namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx-internal" "ingress-nginx-external" "monitoring" "ingresses" "gitea" "frontend-https" "metallb" "raw" "show-env" "external-dns" "internal-dns" "backend" "metrics-server")
 
 # Convert the array to a string with each namespace on a new line
 namespaces_str=$(IFS=$'\n'; echo "${namespaces[*]}")
 
 # Prompt for confirmation
-read -p "This script will remove the $PLATFORM_NAME platform from the $CONTEXT Kubernetes context. It will also delete the following namespaces:
+read -p "This script will remove the '$PLATFORM_NAME' platform from the '$CONTEXT' Kubernetes context. It will also delete the following namespaces:
 
 $namespaces_str
 
@@ -62,15 +63,15 @@ fi
 # Continue with uninstallation
 # namespace
 NAMESPACE=argocd
-kubectl delete --context $CONTEXT -n $NAMESPACE application app-of-apps-$PLATFORM_NAME
-kubectl delete --context $CONTEXT -n $NAMESPACE appproject $PLATFORM_NAME
+kubectl delete --context $CONTEXT -n $NAMESPACE application app-of-apps-$PLATFORM_NAME > /dev/null 2>&1
+kubectl delete --context $CONTEXT -n $NAMESPACE appproject $PLATFORM_NAME > /dev/null 2>&1
 
-helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE
+helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE > /dev/null 2>&1
 
 for namespace in "${namespaces[@]}"
 do
   echo "Deleting namespace: $namespace"
-  kubectl delete namespace "$namespace" --context "$CONTEXT"
+  kubectl delete namespace "$namespace" --context "$CONTEXT" > /dev/null 2>&1
 done
 
 

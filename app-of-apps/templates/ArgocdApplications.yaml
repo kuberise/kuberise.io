@@ -1,4 +1,5 @@
-{{- range $name, $app := .Values.helm -}}
+{{- range $name, $app := .Values.ArgocdApplications -}}
+{{- $applicationType := default "helm" .type }}
 {{- if .enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -19,6 +20,7 @@ spec:
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
+  {{- if eq $applicationType "helm" }}
     {{- if hasKey . "chart"}}
     chart: {{ .chart }}
     {{- else if hasKey . "path"}}
@@ -43,6 +45,13 @@ spec:
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}
     ref: valuesRepo
+  {{- else }} # If the type is not helm, (it is kustomize or raw)
+    {{- if hasKey . "path"}}
+    path: {{ .path }}
+    {{- else }}
+    path: templates/{{ $name }}
+    {{- end }}
+  {{- end }}
   destination:
     namespace: {{ default $name .namespace }}
     server: {{ default $.Values.global.spec.destination.server .destinationServer }}
