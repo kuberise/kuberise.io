@@ -4,15 +4,6 @@ ArgocdApplications:
   keycloak:
     enabled: false
 
-  keycloakx:
-    enabled: false
-    namespace: keycloak
-
-  keycloak-operator:
-    enabled: false
-    type: raw
-    namespace: keycloak
-
   sealed-secrets:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami

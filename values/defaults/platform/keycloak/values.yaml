@@ -1,35 +1,34 @@
-# keycloakx:
-#   http:
-#     relativePath: "/"
-#   command:
-#     - "/opt/keycloak/bin/kc.sh"
-#     - "start-dev"
-#     - "--http-enabled=true"
-#     - "--http-port=8080"
-#     - "--hostname-strict=false"
-#     - "--hostname-strict-https=false"
+keycloakx:
+  http:
+    relativePath: "/"
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start-dev"
+    - "--http-enabled=true"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
 
 
-#   metrics:
-#     enabled: true
+  metrics:
+    enabled: true
 
-#   serviceMonitor:
-#     enabled: true
-#     path: /metrics
-#     labels:
-#       app.kubernetes.io/part-of: kube-prometheus-stack
+  serviceMonitor:
+    enabled: true
+    path: /metrics
+    labels:
+      app.kubernetes.io/part-of: kube-prometheus-stack
 
-#   extraEnv: |
-#     - name: JAVA_OPTS_APPEND
-#       value: >-
-#         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-#     - name: KC_DB_URL
-#       value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/app"
-#     - name: KC_DB
-#       value: postgres
+  extraEnv: |
+    - name: JAVA_OPTS_APPEND
+      value: >-
+        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    - name: KC_DB_URL
+      value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/app"
+    - name: KC_DB
+      value: postgres
 
-#   extraEnvFrom: |
-#     - secretRef:
-#         name: pg-secret
-#     - secretRef:
-#        name: admin-secret
+  extraEnvFrom: |
+    - secretRef:
+        name: pg-secret
+    - secretRef:
+        name: admin-secret

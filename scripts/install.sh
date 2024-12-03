@@ -185,6 +185,30 @@ spec:
 EOF
 }
 
+function install_keycloak_operator() {
+  # Installs the OLM (Operator Lifecycle Manager)
+  curl -sSL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh | bash -s v0.30.0 || true
+
+  echo "Installing Keycloak Operator..."
+  cat << EOF | kubectl apply -f -
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: keycloak-operator-group
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: keycloak-operator-subscription
+spec:
+  channel: alpha
+  name: keycloak-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+  installPlanApproval: Automatic
+EOF
+}
+
 # Variables Initialization
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
@@ -288,8 +312,7 @@ fi
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
 
-# Installs the OLM (Operator Lifecycle Manager)
-curl -sSL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh | bash -s v0.30.0 || true
+# install_keycloak_operator
 
 # Install ArgoCD with custom values and admin password
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
