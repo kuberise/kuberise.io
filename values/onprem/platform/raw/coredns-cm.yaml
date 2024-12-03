@@ -23,6 +23,7 @@ data:
            fallthrough
         }
         rewrite name kuberise.internal ingress-nginx-internal-controller.ingress-nginx-internal.svc.cluster.local
+        rewrite name *.onprem.kuberise.dev ingress-nginx-external-controller.ingress-nginx-external.svc.cluster.local
         forward . /etc/resolv.conf {
            max_concurrent 1000
         }
