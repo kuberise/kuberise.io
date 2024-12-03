@@ -23,34 +23,6 @@ ArgocdApplications:
     enabled: false
     type: raw
 
-  olm:
-    enabled: false
-    type: raw
-    repoURL: https://github.com/operator-framework/operator-lifecycle-manager.git
-    targetRevision: v0.30.0
-    path: deploy/upstream/quickstart/
-    namespace: olm
-    plugin:
-      name: kustomize
-      parameters:
-        patches: |
-          - patch: |
-              - op: add
-                path: /spec/template/spec/containers/0/ports/0/protocol
-                value: TCP
-            target:
-              kind: Deployment
-              name: olm-operator
-              namespace: olm
-          - patch: |
-              - op: add
-                path: /spec/template/spec/containers/0/ports/0/protocol
-                value: TCP
-            target:
-              kind: Deployment
-              name: catalog-operator
-              namespace: olm
-
   argocd-image-updater:
     enabled: false
     repoURL: https://argoproj.github.io/argo-helm
