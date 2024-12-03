@@ -5,7 +5,7 @@ ArgocdApplications:
     syncWave: 1
 
   keycloakx:
-    enabled: true
+    enabled: false
 
   keycloak-operator:
       enabled: true
