@@ -288,11 +288,15 @@ fi
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
 
+# Installs the OLM (Operator Lifecycle Manager)
+curl -sSL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh | bash -s v0.30.0 || true
+
 # Install ArgoCD with custom values and admin password
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD"
 
 # Apply ArgoCD project and app of apps configuration
 deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
+
 
 echo "Installation completed successfully."
