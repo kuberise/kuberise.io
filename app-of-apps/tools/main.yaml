@@ -33,9 +33,8 @@ ArgocdApplications:
     plugin:
       name: kustomize
       parameters:
-        patches: |-
-          # Patch for olm-operator deployment
-          - patch: |-
+        patches: |
+          - patch: |
               - op: add
                 path: /spec/template/spec/containers/0/ports/0/protocol
                 value: TCP
@@ -43,9 +42,7 @@ ArgocdApplications:
               kind: Deployment
               name: olm-operator
               namespace: olm
-
-          # Patch for catalog-operator deployment
-          - patch: |-
+          - patch: |
               - op: add
                 path: /spec/template/spec/containers/0/ports/0/protocol
                 value: TCP
