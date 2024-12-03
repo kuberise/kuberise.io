@@ -1,4 +1,6 @@
 keycloakx:
+  http:
+    relativePath: "/"
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "--verbose"
