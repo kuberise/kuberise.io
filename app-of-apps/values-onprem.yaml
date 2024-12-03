@@ -29,6 +29,12 @@ ArgocdApplications:
 
   metallb:
     enabled: true
+    ignoreDifferences:
+      - group: apiextensions.k8s.io
+        kind: CustomResourceDefinition
+        name: bgppeers.metallb.io
+        jsonPointers:
+          - /spec/conversion/webhook/clientConfig/caBundle
 
   external-dns:
     enabled: true
