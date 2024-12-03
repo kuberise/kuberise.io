@@ -20,7 +20,7 @@ spec:
   sources:
   - repoURL:  {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
-    {{- if hasKey . "plugin" }}
+    {{- if .plugin }}
     plugin:
       {{- toYaml .plugin | nindent 4 }}
     {{- end }}
