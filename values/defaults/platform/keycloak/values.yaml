@@ -1,14 +1,11 @@
 keycloakx:
-  http:
-    relativePath: "/"
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "--verbose"
     - "start"
+    - "--http-enabled"
     - "--http-port=8080"
     - "--hostname-strict=false"
-
-
 
   metrics:
     enabled: true
