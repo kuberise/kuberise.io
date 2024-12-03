@@ -22,7 +22,7 @@ spec:
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
     {{- if hasKey . "plugin" }}
     plugin:
-      {{- toYaml .plugins | nindent 4 }}
+      {{- toYaml .plugin | nindent 4 }}
     {{- end }}
   {{- if eq $applicationType "helm" }}
     {{- if hasKey . "chart"}}

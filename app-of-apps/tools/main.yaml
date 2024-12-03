@@ -30,6 +30,29 @@ ArgocdApplications:
     targetRevision: v0.30.0
     path: deploy/upstream/quickstart/
     namespace: olm
+    plugin:
+      name: kustomize
+      parameters:
+        patches: |-
+          # Patch for olm-operator deployment
+          - patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/ports/0/protocol
+                value: TCP
+            target:
+              kind: Deployment
+              name: olm-operator
+              namespace: olm
+
+          # Patch for catalog-operator deployment
+          - patch: |-
+              - op: add
+                path: /spec/template/spec/containers/0/ports/0/protocol
+                value: TCP
+            target:
+              kind: Deployment
+              name: catalog-operator
+              namespace: olm
 
   argocd-image-updater:
     enabled: false
