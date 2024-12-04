@@ -4,7 +4,7 @@ metadata:
   name: pgadmin
   namespace: pgadmin
 data:
-  config_oauth2.py: |
+  config_local.py: |
     import os
     import logging
 
