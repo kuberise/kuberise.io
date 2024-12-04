@@ -5,7 +5,6 @@ keycloakx:
     - "/opt/keycloak/bin/kc.sh"
     - "--verbose"
     - "start"
-    - "--hostname-strict=false"
     - "--features=token-exchange"
     - "--https-certificate-file=/etc/tls/tls.crt"
     - "--https-certificate-key-file=/etc/tls/tls.key"
