@@ -8,6 +8,8 @@ keycloakx:
     - "--http-enabled=false" # Only HTTPS is enabled
     - "--hostname-strict=false"
     - "--features=token-exchange"
+    - "--https-certificate-file=/etc/tls/tls.crt"
+    - "--https-certificate-key-file=/etc/tls/tls.key"
 
   metrics:
     enabled: true
@@ -26,10 +28,7 @@ keycloakx:
       value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/app"
     - name: KC_DB
       value: postgres
-    - name: HTTPS_CERTIFICATE_FILE
-      value: /etc/tls/tls.crt
-    - name: HTTPS_CERTIFICATE_KEY_FILE
-      value: /etc/tls/tls.key
+
 
   extraEnvFrom: |
     - secretRef:
