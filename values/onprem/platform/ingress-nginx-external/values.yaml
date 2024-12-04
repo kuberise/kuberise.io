@@ -11,4 +11,4 @@ controller:
       https: 30443
 
   extraArgs:
-    default-ssl-certificate: cert-manager/ssl-certificate-selfsigned
+    default-ssl-certificate: cert-manager/ssl-certificate-letsencrypt
