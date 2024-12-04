@@ -4,15 +4,16 @@ metadata:
   name: pgadmin
   namespace: pgadmin
 data:
-  config_local.py: |
+  config_oauth2.py: |
     AUTHENTICATION_SOURCES = ['oauth2']
     OAUTH2_AUTO_CREATE_USER = True
 
-    # Use internal Keycloak service URL since PgAdmin is accessing from inside the cluster
-    OAUTH2_CONFIG = {
+    # PgAdmin expects OAUTH2_CONFIG to be a list of configurations
+    OAUTH2_CONFIG = [{
+        'OAUTH2_NAME': 'Keycloak',
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
-        'OAUTH2_CLIENT_ID': 'pgadmin',  # Replace with your client ID
-        'OAUTH2_CLIENT_SECRET': 'ihHuyvj4EcaGpKR5QVA4DeGDRxelz0Iv',  # Replace with your client secret
+        'OAUTH2_CLIENT_ID': 'pgadmin',
+        'OAUTH2_CLIENT_SECRET': 'ihHuyvj4EcaGpKR5QVA4DeGDRxelz0Iv',
 
         # Internal Keycloak URLs
         'OAUTH2_TOKEN_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/master/protocol/openid-connect/token',
@@ -27,7 +28,7 @@ data:
         # Configure both internal and external redirect URIs
         'OAUTH2_REDIRECT_URI': 'https://pgadmin.onprem.kuberise.dev/oauth2/authorize',
         'SERVER_REDIRECT_URI': 'http://pgadmin-pgadmin4.pgadmin.svc.cluster.local/oauth2/authorize'
-    }
+    }]
 
     # Additional security settings
     OAUTH2_TOKEN_VERIFY_SSL = False  # Since we're using internal cluster communication
