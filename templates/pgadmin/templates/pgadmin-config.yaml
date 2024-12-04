@@ -4,7 +4,7 @@ metadata:
   name: pgadmin
   namespace: pgadmin
 data:
-  config_oauth2.py: |
+  config_local.py: |
     AUTHENTICATION_SOURCES = ['oauth2']
     OAUTH2_AUTO_CREATE_USER = True
 
