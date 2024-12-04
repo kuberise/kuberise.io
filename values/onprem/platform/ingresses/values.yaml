@@ -4,6 +4,7 @@ services:
     subdomain: argocd
   - name: keycloak
     serviceName: keycloak-keycloakx-http
+    port: 8443
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
