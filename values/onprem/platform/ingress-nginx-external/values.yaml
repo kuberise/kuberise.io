@@ -12,3 +12,5 @@ controller:
 
   extraArgs:
     default-ssl-certificate: cert-manager/ssl-certificate-letsencrypt
+
+  terminationGracePeriodSeconds: 5 # only for dev environment and local/onprem
