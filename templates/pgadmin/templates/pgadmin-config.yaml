@@ -5,8 +5,14 @@ metadata:
   namespace: pgadmin
 data:
   config_oauth2.py: |
-    # Enable authentication sources
-    AUTHENTICATION_SOURCES = ['oauth2', 'internal']  # Added internal for testing
+    import os
+    import logging
+
+    FILE_LOG_LEVEL = logging.INFO
+    SERVER_MODE = True
+    CONSOLE_LOG_LEVEL = logging.INFO
+    MASTER_PASSWORD_REQUIRED = True
+    AUTHENTICATION_SOURCES = ['internal', 'oauth2']
     OAUTH2_AUTO_CREATE_USER = True
 
     # Configure OAuth2 providers
