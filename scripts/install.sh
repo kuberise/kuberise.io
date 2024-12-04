@@ -65,7 +65,7 @@ generate_ca_cert_and_key() {
 
     # Generate the CA certificate and private key
     openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
-      -keyout "$KEY" -out "$CERT" -subj "/CN=ca.kuberise.io CA/O=KUBERISE/C=NL"
+      -keyout "$KEY" -out "$CERT" -subj "/CN=ca.kuberise.local CA/O=KUBERISE/C=NL"
 
     echo "CA certificate and key generated."
   else

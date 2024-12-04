@@ -17,7 +17,7 @@ data:
 
     # Configure OAuth2 providers
     OAUTH2_CONFIG = [{
-        'OAUTH2_NAME': 'keycloak',  # Changed to lowercase
+        'OAUTH2_NAME': 'keycloak',
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
         'OAUTH2_CLIENT_ID': 'pgadmin',
         'OAUTH2_CLIENT_SECRET': 'ihHuyvj4EcaGpKR5QVA4DeGDRxelz0Iv',
@@ -27,6 +27,7 @@ data:
         'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.onprem.kuberise.dev/realms/master/protocol/openid-connect/auth',
         'OAUTH2_API_BASE_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/master/protocol/openid-connect',
         'OAUTH2_USERINFO_ENDPOINT': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/master/protocol/openid-connect/userinfo',
+        'OAUTH2_LOGOUT_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/logout?client_id=pgadmin',
 
         'OAUTH2_SCOPE': ['openid', 'email', 'profile'],  # Changed to list format
         'OAUTH2_USERNAME_CLAIM': 'preferred_username',
