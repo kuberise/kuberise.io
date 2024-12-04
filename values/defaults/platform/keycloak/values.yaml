@@ -9,7 +9,8 @@ keycloakx:
     - "--https-certificate-file=/etc/tls/tls.crt"
     - "--https-certificate-key-file=/etc/tls/tls.key"
     - "--health-enabled=true"
-    - "--hostname=keycloak.onprem.kuberise.dev"
+    # - "--hostname=keycloak.onprem.kuberise.dev"
+    - "--hostname-strict=false"
     - "--http-enabled=false"
 
   metrics:
