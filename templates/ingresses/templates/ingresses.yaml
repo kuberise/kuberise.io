@@ -20,7 +20,7 @@ spec:
           service:
             name: {{ default .name .serviceName }}
             port:
-              number: {{ default 80 .port }}
+              number: {{ default "80" .port }}
         path: {{ default "/" .path }}
         pathType: Prefix
   tls:
