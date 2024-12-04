@@ -6,9 +6,7 @@ metadata:
   namespace: {{ default .name .namespace }}
   {{- if .annotations }}
   annotations:
-    {{- range $key, $value := .annotations }}
-    {{ $key }}: {{ $value }}
-    {{- end }}
+    {{- toYaml .annotations | nindent 4 }}
   {{- end }}
 spec:
   ingressClassName: {{ default "nginx-external" .ingressClassName }}
