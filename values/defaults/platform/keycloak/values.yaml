@@ -37,11 +37,11 @@ keycloakx:
     - secretRef:
         name: admin-secret
 
-  extraVolumes:
+  extraVolumes: |
     - name: keycloak-tls
       secret:
         secretName: keycloak-tls
-  extraVolumeMounts:
+  extraVolumeMounts: |
     - name: keycloak-tls
       mountPath: /etc/tls
       readOnly: true
