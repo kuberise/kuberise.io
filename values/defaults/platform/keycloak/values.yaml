@@ -3,12 +3,15 @@ keycloakx:
     relativePath: "/"
   command:
     - "/opt/keycloak/bin/kc.sh"
-    - "start-dev"
-    - "--http-enabled=true"
-    - "--http-port=8080"
+    - "--verbose"
+    - "start"
+    - "--features=token-exchange"
+    - "--https-certificate-file=/etc/tls/tls.crt"
+    - "--https-certificate-key-file=/etc/tls/tls.key"
+    - "--health-enabled=true"
+    # - "--hostname=keycloak.onprem.kuberise.dev"
     - "--hostname-strict=false"
-    - "--hostname-strict-https=false"
-
+    - "--http-enabled=false"
 
   metrics:
     enabled: true
@@ -28,8 +31,51 @@ keycloakx:
     - name: KC_DB
       value: postgres
 
+
   extraEnvFrom: |
     - secretRef:
         name: pg-secret
     - secretRef:
         name: admin-secret
+
+  extraVolumes: |
+    - name: keycloak-tls
+      secret:
+        secretName: keycloak-tls
+  extraVolumeMounts: |
+    - name: keycloak-tls
+      mountPath: /etc/tls
+      readOnly: true
+
+
+  livenessProbe: |
+    failureThreshold: 3
+    httpGet:
+      path: /health/live
+      port: http-internal
+      scheme: HTTPS
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  readinessProbe: |
+    failureThreshold: 3
+    httpGet:
+      path: /health/ready
+      port: http-internal
+      scheme: HTTPS
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  startupProbe: |
+    failureThreshold: 60
+    httpGet:
+      path: /health
+      port: http-internal
+      scheme: HTTPS
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 1

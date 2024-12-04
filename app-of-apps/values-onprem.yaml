@@ -1,5 +1,9 @@
 ArgocdApplications:
 
+  keycloak:
+    enabled: true
+    syncWave: 1
+
   cnpg-database:
     enabled: true
     path: values/onprem/platform/database/
@@ -29,12 +33,6 @@ ArgocdApplications:
   argocd-image-updater:
     enabled: true
 
-  keycloak:
-    enabled: true
-
-  keycloak-operator:
-    enabled: false
-
   ingress-nginx-internal:
     enabled: true
 
@@ -47,7 +45,7 @@ ArgocdApplications:
     #       - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
     enabled: false
@@ -59,7 +57,7 @@ ArgocdApplications:
     enabled: true
 
   pgadmin:
-    enabled: false
+    enabled: true
 
   cert-manager:
     enabled: true

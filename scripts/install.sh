@@ -157,9 +157,9 @@ spec:
       valueFiles:
         - tools/main.yaml
         - tools/data.yaml
+        - tools/network.yaml
         - tools/observability.yaml
         - tools/security.yaml
-        - tools/network.yaml
         - values-$platform_name.yaml
       parameters:
         - name: global.spec.source.repoURL
@@ -181,6 +181,31 @@ spec:
     automated:
       prune: true
       selfHeal: true
+      allowEmpty: true
+EOF
+}
+
+function install_keycloak_operator() {
+  # Installs the OLM (Operator Lifecycle Manager)
+  curl -sSL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh | bash -s v0.30.0 || true
+
+  echo "Installing Keycloak Operator..."
+  cat << EOF | kubectl apply -f -
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: keycloak-operator-group
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: keycloak-operator-subscription
+spec:
+  channel: alpha
+  name: keycloak-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+  installPlanApproval: Automatic
 EOF
 }
 
@@ -284,11 +309,17 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   create_secret "$CONTEXT" "$NAMESPACE_CERTMANAGER" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
 fi
 
+# Create secret for keycloak-operator to connect to Keycloak master realm.
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
+
+# install_keycloak_operator
+
 # Install ArgoCD with custom values and admin password
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD"
 
 # Apply ArgoCD project and app of apps configuration
 deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
+
 
 echo "Installation completed successfully."
