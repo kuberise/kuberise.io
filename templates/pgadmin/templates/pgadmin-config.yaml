@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pgadmin-config
+  name: pgadmin
   namespace: pgadmin
 data:
   config_oauth2.py: |
