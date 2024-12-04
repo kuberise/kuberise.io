@@ -5,8 +5,7 @@ keycloakx:
     - "/opt/keycloak/bin/kc.sh"
     - "--verbose"
     - "start-dev"
-    - "--http-enabled=true"
-    - "--http-port=8080"
+    - "--http-enabled=false" # Only HTTPS is enabled
     - "--hostname-strict=false"
     - "--features=token-exchange"
 
@@ -27,9 +26,22 @@ keycloakx:
       value: "jdbc:postgresql://cnpg-database-rw.cloudnative-pg.svc.cluster.local:5432/app"
     - name: KC_DB
       value: postgres
+    - name: HTTPS_CERTIFICATE_FILE
+      value: /etc/tls/tls.crt
+    - name: HTTPS_CERTIFICATE_KEY_FILE
+      value: /etc/tls/tls.key
 
   extraEnvFrom: |
     - secretRef:
         name: pg-secret
     - secretRef:
         name: admin-secret
+
+  extraVolumes:
+    - name: keycloak-tls
+      secret:
+        secretName: keycloak-tls
+  extraVolumeMounts:
+    - name: keycloak-tls
+      mountPath: /etc/tls
+      readOnly: true
