@@ -5,3 +5,8 @@ pgadmin4:
       mountPath: /pgadmin4/config_local.py
       subPath: config_local.py
       readOnly: true
+    - name: ca-cert-config
+      mountPath: /etc/ssl/certs/custom-ca.crt
+      subPath: ca.crt
+      configMap: pgadmin-ca-cert
+      readOnly: true
