@@ -10,6 +10,8 @@ pgadmin4:
       subPath: ca.crt
       configMap: external-custom-ca-cert
       readOnly: true
-  env:
-    REQUESTS_CA_BUNDLE: /etc/ssl/certs/custom-ca.crt
-    SSL_CERT_FILE: /etc/ssl/certs/custom-ca.crt
+  envVarsExtra:
+    - name: REQUESTS_CA_BUNDLE
+      value: /etc/ssl/certs/custom-ca.crt
+    - name: SSL_CERT_FILE
+      value: /etc/ssl/certs/custom-ca.crt
