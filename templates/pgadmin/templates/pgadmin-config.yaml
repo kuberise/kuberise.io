@@ -13,35 +13,22 @@ data:
     CONSOLE_LOG_LEVEL = logging.INFO
     MASTER_PASSWORD_REQUIRED = True
     AUTHENTICATION_SOURCES = ['internal', 'oauth2']
-    OAUTH2_AUTO_CREATE_USER = True
-
-    # Configure OAuth2 providers
-    OAUTH2_CONFIG = [{
-        'OAUTH2_NAME': 'keycloak',
+    OAUTH2_CONFIG = [
+      {
+        'OAUTH2_NAME': 'Keycloak',
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
         'OAUTH2_CLIENT_ID': 'pgadmin',
-        'OAUTH2_CLIENT_SECRET': 'ihHuyvj4EcaGpKR5QVA4DeGDRxelz0Iv',
-
-        # Internal Keycloak URLs
-        'OAUTH2_TOKEN_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/master/protocol/openid-connect/token',
-        'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.onprem.kuberise.dev/realms/master/protocol/openid-connect/auth',
-        'OAUTH2_API_BASE_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/master/protocol/openid-connect',
-        'OAUTH2_USERINFO_ENDPOINT': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/master/protocol/openid-connect/userinfo',
-        'OAUTH2_LOGOUT_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/logout?client_id=pgadmin',
-
-        'OAUTH2_SCOPE': ['openid', 'email', 'profile'],  # Changed to list format
+        'OAUTH2_CLIENT_SECRET': '3OpIsTcAUM81lB2E1sXpbdipQe37JLmF',
+        'OAUTH2_TOKEN_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/kuberise/protocol/openid-connect/token',
+        'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/auth',
+        'OAUTH2_SERVER_METADATA_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/kuberise/.well-known/openid-configuration',
+        'OAUTH2_API_BASE_URL': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/',
+        'OAUTH2_USERINFO_ENDPOINT': 'https://keycloak-keycloakx-http.keycloak.svc.cluster.local:8443/realms/kuberise/protocol/openid-connect/userinfo',
+        'OAUTH2_SCOPE': 'openid email profile',
         'OAUTH2_USERNAME_CLAIM': 'preferred_username',
-        'OAUTH2_EMAIL_CLAIM': 'email',
-
-        # Configure both internal and external redirect URIs
-        'OAUTH2_REDIRECT_URI': 'https://pgadmin.onprem.kuberise.dev/oauth2/authorize',
-        'SERVER_REDIRECT_URI': 'http://pgadmin-pgadmin4.pgadmin.svc.cluster.local/oauth2/authorize'
-    }]
-
-    # Additional security settings
-    OAUTH2_TOKEN_VERIFY_SSL = False
-    SERVER_MODE = True
-
-    # Debug settings (temporarily enable for troubleshooting)
-    DEBUG = True
-    CONSOLE_LOG_LEVEL = 10  # DEBUG level
+        'OAUTH2_LOGOUT_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/logout?post_logout_redirect_uri=https://keycloak.onprem.kuberise.dev&id_token_hint={id_token}&client_id={pgadmin}',
+        'OAUTH2_ICON': 'fa-solid fa-unlock',
+        'OAUTH2_BUTTON_COLOR': '#f44242',
+        'OAUTH2_SSL_CERT_VERIFICATION': False, # for self-signed certificates it should be False
+      }
+    ]
