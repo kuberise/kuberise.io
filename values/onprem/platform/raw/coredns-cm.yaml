@@ -5,6 +5,12 @@ metadata:
   namespace: kube-system
 data:
   Corefile: |
+    keycloak.onprem.kuberise.dev:53 {
+        hosts {
+            10.99.150.145 keycloak.onprem.kuberise.dev
+            fallthrough
+        }
+    }
     .:53 {
         log
         errors
