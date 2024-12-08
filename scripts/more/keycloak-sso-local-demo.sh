@@ -78,7 +78,7 @@ kcadm.sh create clients -r $REALM \
   -s directAccessGrantsEnabled=true \
   -s standardFlowEnabled=true \
   -s implicitFlowEnabled=false \
-  -s serviceAccountsEnabled=false \
+  -s serviceAccountsEnabled=true \
   -s authorizationServicesEnabled=false
 
 echo "Starting pgadmin ... "
