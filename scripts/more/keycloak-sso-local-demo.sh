@@ -87,7 +87,7 @@ echo Client UUID: $CLIENT_UUID
 # Get service account user ID
 SERVICE_ACCOUNT_USER_ID=$(kcadm.sh get clients/$CLIENT_UUID/service-account-user -r $REALM | grep "\"id\"" | cut -d'"' -f4)
 
-# Add roles
+# Add roles to pgadmin service account. because pgadmin should be able to send logut request and close user session in keycloak
 kcadm.sh add-roles -r $REALM \
   --uid $SERVICE_ACCOUNT_USER_ID \
   --cclientid realm-management \
