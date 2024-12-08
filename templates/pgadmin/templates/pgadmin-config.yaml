@@ -18,7 +18,7 @@ data:
         'OAUTH2_NAME': 'Keycloak',
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
         'OAUTH2_CLIENT_ID': 'pgadmin',
-        'OAUTH2_CLIENT_SECRET': '3OpIsTcAUM81lB2E1sXpbdipQe37JLmF',
+        'OAUTH2_CLIENT_SECRET': 'AB4NBwnv2nDdWPBGpthpMOxG9yfGYVFw',
         'OAUTH2_TOKEN_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/token',
         'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/auth',
         'OAUTH2_SERVER_METADATA_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/.well-known/openid-configuration',
