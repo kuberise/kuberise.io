@@ -2,9 +2,10 @@
 
 # This script demonstrates how to configure pgAdmin to use Keycloak for authentication in http mode and in local mode.
 
-OAUTH2_CLIENT_SECRET=$(openssl rand -hex 16)
+CLIENT_SECRET=$(openssl rand -hex 16)
 REALM=platform
 NETWORK=privnet
+CLIENT_ID=pgadmin # this is different from CLIENT_UUID
 
 
 cat <<EOF > config_local.py
@@ -20,8 +21,8 @@ OAUTH2_CONFIG = [
   {
     'OAUTH2_NAME': 'Keycloak',
     'OAUTH2_DISPLAY_NAME': 'Keycloak',
-    'OAUTH2_CLIENT_ID': 'pgadmin',
-    'OAUTH2_CLIENT_SECRET': '$OAUTH2_CLIENT_SECRET',
+    'OAUTH2_CLIENT_ID': '$CLIENT_ID',
+    'OAUTH2_CLIENT_SECRET': '$CLIENT_SECRET',
     'OAUTH2_TOKEN_URL': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/token',
     'OAUTH2_AUTHORIZATION_URL': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/auth',
     'OAUTH2_SERVER_METADATA_URL': 'http://keycloak:8080/realms/$REALM/.well-known/openid-configuration',
@@ -29,7 +30,7 @@ OAUTH2_CONFIG = [
     'OAUTH2_USERINFO_ENDPOINT': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/userinfo',
     'OAUTH2_SCOPE': 'openid email profile',
     'OAUTH2_USERNAME_CLAIM': 'preferred_username',
-    'OAUTH2_LOGOUT_URL': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/logout?id_token_hint={id_token}&client_id={pgadmin}',
+    'OAUTH2_LOGOUT_URL': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/logout?id_token_hint={id_token}&client_id={$CLIENT_ID}',
     'OAUTH2_ICON': 'fa-solid fa-unlock',
     'OAUTH2_BUTTON_COLOR': '#f44242',
     'OAUTH2_SSL_CERT_VERIFICATION': False, # for self-signed certificates it should be False
@@ -64,13 +65,13 @@ echo "Configuring keycloak ... "
 # create new realm, client and user
 kcadm.sh config credentials --server  http://localhost:8080 --realm master --user admin --password admin
 kcadm.sh create realms -s realm=$REALM -s enabled=true
-kcadm.sh create users -r $REALM -s username=pgauser -s enabled=true -s email=pgauser@kuberise.net -s firstName=PGA -s lastName=User
+USER_ID=$(kcadm.sh create users -r $REALM -s username=pgauser -s enabled=true -s email=pgauser@kuberise.net -s firstName=PGA -s lastName=User -i)
+echo User ID: $USER_ID
 kcadm.sh set-password -r $REALM --username pgauser --new-password pgapassword
-
-kcadm.sh create clients -r $REALM \
-  -s clientId=pgadmin \
+CLIENT_UUID=$(kcadm.sh create clients -r $REALM \
+  -s clientId=$CLIENT_ID \
   -s enabled=true \
-  -s secret=$OAUTH2_CLIENT_SECRET \
+  -s secret=$CLIENT_SECRET \
   -s 'redirectUris=["http://pgadmin/*"]' \
   -s publicClient=false \
   -s protocol=openid-connect \
@@ -79,11 +80,23 @@ kcadm.sh create clients -r $REALM \
   -s standardFlowEnabled=true \
   -s implicitFlowEnabled=false \
   -s serviceAccountsEnabled=true \
-  -s authorizationServicesEnabled=false
+  -s authorizationServicesEnabled=false \
+  -i)
+echo Client UUID: $CLIENT_UUID
 
-echo "Starting pgadmin ... "
+# Get service account user ID
+SERVICE_ACCOUNT_USER_ID=$(kcadm.sh get clients/$CLIENT_UUID/service-account-user -r $REALM | grep "\"id\"" | cut -d'"' -f4)
+
+# Add roles
+kcadm.sh add-roles -r $REALM \
+  --uid $SERVICE_ACCOUNT_USER_ID \
+  --cclientid realm-management \
+  --rolename view-users \
+  --rolename manage-users
+
+echo "Starting $CLIENT_ID ... "
 # run pgadmin
-docker run --rm -d --name pgadmin --network $NETWORK \
+docker run --rm -d --name $CLIENT_ID --network $NETWORK \
   -p 5050:80 \
   -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
   -e PGADMIN_DEFAULT_PASSWORD="admin" \
@@ -102,6 +115,8 @@ docker run -it --rm -d --name firefox-browser --network $NETWORK \
 
 echo "pgAdmin dashboard: http://pgadmin"
 echo "Keycloak dashboard:  http://keycloak:8080"
+echo
+echo "To clean up the demo, just close the firefox browser."
 sleep 3
 
 # Open the URL in Firefox
@@ -116,6 +131,32 @@ while pgrep -x "firefox" > /dev/null; do sleep 1; done
 # Cleanup
 
 echo "Cleaning up ... "
+
+echo "Closing all open sessions..." # to demonstrate the logout functionality
+
+# Get access token using client credentials
+TOKEN_RESPONSE=$(curl -s -X POST \
+  "http://localhost:8080/realms/$REALM/protocol/openid-connect/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=$CLIENT_ID" \
+  -d "client_secret=$CLIENT_SECRET")
+
+ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.access_token')
+
+# Get all sessions for the user
+SESSIONS=$(curl -s -X GET \
+  "http://localhost:8080/admin/realms/$REALM/users/$USER_ID/sessions" \
+  -H "Authorization: Bearer $ACCESS_TOKEN")
+
+# Extract session IDs and delete each session
+echo $SESSIONS | jq -r '.[] | .id' | while read -r SESSION_ID; do
+  curl -s -X DELETE \
+    "http://localhost:8080/admin/realms/$REALM/sessions/$SESSION_ID" \
+    -H "Authorization: Bearer $ACCESS_TOKEN"
+  echo "Deleted session: $SESSION_ID"
+done
+
 
 rm -f config_local.py
 docker stop firefox-browser
