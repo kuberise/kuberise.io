@@ -5,3 +5,18 @@ pgadmin4:
       mountPath: /pgadmin4/config_local.py
       subPath: config_local.py
       readOnly: true
+    - name: external-selfsigned-ca-certificate
+      mountPath: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
+      subPath: ca.crt
+      configMap: external-selfsigned-ca-certificate
+      readOnly: true
+  envVarsExtra:
+    - name: REQUESTS_CA_BUNDLE
+      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
+    - name: SSL_CERT_FILE
+      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
+    - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: keycloak-pgadmin-oauth2-client-secret
+          key: CLIENT_SECRET

@@ -2,7 +2,7 @@ ArgocdApplications:
 
   keycloak:
     enabled: true
-    syncWave: 1
+    # syncWave: 1
 
   cnpg-database:
     enabled: true

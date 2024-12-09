@@ -3,7 +3,6 @@ controller:
     enabled: true
     serviceMonitor:
       enabled: true
-
   ingressClassResource:
     enabled: true
     name: nginx-external

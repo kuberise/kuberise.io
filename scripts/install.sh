@@ -65,7 +65,7 @@ generate_ca_cert_and_key() {
 
     # Generate the CA certificate and private key
     openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
-      -keyout "$KEY" -out "$CERT" -subj "/CN=ca.kuberise.io CA/O=KUBERISE/C=NL"
+      -keyout "$KEY" -out "$CERT" -subj "/CN=ca.kuberise.local CA/O=KUBERISE/C=NL"
 
     echo "CA certificate and key generated."
   else
@@ -78,6 +78,12 @@ generate_ca_cert_and_key() {
     --key="$KEY" \
     --namespace="$namespace" \
     --dry-run=client -o yaml | kubectl apply --namespace="$namespace" --context="$context" -f -
+
+  # Create a ConfigMap in the pgadmin namespace with the CA certificate (pgadmin need it to connect to keycloak )
+  kubectl create configmap external-selfsigned-ca-certificate \
+  --from-file=ca.crt="$CERT" \
+  --namespace="pgadmin" \
+  --dry-run=client -o yaml | kubectl apply --namespace="pgadmin" --context="$context" -f -
 
   echo "Secret with CA certificate and key created in the $namespace namespace."
 }
@@ -253,6 +259,7 @@ NAMESPACE_BACKSTAGE="backstage"
 NAMESPACE_MONITORING="monitoring"
 NAMESPACE_CERTMANAGER="cert-manager"
 NAMESPACE_EXTERNALDNS="external-dns"
+NAMESPACE_PGADMIN="pgadmin"
 
 # Warning Message
 echo -n "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
@@ -278,6 +285,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_BACKSTAGE"
 create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
 create_namespace "$CONTEXT" "$NAMESPACE_CERTMANAGER"
 create_namespace "$CONTEXT" "$NAMESPACE_EXTERNALDNS"
+create_namespace "$CONTEXT" "$NAMESPACE_PGADMIN"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
@@ -308,6 +316,11 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for Cert-Manager DNS01 Challenge if CLOUDFLARE_API_TOKEN is provided
   create_secret "$CONTEXT" "$NAMESPACE_CERTMANAGER" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
 fi
+
+# PGAdmin Configuration
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
