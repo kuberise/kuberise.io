@@ -5,10 +5,10 @@ pgadmin4:
       mountPath: /pgadmin4/config_local.py
       subPath: config_local.py
       readOnly: true
-    - name: external-custom-ca-cert
-      mountPath: /etc/ssl/certs/custom-ca.crt
+    - name: external-selfsigned-ca-certificate
+      mountPath: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
       subPath: ca.crt
-      configMap: external-custom-ca-cert
+      configMap: external-selfsigned-ca-certificate
       readOnly: true
   envVarsExtra:
     - name: REQUESTS_CA_BUNDLE

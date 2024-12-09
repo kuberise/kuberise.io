@@ -79,6 +79,12 @@ generate_ca_cert_and_key() {
     --namespace="$namespace" \
     --dry-run=client -o yaml | kubectl apply --namespace="$namespace" --context="$context" -f -
 
+  # Create a ConfigMap in the pgadmin namespace with the CA certificate (pgadmin need it to connect to keycloak )
+  kubectl create configmap external-selfsigned-ca-certificate \
+  --from-file=ca.crt="$CERT" \
+  --namespace="pgadmin" \
+  --dry-run=client -o yaml | kubectl apply --namespace="pgadmin" --context="$context" -f -
+
   echo "Secret with CA certificate and key created in the $namespace namespace."
 }
 
@@ -311,9 +317,10 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   create_secret "$CONTEXT" "$NAMESPACE_CERTMANAGER" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
 fi
 
-# Create secret for pgAdmin client in Keycloak.
+# PGAdmin Configuration
 create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
