@@ -12,9 +12,9 @@ pgadmin4:
       readOnly: true
   envVarsExtra:
     - name: REQUESTS_CA_BUNDLE
-      value: /etc/ssl/certs/custom-ca.crt
+      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
     - name: SSL_CERT_FILE
-      value: /etc/ssl/certs/custom-ca.crt
+      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
     - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
