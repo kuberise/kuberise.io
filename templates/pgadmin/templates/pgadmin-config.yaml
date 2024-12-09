@@ -44,3 +44,8 @@ data:
     #   DEBUG    10
     #   NOTSET    0
     CONSOLE_LOG_LEVEL = logging.DEBUG
+
+    # Note: This can cause problems when the server is deployed in dynamic IP
+    # address hosting environments, such as Kubernetes or behind load
+    # balancers. In such cases, this option should be set to False.
+    ENHANCED_COOKIE_PROTECTION = False
