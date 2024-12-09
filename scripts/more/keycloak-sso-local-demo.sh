@@ -30,12 +30,29 @@ OAUTH2_CONFIG = [
     'OAUTH2_USERINFO_ENDPOINT': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/userinfo',
     'OAUTH2_SCOPE': 'openid email profile',
     'OAUTH2_USERNAME_CLAIM': 'preferred_username',
-    'OAUTH2_LOGOUT_URL': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/logout?id_token_hint={id_token}&client_id={$CLIENT_ID}',
+    'OAUTH2_LOGOUT_URL': 'http://keycloak:8080/realms/$REALM/protocol/openid-connect/logout?id_token_hint={id_token}&post_logout_redirect_uri=http://keycloak:8080/',
     'OAUTH2_ICON': 'fa-solid fa-unlock',
     'OAUTH2_BUTTON_COLOR': '#f44242',
     'OAUTH2_SSL_CERT_VERIFICATION': False, # for self-signed certificates it should be False
   }
 ]
+
+DEBUG = True
+
+# Application log level - one of:
+#   CRITICAL 50
+#   ERROR    40
+#   WARNING  30
+#   SQL      25
+#   INFO     20
+#   DEBUG    10
+#   NOTSET    0
+CONSOLE_LOG_LEVEL = logging.DEBUG
+
+# Note: This can cause problems when the server is deployed in dynamic IP
+# address hosting environments, such as Kubernetes or behind load
+# balancers. In such cases, this option should be set to False.
+ENHANCED_COOKIE_PROTECTION = False
 EOF
 
 
