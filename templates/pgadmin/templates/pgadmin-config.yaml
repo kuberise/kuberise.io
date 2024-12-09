@@ -50,3 +50,4 @@ data:
     # balancers. In such cases, this option should be set to False.
     ENHANCED_COOKIE_PROTECTION = False
     SERVER_HEARTBEAT_TIMEOUT = 86400
+    WTF_CSRF_HEADERS = []
