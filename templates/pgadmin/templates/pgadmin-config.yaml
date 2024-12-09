@@ -26,9 +26,21 @@ data:
         'OAUTH2_USERINFO_ENDPOINT': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/userinfo',
         'OAUTH2_SCOPE': 'openid email profile',
         'OAUTH2_USERNAME_CLAIM': 'preferred_username',
-        'OAUTH2_LOGOUT_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/logout?id_token_hint={id_token}&client_id={pgadmin}&post_logout_redirect_uri=https://keycloak.onprem.kuberise.dev',
+        'OAUTH2_LOGOUT_URL': 'https://keycloak.onprem.kuberise.dev/realms/kuberise/protocol/openid-connect/logout?id_token_hint={id_token}&post_logout_redirect_uri=https://pgadmin.onprem.kuberise.dev',
         'OAUTH2_ICON': 'fa-solid fa-unlock',
         'OAUTH2_BUTTON_COLOR': '#f44242',
         'OAUTH2_SSL_CERT_VERIFICATION': False, # for self-signed certificates it should be False
       }
     ]
+
+    DEBUG = True
+
+    # Application log level - one of:
+    #   CRITICAL 50
+    #   ERROR    40
+    #   WARNING  30
+    #   SQL      25
+    #   INFO     20
+    #   DEBUG    10
+    #   NOTSET    0
+    CONSOLE_LOG_LEVEL = logging.DEBUG
