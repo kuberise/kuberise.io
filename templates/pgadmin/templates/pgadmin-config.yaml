@@ -18,7 +18,7 @@ data:
         'OAUTH2_NAME': 'Keycloak',
         'OAUTH2_DISPLAY_NAME': 'Keycloak',
         'OAUTH2_CLIENT_ID': 'pgadmin',
-        'OAUTH2_CLIENT_SECRET': 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY',
+        'OAUTH2_CLIENT_SECRET': os.getenv('KEYCLOAK_OAUTH2_CLIENT_SECRET'),
         'OAUTH2_TOKEN_URL': 'https://keycloak.{{ .Values.domain }}/realms/platform/protocol/openid-connect/token',
         'OAUTH2_AUTHORIZATION_URL': 'https://keycloak.{{ .Values.domain }}/realms/platform/protocol/openid-connect/auth',
         'OAUTH2_SERVER_METADATA_URL': 'https://keycloak.{{ .Values.domain }}/realms/platform/.well-known/openid-configuration',

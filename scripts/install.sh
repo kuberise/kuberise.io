@@ -253,6 +253,7 @@ NAMESPACE_BACKSTAGE="backstage"
 NAMESPACE_MONITORING="monitoring"
 NAMESPACE_CERTMANAGER="cert-manager"
 NAMESPACE_EXTERNALDNS="external-dns"
+NAMESPACE_PGADMIN="pgadmin"
 
 # Warning Message
 echo -n "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
@@ -278,6 +279,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_BACKSTAGE"
 create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
 create_namespace "$CONTEXT" "$NAMESPACE_CERTMANAGER"
 create_namespace "$CONTEXT" "$NAMESPACE_EXTERNALDNS"
+create_namespace "$CONTEXT" "$NAMESPACE_PGADMIN"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
@@ -308,6 +310,10 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for Cert-Manager DNS01 Challenge if CLOUDFLARE_API_TOKEN is provided
   create_secret "$CONTEXT" "$NAMESPACE_CERTMANAGER" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
 fi
+
+# Create secret for pgAdmin client in Keycloak.
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
