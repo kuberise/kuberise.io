@@ -15,3 +15,8 @@ pgadmin4:
       value: /etc/ssl/certs/custom-ca.crt
     - name: SSL_CERT_FILE
       value: /etc/ssl/certs/custom-ca.crt
+    - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: keycloak-pgadmin-oauth2-client-secret
+          key: CLIENT_SECRET
