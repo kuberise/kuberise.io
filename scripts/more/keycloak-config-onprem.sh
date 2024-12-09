@@ -45,3 +45,5 @@ kcadm.sh create realms -s realm=platform -s enabled=true
 kcadm.sh create users -r platform -s username=pgauser -s enabled=true -s email=pgauser@kuberise.net -s firstName=PGA -s lastName=User
 kcadm.sh set-password -r platform --username pgauser --new-password pgapassword
 kcadm.sh create clients -r platform -f pgadmin_client.json
+
+rm -f pgadmin_client.json
