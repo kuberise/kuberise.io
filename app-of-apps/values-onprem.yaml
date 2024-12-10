@@ -45,13 +45,13 @@ ArgocdApplications:
     #       - .status.loadBalancer.ingress[].ipMode
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   cloudnative-pg:
     enabled: true
@@ -63,7 +63,7 @@ ArgocdApplications:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   sealed-secrets:
     enabled: false
