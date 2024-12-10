@@ -1,7 +1,7 @@
 ArgocdApplications:
 
   keycloak:
-    enabled: true
+    enabled: false
     # syncWave: 1
 
   cnpg-database:
@@ -57,7 +57,7 @@ ArgocdApplications:
     enabled: true
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   cert-manager:
     enabled: true
@@ -77,14 +77,14 @@ ArgocdApplications:
   # Microservices
 
   show-env:
-    enabled: true
+    enabled: false
     annotations:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
   frontend-https:
-    enabled: true
+    enabled: false
 
   backend:
-    enabled: true
+    enabled: false
