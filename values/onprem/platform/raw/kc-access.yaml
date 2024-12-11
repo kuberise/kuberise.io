@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: keycloak-access
+  namespace: keycloak
