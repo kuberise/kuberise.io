@@ -22,3 +22,44 @@ spec:
    name: keycloak-instance
    kind: Keycloak
 ---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmUser
+metadata:
+  name: platform-admin
+  namespace: keycloak
+spec:
+  attributes:
+    baz: jazz
+    foo: bar
+  email: john.snow13@kuberise.com
+  emailVerified: true
+  enabled: true
+  firstName: John
+  keepResource: true
+  lastName: Snow
+  password: '12345678'
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  requiredUserActions: []
+  username: admin
+  passwordSecret:
+    name: admin-secret
+    key: KEYCLOAK_ADMIN_PASSWORD
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClient
+metadata:
+  name: pgadmin-client
+  namespace: keycloak
+spec:
+  authorizationServicesEnabled: true
+  clientId: pgadmin
+  directAccess: false
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  secret: '$keycloak-pgadmin-oauth2-client-secret:CLIENT_SECRET'
+  serviceAccount:
+    enabled: true
+  webUrl: 'https://pgadmin.onprem.kuberise.dev/'
