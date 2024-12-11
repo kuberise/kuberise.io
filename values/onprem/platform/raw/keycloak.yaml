@@ -10,3 +10,14 @@ spec:
     secretKeyRef:
       name: keycloak-tls
       key: tls.crt
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealm
+metadata:
+ name: platform-realm
+spec:
+ realmName: platform
+ keycloakRef:
+   name: keycloak-instance
+   kind: Keycloak
+---
