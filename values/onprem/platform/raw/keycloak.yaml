@@ -22,5 +22,5 @@ spec:
   hostname:
     hostname: keycloak.onprem.kuberise.dev
   ingress:
-    enabled: true
+    enabled: false
     className: nginx-external
