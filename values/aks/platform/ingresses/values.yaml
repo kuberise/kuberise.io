@@ -3,7 +3,7 @@ services:
     namespace: argocd
     subdomain: argocd
   - name: keycloak
-    serviceName: keycloak-keycloakx-http
+    serviceName: keycloak-http
     port: 8443
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"

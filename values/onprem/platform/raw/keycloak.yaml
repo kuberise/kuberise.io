@@ -5,7 +5,7 @@ metadata:
   namespace: keycloak
 spec:
   secret: keycloak-access             # Secret name containing keycloak admin username and password
-  url: https://keycloak-keycloakx-http:8443
+  url: https://keycloak-http:8443
   caCert:
     secretKeyRef:
       name: keycloak-tls

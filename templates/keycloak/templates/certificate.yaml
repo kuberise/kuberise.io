@@ -7,8 +7,8 @@ spec:
   secretName: keycloak-tls
   dnsNames:
     - "keycloak.{{ .Values.domain }}"
-    - keycloak-keycloakx-http.keycloak.svc.cluster.local
-    - keycloak-keycloakx-http
+    - keycloak-http.keycloak.svc.cluster.local
+    - keycloak-http
     - keycloak.kuberise.internal
   issuerRef:
     name: selfsigned
