@@ -7,7 +7,11 @@ metadata:
     app: sso
 spec:
   keycloakCRName: keycloak
-  realm: {}
+  realm:
+    realm: testrealm
+    displayName: testrealm
+    displayNameHtml: testrealm
+    enabled: true
 
 # apiVersion: k8s.keycloak.org/v2alpha1
 # kind: KeycloakRealmImport
