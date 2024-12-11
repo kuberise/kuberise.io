@@ -6,3 +6,7 @@ metadata:
 spec:
   secret: keycloak-access             # Secret name
   url: https://keycloak-keycloakx-http
+  caCert:
+    secretKeyRef:
+      name: keycloak-tls
+      key: tls.crt
