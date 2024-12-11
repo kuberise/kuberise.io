@@ -1,0 +1,53 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: KeycloakRealmImport
+metadata:
+  name: platform-realm
+  namespace: keycloak
+spec:
+  keycloakCRName: keycl
+  realm:
+    realm: platform
+    displayName: platform
+    displayNameHtml: platform
+    enabled: true
+    keycloakVersion: "26.0.7"
+    clients:
+      - clientId: pgadmin
+        name: pgAdmin Client
+        description: Provides login for pgAdmin
+        rootUrl: https://pgadmin.onprem.kuberise.dev/
+        adminUrl: https://pgadmin.onprem.kuberise.dev/
+        baseUrl: https://pgadmin.onprem.kuberise.dev/
+        surrogateAuthRequired: false
+        enabled: true
+        alwaysDisplayInConsole: false
+        clientAuthenticatorType: client-secret
+        secret: YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY
+        redirectUris:
+          - https://pgadmin.onprem.kuberise.dev/*
+        webOrigins:
+          - https://pgadmin.onprem.kuberise.dev/
+        notBefore: 0
+        bearerOnly: false
+        consentRequired: false
+        standardFlowEnabled: true
+        implicitFlowEnabled: false
+        directAccessGrantsEnabled: false
+        serviceAccountsEnabled: true
+        publicClient: false
+        frontchannelLogout: true
+        protocol: openid-connect
+        attributes:
+          post.logout.redirect.uris: https://pgadmin.onprem.kuberise.dev/*
+    users:
+      - username: pgauser
+        serviceAccountClientId: pgadmin
+        enabled: true
+        firstName: "PGA"
+        lastName: "Admin"
+        email: "sample@example.com"
+        emailVerified: true
+        credentials:
+          - type: "password"
+            value: "pgapassword"
+            temporary: false
