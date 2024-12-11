@@ -1,7 +1,7 @@
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: Keycloak
 metadata:
-  name: keycl
+  name: keycloak
   namespace: keycloak
   labels:
     app: sso
