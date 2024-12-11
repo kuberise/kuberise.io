@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  a: Yg==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: keycloak-platform-realm
+  namespace: keycloak
