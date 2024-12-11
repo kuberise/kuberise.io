@@ -41,11 +41,7 @@ ArgocdApplications:
 
   ingress-nginx-external:
     enabled: true
-    # ignoreDifferences:
-    #   - group: ""
-    #     kind: Service
-    #     jqPathExpressions:
-    #       - .status.loadBalancer.ingress[].ipMode
+
 
   kube-prometheus-stack:
     enabled: false
@@ -80,14 +76,14 @@ ArgocdApplications:
   # Microservices
 
   show-env:
-    enabled: false
+    enabled: true
     annotations:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
   frontend-https:
-    enabled: false
+    enabled: true
 
   backend:
-    enabled: false
+    enabled: true
