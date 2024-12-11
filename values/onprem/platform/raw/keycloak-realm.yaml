@@ -52,3 +52,17 @@ spec:
           - type: "password"
             value: "pgapassword"
             temporary: false
+      - id: d3fd3f98-a22e-41c3-85ed-5bb4ee52d786
+        username: heloworld
+        emailVerified: false
+        enabled: true
+        totp: false
+        disableableCredentialTypes: []
+        requiredActions: []
+        notBefore: 0
+        access:
+          manageGroupMembership: true
+          view: true
+          mapRoles: true
+          impersonate: true
+          manage: true
