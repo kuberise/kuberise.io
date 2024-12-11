@@ -4,7 +4,7 @@ metadata:
   name: platform-realm
   namespace: keycloak
 spec:
-  keycloakCRName: keycl
+  keycloakCRName: keycloak
   realm:
     realm: platform
     displayName: platform
