@@ -2,12 +2,12 @@ services:
   - name: argocd-server
     namespace: argocd
     subdomain: argocd
-  - name: keycloak
-    serviceName: keycloak-keycloakx-http
-    port: 8443
-    annotations:
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  # - name: keycloak
+  #   serviceName: keycloak-keycloakx-http
+  #   port: 8443
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  #     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   - name: grafana
     namespace: monitoring
     serviceName: kube-prometheus-stack-grafana
