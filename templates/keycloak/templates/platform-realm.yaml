@@ -1,0 +1,10 @@
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealm
+metadata:
+ name: platform-realm
+ namespace: keycloak
+spec:
+ realmName: platform
+ keycloakRef:
+   name: keycloak-instance
+   kind: Keycloak
