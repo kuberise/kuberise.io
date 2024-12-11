@@ -1,5 +1,6 @@
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: Keycloak
+namespace: keycloak
 metadata:
   name: keycl
   labels:
