@@ -4,6 +4,9 @@ ArgocdApplications:
     enabled: true
     # syncWave: 1
 
+  keycloak-operator:
+    enabled: true
+
   cnpg-database:
     enabled: true
     path: values/onprem/platform/database/

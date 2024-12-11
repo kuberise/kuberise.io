@@ -1,3 +1,31 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+# kind: Keycloak
+# metadata:
+#   name: keycloak
+#   namespace: keycloak
+#   labels:
+#     app: sso
+# spec:
+#   instances: 1
+#   db:
+#     vendor: postgres
+#     host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+#     database: app
+#     usernameSecret:
+#       name: pg-secret
+#       key: KC_DB_USERNAME
+#     passwordSecret:
+#       name: pg-secret
+#       key: KC_DB_PASSWORD
+#   http:
+#     tlsSecret: keycloak-tls
+#   hostname:
+#     hostname: keycloak.onprem.kuberise.dev
+#   ingress:
+#     enabled: false
+#     className: nginx-external
+
+
 # apiVersion: k8s.keycloak.org/v2alpha1
 # kind: KeycloakRealmImport
 # metadata:

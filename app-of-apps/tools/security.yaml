@@ -4,6 +4,13 @@ ArgocdApplications:
   keycloak:
     enabled: false
 
+  keycloak-operator:
+    enabled: false
+    repoURL: https://epam.github.io/edp-helm-charts/stable
+    targetRevision: 1.23.0
+    chart: keycloak-operator
+    namespace: keycloak
+
   sealed-secrets:
     enabled: false
     repoURL: https://charts.bitnami.com/bitnami
