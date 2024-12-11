@@ -41,14 +41,14 @@ spec:
         protocol: openid-connect
         attributes:
           post.logout.redirect.uris: https://pgadmin.onprem.kuberise.dev/*
-#     users:
-#       - username: pgauser
-#         enabled: true
-#         firstName: "PGA"
-#         lastName: "Admin"
-#         email: "sample@example.com"
-#         emailVerified: true
-#         credentials:
-#           - type: "password"
-#             value: "pgapassword"
-#             temporary: false
+    users:
+      - username: pgauser
+        enabled: true
+        firstName: "PGA"
+        lastName: "Admin"
+        email: "sample@example.com"
+        emailVerified: true
+        credentials:
+          - type: "password"
+            value: "pgapassword"
+            temporary: false
