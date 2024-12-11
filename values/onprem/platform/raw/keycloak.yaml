@@ -63,3 +63,5 @@ spec:
   serviceAccount:
     enabled: true
   webUrl: 'https://pgadmin.onprem.kuberise.dev/'
+  redirectUris:
+    - 'https://pgadmin.onprem.kuberise.dev/*'
