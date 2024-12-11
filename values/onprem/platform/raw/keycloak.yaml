@@ -20,3 +20,6 @@ spec:
     tlsSecret: keycloak-tls
   hostname:
     hostname: keycloak.onprem.kuberise.dev
+  ingress:
+    enabled: false
+    className: nginx-external
