@@ -46,7 +46,7 @@ spec:
         enabled: true
         firstName: "PGA"
         lastName: "Admin"
-        email: "sample@example.com"
+        email: "a@a.com"
         emailVerified: true
         credentials:
           - type: "password"
