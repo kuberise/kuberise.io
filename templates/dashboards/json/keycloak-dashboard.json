@@ -5440,8 +5440,8 @@
       {
         "current": {
           "selected": false,
-          "text": "keycloak-keycloakx-http",
-          "value": "keycloak-keycloakx-http"
+          "text": "keycloak-http",
+          "value": "keycloak-http"
         },
         "datasource": {
           "type": "prometheus",

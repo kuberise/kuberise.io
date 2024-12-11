@@ -1,0 +1,23 @@
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmUser
+metadata:
+  name: platform-admin
+spec:
+  attributes:
+    baz: jazz
+    foo: bar
+  email: john.snow13@kuberise.com
+  emailVerified: true
+  enabled: true
+  firstName: John
+  keepResource: true
+  lastName: Snow
+  password: '12345678'
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  requiredUserActions: []
+  username: admin
+  passwordSecret:
+    name: admin-secret
+    key: KEYCLOAK_ADMIN_PASSWORD

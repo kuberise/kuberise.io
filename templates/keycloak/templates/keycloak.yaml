@@ -1,0 +1,11 @@
+apiVersion: v1.edp.epam.com/v1
+kind: Keycloak
+metadata:
+  name: keycloak-instance
+spec:
+  secret: keycloak-access             # Secret name containing keycloak admin username and password
+  url: https://keycloak-http:8443
+  caCert:
+    secretKeyRef:
+      name: keycloak-tls
+      key: tls.crt

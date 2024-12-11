@@ -1,4 +1,5 @@
 keycloakx:
+  fullnameOverride: keycloak
   http:
     relativePath: "/"
   command:
