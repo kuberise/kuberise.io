@@ -5,6 +5,8 @@ metadata:
 spec:
   clientId: argocd
   directAccess: true
+  implicitFlowEnabled: false
+  authorizationServicesEnabled: false
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
@@ -14,5 +16,7 @@ spec:
   webUrl: 'https://argocd.{{ .Values.global.domain }}/'
   redirectUris:
     - 'https://argocd.{{ .Values.global.domain }}/*'
+  webOrigins:
+    - 'https://argocd.{{ .Values.global.domain }}'
   attributes:
     "post.logout.redirect.uris": "https://argocd.{{ .Values.global.domain }}/*"
