@@ -36,9 +36,9 @@ grafana:
       mountPath: /etc/ssl/certs/ca-certificates.crt
       subPath: ca.crt
 
-  env:
-    - name: SSL_CERT_FILE
-      value: /etc/ssl/certs/ca-certificates.crt
+  # env:
+  #   - name: SSL_CERT_FILE
+  #     value: /etc/ssl/certs/ca-certificates.crt
 
 # prometheus:
 #   prometheusSpec:
