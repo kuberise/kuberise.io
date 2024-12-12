@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: {{ default "nginx-external" .ingressClassName }}
   rules:
-  - host: {{ default .name .subdomain }}.{{ $.Values.domain }}
+  - host: {{ default .name .subdomain }}.{{ $.Values.global.domain }}
     http:
       paths:
       - backend:
@@ -23,7 +23,7 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - {{ default .name .subdomain }}.{{ $.Values.domain }}
+    - {{ default .name .subdomain }}.{{ $.Values.global.domain }}
     secretName: {{ default "" .secretName }}
 ---
 {{- end }}
