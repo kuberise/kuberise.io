@@ -14,3 +14,5 @@ spec:
   webUrl: 'https://grafana.{{ .Values.global.domain }}/'
   redirectUris:
     - 'https://grafana.{{ .Values.global.domain }}/login/generic_oauth'
+  attributes:
+    "post.logout.redirect.uris": "https://grafana.{{ .Values.global.domain }}/*"
