@@ -7,5 +7,5 @@ helm:
     value: ghcr.io/kuberise/show-env
     forcestring: true
   - name: image.tag
-    value: latest@sha256:0532156e38bb0cd1868c2da0bf8abf2a39a53ab42dbc6bdd9d00f1c78f7f248a
+    value: latest@sha256:611719e390f49fe0e900f07654310ade189186c9b1b98e10b60ea77ffd8bb2eb
     forcestring: true
