@@ -26,6 +26,20 @@ grafana:
         name: grafana-oauth2-client-secret
         key: client-secret
 
+  extraVolumes:
+    - name: ca-certificates
+      configMap:
+        name: external-selfsigned-ca-certificate
+
+  extraVolumeMounts:
+    - name: ca-certificates
+      mountPath: /etc/ssl/certs/ca-certificates.crt
+      subPath: ca.crt
+
+  env:
+    - name: SSL_CERT_FILE
+      value: /etc/ssl/certs/ca-certificates.crt
+
 # prometheus:
 #   prometheusSpec:
 #     containers:
