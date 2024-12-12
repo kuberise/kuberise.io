@@ -4,7 +4,7 @@ metadata:
   name: grafana-client
 spec:
   clientId: grafana
-  directAccess: false
+  directAccess: true
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
@@ -13,4 +13,4 @@ spec:
     enabled: true
   webUrl: 'https://grafana.onprem.kuberise.dev/'
   redirectUris:
-    - 'https://grafana.onprem.kuberise.dev/*'
+    - 'https://grafana.onprem.kuberise.dev/login/generic_oauth'
