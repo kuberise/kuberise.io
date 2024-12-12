@@ -10,7 +10,7 @@ controller:
 
   service:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.domain }}"
+      external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.global.domain }}"
       external-dns.alpha.kubernetes.io/owner: "onprem-externaldns"
     nodePorts: # This is the port that will be used to access the service from outside the cluster. We map this port from minikube or kind container to 80 and 443 on the host machine.
       http: 30080

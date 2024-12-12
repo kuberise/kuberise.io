@@ -44,7 +44,7 @@ spec:
         - "$valuesRepo/values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml"
         {{- end }}
       parameters:
-        - name: domain
+        - name: global.domain
           value: {{ $.Values.global.domain }}
   - repoURL: {{ $.Values.global.spec.values.repoURL }}
     targetRevision: {{ default $.Values.global.spec.values.targetRevision .valuesTargetRevision }}

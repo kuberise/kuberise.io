@@ -11,6 +11,6 @@ spec:
   secret: '$grafana-oauth2-client-secret:client-secret'
   serviceAccount:
     enabled: true
-  webUrl: 'https://grafana.{{ .Values.domain }}/'
+  webUrl: 'https://grafana.{{ .Values.global.domain }}/'
   redirectUris:
-    - 'https://grafana.{{ .Values.domain }}/login/generic_oauth'
+    - 'https://grafana.{{ .Values.global.domain }}/login/generic_oauth'
