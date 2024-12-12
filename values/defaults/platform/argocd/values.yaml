@@ -1,6 +1,13 @@
 configs:
   cm:
     timeout.reconciliation: 5s
+    url: https://argocd.{{ .Values.global.domain }}
+    oidc.config: |
+      name: Keycloak
+      issuer: https://keycloak.{{ .Values.global.domain }}/realms/platform
+      clientID: argocd
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
     resource.customizations: |
       argoproj.io/Application:
         health.lua: |
