@@ -39,7 +39,7 @@ spec:
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealmGroup
 metadata:
-  name: ArgoCDAdmins
+  name: argocd-admins
 spec:
   realmRef:
     kind: KeycloakRealm

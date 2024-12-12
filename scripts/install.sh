@@ -334,8 +334,10 @@ create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-s
 # ArgoCD OAuth2 Secrets
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
 ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64) # FIXME: Should be generated randomly
-create_secret "$CONTEXT" "$NAMESPACE_ARGOCD" "keycloak-argocd-oauth2-client-secret" "--from-literal=oidc.keycloak.clientSecret=$ARGOCD_CLIENT_SECRET"
-
+kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
+data:
+  oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
+"
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
