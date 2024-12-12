@@ -11,6 +11,6 @@ spec:
   secret: '$grafana-oauth2-client-secret:client-secret'
   serviceAccount:
     enabled: true
-  webUrl: 'https://grafana.onprem.kuberise.dev/'
+  webUrl: 'https://grafana.{{ .Values.domain }}/'
   redirectUris:
-    - 'https://grafana.onprem.kuberise.dev/login/generic_oauth'
+    - 'https://grafana.{{ .Values.domain }}/login/generic_oauth'
