@@ -18,7 +18,7 @@ grafana:
       token_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/token
       api_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/userinfo
       role_attribute_path: contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
-      signout_redirect_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/logout?redirect_uri=https://grafana.onprem.kuberise.dev/*
+      signout_redirect_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/logout?redirect_uri=https://grafana.onprem.kuberise.dev/
 
   envValueFrom:
     GRAFANA_OAUTH2_CLIENT_SECRET:
