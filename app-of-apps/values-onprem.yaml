@@ -47,10 +47,10 @@ ArgocdApplications:
     enabled: true
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   cloudnative-pg:
     enabled: true
@@ -62,7 +62,7 @@ ArgocdApplications:
     enabled: true
 
   backstage:
-    enabled: true
+    enabled: false
 
   sealed-secrets:
     enabled: false
