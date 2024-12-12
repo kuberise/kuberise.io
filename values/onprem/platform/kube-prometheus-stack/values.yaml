@@ -12,13 +12,19 @@ grafana:
       name: Keycloak
       allow_sign_up: true
       client_id: grafana
-      client_secret: "YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: "${GRAFANA_OAUTH2_CLIENT_SECRET}"
+      client_secret: "${GRAFANA_OAUTH2_CLIENT_SECRET}"
       scopes: openid profile email
       auth_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/auth
       token_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/token
       api_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/userinfo
       role_attribute_path: contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
       signout_redirect_url: https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/logout?redirect_uri=https://grafana.onprem.kuberise.dev
+
+  envValueFrom:
+    GRAFANA_OAUTH2_CLIENT_SECRET:
+      secretKeyRef:
+        name: grafana-oauth2-client-secret
+        key: client-secret
 
 # prometheus:
 #   prometheusSpec:

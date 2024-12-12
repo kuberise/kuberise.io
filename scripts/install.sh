@@ -308,7 +308,12 @@ create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-superuser" "--from-lit
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "admin-secret" "--from-literal=KEYCLOAK_ADMIN=admin --from-literal=KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$PG_APP_PASSWORD"
+
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
+
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "prometheus-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
 
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
@@ -318,8 +323,8 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
 fi
 
 # PGAdmin Configuration
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
 
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
