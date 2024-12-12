@@ -12,6 +12,6 @@ spec:
   secret: '$keycloak-pgadmin-oauth2-client-secret:CLIENT_SECRET'
   serviceAccount:
     enabled: true
-  webUrl: 'https://pgadmin.onprem.kuberise.dev/'
+  webUrl: 'https://pgadmin.{{ .Values.global.domain }}/'
   redirectUris:
-    - 'https://pgadmin.onprem.kuberise.dev/*'
+    - 'https://pgadmin.{{ .Values.global.domain }}/*'

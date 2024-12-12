@@ -1,0 +1,18 @@
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClient
+metadata:
+  name: grafana-client
+spec:
+  clientId: grafana
+  directAccess: true
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  secret: '$grafana-oauth2-client-secret:client-secret'
+  serviceAccount:
+    enabled: true
+  webUrl: 'https://grafana.{{ .Values.global.domain }}/'
+  redirectUris:
+    - 'https://grafana.{{ .Values.global.domain }}/login/generic_oauth'
+  attributes:
+    "post.logout.redirect.uris": "https://grafana.{{ .Values.global.domain }}/*"

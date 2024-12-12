@@ -61,10 +61,10 @@ images=(
 )
 
 # Load each image into the minikube cluster
-# for image in "${images[@]}"; do
-#   echo "Pull image: $image"
-#   docker pull "$image"
-# done
+for image in "${images[@]}"; do
+  echo "Pull image: $image"
+  docker pull "$image"
+done
 
 # echo "All images have been pulled locally."
 

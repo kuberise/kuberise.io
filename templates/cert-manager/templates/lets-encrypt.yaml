@@ -35,7 +35,7 @@ spec:
   secretName: ssl-certificate-letsencrypt
   dnsNames:
   {{- range .Values.subdomains }}
-  - "{{ . }}.{{ $.Values.domain }}"
+  - "{{ . }}.{{ $.Values.global.domain }}"
   {{- end }}
   issuerRef:
     name: lets-encrypt

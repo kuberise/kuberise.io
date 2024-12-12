@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: keycloak-tls
   dnsNames:
-    - "keycloak.{{ .Values.domain }}"
+    - "keycloak.{{ .Values.global.domain }}"
     - keycloak-http.keycloak.svc.cluster.local
     - keycloak-http
     - keycloak.kuberise.internal

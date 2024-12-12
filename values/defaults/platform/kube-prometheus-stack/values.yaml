@@ -15,6 +15,85 @@ grafana:
     passwordKey: admin-password
     userKey: admin-user
 
+  grafana.ini:
+    server:
+      domain: grafana.{{ .Values.global.domain }}
+      root_url: https://grafana.{{ .Values.global.domain }}
+    auth:
+      disable_login_form: false
+      oauth_auto_login: false
+      disable_signout_menu: false
+    auth.generic_oauth:
+      enabled: true
+      name: Keycloak
+      allow_sign_up: true
+      client_id: grafana
+      client_secret: "${GRAFANA_OAUTH2_CLIENT_SECRET}"
+      scopes: openid profile email
+      email_attribute_path: email
+      login_attribute_path: username
+      name_attribute_path: full_name
+      auth_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/auth
+      token_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/token
+      api_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/userinfo
+      role_attribute_path: contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
+      signout_redirect_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/logout?post_logout_redirect_uri=https://grafana.{{ .Values.global.domain }}/login
+
+  envValueFrom:
+    GRAFANA_OAUTH2_CLIENT_SECRET:
+      secretKeyRef:
+        name: grafana-oauth2-client-secret
+        key: client-secret
+
+  extraVolumes:
+    - name: ca-certificates
+      configMap:
+        name: external-selfsigned-ca-certificate
+
+  extraVolumeMounts:
+    - name: ca-certificates
+      mountPath: /etc/ssl/certs/ca-certificates.crt
+      subPath: ca.crt
+
+# prometheus:
+#   prometheusSpec:
+#     containers:
+#       - name: oauth2-proxy
+#         image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
+#         args:
+#           - --provider=keycloak
+#           - --client-id=prometheus
+#           - --client-secret=$(OAUTH2_PROXY_CLIENT_SECRET)
+#           - --cookie-secret=$(OAUTH2_PROXY_COOKIE_SECRET)
+#           - --cookie-secure=true
+#           - --email-domain=*
+#           - --upstream=http://localhost:9090
+#           - --http-address=0.0.0.0:9091
+#           - --reverse-proxy=true
+#           - --keycloak-group=/prometheus-users
+#           - --oidc-issuer-url=https://keycloak.{{ .Values.global.domain }}/realms/platform
+#         env:
+#           - name: OAUTH2_PROXY_CLIENT_SECRET
+#             valueFrom:
+#               secretKeyRef:
+#                 name: prometheus-oauth-secret
+#                 key: client-secret
+#           - name: OAUTH2_PROXY_COOKIE_SECRET
+#             valueFrom:
+#               secretKeyRef:
+#                 name: prometheus-oauth-secret
+#                 key: cookie-secret
+#         ports:
+#           - containerPort: 9091
+#             name: oauth2-proxy
+
+#     service:
+#       additionalPorts:
+#         - name: oauth2-proxy
+#           port: 9091
+#           targetPort: 9091
+
+
 prometheus:
   prometheusSpec:
     # Select all ServiceMonitors

@@ -17,7 +17,7 @@ function check_required_tools() {
 function create_namespace() {
   local context=$1
   local namespace=$2
-  echo "Creating namespace: $namespace in context: $context"
+  # echo "Creating namespace: $namespace in context: $context"
   kubectl create namespace "$namespace" --context "$context" --dry-run=client -o yaml | kubectl apply --context "$context" -f -
 }
 
@@ -26,7 +26,7 @@ function create_secret() {
   local namespace=$2
   local secret_name=$3
   local key_values=$4  # Pass --from-literal=key=value pairs space-separated
-  echo "Creating secret: $secret_name in namespace: $namespace"
+  # echo "Creating secret: $secret_name in namespace: $namespace"
   kubectl create secret generic "$secret_name" --context "$context" -n "$namespace" $key_values --dry-run=client -o yaml | kubectl apply --context "$context" -n "$namespace" -f -
 }
 
@@ -35,7 +35,7 @@ function label_secret() {
   local namespace=$2
   local secret_name=$3
   local label=$4
-  echo "Labeling secret: $secret_name"
+  # echo "Labeling secret: $secret_name"
   kubectl label secret "$secret_name" "$label" --context "$context" -n "$namespace"
 }
 
@@ -43,7 +43,6 @@ generate_ca_cert_and_key() {
 
   local context=$1
   local platform_name=$2
-  local namespace=$3
 
   # Validate platform_name is provided
   if [ -z "$platform_name" ]; then
@@ -76,16 +75,22 @@ generate_ca_cert_and_key() {
   kubectl create secret tls ca-key-pair-external \
     --cert="$CERT" \
     --key="$KEY" \
-    --namespace="$namespace" \
-    --dry-run=client -o yaml | kubectl apply --namespace="$namespace" --context="$context" -f -
+    --namespace="cert-manager" \
+    --dry-run=client -o yaml | kubectl apply --namespace="cert-manager" --context="$context" -f -
 
-  # Create a ConfigMap in the pgadmin namespace with the CA certificate (pgadmin need it to connect to keycloak )
-  kubectl create configmap external-selfsigned-ca-certificate \
-  --from-file=ca.crt="$CERT" \
-  --namespace="pgadmin" \
-  --dry-run=client -o yaml | kubectl apply --namespace="pgadmin" --context="$context" -f -
+  # List of namespaces to create self-signed CA certificate ConfigMap
+  namespaces=("pgadmin" "monitoring" "argocd" "keycloak" "backstage" "cloudnative-pg" "cert-manager" "external-dns")
 
-  echo "Secret with CA certificate and key created in the $namespace namespace."
+  # Iterate over each namespace and create the configmap
+  for namespace in "${namespaces[@]}"; do
+    # Create the configmap in the current namespace
+    kubectl create configmap external-selfsigned-ca-certificate \
+      --from-file=ca.crt="$CERT" \
+      --namespace="$namespace" \
+      --dry-run=client -o yaml | kubectl apply --namespace="$namespace" --context="$context" -f -
+  done
+
+  # echo "Secret with CA certificate and key created in the cert-manager namespace."
 }
 
 function install_argocd() {
@@ -298,7 +303,7 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
-generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME" "$NAMESPACE_CERTMANAGER"
+generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 
 # Secrets for PostgreSQL
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-app" "--from-literal=dbname=app --from-literal=host=cnpg-database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
@@ -308,7 +313,12 @@ create_secret "$CONTEXT" "$NAMESPACE_CNPG" "cnpg-database-superuser" "--from-lit
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "admin-secret" "--from-literal=KEYCLOAK_ADMIN=admin --from-literal=KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$PG_APP_PASSWORD"
+
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
+
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "prometheus-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
 
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
@@ -318,8 +328,8 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
 fi
 
 # PGAdmin Configuration
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
 
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
