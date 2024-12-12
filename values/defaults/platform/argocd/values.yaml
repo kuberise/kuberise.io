@@ -1,13 +1,13 @@
 configs:
   cm:
     timeout.reconciliation: 5s
-    url: https://argocd.onprem.kuberise.dev
-    oidc.config: |
+    url: https://argocd.onprem.kuberise.dev #FIXME: should be replaced with argocd.{{ .Values.global.domain }} by install.sh script
+    oidc.config: | #FIXME: mapper is not done by keycloak operator yet : https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/keycloak/
       name: Keycloak
-      issuer: https://keycloak.onprem.kuberise.dev/realms/platform
+      issuer: https://keycloak.onprem.kuberise.dev/realms/platform #FIXME: should be replaced with keycloak.{{ .Values.global.domain }} by install.sh script
       clientID: argocd
-      clientSecret: $oidc.keycloak.clientSecret
-      requestedScopes: ["openid", "profile", "email", "groups"]
+      clientSecret: $oidc.keycloak.clientSecret #FIXME: keycloak user doesn't see applications
+      requestedScopes: ["openid", "profile", "email", "groups"] #FIXME: logout doesn't work
     resource.customizations: |
       argoproj.io/Application:
         health.lua: |
