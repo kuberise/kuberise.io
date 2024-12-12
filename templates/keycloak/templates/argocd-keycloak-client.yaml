@@ -1,0 +1,18 @@
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClient
+metadata:
+  name: argocd-client
+spec:
+  clientId: argocd
+  directAccess: true
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  secret: '$argocd-oauth2-client-secret:client-secret'
+  serviceAccount:
+    enabled: true
+  webUrl: 'https://argocd.{{ .Values.global.domain }}/'
+  redirectUris:
+    - 'https://argocd.{{ .Values.global.domain }}/*'
+  attributes:
+    "post.logout.redirect.uris": "https://argocd.{{ .Values.global.domain }}/*"
