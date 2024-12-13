@@ -17,12 +17,16 @@ spec:
   redirectUris:
     - 'https://argocd.{{ .Values.global.domain }}/auth/callback'
     - 'https://argocd.{{ .Values.global.domain }}/logout'
+    - 'https://argocd.{{ .Values.global.domain }}/*'
   webOrigins:
     - 'https://argocd.{{ .Values.global.domain }}'
   attributes:
     "post.logout.redirect.uris": "https://argocd.{{ .Values.global.domain }}/*"
     "backchannel.logout.url": "https://argocd.{{ .Values.global.domain }}/auth/callback"
     "backchannel.logout.session.required": "true"
+    "frontchannel.logout.url": "https://argocd.{{ .Values.global.domain }}/logout"
+    "frontchannel.logout.session.required": "true"
+    "logout.redirect.uris": "https://argocd.{{ .Values.global.domain }}/*"
   optionalClientScopes:
     - 'groups'
   protocolMappers:
