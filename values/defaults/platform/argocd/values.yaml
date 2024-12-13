@@ -8,6 +8,10 @@ configs:
       clientID: argocd
       clientSecret: $oidc.keycloak.clientSecret #FIXME: keycloak user doesn't see applications
       requestedScopes: ["openid", "profile", "email", "groups"] #FIXME: logout doesn't work
+      requestedIDTokenClaims:
+        groups:
+          essential: true
+      groupsAttributePath: groups
     resource.customizations: |
       argoproj.io/Application:
         health.lua: |
