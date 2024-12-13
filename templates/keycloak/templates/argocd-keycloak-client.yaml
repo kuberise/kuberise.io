@@ -28,10 +28,10 @@ spec:
       protocolMapper: oidc-group-membership-mapper
       config:
         claim.name: groups
-        full.path: true
-        id.token.claim: true
-        access.token.claim: true
-        userinfo.token.claim: true
+        full.path: "true"
+        id.token.claim: "true"
+        access.token.claim: "true"
+        userinfo.token.claim: "true"
 ---
 apiVersion: v1.edp.epam.com/v1
 kind: KeycloakClientScope
