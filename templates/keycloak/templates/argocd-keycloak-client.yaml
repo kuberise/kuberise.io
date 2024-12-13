@@ -16,8 +16,7 @@ spec:
   webUrl: 'https://argocd.{{ .Values.global.domain }}/'
   redirectUris:
     - 'https://argocd.{{ .Values.global.domain }}/auth/callback'
-    - 'https://argocd.{{ .Values.global.domain }}/logout'
-    - 'https://argocd.{{ .Values.global.domain }}/*'
+    - 'https://argocd.{{ .Values.global.domain }}'
   webOrigins:
     - 'https://argocd.{{ .Values.global.domain }}'
   attributes:

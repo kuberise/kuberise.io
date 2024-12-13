@@ -12,6 +12,7 @@ configs:
         groups:
           essential: true
       groupsAttributePath: groups
+      logoutURL: https://keycloak.{{ .Values.global.domain }}/auth/realms/platform/protocol/openid-connect/logout?id_token_hint={{token}}&post_logout_redirect_uri={{logoutRedirectURL}}
     resource.customizations: |
       argoproj.io/Application:
         health.lua: |
