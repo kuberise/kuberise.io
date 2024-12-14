@@ -27,11 +27,11 @@ data:
       rewrite name regex (.*)\.onprem\.kuberise\.dev ingress-nginx-external-controller.ingress-nginx-external.svc.cluster.local
 
       # Registry rewrites
-      rewrite name exact ghcr.io registry:5000
-      rewrite name exact docker.io registry:5000
-      rewrite name exact quay.io registry:5000
-      rewrite name exact registry.k8s.io registry:5000
-      rewrite name exact public.ecr.aws registry:5000
+      rewrite stop name regex (.+\.)?ghcr\.io$ registry:5000
+      rewrite stop name regex (.+\.)?docker\.io$ registry:5000
+      rewrite stop name regex (.+\.)?quay\.io$ registry:5000
+      rewrite stop name regex (.+\.)?registry\.k8s\.io$ registry:5000
+      rewrite stop name regex (.+\.)?public\.ecr\.aws$ registry:5000
 
       forward . /etc/resolv.conf {
          max_concurrent 1000
