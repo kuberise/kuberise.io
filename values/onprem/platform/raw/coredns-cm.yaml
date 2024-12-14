@@ -5,39 +5,39 @@ metadata:
   namespace: kube-system
 data:
   Corefile: |
-    .:53 {
-        log
-        errors
-        health {
-           lameduck 5s
-        }
-        ready
-        kubernetes cluster.local in-addr.arpa ip6.arpa {
-           pods insecure
-           fallthrough in-addr.arpa ip6.arpa
-           ttl 30
-        }
-        prometheus :9153
-        hosts {
-           0.250.250.254 host.minikube.internal
-           fallthrough
-        }
-        rewrite name kuberise.internal ingress-nginx-internal-controller.ingress-nginx-internal.svc.cluster.local
-        rewrite name keycloak.kuberise.internal keycloak-http.keycloak.svc.cluster.local
-        rewrite name regex (.*)\.onprem\.kuberise\.dev ingress-nginx-external-controller.ingress-nginx-external.svc.cluster.local
+   .:53 {
+      log
+      errors
+      health {
+         lameduck 5s
+      }
+      ready
+      kubernetes cluster.local in-addr.arpa ip6.arpa {
+         pods insecure
+         fallthrough in-addr.arpa ip6.arpa
+         ttl 30
+      }
+      prometheus :9153
+      hosts {
+         0.250.250.254 host.minikube.internal
+         fallthrough
+      }
+      rewrite name kuberise.internal ingress-nginx-internal-controller.ingress-nginx-internal.svc.cluster.local
+      rewrite name keycloak.kuberise.internal keycloak-http.keycloak.svc.cluster.local
+      rewrite name regex (.*)\.onprem\.kuberise\.dev ingress-nginx-external-controller.ingress-nginx-external.svc.cluster.local
 
-        # Registry rewrites
-        rewrite name regex (.*)\.ghcr\.io registry:5000 answer auto
-        rewrite name regex (.*)\.docker\.io registry:5000 answer auto
-        rewrite name regex (.*)\.quay\.io registry:5000 answer auto
-        rewrite name regex (.*)\.registry\.k8s\.io registry:5000 answer auto
-        rewrite name regex (.*)\.public\.ecr\.aws registry:5000 answer auto
+      # Registry rewrites
+      rewrite name exact ghcr.io registry:5000
+      rewrite name exact docker.io registry:5000
+      rewrite name exact quay.io registry:5000
+      rewrite name exact registry.k8s.io registry:5000
+      rewrite name exact public.ecr.aws registry:5000
 
-        forward . /etc/resolv.conf {
-           max_concurrent 1000
-        }
-        cache 30
-        loop
-        reload
-        loadbalance
+      forward . /etc/resolv.conf {
+         max_concurrent 1000
+      }
+      cache 30
+      loop
+      reload
+      loadbalance
     }

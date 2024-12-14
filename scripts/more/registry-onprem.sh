@@ -27,6 +27,8 @@ openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
 
 minikube start --ports=80:30080,443:30443 --cpus=max --memory=max --network=$NETWORK
 minikube cp certs/registry.crt /etc/docker/certs.d/registry:5000/ca.crt
+# minikube cp ~/.registry/certs/registry.crt /etc/docker/certs.d/registry:5000/ca.crt
+
 
 docker run -d \
   --name registry \
@@ -54,3 +56,11 @@ docker start registry
 # For example, for kube-prometheus-stack:
 # helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
 #   --set global.imageRegistry=registry:5000
+
+# trust the certificate of the registry in host docker desktop
+mkdir -p ~/.docker/certs.d/localhost:5001
+cp certs/registry.crt ~/.docker/certs.d/localhost:5001/ca.crt
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/registry.crt
+
+# Show the list of current repositories in local registry
+curl -sS https://localhost:5001/v2/_catalog | yq -P
