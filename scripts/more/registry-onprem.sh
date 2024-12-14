@@ -49,3 +49,8 @@ minikube ssh -- docker pull registry:5000/api:v1 # test
 # stop start test
 docker stop registry
 docker start registry
+
+# Modify your helm values to use the local registry address
+# For example, for kube-prometheus-stack:
+# helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+#   --set global.imageRegistry=registry:5000

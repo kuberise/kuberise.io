@@ -26,6 +26,13 @@ data:
         rewrite name keycloak.kuberise.internal keycloak-http.keycloak.svc.cluster.local
         rewrite name regex (.*)\.onprem\.kuberise\.dev ingress-nginx-external-controller.ingress-nginx-external.svc.cluster.local
 
+        # Registry rewrites
+        rewrite name regex (.*)\.ghcr\.io registry:5000 answer auto
+        rewrite name regex (.*)\.docker\.io registry:5000 answer auto
+        rewrite name regex (.*)\.quay\.io registry:5000 answer auto
+        rewrite name regex (.*)\.registry\.k8s\.io registry:5000 answer auto
+        rewrite name regex (.*)\.public\.ecr\.aws registry:5000 answer auto
+
         forward . /etc/resolv.conf {
            max_concurrent 1000
         }
