@@ -1,3 +1,0 @@
-global:
-  image:
-    repository: registry:5000/argoproj/argocd
