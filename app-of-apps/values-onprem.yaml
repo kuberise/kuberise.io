@@ -9,11 +9,9 @@ ArgocdApplications:
 
   cnpg-database:
     enabled: true
-    path: values/onprem/platform/database/
 
   raw:
     enabled: true
-    path: values/onprem/platform/raw
 
   dashboards:
     enabled: true

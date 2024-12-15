@@ -3,6 +3,7 @@ ArgocdApplications:
   cnpg-database:
     enabled: false
     namespace: cloudnative-pg
+    path: platform/database/
     type: raw
 
   cloudnative-pg:

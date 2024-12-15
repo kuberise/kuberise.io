@@ -2,11 +2,9 @@ kustomize:
 
   cnpg-database:
     enabled: false
-    path: values/aks/platform/database/
 
   raw:
     enabled: false
-    path: values/aks/platform/raw
 
   dashboards:
     enabled: true

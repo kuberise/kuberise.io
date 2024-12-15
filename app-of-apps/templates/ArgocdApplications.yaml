@@ -51,7 +51,7 @@ spec:
     ref: valuesRepo
   {{- else }} # If the type is not helm, (it is kustomize or raw)
     {{- if hasKey . "path"}}
-    path: {{ .path }}
+    path: values/{{ $.Values.global.platformName }}/{{ .path }}
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
