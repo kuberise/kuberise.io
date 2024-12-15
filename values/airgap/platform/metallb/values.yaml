@@ -1,8 +1,9 @@
-controller:
-  image:
-    repository: registry:5000/metallb/controller
-
-speaker:
-  frr:
+metallb:
+  controller:
     image:
-      repository: registry:5000/frrouting/frr
+      repository: registry:5000/metallb/controller
+
+  speaker:
+    frr:
+      image:
+        repository: registry:5000/frrouting/frr
