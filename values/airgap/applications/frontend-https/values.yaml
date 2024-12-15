@@ -1,5 +1,5 @@
 image:
-  repository: registry:5000/nginx
+  repository: registry:5000/library/nginx
   tag: alpine
 
 useHttps: true

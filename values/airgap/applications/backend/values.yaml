@@ -21,4 +21,4 @@ ingress:
   tls: []
 
 image:
-  repository: registry:5000/nginx
+  repository: registry:5000/library/nginx
