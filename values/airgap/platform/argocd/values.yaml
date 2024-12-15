@@ -1,3 +1,9 @@
 global:
   image:
     repository: registry:5000/argoproj/argocd
+dex:
+  image:
+    repository: registry:5000/dexidp/dex
+redis:
+  image:
+    repository: registry:5000/redis/redis-stack-server

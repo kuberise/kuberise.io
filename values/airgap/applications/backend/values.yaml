@@ -19,3 +19,6 @@ ingress:
         - path: /backend
           pathType: Prefix
   tls: []
+
+image:
+  repository: registry:5000/nginx

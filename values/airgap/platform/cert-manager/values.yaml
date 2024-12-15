@@ -7,3 +7,19 @@ letsEncrypt:
 
 image:
   repository: registry:5000/jetstack/cert-manager-controller
+
+webhook:
+  image:
+    repository: registry:5000/jetstack/cert-manager-webhook
+
+cainjector:
+  image:
+    repository: registry:5000/jetstack/cert-manager-cainjector
+
+acmesolver:
+  image:
+    repository: registry:5000/jetstack/cert-manager-acmesolver
+
+startupapicheck:
+  image:
+    repository: registry:5000/jetstack/cert-manager-startupapicheck
