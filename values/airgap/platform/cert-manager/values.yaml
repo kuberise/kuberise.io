@@ -5,21 +5,22 @@ letsEncrypt:
   server: production
   challenge: dns01
 
-image:
-  repository: registry:5000/jetstack/cert-manager-controller
-
-webhook:
+cert-manager:
   image:
-    repository: registry:5000/jetstack/cert-manager-webhook
+    repository: registry:5000/jetstack/cert-manager-controller
 
-cainjector:
-  image:
-    repository: registry:5000/jetstack/cert-manager-cainjector
+  webhook:
+    image:
+      repository: registry:5000/jetstack/cert-manager-webhook
 
-acmesolver:
-  image:
-    repository: registry:5000/jetstack/cert-manager-acmesolver
+  cainjector:
+    image:
+      repository: registry:5000/jetstack/cert-manager-cainjector
 
-startupapicheck:
-  image:
-    repository: registry:5000/jetstack/cert-manager-startupapicheck
+  acmesolver:
+    image:
+      repository: registry:5000/jetstack/cert-manager-acmesolver
+
+  startupapicheck:
+    image:
+      repository: registry:5000/jetstack/cert-manager-startupapicheck

@@ -6,4 +6,4 @@ dex:
     repository: registry:5000/dexidp/dex
 redis:
   image:
-    repository: registry:5000/redis/redis-stack-server
+    repository: registry:5000/docker/library/redis
