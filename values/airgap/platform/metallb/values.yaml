@@ -1,0 +1,3 @@
+controller:
+  image:
+    repository: registry:5000/metallb/controller

@@ -1,0 +1,3 @@
+image:
+  registry: registry:5000
+  repository: dpage/pgadmin4
