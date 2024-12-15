@@ -19,7 +19,7 @@ policy: sync
 ## @param txtOwnerId A name that identifies this instance of ExternalDNS. Currently used by registry types: txt & aws-sd (optional)
 ## But other registry types might be added in the future.
 ##
-txtOwnerId: "onprem-externaldns"
+txtOwnerId: "airgap-externaldns"
 
 ## @param domainFilters Limit possible target zones by domain suffixes (optional)
 ##

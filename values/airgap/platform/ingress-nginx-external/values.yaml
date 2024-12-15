@@ -11,7 +11,7 @@ controller:
   service:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.global.domain }}"
-      external-dns.alpha.kubernetes.io/owner: "onprem-externaldns"
+      external-dns.alpha.kubernetes.io/owner: "airgap-externaldns"
     nodePorts: # This is the port that will be used to access the service from outside the cluster. We map this port from minikube or kind container to 80 and 443 on the host machine.
       http: 30080
       https: 30443
@@ -19,7 +19,7 @@ controller:
   extraArgs:
     default-ssl-certificate: cert-manager/ssl-certificate-selfsigned
 
-  terminationGracePeriodSeconds: 5 # only for dev environment and local/onprem
+  terminationGracePeriodSeconds: 5 # only for dev environment and local/onprem/airgap
 
   image:
     registry: registry:5000
