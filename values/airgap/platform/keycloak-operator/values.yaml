@@ -1,0 +1,2 @@
+image:
+  repository: registry:5000/epamedp/keycloak-operator
