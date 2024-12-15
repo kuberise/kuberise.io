@@ -2,6 +2,6 @@ fullnameOverride: show-env
 
 image:
   repository: ghcr.io/kuberise/show-env
-  tag: main
+  tag: latest
 
 replicaCount: 1

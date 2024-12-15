@@ -1,6 +1,6 @@
 image:
   repository: registry:5000/kuberise/show-env
-  tag: main
+  tag: latest
 
 replicaCount: 1
 
