@@ -12,8 +12,8 @@ declare -a images=(
     "quay.io/prometheus/prometheus:v2.55.0"
     "quay.io/prometheus-operator/prometheus-config-reloader:v0.77.2"
     "quay.io/prometheus-operator/prometheus-operator:v0.77.2"
-    "registry.k8s.io/ingress-nginx/controller"
-    "registry.k8s.io/ingress-nginx/kube-webhook-certgen"
+    "registry.k8s.io/ingress-nginx/controller:v1.12.0-beta.0"
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6"
     "quay.io/kiwigrid/k8s-sidecar:1.28.0"
     "registry.k8s.io/metrics-server/metrics-server:v0.7.2"
     "docker.io/grafana/loki:2.9.10"
@@ -103,3 +103,9 @@ if [ ${#failed_images[@]} -gt 0 ]; then
     echo "Failed images:"
     printf '%s\n' "${failed_images[@]}"
 fi
+
+
+# Remove old registry image if it exists
+docker rmi registry-with-images:latest || true
+# Commit the registry container with its contents to a new image
+docker commit registry registry-with-images:latest
