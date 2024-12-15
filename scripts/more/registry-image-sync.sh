@@ -2,6 +2,7 @@
 
 # Array of images
 declare -a images=(
+    "public.ecr.aws/docker/library/redis:7.2.4-alpine"
     "ghcr.io/kuberise/show-env"
     "docker.io/library/nginx:alpine"
     "docker.io/dpage/pgadmin4:8.13"
