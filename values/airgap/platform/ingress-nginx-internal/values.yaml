@@ -11,3 +11,5 @@ controller:
     registry: registry:5000
     image: ingress-nginx/controller
     tag: "v1.9.6"
+    digest: ""
+    digestChroot: ""
