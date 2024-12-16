@@ -26,7 +26,9 @@ keycloakx:
     tls:
       - hosts:
           - keycloak.{{ .Values.global.domain }}
-
+        paths:
+          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+            pathType: Prefix
   metrics:
     enabled: true
 
