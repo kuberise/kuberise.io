@@ -42,3 +42,7 @@ logLevel: info
 image:
   registry: registry:5000
   repository: bitnami/external-dns
+
+global:
+  security:
+    allowInsecureImages: true

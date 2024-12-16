@@ -62,9 +62,6 @@ ArgocdApplications:
   backstage:
     enabled: true
 
-  sealed-secrets:
-    enabled: false
-
   ingresses:
     enabled: true
 
