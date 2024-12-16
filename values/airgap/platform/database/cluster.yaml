@@ -1,8 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: cnpg-database
-  namespace: cloudnative-pg
+  name: database
 spec:
   instances: 1
   imageName: registry:5000/cloudnative-pg/postgresql:16.1
@@ -12,7 +11,7 @@ spec:
       database: app
       owner: application
       secret:
-        name: cnpg-database-app
+        name: database-app
 
   storage:
     size: 2Gi
@@ -22,7 +21,7 @@ spec:
 
   enableSuperuserAccess: true
   superuserSecret:
-    name: cnpg-database-superuser
+    name: database-superuser
 
   managed:
     roles:

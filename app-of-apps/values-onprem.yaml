@@ -7,7 +7,7 @@ ArgocdApplications:
   keycloak-operator:
     enabled: true
 
-  cnpg-database:
+  database:
     enabled: true
 
   raw:
@@ -50,7 +50,7 @@ ArgocdApplications:
   promtail:
     enabled: true
 
-  cloudnative-pg:
+  postgres-operator:
     enabled: true
 
   pgadmin:

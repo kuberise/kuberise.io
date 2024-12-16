@@ -1,6 +1,6 @@
 kustomize:
 
-  cnpg-database:
+  database:
     enabled: false
 
   raw:
@@ -44,7 +44,7 @@ helm:
   promtail:
     enabled: false
 
-  cloudnative-pg:
+  postgres-operator:
     enabled: false
 
   pgadmin:
