@@ -1,8 +1,168 @@
-# This file contains the list of all developer applications
+# some of the values will be filled by install.sh script
+global:
+  platformName: x
+  domain: x
 
+  automated: true
+  spec:
+    destination:
+      server: https://kubernetes.default.svc
+    source:
+      repoURL: x
+      targetRevision: x
+    values:
+      repoURL: x
+      targetRevision: x
 
 # There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
 ArgocdApplications:
+  hello:
+    enabled: false
+    type: kustomize
+
+  raw:
+    enabled: false
+    path: platform/raw
+    type: raw
+
+
+  argocd-image-updater:
+    enabled: false
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 0.11.1
+    chart: argocd-image-updater
+    namespace: argocd
+
+  teams-namespaces:
+    enabled: false
+    namespace: default
+
+  backstage:
+    enabled: false
+    # syncWave: 1
+
+  actions-runner-controller:
+    enabled: false
+    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    namespace: actions-runner-system
+    targetRevision: 0.22.0
+    chart: actions-runner-controller
+    syncWave: 0
+
+  actions-runner:
+    enabled: false
+    repoURL: https://github.com/kuberise/kuberise.git
+    namespace: actions-runner-system
+    syncWave: 1
+
+  gitea:
+    enabled: false
+    repoURL: https://dl.gitea.io/charts
+    namespace: gitea
+    targetRevision: 10.1.4
+    chart: gitea
+
+  database:
+    enabled: false
+    namespace: postgres
+    path: platform/database/
+    type: raw
+
+  postgres-operator:
+    enabled: false
+    repoURL: https://cloudnative-pg.github.io/charts
+    namespace: postgres
+    targetRevision: 0.20.1
+    chart: cloudnative-pg
+
+  pgadmin:
+    enabled: false
+
+  metallb:
+    enabled: false
+
+  internal-dns:
+    enabled: false
+    repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 8.7.0
+    chart: external-dns
+
+  external-dns:
+    enabled: false
+    repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 8.7.0
+    chart: external-dns
+
+  ingress-nginx-external:
+    enabled: false
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.3
+    chart: ingress-nginx
+
+  ingress-nginx-internal:
+    enabled: false
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.11.3
+    chart: ingress-nginx
+
+  ingresses:
+    enabled: false
+
+  keycloak:
+    enabled: false
+
+  keycloak-operator:
+    enabled: false
+    repoURL: https://epam.github.io/edp-helm-charts/stable
+    targetRevision: 1.23.0
+    chart: keycloak-operator
+    namespace: keycloak
+
+  cert-manager:
+    enabled: false
+    namespace: cert-manager
+
+  vault:
+    enabled: false
+    repoURL: https://helm.releases.hashicorp.com
+    namespace: vault
+    targetRevision: 0.28.0
+    chart: vault
+
+  dashboards:
+    enabled: false
+    namespace: monitoring
+    type: kustomize
+
+  metrics-server:
+    enabled: false
+    repoURL: https://kubernetes-sigs.github.io/metrics-server
+    targetRevision: 3.12.2
+    chart: metrics-server
+
+  kube-prometheus-stack:
+    enabled: false
+    repoURL: https://prometheus-community.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 65.8.1
+    chart: kube-prometheus-stack
+
+  loki:
+    enabled: false
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 0.79.4
+    chart: loki-distributed
+
+  promtail:
+    enabled: false
+    repoURL: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    targetRevision: 6.16.6
+    chart: promtail
+
+
+
   # Microservice examples
 
   # http container example with external traffic
