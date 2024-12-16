@@ -23,12 +23,12 @@ keycloakx:
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     rules:
       - host: keycloak.{{ .Values.global.domain }}
-    tls:
-      - hosts:
-          - keycloak.{{ .Values.global.domain }}
         paths:
           - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
             pathType: Prefix
+    tls:
+      - hosts:
+          - keycloak.{{ .Values.global.domain }}
   metrics:
     enabled: true
 
