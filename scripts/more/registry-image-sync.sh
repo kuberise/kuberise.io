@@ -2,6 +2,15 @@
 
 # Array of images
 declare -a images=(
+    "registry.k8s.io/etcd:3.5.15-0"
+    "registry.k8s.io/pause:3.10"
+    "registry.k8s.io/kube-controller-manager:v1.31.0"
+    "registry.k8s.io/coredns/coredns:v1.11.1"
+    "registry.k8s.io/kube-scheduler:v1.31.0"
+    "gcr.io/k8s-minikube/storage-provisioner:v5"
+    "registry.k8s.io/kube-apiserver:v1.31.0"
+    "registry.k8s.io/kube-proxy:v1.31.0"
+    "gcr.io/k8s-minikube/kicbase:v0.0.45"
     "public.ecr.aws/docker/library/redis:7.2.4-alpine"
     "ghcr.io/kuberise/show-env"
     "docker.io/library/nginx:alpine"
