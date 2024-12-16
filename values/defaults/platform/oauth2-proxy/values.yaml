@@ -1,0 +1,30 @@
+config:
+  clientID: prometheus
+  clientSecret: ${OAUTH2_PROXY_CLIENT_SECRET}
+  cookieSecret: ${OAUTH2_PROXY_COOKIE_SECRET}
+
+extraArgs:
+  provider: keycloak-oidc
+  oidc-issuer-url: https://keycloak.{{ .Values.global.domain }}/realms/platform
+  redirect-url: https://prometheus.{{ .Values.global.domain }}/oauth2/callback
+  upstream: http://kube-prometheus-stack-prometheus:9090
+  email-domain: "*"
+  cookie-domain: .{{ .Values.global.domain }}
+  whitelist-domain: .{{ .Values.global.domain }}
+  pass-authorization-header: true
+  pass-access-token: true
+  pass-user-headers: true
+  set-authorization-header: true
+  set-xauthrequest: true
+
+ingress:
+  enabled: true
+  className: nginx-external
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - prometheus.{{ .Values.global.domain }}
+  tls:
+    - secretName: prometheus-tls
+      hosts:
+        - prometheus.{{ .Values.global.domain }}

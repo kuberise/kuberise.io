@@ -59,10 +59,10 @@ grafana:
     enabled: true
     ingressClassName: nginx-external
     hosts:
-      - prometheus.{{ .Values.global.domain }}
+      - grafana.{{ .Values.global.domain }}
     tls:
     - hosts:
-      - prometheus.{{ .Values.global.domain }}
+      - grafana.{{ .Values.global.domain }}
 
 prometheus:
   prometheusSpec:
