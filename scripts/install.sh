@@ -264,7 +264,7 @@ fi
 
 # Namespace Definitions
 NAMESPACE_ARGOCD="argocd"
-NAMESPACE_CNPG="cloudnative-pg"
+NAMESPACE_CNPG="postgres"
 NAMESPACE_KEYCLOAK="keycloak"
 NAMESPACE_BACKSTAGE="backstage"
 NAMESPACE_MONITORING="monitoring"

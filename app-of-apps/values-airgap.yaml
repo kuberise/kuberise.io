@@ -60,7 +60,7 @@ ArgocdApplications:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   sealed-secrets:
     enabled: false
