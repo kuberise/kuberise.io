@@ -1,0 +1,14 @@
+configs:
+  cm:
+    timeout.reconciliation: 5s
+    url: https://argocd.gke.kuberise.dev
+    oidc.config: |
+      name: Keycloak
+      issuer: https://keycloak.gke.kuberise.dev/realms/platform
+      clientID: argocd
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+      requestedIDTokenClaims:
+        groups:
+          essential: true
+      groupsAttributePath: groups

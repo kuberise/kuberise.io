@@ -21,3 +21,5 @@ spec:
   passwordSecret:
     name: admin-secret
     key: KEYCLOAK_ADMIN_PASSWORD
+  groups:
+    - ArgoCDAdmins

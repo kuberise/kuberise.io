@@ -1,3 +1,4 @@
-image:
-  registry: registry:5000
-  repository: dpage/pgadmin4
+pgadmin4:
+  image:
+    registry: registry:5000
+    repository: dpage/pgadmin4

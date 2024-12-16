@@ -57,3 +57,12 @@ server:
     enabled: true
     serviceMonitor:
       enabled: true
+
+  volumes:
+    - name: ca-cert
+      configMap:
+        name: ca-bundle
+  volumeMounts:
+    - name: ca-cert
+      mountPath: /etc/ssl/certs/ca-certificates.crt
+      subPath: ca.crt

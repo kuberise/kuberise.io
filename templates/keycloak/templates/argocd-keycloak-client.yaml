@@ -1,0 +1,58 @@
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClient
+metadata:
+  name: argocd-client
+spec:
+  clientId: argocd
+  directAccess: true
+  implicitFlowEnabled: false
+  authorizationServicesEnabled: false
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  secret: '$keycloak-argocd-oauth2-client-secret:client-secret'
+  serviceAccount:
+    enabled: true
+  webUrl: 'https://argocd.{{ .Values.global.domain }}/'
+  redirectUris:
+    - 'https://argocd.{{ .Values.global.domain }}/auth/callback'
+  webOrigins:
+    - 'https://argocd.{{ .Values.global.domain }}'
+  attributes:
+    "post.logout.redirect.uris": "https://argocd.{{ .Values.global.domain }}/*"
+  optionalClientScopes:
+    - 'groups'
+  protocolMappers:
+    - name: groups
+      protocol: openid-connect
+      protocolMapper: oidc-group-membership-mapper
+      config:
+        claim.name: groups
+        full.path: "true"
+        id.token.claim: "true"
+        access.token.claim: "true"
+        userinfo.token.claim: "true"
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClientScope
+metadata:
+  name: argocd-groups
+spec:
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  default: true
+  description: 'ArgoCD groups client scope'
+  name: 'groups'
+  protocol: 'openid-connect'
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmGroup
+metadata:
+  name: argocd-admins
+spec:
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  name: ArgoCDAdmins
+  path: /ArgoCDAdmins

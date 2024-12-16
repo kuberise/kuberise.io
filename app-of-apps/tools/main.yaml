@@ -22,7 +22,9 @@ ArgocdApplications:
 
   raw:
     enabled: false
+    path: platform/raw
     type: raw
+
 
   argocd-image-updater:
     enabled: false

@@ -6,4 +6,19 @@ dex:
     repository: registry:5000/dexidp/dex
 redis:
   image:
-    repository: registry:5000/redis/redis-stack-server
+    repository: registry:5000/docker/library/redis
+
+configs:
+  cm:
+    timeout.reconciliation: 5s
+    url: https://argocd.airgap.kuberise.dev
+    oidc.config: |
+      name: Keycloak
+      issuer: https://keycloak.airgap.kuberise.dev/realms/platform
+      clientID: argocd
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+      requestedIDTokenClaims:
+        groups:
+          essential: true
+      groupsAttributePath: groups

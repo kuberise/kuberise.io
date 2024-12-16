@@ -48,7 +48,7 @@ grafana:
   extraVolumes:
     - name: ca-certificates
       configMap:
-        name: external-selfsigned-ca-certificate
+        name: ca-bundle
 
   extraVolumeMounts:
     - name: ca-certificates
