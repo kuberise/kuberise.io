@@ -19,35 +19,35 @@ config:
   # OAuth client ID
   clientID: "oauth2-proxy"
   # OAuth client secret
-  # clientSecret: "XXXXXXXX"
+  clientSecret: "YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
   # Create a new secret with the following command
   # openssl rand -base64 32 | head -c 32 | base64
   # Use an existing secret for OAuth2 credentials (see secret.yaml for required fields)
   # Example:
   existingSecret: oauth2-proxy-client-secret
-  # cookieSecret: "XXXXXXXXXXXXXXXX"
+  cookieSecret: "YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
   # The name of the cookie that oauth2-proxy will create
   # If left empty, it will default to the release name
   cookieName: "oauth2-proxy-cookie"
 
-  # configFile: |-
-  #   cookie_domains=".{{ .Values.global.domain }}"
-  #   whitelist_domains=[".{{ .Values.global.domain }}"]
-  #   # only users with this domain will be let in
-  #   email_domains=["*"]
+  configFile: |-
+    cookie_domains=".{{ .Values.global.domain }}"
+    whitelist_domains=[".{{ .Values.global.domain }}"]
+    # only users with this domain will be let in
+    email_domains="*"
 
-  #   # client_id="oauth2-proxy"
-  #   # client_secret="xxxx"
-  #   cookie_secure="false"
+    client_id="oauth2-proxy"
+    # client_secret="xxxx"
+    cookie_secure="false"
 
-  #   redirect_url="https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/callback"
+    redirect_url="https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/callback"
 
-  #   # we don't want to proxy anything so pick a non-existent directory
-  #   upstreams = [ "file:///dev/null" ]
+    # we don't want to proxy anything so pick a non-existent directory
+    upstreams = [ "file:///dev/null" ]
 
-  #   # return authenticated user to nginx
-  #   set_xauthrequest = true
-  #   # using http://dex.localtest.me/.well-known/openid-configuration oauth2-proxy will populate
-  #   # login_url, redeem_url, and oidc_jwks_url
-  #   provider="oidc"
-  #   oidc_issuer_url="https://keycloak.{{ .Values.global.domain }}/realms/platform"
+    # return authenticated user to nginx
+    set_xauthrequest = true
+    # using http://dex.localtest.me/.well-known/openid-configuration oauth2-proxy will populate
+    # login_url, redeem_url, and oidc_jwks_url
+    provider="oidc"
+    oidc_issuer_url="https://keycloak.{{ .Values.global.domain }}/realms/platform"
