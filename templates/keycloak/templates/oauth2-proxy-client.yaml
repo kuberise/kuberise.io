@@ -1,21 +1,21 @@
-apiVersion: k8s.keycloak.org/v2alpha1
-kind: KeycloakClient
-metadata:
-  name: prometheus
-  namespace: keycloak
-spec:
-  realmSelector:
-    matchLabels:
-      realm: platform
-  client:
-    clientId: prometheus
-    clientSecret: ${OAUTH2_PROXY_CLIENT_SECRET}
-    protocol: openid-connect
-    standardFlowEnabled: true
-    redirectUris:
-      - https://prometheus.{{ .Values.global.domain }}/oauth2/callback
-    webOrigins:
-      - https://prometheus.{{ .Values.global.domain }}
-    defaultClientScopes:
-      - profile
-      - email
+# apiVersion: k8s.keycloak.org/v2alpha1
+# kind: KeycloakClient
+# metadata:
+#   name: prometheus
+#   namespace: keycloak
+# spec:
+#   realmSelector:
+#     matchLabels:
+#       realm: platform
+#   client:
+#     clientId: prometheus
+#     clientSecret: ${OAUTH2_PROXY_CLIENT_SECRET}
+#     protocol: openid-connect
+#     standardFlowEnabled: true
+#     redirectUris:
+#       - https://prometheus.{{ .Values.global.domain }}/oauth2/callback
+#     webOrigins:
+#       - https://prometheus.{{ .Values.global.domain }}
+#     defaultClientScopes:
+#       - profile
+#       - email
