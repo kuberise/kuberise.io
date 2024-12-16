@@ -15,7 +15,7 @@ declare -a images=(
     "ghcr.io/kuberise/show-env"
     "docker.io/library/nginx:alpine"
     "docker.io/dpage/pgadmin4:8.13"
-    "docker.io/bitnami/external-dns:0.15.0-debian-12-r4"
+    "docker.io/bitnami/external-dns:0.15.0-debian-12-r6"
     "docker.io/epamedp/keycloak-operator:1.23.0"
     "quay.io/argoprojlabs/argocd-image-updater:v0.15.0"
     "docker.io/grafana/grafana:11.3.0"
