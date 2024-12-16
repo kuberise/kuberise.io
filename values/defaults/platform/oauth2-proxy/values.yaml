@@ -37,8 +37,9 @@ config:
     email_domains="*"
 
     client_id="oauth2-proxy"
-    # client_secret="xxxx"
     cookie_secure="false"
+    client_secret="YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+    cookie_secret="YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
 
     redirect_url="https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/callback"
 
