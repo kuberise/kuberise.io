@@ -1,7 +1,7 @@
 helm:
   parameters:
   - name: global.domain
-    value: onprem.kuberise.dev
+    value: airgap.kuberise.dev
     forcestring: false
   - name: image.name
     value: ghcr.io/kuberise/show-env
