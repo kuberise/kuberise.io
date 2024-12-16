@@ -10,11 +10,16 @@ pgadmin4:
       subPath: ca.crt
       configMap: external-selfsigned-ca-certificate
       readOnly: true
+    - name: letsencrypt-ca
+      mountPath: /etc/ssl/certs/letsencrypt-ca.crt
+      subPath: ca.crt
+      configMap: letsencrypt-ca-certificate
+      readOnly: true
   envVarsExtra:
     - name: REQUESTS_CA_BUNDLE
-      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
+      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt:/etc/ssl/certs/letsencrypt-ca.crt
     - name: SSL_CERT_FILE
-      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt
+      value: /etc/ssl/certs/external-selfsigned-ca-certificate.crt:/etc/ssl/certs/letsencrypt-ca.crt
     - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
