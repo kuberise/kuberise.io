@@ -2,14 +2,12 @@ services:
   - name: argocd-server
     namespace: argocd
     subdomain: argocd
-  - name: keycloak
-    serviceName: keycloak-http
-    port: 8443
-    annotations:
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-  # - name: pgadmin
-  #   serviceName: pgadmin-pgadmin4
+  # - name: keycloak
+  #   serviceName: keycloak-http
+  #   port: 8443
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  #     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   # - name: gitea
   #   port: 3000
   #   serviceName: gitea-http
