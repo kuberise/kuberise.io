@@ -39,8 +39,7 @@ function label_secret() {
   kubectl label secret "$secret_name" "$label" --context "$context" -n "$namespace"
 }
 
-generate_ca_cert_and_key() {
-
+function generate_ca_cert_and_key() {
   local context=$1
   local platform_name=$2
 
@@ -54,6 +53,7 @@ generate_ca_cert_and_key() {
   DIR=".env/$platform_name"
   CERT="$DIR/ca.crt"
   KEY="$DIR/ca.key"
+  CA_BUNDLE="$DIR/ca-bundle.crt"
 
   # Check if both the certificate and key files exist
   if [ ! -f "$CERT" ] || [ ! -f "$KEY" ]; then
@@ -71,6 +71,12 @@ generate_ca_cert_and_key() {
     echo "CA certificate and key already exist."
   fi
 
+  # Download Let's Encrypt root certificate and create CA bundle
+  echo "Creating CA bundle with self-signed and Let's Encrypt certificates..."
+  curl -sL https://letsencrypt.org/certs/isrgrootx1.pem > "$DIR/letsencrypt.crt"
+  cat "$CERT" "$DIR/letsencrypt.crt" > "$CA_BUNDLE"
+  rm "$DIR/letsencrypt.crt"  # Clean up temporary file
+
   # Create a secret in the cert-manager namespace with the CA certificate
   kubectl create secret tls ca-key-pair-external \
     --cert="$CERT" \
@@ -81,16 +87,16 @@ generate_ca_cert_and_key() {
   # List of namespaces to create self-signed CA certificate ConfigMap
   namespaces=("pgadmin" "monitoring" "argocd" "keycloak" "backstage" "cloudnative-pg" "cert-manager" "external-dns")
 
-  # Iterate over each namespace and create the configmap
+  # Iterate over each namespace and create the configmap with the CA bundle
   for namespace in "${namespaces[@]}"; do
-    # Create the configmap in the current namespace
-    kubectl create configmap external-selfsigned-ca-certificate \
-      --from-file=ca.crt="$CERT" \
+    # Create the configmap in the current namespace using the CA bundle
+    kubectl create configmap ca-bundle \
+      --from-file=ca.crt="$CA_BUNDLE" \
       --namespace="$namespace" \
       --dry-run=client -o yaml | kubectl apply --namespace="$namespace" --context="$context" -f -
   done
 
-  # echo "Secret with CA certificate and key created in the cert-manager namespace."
+  echo "CA bundle created and ConfigMaps updated in all namespaces."
 }
 
 function install_argocd() {

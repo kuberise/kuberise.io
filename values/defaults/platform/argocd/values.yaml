@@ -61,7 +61,7 @@ server:
   volumes:
     - name: ca-cert
       configMap:
-        name: external-selfsigned-ca-certificate
+        name: ca-bundle
   volumeMounts:
     - name: ca-cert
       mountPath: /etc/ssl/certs/ca-certificates.crt
