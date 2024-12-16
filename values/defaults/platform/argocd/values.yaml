@@ -57,7 +57,8 @@ server:
     enabled: true
     ingressClassName: nginx-external
     servicePort: http
-    hostname: argocd.{{ .Values.global.domain }}
+    hostname: "" # will be set by the install script
+    tls: true
   metrics:
     enabled: true
     serviceMonitor:

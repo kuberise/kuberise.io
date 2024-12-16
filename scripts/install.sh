@@ -115,7 +115,7 @@ function install_argocd() {
     --wait \
     -f values/defaults/platform/argocd/values.yaml \
     -f "$values_file" \
-    --set global.domain=argocd."$domain" \
+    --set server.ingress.hostname=argocd."$domain" \
     --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" \
     --repo https://argoproj.github.io/argo-helm \
     --version 6.9.2 \
