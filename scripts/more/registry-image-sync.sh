@@ -128,3 +128,6 @@ fi
 docker rmi registry-with-images:latest || true
 # Commit the registry container with its contents to a new image
 docker commit registry registry-with-images:latest
+
+# Get all images in the current kubernetes cluster that are not using the local registry
+k get pods --all-namespaces -o=jsonpath='{range .items[*]}{.spec.containers[*].image}{"\n"}{end}' | grep -v registry
