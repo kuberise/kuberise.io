@@ -53,6 +53,11 @@ controller:
       enabled: true
 server:
   insecure: true
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    servicePort: http
+    hostname: argocd.{{ .Values.global.domain }}
   metrics:
     enabled: true
     serviceMonitor:

@@ -63,7 +63,7 @@ ArgocdApplications:
     enabled: true
 
   ingresses:
-    enabled: true
+    enabled: false
 
   vault:
     enabled: false

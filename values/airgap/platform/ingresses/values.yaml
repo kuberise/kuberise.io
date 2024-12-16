@@ -1,7 +1,7 @@
-services:
-  - name: argocd-server
-    namespace: argocd
-    subdomain: argocd
+# services:
+#   - name: argocd-server
+#     namespace: argocd
+#     subdomain: argocd
   # - name: keycloak
   #   serviceName: keycloak-http
   #   port: 8443
