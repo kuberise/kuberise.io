@@ -5,14 +5,14 @@ ArgocdApplications:
 
   internal-dns:
     enabled: false
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 8.5.1
+    repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 8.7.0
     chart: external-dns
 
   external-dns:
     enabled: false
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 8.5.1
+    repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 8.7.0
     chart: external-dns
 
   ingress-nginx-external:

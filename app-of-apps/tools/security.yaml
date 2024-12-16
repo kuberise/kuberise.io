@@ -11,12 +11,6 @@ ArgocdApplications:
     chart: keycloak-operator
     namespace: keycloak
 
-  sealed-secrets:
-    enabled: false
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 2.40.10
-    chart: sealed-secrets
-
   cert-manager:
     enabled: false
     namespace: cert-manager

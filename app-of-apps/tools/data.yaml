@@ -1,15 +1,15 @@
 # There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
 ArgocdApplications:
-  cnpg-database:
+  database:
     enabled: false
-    namespace: cloudnative-pg
+    namespace: postgres
     path: platform/database/
     type: raw
 
-  cloudnative-pg:
+  postgres-operator:
     enabled: false
     repoURL: https://cloudnative-pg.github.io/charts
-    namespace: cloudnative-pg
+    namespace: postgres
     targetRevision: 0.20.1
     chart: cloudnative-pg
 

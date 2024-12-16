@@ -6,7 +6,7 @@ backstage:
   appConfig:
     db:
       connection:
-        host: cnpg-database-rw.cloudnative-pg.svc.cluster.local
+        host: database-rw.postgres.svc.cluster.local
         port: 5432
         user: application
         existingSecret: pg-secret
