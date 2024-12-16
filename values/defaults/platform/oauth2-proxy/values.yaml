@@ -34,7 +34,7 @@ config:
     cookie_domains=".{{ .Values.global.domain }}"
     whitelist_domains=[".{{ .Values.global.domain }}"]
     # only users with this domain will be let in
-    # email_domains=["example.com"]
+    email_domains=["*"]
 
     # client_id="oauth2-proxy"
     # client_secret="xxxx"
