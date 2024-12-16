@@ -1,21 +1,16 @@
-# apiVersion: k8s.keycloak.org/v2alpha1
-# kind: KeycloakClient
-# metadata:
-#   name: prometheus
-#   namespace: keycloak
-# spec:
-#   realmSelector:
-#     matchLabels:
-#       realm: platform
-#   client:
-#     clientId: prometheus
-#     clientSecret: ${OAUTH2_PROXY_CLIENT_SECRET}
-#     protocol: openid-connect
-#     standardFlowEnabled: true
-#     redirectUris:
-#       - https://prometheus.{{ .Values.global.domain }}/oauth2/callback
-#     webOrigins:
-#       - https://prometheus.{{ .Values.global.domain }}
-#     defaultClientScopes:
-#       - profile
-#       - email
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClient
+metadata:
+  name: oauth2-proxy-client
+spec:
+  clientId: oauth2-proxy
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  secret: '$oauth2-proxy-client-secret:client-secret'
+  redirectUris:
+    - 'https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/callback'
+  # attributes:
+  #   "post.logout.redirect.uris": "https://oauth2-proxy.{{ .Values.global.domain }}/*"
+  # webOrigins:
+  #   - https://oauth2-proxy.{{ .Values.global.domain }}

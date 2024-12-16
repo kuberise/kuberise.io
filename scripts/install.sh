@@ -325,8 +325,8 @@ create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=pass
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
 # Grafana OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
 
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
@@ -336,8 +336,11 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
 fi
 
 # PGAdmin OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+
+# OAuth2-Proxy Secrets
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
 
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
@@ -349,8 +352,8 @@ create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
 # ArgoCD OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
-ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64) # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64) # FIXME: Should be generated randomly outside the script
 kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
