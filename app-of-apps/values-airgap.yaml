@@ -68,6 +68,9 @@ ArgocdApplications:
   vault:
     enabled: false
 
+  sealed-secrets:
+    enabled: true
+
   # Microservices
 
   show-env:
