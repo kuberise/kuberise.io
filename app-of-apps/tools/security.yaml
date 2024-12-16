@@ -3,5 +3,5 @@ ArgocdApplications:
   sealed-secrets:
     enabled: false
     repoURL: registry-1.docker.io/bitnamicharts
-    targetRevision: 0.27.3
+    targetRevision: 2.5.0
     chart: sealed-secrets
