@@ -1,1 +1,14 @@
 # placeholder for more security tools
+ArgocdApplications:
+  sealed-secrets:
+    enabled: false
+    repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 2.5.0
+    chart: sealed-secrets
+
+  vault:
+    enabled: false
+    repoURL: https://helm.releases.hashicorp.com
+    namespace: vault
+    targetRevision: 0.28.0
+    chart: vault
