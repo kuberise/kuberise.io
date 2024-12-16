@@ -82,9 +82,9 @@ prometheus:
   ingress:
     enabled: true
     ingressClassName: nginx-external
-    annotations:
-      nginx.ingress.kubernetes.io/auth-signin: https://oauth2.{{ .Values.global.domain }}/oauth2/start
-      nginx.ingress.kubernetes.io/auth-url: https://oauth2.{{ .Values.global.domain }}/oauth2/auth
+    # annotations:
+    #   nginx.ingress.kubernetes.io/auth-signin: https://oauth2.{{ .Values.global.domain }}/oauth2/start
+    #   nginx.ingress.kubernetes.io/auth-url: https://oauth2.{{ .Values.global.domain }}/oauth2/auth
     hosts:
       - prometheus.{{ .Values.global.domain }}
     tls:
