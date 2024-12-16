@@ -1,1 +1,5 @@
 # placeholder for more network tools
+
+ArgocdApplications:
+  ingresses:
+    enabled: false

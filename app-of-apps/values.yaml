@@ -20,7 +20,7 @@ ArgocdApplications:
   #=================================#
   #      Platform Core Apps         #
   #=================================#
-  
+
   raw:
     enabled: false
     path: platform/raw
@@ -87,9 +87,6 @@ ArgocdApplications:
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.11.3
     chart: ingress-nginx
-
-  ingresses:
-    enabled: false
 
   #=================================#
   #      Security & Auth            #

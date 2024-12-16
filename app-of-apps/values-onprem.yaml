@@ -62,9 +62,6 @@ ArgocdApplications:
   backstage:
     enabled: false
 
-  ingresses:
-    enabled: true
-
   vault:
     enabled: false
 
