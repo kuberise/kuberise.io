@@ -25,6 +25,9 @@ pgadmin4:
     ingressClassName: nginx-external
     hosts:
       - host: pgadmin.{{ .Values.global.domain }}
+        paths:
+        - path: /
+          pathType: Prefix
     tls:
-      - hosts:
-        - pgadmin.{{ .Values.global.domain }}
+    - hosts:
+      - pgadmin.{{ .Values.global.domain }}
