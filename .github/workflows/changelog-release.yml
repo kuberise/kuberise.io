@@ -1,0 +1,40 @@
+name: Changelog and Release Management
+on:
+  push:
+    branches:
+      - changelog
+    tags:
+      - 't*'
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Generate changelog from conventional commits
+      - name: Generate Changelog
+        uses: conventional-changelog/conventional-changelog-action@v3
+        with:
+          config: './changelog-config.js'
+          output-file: 'CHANGELOG.md'
+
+      # Create Release Notes when a tag is pushed
+      - name: Generate Release Notes
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          ./scripts/generate-release-notes.sh $VERSION
+
+      # Create GitHub Release
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: 'RELEASE.md'
+          files: |
+            CHANGELOG.md
+            RELEASE.md
