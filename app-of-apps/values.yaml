@@ -16,15 +16,11 @@ global:
 
 # There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
 ArgocdApplications:
-  hello:
-    enabled: false
-    type: kustomize
 
   raw:
     enabled: false
     path: platform/raw
     type: raw
-
 
   argocd-image-updater:
     enabled: false
@@ -36,31 +32,6 @@ ArgocdApplications:
   teams-namespaces:
     enabled: false
     namespace: default
-
-  backstage:
-    enabled: false
-    # syncWave: 1
-
-  actions-runner-controller:
-    enabled: false
-    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
-    namespace: actions-runner-system
-    targetRevision: 0.22.0
-    chart: actions-runner-controller
-    syncWave: 0
-
-  actions-runner:
-    enabled: false
-    repoURL: https://github.com/kuberise/kuberise.git
-    namespace: actions-runner-system
-    syncWave: 1
-
-  gitea:
-    enabled: false
-    repoURL: https://dl.gitea.io/charts
-    namespace: gitea
-    targetRevision: 10.1.4
-    chart: gitea
 
   database:
     enabled: false
@@ -121,13 +92,6 @@ ArgocdApplications:
   cert-manager:
     enabled: false
     namespace: cert-manager
-
-  vault:
-    enabled: false
-    repoURL: https://helm.releases.hashicorp.com
-    namespace: vault
-    targetRevision: 0.28.0
-    chart: vault
 
   dashboards:
     enabled: false
