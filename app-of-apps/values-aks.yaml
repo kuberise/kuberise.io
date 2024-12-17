@@ -53,9 +53,6 @@ helm:
   cert-manager:
     enabled: true
 
-  ingresses:
-    enabled: true
-
   # Microservices
 
   show-env:

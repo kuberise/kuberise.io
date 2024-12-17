@@ -14,6 +14,21 @@ keycloakx:
     - "--hostname-strict=false"
     - "--http-enabled=false"
 
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    servicePort: https
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    rules:
+      - host: keycloak.{{ .Values.global.domain }}
+        paths:
+          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+            pathType: Prefix
+    tls:
+      - hosts:
+          - keycloak.{{ .Values.global.domain }}
   metrics:
     enabled: true
 

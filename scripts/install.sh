@@ -85,7 +85,7 @@ function generate_ca_cert_and_key() {
     --dry-run=client -o yaml | kubectl apply --namespace="cert-manager" --context="$context" -f -
 
   # List of namespaces to create self-signed CA certificate ConfigMap
-  namespaces=("pgadmin" "monitoring" "argocd" "keycloak" "backstage" "cloudnative-pg" "cert-manager" "external-dns")
+  namespaces=("pgadmin" "monitoring" "argocd" "keycloak" "backstage" "postgres" "cert-manager" "external-dns")
 
   # Iterate over each namespace and create the configmap with the CA bundle
   for namespace in "${namespaces[@]}"; do
@@ -104,6 +104,7 @@ function install_argocd() {
   local namespace=$2
   local values_file=$3
   local admin_password=$4
+  local domain=$5
   echo "Installing ArgoCD using Helm..."
   BCRYPT_HASH=$(htpasswd -nbBC 10 "" "$admin_password" | tr -d ':\n' | sed 's/$2y/$2a/')
   helm upgrade \
@@ -114,6 +115,7 @@ function install_argocd() {
     --wait \
     -f values/defaults/platform/argocd/values.yaml \
     -f "$values_file" \
+    --set server.ingress.hostname=argocd."$domain" \
     --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" \
     --repo https://argoproj.github.io/argo-helm \
     --version 6.9.2 \
@@ -233,7 +235,7 @@ CONTEXT=${1:-}                                          # example: platform-clus
 PLATFORM_NAME=${2:-local}                               # example: local, dta, azure etc. (default: local)
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
-DOMAIN=${5:-kind.kuberise.dev}                          # example: kind.kuberise.dev
+DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberise.dev
 REPOSITORY_TOKEN=${6:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
@@ -323,8 +325,8 @@ create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=pass
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
 # Grafana OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
 
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
@@ -334,8 +336,11 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
 fi
 
 # PGAdmin OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+
+# OAuth2-Proxy Secrets
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-secrets" "--from-literal=client-secret=z78FKdehfot0n5qKzq79ipi85p75gXCD --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=dCt6aXJJVmxCRkd6ZjRjQUVBRnV3QjU4Z3k4R2xBalI=" # FIXME: Should be generated randomly outside the script
 
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
@@ -345,10 +350,10 @@ create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal
 
 # Install ArgoCD with custom values and admin password
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
-install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD"
+install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
 # ArgoCD OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly
-ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64) # FIXME: Should be generated randomly
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64) # FIXME: Should be generated randomly outside the script
 kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET

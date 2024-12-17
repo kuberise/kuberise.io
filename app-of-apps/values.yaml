@@ -17,6 +17,10 @@ global:
 # There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
 ArgocdApplications:
 
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
+
   raw:
     enabled: false
     path: platform/raw
@@ -33,6 +37,10 @@ ArgocdApplications:
     enabled: false
     namespace: default
 
+  #=================================#
+  #      Database Services          #
+  #=================================#
+
   database:
     enabled: false
     namespace: postgres
@@ -48,6 +56,10 @@ ArgocdApplications:
 
   pgadmin:
     enabled: false
+
+  #=================================#
+  #      Network Services           #
+  #=================================#
 
   metallb:
     enabled: false
@@ -76,8 +88,9 @@ ArgocdApplications:
     targetRevision: 4.11.3
     chart: ingress-nginx
 
-  ingresses:
-    enabled: false
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
 
   keycloak:
     enabled: false
@@ -89,9 +102,20 @@ ArgocdApplications:
     chart: keycloak-operator
     namespace: keycloak
 
+  oauth2-proxy:
+    enabled: false
+    repoURL: https://oauth2-proxy.github.io/manifests
+    targetRevision: 7.8.2
+    chart: oauth2-proxy
+    namespace: keycloak
+
   cert-manager:
     enabled: false
     namespace: cert-manager
+
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
 
   dashboards:
     enabled: false
@@ -125,9 +149,9 @@ ArgocdApplications:
     targetRevision: 6.16.6
     chart: promtail
 
-
-
-  # Microservice examples
+  #=================================#
+  #      Example Applications       #
+  #=================================#
 
   # http container example with external traffic
   show-env:
@@ -136,7 +160,6 @@ ArgocdApplications:
     valuesFolder: applications
 
   # https container example with external traffic that receives traffic over https from ingress controller
-
   frontend-https:
     enabled: false
     path: templates/generic-deployment

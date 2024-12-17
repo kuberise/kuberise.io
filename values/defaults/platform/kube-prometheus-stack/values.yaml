@@ -55,44 +55,14 @@ grafana:
       mountPath: /etc/ssl/certs/ca-certificates.crt
       subPath: ca.crt
 
-# prometheus:
-#   prometheusSpec:
-#     containers:
-#       - name: oauth2-proxy
-#         image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
-#         args:
-#           - --provider=keycloak
-#           - --client-id=prometheus
-#           - --client-secret=$(OAUTH2_PROXY_CLIENT_SECRET)
-#           - --cookie-secret=$(OAUTH2_PROXY_COOKIE_SECRET)
-#           - --cookie-secure=true
-#           - --email-domain=*
-#           - --upstream=http://localhost:9090
-#           - --http-address=0.0.0.0:9091
-#           - --reverse-proxy=true
-#           - --keycloak-group=/prometheus-users
-#           - --oidc-issuer-url=https://keycloak.{{ .Values.global.domain }}/realms/platform
-#         env:
-#           - name: OAUTH2_PROXY_CLIENT_SECRET
-#             valueFrom:
-#               secretKeyRef:
-#                 name: prometheus-oauth-secret
-#                 key: client-secret
-#           - name: OAUTH2_PROXY_COOKIE_SECRET
-#             valueFrom:
-#               secretKeyRef:
-#                 name: prometheus-oauth-secret
-#                 key: cookie-secret
-#         ports:
-#           - containerPort: 9091
-#             name: oauth2-proxy
-
-#     service:
-#       additionalPorts:
-#         - name: oauth2-proxy
-#           port: 9091
-#           targetPort: 9091
-
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    hosts:
+      - grafana.{{ .Values.global.domain }}
+    tls:
+    - hosts:
+      - grafana.{{ .Values.global.domain }}
 
 prometheus:
   prometheusSpec:
@@ -108,3 +78,17 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false
     # Allow selection of PodMonitors from all namespaces
     podMonitorSelectorNilUsesHelmValues: false
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    annotations:
+      nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
+      nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
+    #   nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy/oauth2/auth
+    #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+    hosts:
+      - prometheus.{{ .Values.global.domain }}
+    tls:
+    - hosts:
+      - prometheus.{{ .Values.global.domain }}

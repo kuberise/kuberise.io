@@ -20,3 +20,14 @@ pgadmin4:
         secretKeyRef:
           name: keycloak-pgadmin-oauth2-client-secret
           key: CLIENT_SECRET
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    hosts:
+      - host: pgadmin.{{ .Values.global.domain }}
+        paths:
+        - path: /
+          pathType: Prefix
+    tls:
+    - hosts:
+      - pgadmin.{{ .Values.global.domain }}

@@ -63,12 +63,15 @@ ArgocdApplications:
     enabled: true
 
   ingresses:
-    enabled: true
+    enabled: false
 
   vault:
     enabled: false
 
   sealed-secrets:
+    enabled: true
+
+  oauth2-proxy:
     enabled: true
 
   # Microservices

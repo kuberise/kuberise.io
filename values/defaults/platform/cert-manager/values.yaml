@@ -17,3 +17,4 @@ subdomains:
   - "grafana"
   - "prometheus"
   - "frontend-https"
+  - "oauth2-proxy"

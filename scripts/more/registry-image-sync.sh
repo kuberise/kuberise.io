@@ -2,6 +2,7 @@
 
 # Array of images
 declare -a images=(
+    "quay.io/oauth2-proxy/oauth2-proxy:v7.7.1"
     "docker.io/bitnami/sealed-secrets-controller:0.27.3-debian-12-r0"
     "registry.k8s.io/etcd:3.5.15-0"
     "registry.k8s.io/pause:3.10"
@@ -128,3 +129,7 @@ fi
 docker rmi registry-with-images:latest || true
 # Commit the registry container with its contents to a new image
 docker commit registry registry-with-images:latest
+
+echo
+echo images in the current kubernetes cluster that are not using the local registry:
+kubectl get pods --all-namespaces -o=jsonpath='{range .items[*]}{.spec.containers[*].image}{"\n"}{end}' | grep -v registry
