@@ -1,3 +1,6 @@
+cluster:
+  name: "kuberise"
+
 operator:
   replicas: 1
 
