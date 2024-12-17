@@ -21,15 +21,20 @@ configs:
           jqPathExpressions:
             - .spec.template.spec.containers[].resources
             - .spec.template.spec.initContainers[].resources
-      operators.coreos.com/ClusterServiceVersion:
-        ignoreDifferences: |
-          jqPathExpressions:
-            - .spec.install.spec.deployments[].spec.template.spec.containers[].ports[].protocol
       apps/DaemonSet:
         ignoreDifferences: |
           jqPathExpressions:
             - .spec.template.spec.containers[].resources
             - .spec.template.spec.initContainers[].resources
+      apps/StatefulSet:
+        ignoreDifferences: |
+          jqPathExpressions:
+            - .spec.template.spec.containers[].resources
+            - .spec.template.spec.initContainers[].resources
+      operators.coreos.com/ClusterServiceVersion:
+        ignoreDifferences: |
+          jqPathExpressions:
+            - .spec.install.spec.deployments[].spec.template.spec.containers[].ports[].protocol
       admissionregistration.k8s.io/MutatingWebhookConfiguration:
         ignoreDifferences: |
           jqPathExpressions:
