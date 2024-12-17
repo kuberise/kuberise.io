@@ -30,7 +30,7 @@ ipam:
 ipv4NativeRoutingCIDR: "10.0.0.0/8"
 
 # Enable BPF NodePort for better performance
-kubeProxyReplacement: true
+kubeProxyReplacement: false # Disturbs the minikube node port mapping to local ports
 
 # Enable bandwidth manager for better traffic control
 bandwidthManager:
