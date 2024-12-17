@@ -2,7 +2,7 @@ cluster:
   name: "kuberise"
 
 operator:
-  replicas: 1
+  replicas: 3
 
 # Enable IPv4 support
 ipv4:
