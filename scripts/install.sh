@@ -340,7 +340,7 @@ create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-se
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
 
 # OAuth2-Proxy Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-secrets" "--from-literal=client-secret=z78FKdehfot0n5qKzq79ipi85p75gXCD --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=dCt6aXJJVmxCRkd6ZjRjQUVBRnV3QjU4Z3k4R2xBalI=" # FIXME: Should be generated randomly outside the script
 
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
