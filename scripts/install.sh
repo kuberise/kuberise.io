@@ -85,7 +85,7 @@ function generate_ca_cert_and_key() {
     --dry-run=client -o yaml | kubectl apply --namespace="cert-manager" --context="$context" -f -
 
   # List of namespaces to create self-signed CA certificate ConfigMap
-  namespaces=("pgadmin" "monitoring" "argocd" "keycloak" "backstage" "cloudnative-pg" "cert-manager" "external-dns")
+  namespaces=("pgadmin" "monitoring" "argocd" "keycloak" "backstage" "postgres" "cert-manager" "external-dns")
 
   # Iterate over each namespace and create the configmap with the CA bundle
   for namespace in "${namespaces[@]}"; do
