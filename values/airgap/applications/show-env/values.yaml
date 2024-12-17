@@ -18,6 +18,7 @@ service:
   type: ClusterIP
   ports:
     http: 80
+  targetPort: 80
 
 # sample http probes
 livenessProbe:
@@ -48,6 +49,12 @@ startupProbe:
 
 ingress:
   className: nginx-external
+  enabled: true
   annotations:
     nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
     nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
+  hosts:
+    - host: show-env.{{ .Values.global.domain }}
+      paths:
+        - path: /
+          pathType: Prefix
