@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
   - name: storage-provisioner
-    image: localhost:5000/storage-provisioner:v5
+    image: localhost:5000/k8s-minikube/storage-provisioner:v5
 
 
 
