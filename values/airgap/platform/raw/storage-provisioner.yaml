@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: storage-provisioner
+  namespace: kube-system
+spec:
+  containers:
+  - name: storage-provisioner
+    image: registry:5000/k8s-minikube/storage-provisioner:v5
+
+
+
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: storage-provisioner
+#   namespace: kube-system
+# spec:
+#   containers:
+#   - command:
+#     - /storage-provisioner
+#     image: localhost:5000/k8s-minikube/storage-provisioner:v5
+#     name: storage-provisioner
+#     terminationMessagePath: /dev/termination-log
+#     terminationMessagePolicy: File
+#     volumeMounts:
+#     - mountPath: /tmp
+#       name: tmp
+#     - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#       name: kube-api-access-rfhvf
+#       readOnly: true
+#   dnsPolicy: ClusterFirst
+#   enableServiceLinks: true
+#   hostNetwork: true
+#   nodeName: minikube
+#   preemptionPolicy: PreemptLowerPriority
+#   restartPolicy: Always
+#   schedulerName: default-scheduler
+#   serviceAccount: storage-provisioner
+#   serviceAccountName: storage-provisioner
+#   terminationGracePeriodSeconds: 30
+#   tolerations:
+#   - effect: NoExecute
+#     key: node.kubernetes.io/not-ready
+#     operator: Exists
+#     tolerationSeconds: 300
+#   - effect: NoExecute
+#     key: node.kubernetes.io/unreachable
+#     operator: Exists
+#     tolerationSeconds: 300
+#   volumes:
+#   - hostPath:
+#       path: /tmp
+#       type: Directory
+#     name: tmp
+#   - name: kube-api-access-rfhvf
+#     projected:
+#       defaultMode: 420
+#       sources:
+#       - serviceAccountToken:
+#           expirationSeconds: 3607
+#           path: token
+#       - configMap:
+#           items:
+#           - key: ca.crt
+#             path: ca.crt
+#           name: kube-root-ca.crt
+#       - downwardAPI:
+#           items:
+#           - fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.namespace
+#             path: namespace

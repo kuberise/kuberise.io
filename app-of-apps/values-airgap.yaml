@@ -1,23 +1,34 @@
 ArgocdApplications:
 
-  keycloak:
-    enabled: true
-    # syncWave: 1
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
 
-  keycloak-operator:
-    enabled: true
-
-  database:
+  argocd-image-updater:
     enabled: true
 
   raw:
     enabled: true
 
-  dashboards:
+  backstage:
+    enabled: false
+
+  #=================================#
+  #      Data Services          #
+  #=================================#
+
+  database:
     enabled: true
 
-  metrics-server:
+  postgres-operator:
     enabled: true
+
+  pgadmin:
+    enabled: true
+
+  #=================================#
+  #      Network Services           #
+  #=================================#
 
   metallb:
     enabled: true
@@ -31,39 +42,28 @@ ArgocdApplications:
   external-dns:
     enabled: true
 
-  argocd-image-updater:
-    enabled: true
-
   ingress-nginx-internal:
     enabled: true
 
   ingress-nginx-external:
     enabled: true
 
-
-  kube-prometheus-stack:
+  cilium:
     enabled: true
 
-  loki:
-    enabled: true
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
 
-  promtail:
+  keycloak:
     enabled: true
+    # syncWave: 1
 
-  postgres-operator:
-    enabled: true
-
-  pgadmin:
+  keycloak-operator:
     enabled: true
 
   cert-manager:
     enabled: true
-
-  backstage:
-    enabled: true
-
-  ingresses:
-    enabled: false
 
   vault:
     enabled: false
@@ -74,7 +74,28 @@ ArgocdApplications:
   oauth2-proxy:
     enabled: true
 
-  # Microservices
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
+
+  dashboards:
+    enabled: true
+
+  metrics-server:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  #=================================#
+  #      Example Applications       #
+  #=================================#
 
   show-env:
     enabled: true
