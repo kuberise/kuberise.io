@@ -1,2 +1,27 @@
 operator:
   replicas: 1
+
+# Enable IPv4 support
+ipv4:
+  enabled: true
+
+# Enable IPv4 masquerade
+enableIPv4Masquerade: true
+
+# Disable IP masquerade agent
+ipMasqAgent:
+  enabled: false
+
+# Set routing mode to native
+routingMode: "native"
+
+# Configure IPAM mode to cluster-pool
+ipam:
+  mode: "cluster-pool"
+  operator:
+    clusterPoolIPv4PodCIDRList: ["10.0.0.0/8"]
+    clusterPoolIPv4MaskSize: 24
+
+# Configure IPv4 native routing CIDR
+# This should match your cluster's pod CIDR range
+ipv4NativeRoutingCIDR: "10.0.0.0/8"
