@@ -70,3 +70,6 @@ helm:
 
   api:
     enabled: true
+
+  external-secrets:
+    enabled: true

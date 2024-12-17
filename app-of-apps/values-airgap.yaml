@@ -74,6 +74,9 @@ ArgocdApplications:
   oauth2-proxy:
     enabled: true
 
+  external-secrets:
+    enabled: true
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
