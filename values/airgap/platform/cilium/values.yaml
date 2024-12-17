@@ -52,3 +52,55 @@ hubble:
     enabled: true
   ui:
     enabled: true
+
+# -----------------------------------------------------------------------------
+# Change image repository for airgap environment
+# -----------------------------------------------------------------------------
+
+image:
+  repository: "registry:5000/cilium/cilium"
+  digest: ""
+  useDigest: false
+operator:
+  image:
+    repository: "registry:5000/cilium/operator"
+    genericDigest: ""
+    useDigest: false
+certgen:
+  image:
+    repository: "registry:5000/cilium/certgen"
+    digest: ""
+    useDigest: false
+hubble:
+  relay:
+    image:
+      repository: "registry:5000/cilium/hubble-relay"
+      digest: ""
+      useDigest: false
+  ui:
+    backend:
+      image:
+        repository: "registry:5000/cilium/hubble-ui-backend"
+        digest: ""
+        useDigest: false
+    frontend:
+      image:
+        repository: "registry:5000/cilium/hubble-ui"
+        digest: ""
+        useDigest: false
+clustermesh:
+  apiserver:
+    image:
+      repository: "registry:5000/cilium/clustermesh-apiserver"
+      digest: ""
+      useDigest: false
+envoy:
+  image:
+    repository: "registry:5000/cilium/cilium-envoy"
+    digest: ""
+    useDigest: false
+nodeinit:
+  image:
+    repository: "registry:5000/startup-script"
+    digest: ""
+    useDigest: false

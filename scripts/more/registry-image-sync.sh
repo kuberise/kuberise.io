@@ -2,6 +2,11 @@
 
 # Array of images
 declare -a images=(
+    "quay.io/cilium/cilium-envoy:v1.30.7-1731393961-97edc2815e2c6a174d3d12e71731d54f5d32ea16"
+    "quay.io/cilium/cilium:v1.16.4"
+    "quay.io/cilium/operator-generic:v1.16.4"
+    "quay.io/cilium/hubble-relay:v1.16.4"
+    "quay.io/cilium/hubble-ui:v0.13.1"
     "quay.io/oauth2-proxy/oauth2-proxy:v7.7.1"
     "docker.io/bitnami/sealed-secrets-controller:0.27.3-debian-12-r0"
     "registry.k8s.io/etcd:3.5.15-0"
