@@ -22,3 +22,4 @@ configs:
         groups:
           essential: true
       groupsAttributePath: groups
+      pkceMethod: S256

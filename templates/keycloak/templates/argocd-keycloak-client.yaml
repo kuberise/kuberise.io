@@ -24,6 +24,7 @@ spec:
   attributes:
     "post.logout.redirect.uris": "https://argocd.{{ .Values.global.domain }}/*"
     "pkce.code.challenge.method": "S256"
+    "pkce.enabled": "true"
   optionalClientScopes:
     - 'groups'
   defaultClientScopes:
