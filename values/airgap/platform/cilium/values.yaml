@@ -28,3 +28,8 @@ ipv4NativeRoutingCIDR: "10.0.0.0/8"
 
 # Enable BPF NodePort for better performance
 kubeProxyReplacement: true
+
+# Enable bandwidth manager for better traffic control
+bandwidthManager:
+  enabled: true
+  bbr: true # Enable BBR congestion control

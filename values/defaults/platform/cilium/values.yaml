@@ -4,13 +4,7 @@ cluster:
 operator:
   replicas: 2
 
-# # Enable BPF NodePort for better performance
-# kubeProxyReplacement: true
 
-# # Enable bandwidth manager for better traffic control
-# bandwidthManager:
-#   enabled: true
-#   bbr: true # Enable BBR congestion control
 
 # # Enable IPv4 and IPv6 for future-proofing
 # ipv4:
