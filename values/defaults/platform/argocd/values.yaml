@@ -26,6 +26,8 @@ configs:
           jqPathExpressions:
             - .spec.template.spec.containers[].resources
             - .spec.template.spec.initContainers[].resources
+            - .spec.template.spec.containers[].volumeMounts[].readOnly
+            - .spec.template.metadata.annotations
       apps/StatefulSet:
         ignoreDifferences: |
           jqPathExpressions:

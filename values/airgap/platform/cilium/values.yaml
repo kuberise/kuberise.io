@@ -33,3 +33,19 @@ kubeProxyReplacement: true
 bandwidthManager:
   enabled: true
   bbr: true # Enable BBR congestion control
+
+# Enable Hubble for network visibility
+hubble:
+  enabled: true
+  metrics:
+    enabled:
+      - dns:query
+      - drop
+      - tcp
+      - flow
+      - icmp
+      - http
+  relay:
+    enabled: true
+  ui:
+    enabled: true

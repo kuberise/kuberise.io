@@ -12,21 +12,6 @@ operator:
 # ipv6:
 #   enabled: true
 
-# # Enable Hubble for network visibility
-# hubble:
-#   enabled: true
-#   metrics:
-#     enabled:
-#       - dns:query
-#       - drop
-#       - tcp
-#       - flow
-#       - icmp
-#       - http
-#   relay:
-#     enabled: true
-#   ui:
-#     enabled: true
 
 # # Enable endpoint health checking
 # endpointHealthChecking:
