@@ -38,7 +38,7 @@ ArgocdApplications:
     namespace: default
 
   #=================================#
-  #      Database Services          #
+  #      Data Services          #
   #=================================#
 
   database:
@@ -87,6 +87,12 @@ ArgocdApplications:
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.11.3
     chart: ingress-nginx
+
+  cilium:
+    enabled: false
+    repoURL: https://helm.cilium.io
+    targetRevision: 1.16.4
+    chart: cilium
 
   #=================================#
   #      Security & Auth            #
