@@ -5,7 +5,7 @@ operator:
   replicas: 2
 
 # Enable BPF NodePort for better performance
-kubeProxyReplacement: "strict"
+kubeProxyReplacement: true
 
 # Enable bandwidth manager for better traffic control
 bandwidthManager:
