@@ -7,14 +7,10 @@ ingress:
   tls:
     - hosts:
         - oauth2-proxy.{{ .Values.global.domain }}
-  # annotations:
-  #   nginx.ingress.kubernetes.io/server-snippet: |
-  #     large_client_header_buffers 4 32k;
 
 # pick up client_id and client_secret from configFile as opposed to helm .Values.config.clientID and .Values.config.clientSecret
 proxyVarsAsSecrets: true
 config:
-  # Add config annotations
   annotations: {}
   # OAuth client ID
   clientID: "oauth2-proxy"

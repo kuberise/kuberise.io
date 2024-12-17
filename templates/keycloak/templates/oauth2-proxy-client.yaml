@@ -10,7 +10,3 @@ spec:
   secret: '$oauth2-proxy-secrets:client-secret'
   redirectUris:
     - 'https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/callback'
-  # attributes:
-  #   "post.logout.redirect.uris": "https://oauth2-proxy.{{ .Values.global.domain }}/*"
-  # webOrigins:
-  #   - https://oauth2-proxy.{{ .Values.global.domain }}
