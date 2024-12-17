@@ -1,9 +1,6 @@
 cluster:
   name: "kuberise"
 
-operator:
-  replicas: 3
-
 # Enable IPv4 support
 ipv4:
   enabled: true
@@ -62,6 +59,7 @@ image:
   digest: ""
   useDigest: false
 operator:
+  replicas: 1
   image:
     repository: "registry:5000/cilium/operator"
     genericDigest: ""
