@@ -55,6 +55,8 @@ spec:
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
+    directory:
+      recurse: true
   {{- end }}
   destination:
     namespace: {{ default $name .namespace }}
