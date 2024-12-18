@@ -1,1 +1,3 @@
 # External Secrets airgap values
+image:
+  repository: registry:5000/external-secrets/external-secrets

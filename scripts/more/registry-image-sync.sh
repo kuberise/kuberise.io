@@ -2,6 +2,7 @@
 
 # Array of images
 declare -a images=(
+    "oci.external-secrets.io/external-secrets/external-secrets:v0.11.0"
     "quay.io/cilium/cilium-envoy:v1.30.7-1731393961-97edc2815e2c6a174d3d12e71731d54f5d32ea16"
     "quay.io/cilium/cilium:v1.16.4"
     "quay.io/cilium/operator-generic:v1.16.4"
