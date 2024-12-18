@@ -34,8 +34,6 @@ bandwidthManager:
   enabled: true
   bbr: true # Enable BBR congestion control
 
-securityContext:
-  appArmorProfile: null
 
 # Enable Hubble for network visibility
 hubble:
