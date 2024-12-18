@@ -1,3 +1,9 @@
 # External Secrets airgap values
 image:
   repository: registry:5000/external-secrets/external-secrets
+webhook:
+  image:
+    repository: registry:5000/external-secrets/external-secrets
+certController:
+  image:
+    repository: registry:5000/external-secrets/external-secrets
