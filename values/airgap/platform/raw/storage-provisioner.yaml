@@ -11,6 +11,7 @@ spec:
     name: storage-provisioner
     terminationMessagePath: /dev/termination-log
     terminationMessagePolicy: File
+    resources: {}
     volumeMounts:
     - mountPath: /tmp
       name: tmp
