@@ -25,6 +25,7 @@ ArgocdApplications:
     enabled: false
     path: platform/raw
     type: raw
+    recursive: true
 
   argocd-image-updater:
     enabled: false
