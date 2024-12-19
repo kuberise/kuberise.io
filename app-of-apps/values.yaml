@@ -126,6 +126,9 @@ ArgocdApplications:
     enabled: false
     namespace: cert-manager
 
+  secrets-manager:
+    enabled: false
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
