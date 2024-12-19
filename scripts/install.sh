@@ -332,6 +332,7 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
 fi
 
 
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-secrets" "--from-literal=client-secret=z78FKdehfot0n5qKzq79ipi85p75gXCD --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=dCt6aXJJVmxCRkd6ZjRjQUVBRnV3QjU4Z3k4R2xBalI=" # FIXME: Should be generated randomly outside the script
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"

@@ -5,5 +5,5 @@ applications:
     namespace: monitoring
   - name: pgadmin
     namespace: pgadmin
-  - name: oauth2-proxy
-    namespace: keycloak
+  # - name: oauth2-proxy
+  #   namespace: keycloak
