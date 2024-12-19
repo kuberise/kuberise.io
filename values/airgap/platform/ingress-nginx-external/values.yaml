@@ -17,7 +17,7 @@ controller:
       https: 30443
 
   extraArgs:
-    default-ssl-certificate: cert-manager/ssl-certificate-letsencrypt
+    default-ssl-certificate: cert-manager/ssl-certificate-selfsigned
 
   terminationGracePeriodSeconds: 5 # only for dev environment and local/onprem/airgap
 
