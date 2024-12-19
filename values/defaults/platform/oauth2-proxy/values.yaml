@@ -8,7 +8,25 @@ ingress:
     - hosts:
         - oauth2-proxy.{{ .Values.global.domain }}
 
-# pick up client_id and client_secret from configFile as opposed to helm .Values.config.clientID and .Values.config.clientSecret
+# Add extraVolumes to mount the CA certificate
+extraVolumes:
+  - name: ca-cert
+    configMap:
+      name: ca-bundle
+
+# Add extraVolumeMounts to make the cert available to oauth2-proxy
+extraVolumeMounts:
+  - name: ca-cert
+    mountPath: /etc/ssl/certs/custom-ca.crt
+    subPath: ca.crt
+
+# Add extraEnv to tell oauth2-proxy to use the custom CA cert
+extraEnv:
+  - name: OAUTH2_PROXY_SSL_INSECURE_SKIP_VERIFY
+    value: "false"
+  - name: SSL_CERT_FILE
+    value: "/etc/ssl/certs/custom-ca.crt"
+
 proxyVarsAsSecrets: true
 config:
   annotations: {}
