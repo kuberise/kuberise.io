@@ -7,6 +7,6 @@ spec:
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
-  secret: '$oauth2-proxy-oauth2-client-secrets:client-secret'
+  secret: '$oauth2-proxy-oauth2-client-secret:client-secret'
   redirectUris:
     - 'https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/callback'

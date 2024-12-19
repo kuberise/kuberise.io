@@ -10,7 +10,7 @@ spec:
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
-  secret: '$keycloak-argocd-oauth2-client-secret:client-secret'
+  secret: '$argocd-oauth2-client-secret:client-secret'
   serviceAccount:
     enabled: true
   webUrl: 'https://argocd.{{ .Values.global.domain }}/'
