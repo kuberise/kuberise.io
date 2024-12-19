@@ -55,14 +55,14 @@ grafana:
       mountPath: /etc/ssl/certs/ca-certificates.crt
       subPath: ca.crt
 
-  # ingress:
-  #   enabled: true
-  #   ingressClassName: nginx-external
-  #   hosts:
-  #     - grafana.{{ .Values.global.domain }}
-  #   tls:
-  #   - hosts:
-  #     - grafana.{{ .Values.global.domain }}
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    hosts:
+      - grafana.{{ .Values.global.domain }}
+    tls:
+    - hosts:
+      - grafana.{{ .Values.global.domain }}
 
 prometheus:
   prometheusSpec:
@@ -79,16 +79,16 @@ prometheus:
     # Allow selection of PodMonitors from all namespaces
     podMonitorSelectorNilUsesHelmValues: false
 
-  # ingress:
-  #   enabled: true
-  #   ingressClassName: nginx-external
-  #   annotations:
-  #     nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
-  #     nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
-  #   #   nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy/oauth2/auth
-  #   #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
-  #   hosts:
-  #     - prometheus.{{ .Values.global.domain }}
-  #   tls:
-  #   - hosts:
-  #     - prometheus.{{ .Values.global.domain }}
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    annotations:
+      nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
+      nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
+    #   nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy/oauth2/auth
+    #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+    hosts:
+      - prometheus.{{ .Values.global.domain }}
+    tls:
+    - hosts:
+      - prometheus.{{ .Values.global.domain }}
