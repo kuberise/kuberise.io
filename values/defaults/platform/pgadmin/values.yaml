@@ -18,8 +18,8 @@ pgadmin4:
     - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
       valueFrom:
         secretKeyRef:
-          name: keycloak-pgadmin-oauth2-client-secret
-          key: CLIENT_SECRET
+          name: pgadmin-oauth2-client-secret
+          key: client-secret
   ingress:
     enabled: true
     ingressClassName: nginx-external

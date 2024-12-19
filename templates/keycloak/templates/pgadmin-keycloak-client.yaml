@@ -9,7 +9,7 @@ spec:
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
-  secret: '$keycloak-pgadmin-oauth2-client-secret:CLIENT_SECRET'
+  secret: '$pgadmin-oauth2-client-secret:client-secret'
   serviceAccount:
     enabled: true
   webUrl: 'https://pgadmin.{{ .Values.global.domain }}/'
