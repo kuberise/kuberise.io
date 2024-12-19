@@ -20,7 +20,7 @@ config:
   # openssl rand -base64 32 | head -c 32 | base64
   # Use an existing secret for OAuth2 credentials (see secret.yaml for required fields)
   # Example:
-  existingSecret: oauth2-proxy-secrets
+  existingSecret: oauth2-proxy-oauth2-client-secret
   # cookieSecret: ""
   # The name of the cookie that oauth2-proxy will create
   # If left empty, it will default to the release name
