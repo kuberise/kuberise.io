@@ -332,7 +332,17 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
 fi
 
 
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secrets" "--from-literal=client-secret=z78FKdehfot0n5qKzq79ipi85p75gXCD --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=dCt6aXJJVmxCRkd6ZjRjQUVBRnV3QjU4Z3k4R2xBalI=" # FIXME: Should be generated randomly outside the script
+# # Grafana OAuth2 Secrets
+# create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+# create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
+# # PGAdmin OAuth2 Secrets
+# create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+# create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
+# # OAuth2-Proxy Secrets
+# create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
@@ -343,8 +353,8 @@ create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
 # ArgoCD OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
-ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64) # FIXME: Should be generated randomly outside the script
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64)
 kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
