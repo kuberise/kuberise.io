@@ -1,0 +1,10 @@
+# # List of applications that need OAuth client secrets
+# applications:
+#   - name: grafana
+#     namespace: monitoring
+#   - name: pgadmin
+#     namespace: pgadmin
+# # becuase one of the applications is deployed in keycloak namespace, external-secrets ServiceAccount is generated twice
+# # in ArgoCD, which generates a warning. but it's not a problem and you can ignore it.
+#   - name: oauth2-proxy
+#     namespace: keycloak
