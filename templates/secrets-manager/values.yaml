@@ -1,0 +1,6 @@
+# List of applications that need OAuth client secrets
+applications:
+  - name: grafana
+    namespace: monitoring
+  - name: pgadmin
+    namespace: pgadmin
