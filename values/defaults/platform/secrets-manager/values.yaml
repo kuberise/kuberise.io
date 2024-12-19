@@ -7,3 +7,5 @@ applications:
     namespace: pgadmin
   - name: oauth2-proxy
     namespace: keycloak
+  - name: argocd
+    namespace: argocd
