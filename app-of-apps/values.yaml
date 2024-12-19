@@ -25,6 +25,7 @@ ArgocdApplications:
     enabled: false
     path: platform/raw
     type: raw
+    recursive: true
 
   argocd-image-updater:
     enabled: false
@@ -108,6 +109,12 @@ ArgocdApplications:
     chart: keycloak-operator
     namespace: keycloak
 
+  external-secrets:
+    enabled: false
+    repoURL: https://charts.external-secrets.io
+    targetRevision: 0.11.0
+    chart: external-secrets
+
   oauth2-proxy:
     enabled: false
     repoURL: https://oauth2-proxy.github.io/manifests
@@ -118,6 +125,9 @@ ArgocdApplications:
   cert-manager:
     enabled: false
     namespace: cert-manager
+
+  secrets-manager:
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #

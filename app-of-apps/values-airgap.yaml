@@ -49,7 +49,7 @@ ArgocdApplications:
     enabled: true
 
   cilium:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Security & Auth            #
@@ -72,6 +72,12 @@ ArgocdApplications:
     enabled: true
 
   oauth2-proxy:
+    enabled: true
+
+  external-secrets:
+    enabled: true
+
+  secrets-manager:
     enabled: true
 
   #=================================#

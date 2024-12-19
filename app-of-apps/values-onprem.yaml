@@ -79,3 +79,6 @@ ArgocdApplications:
 
   backend:
     enabled: true
+
+  external-secrets:
+    enabled: true

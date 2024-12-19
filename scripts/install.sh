@@ -324,10 +324,6 @@ create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=pass
 
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
-# Grafana OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
-
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
   create_secret "$CONTEXT" "$NAMESPACE_EXTERNALDNS" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
@@ -335,12 +331,6 @@ if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   create_secret "$CONTEXT" "$NAMESPACE_CERTMANAGER" "cloudflare" "--from-literal=cloudflare_api_token=$CLOUDFLARE_API_TOKEN"
 fi
 
-# PGAdmin OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-pgadmin-oauth2-client-secret" "--from-literal=CLIENT_SECRET=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY" # FIXME: Should be generated randomly outside the script
-
-# OAuth2-Proxy Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-secrets" "--from-literal=client-secret=z78FKdehfot0n5qKzq79ipi85p75gXCD --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=dCt6aXJJVmxCRkd6ZjRjQUVBRnV3QjU4Z3k4R2xBalI=" # FIXME: Should be generated randomly outside the script
 
 
 # Create secret for keycloak-operator to connect to Keycloak master realm.

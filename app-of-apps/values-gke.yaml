@@ -63,3 +63,6 @@ helm:
 
   backend:
     enabled: true
+
+  external-secrets:
+    enabled: true
