@@ -38,7 +38,7 @@ spec:
     creationPolicy: Owner
     template:
       data:
-        password: "{{ `{{ .password | b64enc }}` }}"
+        password: "{{ `{{ .password | b64enc | trunc 32  | b64enc }}` }}"
   dataFrom:
     - sourceRef:
         generatorRef:
