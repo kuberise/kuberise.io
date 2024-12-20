@@ -64,7 +64,7 @@ spec:
   refreshInterval: "1h"
   target:
     creationPolicy: Owner
-    name: database-app
+    name: pg-secret
     template:
       data:
         KC_DB_PASSWORD: "{{ `{{ .password }}` }}"
