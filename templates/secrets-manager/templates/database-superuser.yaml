@@ -19,9 +19,8 @@ spec:
         port: "5432"
         user: "postgres"
         username: "postgres"
-  data:
-    - secretKey: password
-      sourceRef:
+  dataFrom:
+    - sourceRef:
         generatorRef:
           apiVersion: generators.external-secrets.io/v1alpha1
           kind: ClusterGenerator
