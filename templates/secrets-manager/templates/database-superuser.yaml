@@ -1,0 +1,28 @@
+# ==========================================
+# Generate Secret for user:application in database:app
+# ==========================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: postgres-superuser-secret-generate
+  namespace: postgres
+spec:
+  refreshInterval: "0"
+  target:
+    name: database-superuser
+    creationPolicy: Owner
+    template:
+      data:
+        password: "{{ `{{ .password }}` }}"
+        dbname: "*"
+        host: "database-rw"
+        port: "5432"
+        user: "postgres"
+        username: "postgres"
+  data:
+    - secretKey: password
+      sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: ClusterGenerator
+          name: password-generator

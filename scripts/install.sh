@@ -313,14 +313,9 @@ fi
 
 generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 
-# Secrets for PostgreSQL
-# create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname=app --from-literal=host=database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=dbname=* --from-literal=host=database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
 
-# Keycloak and Backstage and Grafana secrets
-# create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "admin-secret" "--from-literal=KEYCLOAK_ADMIN=admin --from-literal=KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD"
-# create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$PG_APP_PASSWORD"
 
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
 
@@ -335,7 +330,6 @@ fi
 # Create secret for keycloak-operator to connect to Keycloak master realm.
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
 
-# install_keycloak_operator
 
 # Install ArgoCD with custom values and admin password
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
