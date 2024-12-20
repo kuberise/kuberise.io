@@ -25,3 +25,23 @@ spec:
           apiVersion: generators.external-secrets.io/v1alpha1
           kind: ClusterGenerator
           name: password-generator
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: demo
+  namespace: postgres
+spec:
+  refreshInterval: "0"
+  target:
+    name: demo
+    creationPolicy: Owner
+    template:
+      data:
+        password: "{{ `{{ .password }}` }}"
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: ClusterGenerator
+          name: password-generator
