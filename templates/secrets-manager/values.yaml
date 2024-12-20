@@ -8,3 +8,12 @@
 # # in ArgoCD, which generates a warning. but it's not a problem and you can ignore it.
 #   - name: oauth2-proxy
 #     namespace: keycloak
+
+# # list of namespaces to create service account and get permission to read secrets
+# namespaces:
+#   - postgres
+#   - keycloak
+#   - backstage
+#   - argocd
+#   - monitoring
+#   - pgadmin

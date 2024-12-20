@@ -1,16 +1,14 @@
-# argocd oauth2 client secret has different requirements and is separated from the general template
-
 # ==========================================
-# Generate Secret for argocd
+# Generate Secret for user:application in database:app
 # ==========================================
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: argocd-client-secret-generate
+  name: db-app-user-application-secret-generate
 spec:
   refreshInterval: "0"
   target:
-    name: argocd-random-string
+    name: db-app-user-application-random-string
     creationPolicy: Owner
   dataFrom:
     - sourceRef:
@@ -25,8 +23,8 @@ spec:
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: client-secret-copy-argocd
-  namespace: argocd
+  name: db-app-user-application-secret-copy
+  namespace: postgres
 spec:
   secretStoreRef:
     name: k8s-store
@@ -34,15 +32,20 @@ spec:
 
   refreshInterval: "1h"
   target:
-    creationPolicy: Merge
-    name: argocd-secret
+    creationPolicy: Owner
+    name: database-app
     template:
       data:
-        oidc.keycloak.clientSecret: "{{ `{{ .clientSecret }}` }}"
+        password: "{{ `{{ .password }}` }}"
+        dbname: "app"
+        host: "database-rw"
+        port: "5432"
+        user: "application"
+        username: "application"
   data:
-    - secretKey: clientSecret
+    - secretKey: password
       remoteRef:
-        key: argocd-random-string
+        key: db-app-user-application-random-string
         property: password
         conversionStrategy: Default
         decodingStrategy: None
@@ -51,7 +54,7 @@ spec:
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: client-secret-copy-keycloak
+  name: db-app-user-application-secret-copy
   namespace: keycloak
 spec:
   secretStoreRef:
@@ -61,14 +64,38 @@ spec:
   refreshInterval: "1h"
   target:
     creationPolicy: Owner
-    name: argocd-oauth2-client-secret
+    name: pg-secret
     template:
       data:
-        client-secret: "{{ `{{ .clientSecret }}` }}"
+        KC_DB_PASSWORD: "{{ `{{ .password }}` }}"
+        KC_DB_USERNAME: "application"
   data:
-    - secretKey: clientSecret
+    - secretKey: password
       remoteRef:
-        key: argocd-random-string
+        key: db-app-user-application-random-string
+        property: password
+        conversionStrategy: Default
+        decodingStrategy: None
+        metadataPolicy: None
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: db-app-user-application-secret-copy
+  namespace: backstage
+spec:
+  secretStoreRef:
+    name: k8s-store
+    kind: ClusterSecretStore
+
+  refreshInterval: "1h"
+  target:
+    creationPolicy: Owner
+    name: pg-secret
+  data:
+    - secretKey: password
+      remoteRef:
+        key: db-app-user-application-random-string
         property: password
         conversionStrategy: Default
         decodingStrategy: None
