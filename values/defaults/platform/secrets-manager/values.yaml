@@ -7,3 +7,12 @@ applications:
     namespace: pgadmin
   - name: oauth2-proxy
     namespace: keycloak
+
+# list of namespaces to create service account and get permission to read secrets
+namespaces:
+  - postgres
+  - keycloak
+  - backstage
+  - argocd
+  - monitoring
+  - pgadmin
