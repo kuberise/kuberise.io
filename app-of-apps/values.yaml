@@ -138,7 +138,11 @@ ArgocdApplications:
       - Replace=true # ref: https://kyverno.io/docs/installation/platform-notes/ -> kubectl adds metadata that exceeds the limit allowed by Kubernetes. Using Replace overcomes this limitation. Another option is to use server-side apply,
     annotations:
       argocd.argoproj.io/tracking-id: kyverno # Use tracking-id for ArgoCD resource tracking
-
+    ignoreDifferences:
+      - group: argoproj.io/v1alpha1
+        kind: ValidatingWebhookConfiguration
+        jqPathExpressions:
+          - .metadata.finalizers
 
   #=================================#
   #      Monitoring Stack           #
