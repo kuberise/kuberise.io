@@ -11,6 +11,7 @@ metadata:
     {{- if .annotations }}
       {{- toYaml .annotations | nindent 4 }}
     {{- end }}
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   labels:
