@@ -166,8 +166,6 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
   labels:
     team: platform
-  annotations:
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   project: $platform_name
   source:
