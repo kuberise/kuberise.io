@@ -2,6 +2,10 @@
 
 # Array of images
 declare -a images=(
+    "ghcr.io/kyverno/kyverno-cli:v1.13.2"
+    "docker.io/bitnami/kubectl:1.30.2"
+    "ghcr.io/kyverno/kyvernopre:v1.13.2"
+    "ghcr.io/kyverno/kyverno-pre:v1.13.2"
     "ghcr.io/kyverno/kyverno:v1.13.2"
     "ghcr.io/kyverno/background-controller:v1.13.2"
     "ghcr.io/kyverno/cleanup-controller:v1.13.2"
