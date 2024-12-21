@@ -139,10 +139,10 @@ ArgocdApplications:
     annotations:
       argocd.argoproj.io/tracking-id: kyverno # Use tracking-id for ArgoCD resource tracking
     ignoreDifferences:
-      - group: argoproj.io/v1alpha1
-        kind: ValidatingWebhookConfiguration
-        jqPathExpressions:
-          - .metadata.finalizers
+      - group: "*"
+        kind: "*"
+        jsonPointers:
+          - /metadata/finalizers
 
   #=================================#
   #      Monitoring Stack           #
