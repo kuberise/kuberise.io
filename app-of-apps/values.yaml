@@ -129,6 +129,12 @@ ArgocdApplications:
   secrets-manager:
     enabled: false
 
+  kyverno:
+    enabled: false
+    repoURL: https://kyverno.github.io/kyverno
+    targetRevision: 3.3.4
+    chart: kyverno
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
