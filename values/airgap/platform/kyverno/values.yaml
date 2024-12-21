@@ -1,0 +1,4 @@
+# Airgap specific values for kyverno
+# global:
+#   image:
+#     registry: registry:5000
