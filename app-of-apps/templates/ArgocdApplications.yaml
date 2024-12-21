@@ -73,6 +73,11 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      {{- if .syncOptions }}
+      {{- range .syncOptions }}
+      - {{ . }}
+      {{- end }}
+      {{- end }}
   {{- if .ignoreDifferences }}
   ignoreDifferences:
     {{- toYaml .ignoreDifferences | nindent 4 }}

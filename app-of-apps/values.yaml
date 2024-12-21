@@ -134,6 +134,8 @@ ArgocdApplications:
     repoURL: https://kyverno.github.io/kyverno
     targetRevision: 3.3.4
     chart: kyverno
+    syncOptions:
+      - Replace=true # ref: https://kyverno.io/docs/installation/platform-notes/
 
   #=================================#
   #      Monitoring Stack           #
