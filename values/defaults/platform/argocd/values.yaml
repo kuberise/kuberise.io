@@ -51,6 +51,11 @@ configs:
       # 'all' - all resources
       # 'none' - disabled
       ignoreResourceStatusField: all
+      # ref: https://kyverno.io/docs/installation/platform-notes/
+      # You may want to also ignore differences in aggregated ClusterRoles which Kyverno uses by default.
+      # Aggregated ClusterRoles are built by aggregating other ClusterRoles in the cluster and are dynamic by nature,
+      # therefore desired and observed states cannot match.
+      ignoreAggregatedRoles: true
   params:
     server.insecure: true
 controller:
