@@ -92,7 +92,7 @@ ArgocdApplications:
     enabled: true
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
     enabled: true

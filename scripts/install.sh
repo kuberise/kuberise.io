@@ -156,7 +156,7 @@ spec:
 EOF
 
 # create app of apps
-  kubectl apply --context "$context" -n "$namespace" -f - <<EOF
+kubectl apply --context "$context" -n "$namespace" -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -166,6 +166,8 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
   labels:
     team: platform
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   project: $platform_name
   source:
@@ -286,8 +288,8 @@ fi
 check_required_tools
 
 # Install PodMonitor and ServiceMonitor CRDs to ensure other charts can be installed even if Prometheus is disabled.
-kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
-kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
+# kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml
 
 
 # Create Namespaces
