@@ -73,7 +73,7 @@ ArgocdApplications:
 
   oauth2-proxy:
     enabled: true
-    syncWave: 2
+    # syncWave: 2
 
   external-secrets:
     enabled: true
