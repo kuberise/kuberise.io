@@ -4,4 +4,4 @@ version: 1.0.0
 dependencies:
   - name: external-dns
     version: 8.7.0
-    repository: registry-1.docker.io/bitnamicharts
+    repository: oci://registry-1.docker.io/bitnamicharts
