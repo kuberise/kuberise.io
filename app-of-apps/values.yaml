@@ -33,7 +33,6 @@ ArgocdApplications:
 
   teams-namespaces:
     enabled: false
-    namespace: default
 
   #=================================#
   #      Data Services              #
@@ -61,23 +60,18 @@ ArgocdApplications:
 
   internal-dns:
     enabled: false
-    namespace: default
 
   external-dns:
     enabled: false
-    namespace: default
 
   ingress-nginx-external:
     enabled: false
-    namespace: ingress-nginx
 
   ingress-nginx-internal:
     enabled: false
-    namespace: ingress-nginx
 
   cilium:
     enabled: false
-    namespace: kube-system
 
   #=================================#
   #      Security & Auth            #
@@ -99,7 +93,6 @@ ArgocdApplications:
 
   cert-manager:
     enabled: false
-    namespace: cert-manager
 
   kyverno:
     enabled: false
