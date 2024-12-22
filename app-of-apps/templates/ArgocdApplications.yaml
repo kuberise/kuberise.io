@@ -33,15 +33,16 @@ spec:
     path: templates/{{ $name }}
     {{- end }}
     helm:
+      # ignoreMissingValueFiles: true
       valueFiles:
         {{- if hasKey . "values"}}
         - {{ .values }}
         {{- else if hasKey . "valuesFolder"}}
-        - values/defaults/{{ .valuesFolder }}/{{ $name }}/values.yaml
-        - values/{{ $.Values.global.platformName }}/{{ .valuesFolder }}/{{ $name }}/values.yaml
+        - ../../values/defaults/{{ .valuesFolder }}/{{ $name }}/values.yaml
+        - ../../values/{{ $.Values.global.platformName }}/{{ .valuesFolder }}/{{ $name }}/values.yaml
         {{- else }}
-        - values/defaults/platform/{{ $name }}/values.yaml
-        - values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml
+        - ../../values/defaults/platform/{{ $name }}/values.yaml
+        - ../../values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml
         {{- end }}
       parameters:
         - name: global.domain
