@@ -126,9 +126,6 @@ ArgocdApplications:
     enabled: false
     namespace: cert-manager
 
-  secrets-manager:
-    enabled: false
-
   kyverno:
     enabled: false
     repoURL: https://kyverno.github.io/kyverno

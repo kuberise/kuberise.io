@@ -78,9 +78,6 @@ ArgocdApplications:
   external-secrets:
     enabled: true
 
-  secrets-manager:
-    enabled: true
-
   kyverno:
     enabled: true
 

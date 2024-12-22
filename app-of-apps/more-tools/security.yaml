@@ -1,5 +1,6 @@
 # placeholder for more security tools
 ArgocdApplications:
+
   sealed-secrets:
     enabled: false
     repoURL: registry-1.docker.io/bitnamicharts
@@ -12,3 +13,6 @@ ArgocdApplications:
     namespace: vault
     targetRevision: 0.28.0
     chart: vault
+
+  secrets-manager:
+    enabled: false
