@@ -1,2 +1,3 @@
-image:
-  repository: registry:5000/epamedp/keycloak-operator
+keycloak-operator:
+  image:
+    repository: registry:5000/epamedp/keycloak-operator

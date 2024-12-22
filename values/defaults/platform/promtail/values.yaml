@@ -1,3 +1,4 @@
-config:
-  clients:
-    - url: http://loki-loki-distributed-gateway/loki/api/v1/push
+promtail:
+  config:
+    clients:
+      - url: http://loki-loki-distributed-gateway/loki/api/v1/push

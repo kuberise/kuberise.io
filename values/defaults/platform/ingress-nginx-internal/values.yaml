@@ -1,20 +1,21 @@
-controller:
-  metrics:
-    enabled: true
-    serviceMonitor:
+ingress-nginx:
+  controller:
+    metrics:
       enabled: true
+      serviceMonitor:
+        enabled: true
 
-  service:
-    type: ClusterIP
+    service:
+      type: ClusterIP
 
-  ingressClassResource:
-    enabled: true
-    name: nginx-internal
-    default: false
-    controllerValue: "k8s.io/ingress-nginx-internal"
+    ingressClassResource:
+      enabled: true
+      name: nginx-internal
+      default: false
+      controllerValue: "k8s.io/ingress-nginx-internal"
 
-  ingressClass: nginx-internal
+    ingressClass: nginx-internal
 
-  watchIngressWithoutClass: false
-  electionID: ingress-controller-leader-internal
-  ingressClassByName: true
+    watchIngressWithoutClass: false
+    electionID: ingress-controller-leader-internal
+    ingressClassByName: true

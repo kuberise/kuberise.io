@@ -2,7 +2,7 @@ apiVersion: v2
 name: cert-manager
 description: A Helm chart with cert-manager as subchart
 type: application
-version: 0.1.0
+version: 1.0.0
 appVersion: "0.1.0"
 dependencies:
   - name: cert-manager

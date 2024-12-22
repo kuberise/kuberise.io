@@ -1,2 +1,3 @@
-global:
-  imageRegistry: registry:5000
+promtail:
+  global:
+    imageRegistry: registry:5000

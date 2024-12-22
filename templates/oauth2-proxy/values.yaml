@@ -1,0 +1,3 @@
+# Default values for oauth2-proxy
+oauth2-proxy:
+  # Add any custom values for oauth2-proxy here

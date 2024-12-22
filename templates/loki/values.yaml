@@ -1,0 +1,3 @@
+# Default values for loki
+loki-distributed:
+  # Add any custom values for loki here
