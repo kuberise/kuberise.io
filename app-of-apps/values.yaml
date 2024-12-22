@@ -29,17 +29,13 @@ ArgocdApplications:
 
   argocd-image-updater:
     enabled: false
-    repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 0.11.1
-    chart: argocd-image-updater
     namespace: argocd
 
   teams-namespaces:
     enabled: false
-    namespace: default
 
   #=================================#
-  #      Data Services          #
+  #      Data Services              #
   #=================================#
 
   database:
@@ -50,10 +46,7 @@ ArgocdApplications:
 
   postgres-operator:
     enabled: false
-    repoURL: https://cloudnative-pg.github.io/charts
     namespace: postgres
-    targetRevision: 0.20.1
-    chart: cloudnative-pg
 
   pgadmin:
     enabled: false
@@ -67,33 +60,18 @@ ArgocdApplications:
 
   internal-dns:
     enabled: false
-    repoURL: registry-1.docker.io/bitnamicharts
-    targetRevision: 8.7.0
-    chart: external-dns
 
   external-dns:
     enabled: false
-    repoURL: registry-1.docker.io/bitnamicharts
-    targetRevision: 8.7.0
-    chart: external-dns
 
   ingress-nginx-external:
     enabled: false
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.11.3
-    chart: ingress-nginx
 
   ingress-nginx-internal:
     enabled: false
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.11.3
-    chart: ingress-nginx
 
   cilium:
     enabled: false
-    repoURL: https://helm.cilium.io
-    targetRevision: 1.16.4
-    chart: cilium
 
   #=================================#
   #      Security & Auth            #
@@ -104,33 +82,23 @@ ArgocdApplications:
 
   keycloak-operator:
     enabled: false
-    repoURL: https://epam.github.io/edp-helm-charts/stable
-    targetRevision: 1.23.0
-    chart: keycloak-operator
     namespace: keycloak
 
   external-secrets:
     enabled: false
-    repoURL: https://charts.external-secrets.io
-    targetRevision: 0.11.0
-    chart: external-secrets
 
   oauth2-proxy:
     enabled: false
-    repoURL: https://oauth2-proxy.github.io/manifests
-    targetRevision: 7.8.2
-    chart: oauth2-proxy
     namespace: keycloak
 
   cert-manager:
     enabled: false
-    namespace: cert-manager
 
   kyverno:
     enabled: false
-    repoURL: https://kyverno.github.io/kyverno
-    targetRevision: 3.3.4
-    chart: kyverno
+    finalizer:
+      - post-delete-finalizer.argocd.argoproj.io
+      - post-delete-finalizer.argocd.argoproj.io/cleanup
 
   #=================================#
   #      Monitoring Stack           #
@@ -143,30 +111,19 @@ ArgocdApplications:
 
   metrics-server:
     enabled: false
-    repoURL: https://kubernetes-sigs.github.io/metrics-server
-    targetRevision: 3.12.2
-    chart: metrics-server
+    namespace: kube-system
 
   kube-prometheus-stack:
     enabled: false
-    repoURL: https://prometheus-community.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 67.4.0
-    chart: kube-prometheus-stack
 
   loki:
     enabled: false
-    repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 0.79.4
-    chart: loki-distributed
 
   promtail:
     enabled: false
-    repoURL: https://grafana.github.io/helm-charts
     namespace: monitoring
-    targetRevision: 6.16.6
-    chart: promtail
 
   #=================================#
   #      Example Applications       #

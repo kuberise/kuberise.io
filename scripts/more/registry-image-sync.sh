@@ -2,6 +2,7 @@
 
 # Array of images
 declare -a images=(
+    "docker.io/mojtabaimani/backstage:1.0"
     # "ghcr.io/kyverno/kyverno-cli:v1.13.2"
     # "docker.io/bitnami/kubectl:1.30.2"
     # "ghcr.io/kyverno/kyvernopre:v1.13.2"
@@ -39,6 +40,7 @@ declare -a images=(
     # "quay.io/prometheus-operator/prometheus-config-reloader:v0.79.2"
     # "quay.io/prometheus-operator/prometheus-operator:v0.79.2"
     # "registry.k8s.io/ingress-nginx/controller:v1.12.0-beta.0"
+    # "registry.k8s.io/ingress-nginx/controller:v1.9.6"
     # "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6"
     # "quay.io/kiwigrid/k8s-sidecar:1.28.0"
     # "registry.k8s.io/metrics-server/metrics-server:v0.7.2"

@@ -1,0 +1,3 @@
+# Default values for postgres-operator
+# cloudnative-pg:
+  # Add any custom values for the postgres operator here

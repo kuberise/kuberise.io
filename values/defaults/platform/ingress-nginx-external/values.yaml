@@ -1,16 +1,17 @@
-controller:
-  metrics:
-    enabled: true
-    serviceMonitor:
+ingress-nginx:
+  controller:
+    metrics:
       enabled: true
-  ingressClassResource:
-    enabled: true
-    name: nginx-external
-    default: false
-    controllerValue: "k8s.io/ingress-nginx-external"
+      serviceMonitor:
+        enabled: true
+    ingressClassResource:
+      enabled: true
+      name: nginx-external
+      default: false
+      controllerValue: "k8s.io/ingress-nginx-external"
 
-  ingressClass: nginx-external
+    ingressClass: nginx-external
 
-  watchIngressWithoutClass: false
-  electionID: ingress-controller-leader-external
-  ingressClassByName: true
+    watchIngressWithoutClass: false
+    electionID: ingress-controller-leader-external
+    ingressClassByName: true

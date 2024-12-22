@@ -1,2 +1,3 @@
-global:
-  imageRegistry: registry:5000
+kube-prometheus-stack:
+  global:
+    imageRegistry: registry:5000

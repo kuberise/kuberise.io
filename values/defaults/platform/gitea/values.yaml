@@ -1,2 +1,3 @@
-persistence:
-  enabled: true
+gitea:
+  persistence:
+    enabled: true

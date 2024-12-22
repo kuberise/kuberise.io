@@ -1,4 +1,6 @@
+# Default values for cert-manager
 cert-manager:
+  # Add any custom values for cert-manager here
   installCRDs: true
   namespace: cert-manager
 
