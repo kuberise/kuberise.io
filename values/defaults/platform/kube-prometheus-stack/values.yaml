@@ -1,4 +1,5 @@
 kube-prometheus-stack:
+  fullnameOverride: kps
   grafana:
     datasources:
       datasources.yaml:
