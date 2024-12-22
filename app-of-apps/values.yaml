@@ -132,14 +132,25 @@ ArgocdApplications:
     targetRevision: 3.3.4
     chart: kyverno
     syncOptions:
-      - Replace=true # ref: https://kyverno.io/docs/installation/platform-notes/ -> kubectl adds metadata that exceeds the limit allowed by Kubernetes. Using Replace overcomes this limitation. Another option is to use server-side apply,
+      - Replace=true
+      - ServerSideApply=true
     annotations:
-      argocd.argoproj.io/tracking-id: kyverno # Use tracking-id for ArgoCD resource tracking
+      argocd.argoproj.io/tracking-id: kyverno
     ignoreDifferences:
       - group: "*"
         kind: "*"
         jsonPointers:
           - /metadata/finalizers
+      - group: "rbac.authorization.k8s.io"
+        kind: "ClusterRole"
+        jsonPointers:
+          - /metadata/resourceVersion
+          - /metadata/generation
+      - group: "rbac.authorization.k8s.io"
+        kind: "ClusterRoleBinding"
+        jsonPointers:
+          - /metadata/resourceVersion
+          - /metadata/generation
 
   #=================================#
   #      Monitoring Stack           #
