@@ -3,4 +3,4 @@ sealed-secrets:
     imageRegistry: registry:5000
 
     security:
-    allowInsecureImages: true
+      allowInsecureImages: true
