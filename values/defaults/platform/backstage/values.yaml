@@ -1,15 +1,13 @@
+service:
+  type: ClusterIP
+  port: 7007
 
 backstage:
-  service:
-    type: ClusterIP
-    port: 7007
-
-  backstage:
-    appConfig:
-      db:
-        connection:
-          host: database-rw.postgres.svc.cluster.local
-          port: 5432
-          user: application
-          existingSecret: pg-secret
-          existingSecretPasswordKey: password
+  appConfig:
+    db:
+      connection:
+        host: database-rw.postgres.svc.cluster.local
+        port: 5432
+        user: application
+        existingSecret: pg-secret
+        existingSecretPasswordKey: password
