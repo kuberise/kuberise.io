@@ -131,26 +131,6 @@ ArgocdApplications:
     repoURL: https://kyverno.github.io/kyverno
     targetRevision: 3.3.4
     chart: kyverno
-    syncOptions:
-      - Replace=true
-      - ServerSideApply=true
-    annotations:
-      argocd.argoproj.io/tracking-id: kyverno
-    ignoreDifferences:
-      - group: "*"
-        kind: "*"
-        jsonPointers:
-          - /metadata/finalizers
-      - group: "rbac.authorization.k8s.io"
-        kind: "ClusterRole"
-        jsonPointers:
-          - /metadata/resourceVersion
-          - /metadata/generation
-      - group: "rbac.authorization.k8s.io"
-        kind: "ClusterRoleBinding"
-        jsonPointers:
-          - /metadata/resourceVersion
-          - /metadata/generation
 
   #=================================#
   #      Monitoring Stack           #
