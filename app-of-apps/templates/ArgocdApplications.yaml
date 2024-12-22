@@ -13,6 +13,9 @@ metadata:
     {{- end }}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  {{- range .finalizer }}
+  - {{ . }}
+  {{- end }}
   labels:
     team: platform
 spec:
