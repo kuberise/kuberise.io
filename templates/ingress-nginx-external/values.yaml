@@ -1,3 +1,3 @@
 # Default values for ingress-nginx-external
-ingress-nginx:
+# ingress-nginx:
   # Add any custom values for ingress-nginx-external here
