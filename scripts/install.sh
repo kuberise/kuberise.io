@@ -174,11 +174,11 @@ spec:
     path: ./app-of-apps
     helm:
       valueFiles:
-        - tools/main.yaml
-        - tools/data.yaml
-        - tools/network.yaml
-        - tools/observability.yaml
-        - tools/security.yaml
+        - more-tools/main.yaml
+        - more-tools/data.yaml
+        - more-tools/network.yaml
+        - more-tools/observability.yaml
+        - more-tools/security.yaml
         - values-$platform_name.yaml
       parameters:
         - name: global.spec.source.repoURL
@@ -313,8 +313,17 @@ fi
 
 generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 
+# Secrets for PostgreSQL
+create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname=app --from-literal=host=database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
+create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=dbname=* --from-literal=host=database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
+
+# Keycloak and Backstage and Grafana secrets
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "admin-secret" "--from-literal=KEYCLOAK_ADMIN=admin --from-literal=KEYCLOAK_ADMIN_PASSWORD=$ADMIN_PASSWORD"
+create_secret "$CONTEXT" "$NAMESPACE_BACKSTAGE" "pg-secret" "--from-literal=password=$PG_APP_PASSWORD"
+
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-admin" "--from-literal=admin-user=admin --from-literal=admin-password=$ADMIN_PASSWORD --from-literal=ldap-toml="
+
 
 if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
   # Cloudflare API Token Secret for ExternalDNS if CLOUDFLARE_API_TOKEN is provided
@@ -331,7 +340,34 @@ create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal
 VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
 
+
+
 # Apply ArgoCD project and app of apps configuration
 deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
+
+
+# ------------------------------------------------------------
+# Generate OAuth2 Client Secrets for Keycloak Authentication
+# ------------------------------------------------------------
+
+# Grafana OAuth2 Secrets
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
+# PGAdmin OAuth2 Secrets
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
+# OAuth2-Proxy OAuth2 Secrets
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
+# ArgoCD OAuth2 Secrets
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64)
+kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
+data:
+  oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
+"
+# ----------------------------------------------------------------
 
 echo "Installation completed successfully."

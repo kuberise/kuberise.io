@@ -8,6 +8,10 @@ grafana:
         access: proxy
         url: http://loki-loki-distributed-gateway
         isDefault: false
+        jsonData:
+          httpHeaderName1: 'X-Scope-OrgID'
+        secureJsonData:
+          httpHeaderValue1: 'platform'
 
   adminPassword: ""
   admin:
@@ -85,7 +89,7 @@ prometheus:
     annotations:
       nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
       nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
-    #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+      nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email,X-Scope-OrgID
     hosts:
       - prometheus.{{ .Values.global.domain }}
     tls:
