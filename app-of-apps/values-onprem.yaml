@@ -5,13 +5,13 @@ ArgocdApplications:
   #=================================#
 
   argocd-image-updater:
-    enabled: true
+    enabled: false
 
   raw:
     enabled: true
 
   backstage:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Data Services          #
@@ -27,7 +27,7 @@ ArgocdApplications:
     enabled: true
 
   redis:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Network Services           #
@@ -72,36 +72,36 @@ ArgocdApplications:
     enabled: false
 
   sealed-secrets:
-    enabled: true
+    enabled: false
 
   oauth2-proxy:
-    enabled: true
+    enabled: false
     # syncWave: 2
 
   external-secrets:
-    enabled: true
+    enabled: false
 
   kyverno:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #
   #=================================#
 
   dashboards:
-    enabled: true
+    enabled: false
 
   metrics-server:
-    enabled: true
+    enabled: false
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Example Applications       #
