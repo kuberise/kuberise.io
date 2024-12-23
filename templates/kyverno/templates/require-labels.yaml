@@ -10,10 +10,12 @@ spec:
       - resources:
           kinds:
           - Pod
+          namespaces:
+          - default
     skipBackgroundRequests: true
     validate:
       allowExistingViolations: true
-      failureAction: Audit
+      failureAction: Enforce
       message: "label 'team' is required"
       pattern:
         metadata:
