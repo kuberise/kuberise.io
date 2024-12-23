@@ -26,6 +26,9 @@ ArgocdApplications:
   pgadmin:
     enabled: true
 
+  redis:
+    enabled: true
+
   #=================================#
   #      Network Services           #
   #=================================#

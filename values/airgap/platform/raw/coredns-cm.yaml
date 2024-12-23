@@ -6,7 +6,6 @@ metadata:
 data:
   Corefile: |
     .:53 {
-        forward . 8.8.8.8 8.8.4.4
         log
         errors
         health {
@@ -30,6 +29,7 @@ data:
         forward . /etc/resolv.conf {
            max_concurrent 1000
         }
+        forward . 8.8.8.8 8.8.4.4
         cache 30
         loop
         reload

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: redis
+version: 1.0.0
+dependencies:
+  - name: redis
+    version: 20.6.1
+    repository: oci://registry-1.docker.io/bitnamicharts
