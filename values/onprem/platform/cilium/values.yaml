@@ -1,2 +1,3 @@
-operator:
-  replicas: 1
+cilium:
+  operator:
+    replicas: 1

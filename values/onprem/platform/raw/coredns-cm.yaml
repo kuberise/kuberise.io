@@ -25,6 +25,7 @@ data:
       rewrite name kuberise.internal ingress-nginx-internal-controller.ingress-nginx-internal.svc.cluster.local
       rewrite name keycloak.kuberise.internal keycloak-http.keycloak.svc.cluster.local
       rewrite name regex (.*)\.onprem\.kuberise\.dev ingress-nginx-external-controller.ingress-nginx-external.svc.cluster.local
+      forward . 8.8.8.8 8.8.4.4
 
       forward . /etc/resolv.conf {
          max_concurrent 1000
