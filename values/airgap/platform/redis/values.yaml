@@ -1,0 +1,17 @@
+redis:
+  global:
+    imageRegistry: registry:5000
+
+  architecture: standalone
+  auth:
+    enabled: true
+
+  master:
+    persistence:
+      enabled: false
+
+  replica:
+    replicaCount: 0
+
+  sentinel:
+    enabled: false
