@@ -73,11 +73,12 @@ spec:
     {{- end }}
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
       {{- if .syncOptions }}
       {{- range .syncOptions }}
       - {{ . }}
       {{- end }}
+      {{- else }}
+      - ServerSideApply=true
       {{- end }}
   {{- if .ignoreDifferences }}
   ignoreDifferences:
