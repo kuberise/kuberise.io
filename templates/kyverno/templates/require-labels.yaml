@@ -21,3 +21,6 @@ spec:
         metadata:
           labels:
             team: "?*"
+
+# then try: k run nginx --image nginx
+# then try: k run nginx --image nginx --labels='team=alpha'
