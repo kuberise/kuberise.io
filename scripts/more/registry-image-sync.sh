@@ -2,7 +2,8 @@
 
 # Array of images
 declare -a images=(
-    "docker.io/mojtabaimani/backstage:1.0"
+    "docker.io/bitnami/redis:7.4.1-debian-12-r3"
+    # "docker.io/mojtabaimani/backstage:1.0"
     # "ghcr.io/kyverno/kyverno-cli:v1.13.2"
     # "docker.io/bitnami/kubectl:1.30.2"
     # "ghcr.io/kyverno/kyvernopre:v1.13.2"
