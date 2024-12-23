@@ -1,23 +1,37 @@
 ArgocdApplications:
 
-  keycloak:
-    enabled: true
-    # syncWave: 1
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
 
-  keycloak-operator:
-    enabled: true
-
-  database:
+  argocd-image-updater:
     enabled: true
 
   raw:
     enabled: true
 
-  dashboards:
+  backstage:
     enabled: true
 
-  metrics-server:
+  #=================================#
+  #      Data Services          #
+  #=================================#
+
+  database:
     enabled: true
+
+  postgres-operator:
+    enabled: true
+
+  pgadmin:
+    enabled: true
+
+  redis:
+    enabled: true
+
+  #=================================#
+  #      Network Services           #
+  #=================================#
 
   metallb:
     enabled: true
@@ -31,15 +45,54 @@ ArgocdApplications:
   external-dns:
     enabled: true
 
-  argocd-image-updater:
-    enabled: true
-
   ingress-nginx-internal:
     enabled: true
 
   ingress-nginx-external:
     enabled: true
 
+  cilium:
+    enabled: false
+
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
+
+  keycloak:
+    enabled: true
+    # syncWave: 1
+
+  keycloak-operator:
+    enabled: true
+
+  cert-manager:
+    enabled: true
+
+  vault:
+    enabled: false
+
+  sealed-secrets:
+    enabled: true
+
+  oauth2-proxy:
+    enabled: true
+    # syncWave: 2
+
+  external-secrets:
+    enabled: true
+
+  kyverno:
+    enabled: true
+
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
+
+  dashboards:
+    enabled: true
+
+  metrics-server:
+    enabled: true
 
   kube-prometheus-stack:
     enabled: true
@@ -50,22 +103,9 @@ ArgocdApplications:
   promtail:
     enabled: true
 
-  postgres-operator:
-    enabled: true
-
-  pgadmin:
-    enabled: true
-
-  cert-manager:
-    enabled: true
-
-  backstage:
-    enabled: false
-
-  vault:
-    enabled: false
-
-  # Microservices
+  #=================================#
+  #      Example Applications       #
+  #=================================#
 
   show-env:
     enabled: true
@@ -78,7 +118,4 @@ ArgocdApplications:
     enabled: true
 
   backend:
-    enabled: true
-
-  external-secrets:
     enabled: true
