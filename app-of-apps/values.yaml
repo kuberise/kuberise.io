@@ -23,7 +23,7 @@ ArgocdApplications:
 
   raw:
     enabled: false
-    path: platform/raw
+    path: values/{{ $.Values.global.platformName }}/platform/raw
     type: raw
     recursive: true
 
@@ -41,7 +41,7 @@ ArgocdApplications:
   database:
     enabled: false
     namespace: postgres
-    path: platform/database/
+    path: values/{{ $.Values.global.platformName }}/platform/database/
     type: raw
 
   postgres-operator:
@@ -113,9 +113,19 @@ ArgocdApplications:
     enabled: false
     namespace: kube-system
 
+  kube-prometheus-stack-crds:
+    enabled: true # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
+    repoURL: https://github.com/prometheus-community/helm-charts.git
+    path: charts/kube-prometheus-stack/charts/crds
+    namespace: monitoring
+    targetRevision: kube-prometheus-stack-67.4.0
+    type: raw
+
   kube-prometheus-stack:
     enabled: false
     namespace: monitoring
+    syncOptions:
+      - ServerSideApply=false
 
   loki:
     enabled: false

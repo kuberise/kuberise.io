@@ -1,3 +1,4 @@
 # Default values for kube-prometheus-stack
-# kube-prometheus-stack:
-  # Add any custom values for kube-prometheus-stack here
+kube-prometheus-stack:
+  crds:
+    enabled: false
