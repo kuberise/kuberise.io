@@ -23,7 +23,7 @@ ArgocdApplications:
 
   raw:
     enabled: false
-    path: platform/raw
+    path: values/{{ $.Values.global.platformName }}/platform/raw
     type: raw
     recursive: true
 
@@ -41,7 +41,7 @@ ArgocdApplications:
   database:
     enabled: false
     namespace: postgres
-    path: platform/database/
+    path: values/{{ $.Values.global.platformName }}/platform/database/
     type: raw
 
   postgres-operator:

@@ -52,7 +52,7 @@ spec:
           value: {{ $.Values.global.domain }}
   {{- else }}
     {{- if hasKey . "path"}}
-    path: values/{{ $.Values.global.platformName }}/{{ .path }}
+    path: {{ tpl .path $ }}
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
