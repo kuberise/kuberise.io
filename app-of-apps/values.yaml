@@ -114,7 +114,7 @@ ArgocdApplications:
     namespace: kube-system
 
   kube-prometheus-stack-crds:
-    enabled: false
+    enabled: true # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
     repoURL: https://github.com/prometheus-community/helm-charts.git
     path: charts/kube-prometheus-stack/charts/crds
     namespace: monitoring
