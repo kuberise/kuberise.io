@@ -113,6 +113,14 @@ ArgocdApplications:
     enabled: false
     namespace: kube-system
 
+  kube-prometheus-stack-crds:
+    enabled: false
+    repoURL: https://github.com/prometheus-community/helm-charts.git
+    path: charts/kube-prometheus-stack/charts/crds
+    namespace: monitoring
+    targetRevision: kube-prometheus-stack-67.4.0
+    type: raw
+
   kube-prometheus-stack:
     enabled: false
     namespace: monitoring
