@@ -1,30 +1,43 @@
-kustomize:
+ArgocdApplications:
+
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
+
+  argocd-image-updater:
+    enabled: false
+
+  raw:
+    enabled: true
+
+  backstage:
+    enabled: false
+
+  #=================================#
+  #      Data Services          #
+  #=================================#
 
   database:
     enabled: true
 
-  raw:
+  postgres-operator:
+    enabled: true
+
+  pgadmin:
     enabled: false
 
-  dashboards:
-    enabled: true
+  redis:
+    enabled: false
 
-helm:
-
-  external-dns:
-    enabled: true
+  #=================================#
+  #      Network Services           #
+  #=================================#
 
   internal-dns:
     enabled: true
 
-  argocd-image-updater:
+  external-dns:
     enabled: true
-
-  keycloak:
-    enabled: true
-
-  keycloak-operator:
-    enabled: false
 
   ingress-nginx-internal:
     enabled: true
@@ -32,28 +45,64 @@ helm:
   ingress-nginx-external:
     enabled: true
 
-  kube-prometheus-stack:
-    enabled: true
+  cilium:
+    enabled: false
 
-  loki:
-    enabled: true
+  aws-lb-controller:
+    enabled: false # deployed by the terraform code that created the eks cluster
 
-  promtail:
-    enabled: true
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
 
-  postgres-operator:
+  keycloak:
     enabled: true
+    # syncWave: 1
 
-  pgadmin:
+  keycloak-operator:
     enabled: true
 
   cert-manager:
     enabled: true
 
-  aws-lb-controller:
-    enabled: false # deployed by the terraform code that created the eks cluster
+  vault:
+    enabled: false
 
-  # Microservices
+  sealed-secrets:
+    enabled: false
+
+  oauth2-proxy:
+    enabled: false
+    # syncWave: 2
+
+  external-secrets:
+    enabled: false
+
+  kyverno:
+    enabled: false
+
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
+
+  dashboards:
+    enabled: true
+
+  metrics-server:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: false
+
+  loki:
+    enabled: false
+
+  promtail:
+    enabled: false
+
+  #=================================#
+  #      Example Applications       #
+  #=================================#
 
   show-env:
     enabled: true
@@ -66,7 +115,4 @@ helm:
     enabled: true
 
   backend:
-    enabled: true
-
-  external-secrets:
     enabled: true

@@ -60,9 +60,11 @@ ArgocdApplications:
 
   internal-dns:
     enabled: false
+    path: templates/external-dns
 
   external-dns:
     enabled: false
+    path: templates/external-dns
 
   ingress-nginx-external:
     enabled: false
