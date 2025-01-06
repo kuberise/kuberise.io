@@ -1,2 +1,2 @@
-internal-dns:
+external-dns:
   fullnameOverride: internal-dns
