@@ -54,11 +54,11 @@ ArgocdApplications:
   #=================================#
 
   keycloak:
-    enabled: false
+    enabled: true
     # syncWave: 1
 
   keycloak-operator:
-    enabled: false
+    enabled: true
 
   cert-manager:
     enabled: true
