@@ -41,10 +41,16 @@ configs:
         ignoreDifferences: |
           jqPathExpressions:
             - .webhooks[].clientConfig.caBundle
+            - .webhooks[].namespaceSelector
       admissionregistration.k8s.io/ValidatingWebhookConfiguration:
         ignoreDifferences: |
           jqPathExpressions:
             - .webhooks[].clientConfig.caBundle
+            - .webhooks[].namespaceSelector
+      v1/Service:
+        ignoreDifferences: |
+          jqPathExpressions:
+            - .spec.ports[].nodePort
     resource.compareoptions: |
       # disables status field diffing in specified resource types
       # 'crd' - CustomResourceDefinitions (default)

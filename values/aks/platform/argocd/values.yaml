@@ -1,7 +1,7 @@
 configs:
   cm:
     timeout.reconciliation: 5s
-    url: https://argocd.onprem.kuberise.dev
+    url: https://argocd.aks.kuberise.dev
     oidc.config: |
       name: Keycloak
       issuer: https://keycloak.aks.kuberise.dev/realms/platform

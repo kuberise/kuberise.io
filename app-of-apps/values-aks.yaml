@@ -87,16 +87,16 @@ ArgocdApplications:
     enabled: true
 
   metrics-server:
-    enabled: true
+    enabled: false # not needed for AKS
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
 
   loki:
-    enabled: false
+    enabled: true
 
   promtail:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Example Applications       #
