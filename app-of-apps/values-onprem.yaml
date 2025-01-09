@@ -89,19 +89,19 @@ ArgocdApplications:
   #=================================#
 
   dashboards:
-    enabled: true
+    enabled: false
 
   metrics-server:
-    enabled: true
+    enabled: false
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
 
   loki:
-    enabled: true
+    enabled: false
 
   promtail:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Example Applications       #
