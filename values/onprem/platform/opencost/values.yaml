@@ -1,6 +1,8 @@
-# opencost:
-#   opencost:
-#     ui:
-#       ingress:
-#         hosts:
-#           - opencost.onprem.kuberise.dev
+opencost:
+  opencost:
+    ui:
+      ingress:
+        hosts:
+          - host: opencost.{{ .Values.global.domain }}
+            paths:
+              - /

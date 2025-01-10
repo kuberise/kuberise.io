@@ -16,10 +16,8 @@ opencost:
         # annotations:
           # nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
           # nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
-        hosts:
-          - host: opencost.{{ .Values.global.domain }}
-            paths:
-              - /
+        hosts: [] # set this in the platform specific values file because opencost doesn't support tpl for this
+
 
     metrics:
       serviceMonitor:
