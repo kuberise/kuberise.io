@@ -1,0 +1,8 @@
+opencost:
+  opencost:
+    ui:
+      ingress:
+        hosts:
+          - host: opencost.eks.kuberise.dev
+            paths:
+              - /
