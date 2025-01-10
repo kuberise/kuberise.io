@@ -3,6 +3,6 @@ opencost:
     ui:
       ingress:
         hosts:
-          - host: opencost.{{ .Values.global.domain }}
+          - host: opencost.onprem.kuberise.dev
             paths:
               - /
