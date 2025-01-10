@@ -1,10 +1,13 @@
 opencost:
   opencost:
     prometheus:
+      internal:
+        enabled: false
       external:
         enabled: true
         url: http://kube-prometheus-stack-prometheus.monitoring:9090
-
+      amp:
+        enabled: false
     ui:
       enabled: true
       ingress:
@@ -18,8 +21,8 @@ opencost:
             paths:
               - /
 
-    # metrics:
-    #   serviceMonitor:
-    #     enabled: true
-    #     additionalLabels:
-    #       release: kube-prometheus-stack
+    metrics:
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus-stack
