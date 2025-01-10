@@ -1,0 +1,23 @@
+opencost:
+  opencost:
+    prometheus:
+      external:
+        enabled: true
+        url: http://kube-prometheus-stack-prometheus.monitoring:9090
+
+    ui:
+      enabled: true
+      ingress:
+        enabled: true
+        ingressClassName: nginx-external
+        # annotations:
+          # nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
+          # nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
+        hosts:
+          - opencost.{{ .Values.global.domain }}
+
+    metrics:
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus-stack

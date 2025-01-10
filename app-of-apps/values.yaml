@@ -137,6 +137,8 @@ ArgocdApplications:
     enabled: false
     namespace: monitoring
 
+  opencost:
+    enabled: false
   #=================================#
   #      Example Applications       #
   #=================================#
