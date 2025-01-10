@@ -103,6 +103,9 @@ ArgocdApplications:
   promtail:
     enabled: true
 
+  opencost:
+    enabled: true
+
   #=================================#
   #      Example Applications       #
   #=================================#
