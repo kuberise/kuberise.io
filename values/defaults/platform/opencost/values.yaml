@@ -18,8 +18,8 @@ opencost:
             paths:
               - /
 
-    metrics:
-      serviceMonitor:
-        enabled: true
-        additionalLabels:
-          release: kube-prometheus-stack
+    # metrics:
+    #   serviceMonitor:
+    #     enabled: true
+    #     additionalLabels:
+    #       release: kube-prometheus-stack
