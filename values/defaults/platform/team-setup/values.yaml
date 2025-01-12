@@ -23,6 +23,24 @@ groups:
       - name: staging
         roles:
           - view
+  frontend-admin:
+    description: "Frontend team with admin access to frontend namespace"
+    namespaces:
+      - name: frontend
+        roles:
+          - admin
+  frontend-edit:
+    description: "Frontend team with edit access to frontend namespace"
+    namespaces:
+      - name: frontend
+        roles:
+          - edit
+  frontend-view:
+    description: "Frontend team with view access to frontend namespace"
+    namespaces:
+      - name: frontend
+        roles:
+          - view
 
 users:
   - username: john.doe
@@ -31,6 +49,7 @@ users:
     email: john.doe@company.domain
     groups:
       - developers
+      - frontend-edit
   - username: jane.smith
     firstName: Jane
     lastName: Smith
@@ -38,6 +57,7 @@ users:
     groups:
       - developers
       - qa-team
+      - frontend-admin
   - username: bob.admin
     firstName: Bob
     lastName: Admin
