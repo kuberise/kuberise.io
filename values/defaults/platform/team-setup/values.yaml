@@ -41,6 +41,7 @@ groups:
       - name: frontend
         roles:
           - view
+          - edit
 
 users:
   - username: john.doe
@@ -69,4 +70,4 @@ users:
     lastName: Hesam
     email: ali.hesam@company.domain
     groups:
-      - operators
+      - frontend-view
