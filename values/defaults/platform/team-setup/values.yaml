@@ -47,6 +47,12 @@ groups:
       - name: betanamespace
         roles:
           - view
+  gamma:
+    description: "Gamma team with edit access to gamma namespace"
+    namespaces:
+      - name: gamma
+        roles:
+          - admin
 
 users:
   - username: john.doe
