@@ -1,0 +1,72 @@
+groups:
+  developers:
+    description: "Development team with edit access to dev namespace"
+    namespaces:
+      - name: dev
+        roles:
+          - edit  # Built-in ClusterRole
+      - name: staging
+        roles:
+          - view  # Built-in ClusterRole
+  operators:
+    description: "Operations team with cluster-wide admin access"
+    namespaces:
+      - name: "*"  # All namespaces
+        clusterRoles:  # Using clusterRoles for cluster-wide access
+          - cluster-admin
+  qa-team:
+    description: "QA team with edit access to qa namespace"
+    namespaces:
+      - name: qa
+        roles:
+          - edit
+      - name: staging
+        roles:
+          - view
+  frontend-admin:
+    description: "Frontend team with admin access to frontend namespace"
+    namespaces:
+      - name: frontend
+        roles:
+          - admin
+  frontend-edit:
+    description: "Frontend team with edit access to frontend namespace"
+    namespaces:
+      - name: frontend
+        roles:
+          - edit
+  frontend-view:
+    description: "Frontend team with view access to frontend namespace"
+    namespaces:
+      - name: frontend
+        roles:
+          - view
+
+users:
+  - username: john.doe
+    firstName: John
+    lastName: Doe
+    email: john.doe@company.domain
+    groups:
+      - developers
+      - frontend-edit
+  - username: jane.smith
+    firstName: Jane
+    lastName: Smith
+    email: jane.smith@company.domain
+    groups:
+      - developers
+      - qa-team
+      - frontend-admin
+  - username: bob.admin
+    firstName: Bob
+    lastName: Admin
+    email: bob.admin@company.domain
+    groups:
+      - operators
+  - username: ali.hesam
+    firstName: Ali
+    lastName: Hesam
+    email: ali.hesam@company.domain
+    groups:
+      - frontend-admin

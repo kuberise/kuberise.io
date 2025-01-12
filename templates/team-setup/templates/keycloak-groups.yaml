@@ -1,0 +1,12 @@
+{{- range $groupName, $groupConfig := .Values.groups }}
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmGroup
+metadata:
+  name: {{ $groupName }}
+spec:
+  name: {{ $groupName }}
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+{{- end }}

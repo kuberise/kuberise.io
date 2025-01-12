@@ -228,6 +228,35 @@ spec:
 EOF
 }
 
+function configure_oidc_auth() {
+  local context=$1
+  local client_secret=$2
+  local domain=$3
+
+  echo "Configuring OIDC authentication in kubeconfig..."
+
+  # Get cluster info from current context
+  local cluster_name=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"$context\")].context.cluster}")
+
+  # Add/Update oidc user
+  kubectl config set-credentials oidc \
+    --exec-api-version=client.authentication.k8s.io/v1beta1 \
+    --exec-command=kubectl \
+    --exec-arg=oidc-login \
+    --exec-arg=get-token \
+    --exec-arg=--oidc-issuer-url=https://keycloak.$domain/realms/platform \
+    --exec-arg=--oidc-client-id=kubernetes \
+    --exec-arg=--oidc-client-secret=$client_secret
+
+  # Add/Update oidc context using the same cluster as original context
+  kubectl config set-context oidc \
+    --cluster=$cluster_name \
+    --user=oidc \
+    --namespace=default
+
+  echo "OIDC authentication configured. Use 'kubectl config use-context oidc' to switch to OIDC authentication."
+}
+
 # Variables Initialization
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
@@ -351,6 +380,9 @@ deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "
 # Generate OAuth2 Client Secrets for Keycloak Authentication
 # ------------------------------------------------------------
 
+# Kubernetes OAuth2 Client Secrets
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+
 # Grafana OAuth2 Secrets
 create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
@@ -370,5 +402,9 @@ data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
 "
 # ----------------------------------------------------------------
+
+# Get the client secret from the kubernetes-oauth2-client-secret
+CLIENT_SECRET=$(kubectl get secret kubernetes-oauth2-client-secret -n keycloak -o jsonpath='{.data.client-secret}' | base64 -d)
+configure_oidc_auth "$CONTEXT" "$CLIENT_SECRET" "$DOMAIN"
 
 echo "Installation completed successfully."

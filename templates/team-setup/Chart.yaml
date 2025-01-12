@@ -1,0 +1,6 @@
+apiVersion: v2
+name: team-setup
+description: A Helm chart for managing Kubernetes RBAC with teams and groups
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

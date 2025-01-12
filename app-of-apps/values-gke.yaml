@@ -13,6 +13,9 @@ ArgocdApplications:
   backstage:
     enabled: false
 
+  team-setup:
+    enabled: true
+
   #=================================#
   #      Data Services          #
   #=================================#

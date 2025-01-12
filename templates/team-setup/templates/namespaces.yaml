@@ -1,0 +1,17 @@
+{{- $namespaces := list }}
+{{- range $groupName, $groupConfig := .Values.groups }}
+{{- range $namespace := $groupConfig.namespaces }}
+{{- if and $namespace.name (ne $namespace.name "*") }}
+{{- $namespaces = append $namespaces $namespace.name }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- $namespaces = uniq $namespaces }}
+
+{{- range $namespace := $namespaces }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $namespace }}
+{{- end }}

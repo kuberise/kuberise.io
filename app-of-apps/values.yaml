@@ -34,6 +34,10 @@ ArgocdApplications:
   teams-namespaces:
     enabled: false
 
+  team-setup:
+    enabled: false
+    namespace: keycloak
+
   #=================================#
   #      Data Services              #
   #=================================#
@@ -139,6 +143,7 @@ ArgocdApplications:
 
   opencost:
     enabled: false
+
   #=================================#
   #      Example Applications       #
   #=================================#
@@ -148,12 +153,14 @@ ArgocdApplications:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+    namespace: frontend
 
   # https container example with external traffic that receives traffic over https from ingress controller
   frontend-https:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+    namespace: frontend
 
   # a sample of microservice with internal traffic
   backend:
@@ -166,3 +173,4 @@ ArgocdApplications:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+    namespace: backend

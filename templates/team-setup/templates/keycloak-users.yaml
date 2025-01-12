@@ -1,0 +1,37 @@
+{{- range .Values.users }}
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmUser
+metadata:
+  name: {{ .username | replace "." "-" }}
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+spec:
+  username: {{ .username }}
+  email: {{ .email }}
+  emailVerified: true
+  enabled: true
+  firstName: {{ .firstName }}
+  lastName: {{ .lastName }}
+  keepResource: true
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  passwordSecret:
+    name: {{ .username | replace "." "-" }}-password
+    key: password
+  groups:
+  {{- range .groups }}
+    - {{ . }}
+  {{- end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .username | replace "." "-" }}-password
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+type: Opaque
+data:
+  password: {{ randAlphaNum 16 | b64enc }}
+{{- end }}

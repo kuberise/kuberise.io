@@ -1,0 +1,69 @@
+RBAC configuration has been applied:
+
+Groups configured with access:
+{{- range $groupName, $groupConfig := .Values.groups }}
+- {{ $groupName }}: {{ $groupConfig.description }}
+{{- range $namespace := $groupConfig.namespaces }}
+  - Namespace: {{ $namespace.name }}
+    {{- if $namespace.roles }}
+    - Roles: {{ join ", " $namespace.roles }}
+    {{- end }}
+    {{- if $namespace.clusterRoles }}
+    - ClusterRoles: {{ join ", " $namespace.clusterRoles }}
+    {{- end }}
+{{- end }}
+{{- end }}
+
+
+Enable OIDC authentication in minikube:
+```
+minikube cp .env/onprem/ca.crt /etc/ssl/certs/keycloak-ca.crt
+minikube start --ports=80:30080,443:30443 --cpus=max --memory=max \
+  --extra-config=apiserver.oidc-issuer-url=https://keycloak.onprem.kuberise.dev/realms/platform \
+  --extra-config=apiserver.oidc-client-id=kubernetes \
+  --extra-config=apiserver.oidc-username-claim=preferred_username \
+  --extra-config=apiserver.oidc-groups-claim=groups \
+  --extra-config=apiserver.oidc-ca-file=/etc/ssl/certs/keycloak-ca.crt
+```
+
+This is how to get a token for a user:
+```
+curl -q -s  -X POST "https://keycloak.onprem.kuberise.dev/realms/platform/protocol/openid-connect/token" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "grant_type=password" \
+-d "client_id=kubernetes" \
+-d "client_secret=<client-secret>" \
+-d "username=<uername>" \
+-d "password=<user-password>" | jq .access_token
+```
+
+How to add a user and context into kubeconfig:
+```
+contexts:
+- context:
+    cluster: minikube
+    namespace: default
+    user: oidc
+  name: oidc
+current-context: oidc
+users:
+- name: oidc
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - oidc-login
+      - get-token
+      - --oidc-issuer-url=https://keycloak.onprem.kuberise.dev/realms/platform
+      - --oidc-client-id=kubernetes
+      - --oidc-client-secret=<client-secret>
+      command: kubectl
+      env: null
+      interactiveMode: IfAvailable
+      provideClusterInfo: false
+```
+
+How to install oidc-login plugin:
+```
+brew install int128/kubelogin/kubelogin  # for macOS
+```
