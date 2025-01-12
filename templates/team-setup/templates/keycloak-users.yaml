@@ -11,13 +11,13 @@ spec:
   email: {{ .email }}
   emailVerified: true
   enabled: true
-  firstName: {{ .name | split "." | first | title }}
-  lastName: {{ .name | split "." | last | title }}
+  {{- $nameParts := split "." .name }}
+  firstName: {{ index $nameParts 0 | title }}
+  lastName: {{ index $nameParts 1 | title }}
   keepResource: true
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
-  # Generate a random initial password and store it in a secret
   passwordSecret:
     name: {{ .name | replace "." "-" }}-password
     key: password
