@@ -21,6 +21,16 @@ spec:
   optionalClientScopes:
     - 'groups'
   # Add protocol mapper configuration
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClientScope
+metadata:
+  name: kubernetes-groups
+spec:
+  default: true
+  name: 'groups'
+  description: 'Kubernetes groups client scope'
+  protocol: 'openid-connect'
   protocolMappers:
     - name: groups
       protocol: openid-connect
@@ -31,16 +41,6 @@ spec:
         id.token.claim: "true"
         access.token.claim: "true"
         userinfo.token.claim: "true"
----
-apiVersion: v1.edp.epam.com/v1
-kind: KeycloakClientScope
-metadata:
-  name: kubernetes-groups
-spec:
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
-  default: true
-  name: 'groups'
-  protocol: 'openid-connect'
-  description: 'Kubernetes groups client scope'
