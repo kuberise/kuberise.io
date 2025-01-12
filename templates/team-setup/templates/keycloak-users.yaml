@@ -11,8 +11,8 @@ spec:
   email: {{ .email }}
   emailVerified: true
   enabled: true
-  firstName: .firstName
-  lastName: .lastName
+  firstName: {{ .firstName }}
+  lastName: {{ .lastName }}
   keepResource: true
   realmRef:
     kind: KeycloakRealm
