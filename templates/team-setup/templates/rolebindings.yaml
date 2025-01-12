@@ -1,0 +1,39 @@
+{{- range $groupName, $groupConfig := .Values.groups }}
+{{- range $namespace := $groupConfig.namespaces }}
+{{- if $namespace.roles }}
+{{- range $role := $namespace.roles }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $groupName }}-{{ $namespace.name }}-{{ $role }}
+  namespace: {{ $namespace.name }}
+subjects:
+- kind: Group
+  name: {{ $groupName }}
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole  # Using ClusterRole instead of Role for built-in roles
+  name: {{ $role }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
+{{- if $namespace.clusterRoles }}
+{{- range $clusterRole := $namespace.clusterRoles }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ $groupName }}-{{ $clusterRole }}
+subjects:
+- kind: Group
+  name: {{ $groupName }}
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: {{ $clusterRole }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

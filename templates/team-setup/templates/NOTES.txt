@@ -1,0 +1,15 @@
+RBAC configuration has been applied:
+
+Groups configured with access:
+{{- range $groupName, $groupConfig := .Values.groups }}
+- {{ $groupName }}: {{ $groupConfig.description }}
+{{- range $namespace := $groupConfig.namespaces }}
+  - Namespace: {{ $namespace.name }}
+    {{- if $namespace.roles }}
+    - Roles: {{ join ", " $namespace.roles }}
+    {{- end }}
+    {{- if $namespace.clusterRoles }}
+    - ClusterRoles: {{ join ", " $namespace.clusterRoles }}
+    {{- end }}
+{{- end }}
+{{- end }}
