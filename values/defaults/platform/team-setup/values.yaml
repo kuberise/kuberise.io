@@ -41,18 +41,6 @@ groups:
       - name: frontend
         roles:
           - view
-  beta:
-    description: "Beta team with edit access to beta namespace"
-    namespaces:
-      - name: betanamespace
-        roles:
-          - view
-  gamma:
-    description: "Gamma team with edit access to gamma namespace"
-    namespaces:
-      - name: gamma
-        roles:
-          - admin
 
 users:
   - username: john.doe
