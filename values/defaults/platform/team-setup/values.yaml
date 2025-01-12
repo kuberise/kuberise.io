@@ -64,3 +64,9 @@ users:
     email: bob.admin@company.domain
     groups:
       - operators
+  - username: ali.hesam
+    firstName: Ali
+    lastName: Hesam
+    email: ali.hesam@company.domain
+    groups:
+      - operators
