@@ -41,6 +41,12 @@ groups:
       - name: frontend
         roles:
           - view
+  beta:
+    description: "Beta team with edit access to beta namespace"
+    namespaces:
+      - name: beta
+        roles:
+          - view
 
 users:
   - username: john.doe
