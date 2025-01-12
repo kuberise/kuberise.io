@@ -25,16 +25,22 @@ groups:
           - view
 
 users:
-  - name: john.doe
+  - username: john.doe
+    firstName: John
+    lastName: Doe
     email: john.doe@company.domain
     groups:
       - developers
-  - name: jane.smith
+  - username: jane.smith
+    firstName: Jane
+    lastName: Smith
     email: jane.smith@company.domain
     groups:
       - developers
       - qa-team
-  - name: bob.admin
+  - username: bob.admin
+    firstName: Bob
+    lastName: Admin
     email: bob.admin@company.domain
     groups:
       - operators
