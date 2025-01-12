@@ -9,5 +9,4 @@ spec:
   realmRef:
     kind: KeycloakRealm
     name: platform-realm
-  description: {{ $groupConfig.description | quote }}
 {{- end }}
