@@ -1,0 +1,46 @@
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClient
+metadata:
+  name: kubernetes-client
+spec:
+  clientId: kubernetes
+  authorizationServicesEnabled: false
+  directAccess: true
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  secret: '$kubernetes-oauth2-client-secret:client-secret'
+  serviceAccount:
+    enabled: true
+  webUrl: 'https://keycloak.{{ .Values.global.domain }}/'
+  redirectUris:
+    - 'https://keycloak.{{ .Values.global.domain }}/*'
+    - 'http://localhost:8000/*'
+    - 'http://localhost:18000/*'
+  # Add groups scope
+  optionalClientScopes:
+    - 'groups'
+  # Add protocol mapper configuration
+  protocolMappers:
+    - name: groups
+      protocol: openid-connect
+      protocolMapper: oidc-group-membership-mapper
+      config:
+        claim.name: groups
+        full.path: "false"
+        id.token.claim: "true"
+        access.token.claim: "true"
+        userinfo.token.claim: "true"
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakClientScope
+metadata:
+  name: kubernetes-groups
+spec:
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  default: true
+  name: 'groups'
+  protocol: 'openid-connect'
+  description: 'Kubernetes groups client scope'

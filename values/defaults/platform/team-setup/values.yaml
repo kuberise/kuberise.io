@@ -23,3 +23,18 @@ groups:
       - name: staging
         roles:
           - view
+
+users:
+  - name: john.doe
+    email: john.doe@company.domain
+    groups:
+      - developers
+  - name: jane.smith
+    email: jane.smith@company.domain
+    groups:
+      - developers
+      - qa-team
+  - name: bob.admin
+    email: bob.admin@company.domain
+    groups:
+      - operators

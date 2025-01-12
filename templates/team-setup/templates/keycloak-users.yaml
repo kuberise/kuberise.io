@@ -1,0 +1,38 @@
+{{- range .Values.users }}
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmUser
+metadata:
+  name: {{ .name | replace "." "-" }}
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+spec:
+  username: {{ .name }}
+  email: {{ .email }}
+  emailVerified: true
+  enabled: true
+  firstName: {{ .name | split "." | first | title }}
+  lastName: {{ .name | split "." | last | title }}
+  keepResource: true
+  realmRef:
+    kind: KeycloakRealm
+    name: platform-realm
+  # Generate a random initial password and store it in a secret
+  passwordSecret:
+    name: {{ .name | replace "." "-" }}-password
+    key: password
+  groups:
+  {{- range .groups }}
+    - {{ . }}
+  {{- end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .name | replace "." "-" }}-password
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+type: Opaque
+data:
+  password: {{ randAlphaNum 16 | b64enc }}
+{{- end }}

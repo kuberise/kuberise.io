@@ -1,0 +1,15 @@
+{{- range $groupName, $groupConfig := .Values.groups }}
+---
+apiVersion: v1.edp.epam.com/v1
+kind: KeycloakRealmGroup
+metadata:
+  name: {{ $groupName }}
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+spec:
+  name: {{ $groupName }}
+  realm: platform-realm
+  description: {{ $groupConfig.description | quote }}
+  keepResource: true
+  attributes: {}
+{{- end }}

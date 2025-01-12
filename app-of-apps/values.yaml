@@ -36,6 +36,7 @@ ArgocdApplications:
 
   team-setup:
     enabled: false
+    namespace: keycloak
 
   #=================================#
   #      Data Services              #
