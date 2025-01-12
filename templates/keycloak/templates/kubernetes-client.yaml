@@ -20,6 +20,8 @@ spec:
   # Add groups scope
   optionalClientScopes:
     - 'groups'
+  defaultClientScopes:
+    - 'groups'
   # Add protocol mapper configuration
 ---
 apiVersion: v1.edp.epam.com/v1
