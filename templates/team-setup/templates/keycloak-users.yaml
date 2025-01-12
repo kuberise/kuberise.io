@@ -12,8 +12,8 @@ spec:
   emailVerified: true
   enabled: true
   {{- $nameParts := split "." .name }}
-  firstName: {{ index $nameParts 0 | title }}
-  lastName: {{ index $nameParts 1 | title }}
+  firstName: {{ (index $nameParts 0) | toString | title }}
+  lastName: {{ (index $nameParts 1) | toString | title }}
   keepResource: true
   realmRef:
     kind: KeycloakRealm
