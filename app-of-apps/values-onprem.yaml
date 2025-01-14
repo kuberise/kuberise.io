@@ -100,7 +100,7 @@ ArgocdApplications:
     enabled: true
     syncWave: 1
 
-    kube-prometheus-stack:
+  kube-prometheus-stack:
     enabled: true
     syncWave: 1
 
