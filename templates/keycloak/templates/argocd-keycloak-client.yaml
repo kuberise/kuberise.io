@@ -34,19 +34,6 @@ spec:
         userinfo.token.claim: "true"
 ---
 apiVersion: v1.edp.epam.com/v1
-kind: KeycloakClientScope
-metadata:
-  name: argocd-groups
-spec:
-  realmRef:
-    kind: KeycloakRealm
-    name: platform-realm
-  default: true
-  description: 'ArgoCD groups client scope'
-  name: 'groups'
-  protocol: 'openid-connect'
----
-apiVersion: v1.edp.epam.com/v1
 kind: KeycloakRealmGroup
 metadata:
   name: argocd-admins
