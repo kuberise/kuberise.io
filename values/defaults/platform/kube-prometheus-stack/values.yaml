@@ -87,10 +87,10 @@ kube-prometheus-stack:
     ingress:
       enabled: true
       ingressClassName: nginx-external
-      # annotations: # enable this when you want to use oauth2-proxy for prometheus
-      #   nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
-      #   nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
-      #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email,X-Scope-OrgID
+      annotations: # enable this when you want to use oauth2-proxy for prometheus
+        nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
+        nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
+        nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email,X-Scope-OrgID
       hosts:
         - prometheus.{{ .Values.global.domain }}
       tls:
