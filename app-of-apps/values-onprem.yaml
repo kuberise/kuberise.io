@@ -67,6 +67,7 @@ ArgocdApplications:
 
   keycloak-operator:
     enabled: true
+    syncWave: 1
 
   cert-manager:
     enabled: true
@@ -93,21 +94,27 @@ ArgocdApplications:
 
   dashboards:
     enabled: true
+    syncWave: 1
 
   metrics-server:
     enabled: true
+    syncWave: 1
 
-  kube-prometheus-stack:
+    kube-prometheus-stack:
     enabled: true
+    syncWave: 1
 
   loki:
     enabled: true
+    syncWave: 1
 
   promtail:
     enabled: true
+    syncWave: 1
 
   opencost:
     enabled: false
+    syncWave: 1
 
   #=================================#
   #      Example Applications       #
