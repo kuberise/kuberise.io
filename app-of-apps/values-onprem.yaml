@@ -5,7 +5,7 @@ ArgocdApplications:
   #=================================#
 
   argocd-image-updater:
-    enabled: false
+    enabled: true
 
   raw:
     enabled: true
@@ -78,7 +78,7 @@ ArgocdApplications:
     enabled: false
 
   oauth2-proxy:
-    enabled: false
+    enabled: true
     # syncWave: 2
 
   external-secrets:
