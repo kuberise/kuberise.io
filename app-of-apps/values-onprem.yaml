@@ -93,23 +93,23 @@ ArgocdApplications:
   #=================================#
 
   dashboards:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   metrics-server:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   loki:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   promtail:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   opencost:
