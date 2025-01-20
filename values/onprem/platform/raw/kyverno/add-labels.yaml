@@ -5,6 +5,7 @@ metadata:
 spec:
   rules:
   - name: add-project
+    skipBackgroundRequests: true
     match:
       any:
       - resources:
