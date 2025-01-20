@@ -17,4 +17,4 @@ spec:
       patchStrategicMerge:
         metadata:
           labels:
-            +(project): alpha
+            +(project): bravo
