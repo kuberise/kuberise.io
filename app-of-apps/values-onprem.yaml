@@ -86,30 +86,30 @@ ArgocdApplications:
     enabled: false
 
   kyverno:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #
   #=================================#
 
   dashboards:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   metrics-server:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   kube-prometheus-stack:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   loki:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   promtail:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   opencost:
