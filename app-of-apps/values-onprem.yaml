@@ -86,7 +86,7 @@ ArgocdApplications:
     enabled: false
 
   kyverno:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Monitoring Stack           #
