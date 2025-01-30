@@ -11,7 +11,7 @@ ArgocdApplications:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   team-setup:
     enabled: true
