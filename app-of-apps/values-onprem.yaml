@@ -55,7 +55,8 @@ ArgocdApplications:
     enabled: true
 
   cilium:
-    enabled: false
+    enabled: true
+
 
   #=================================#
   #      Security & Auth            #
