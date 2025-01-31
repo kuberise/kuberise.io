@@ -8,6 +8,9 @@ cilium:
       enabled: true
     ui:
       enabled: true
+      securityContext:
+        apparmor:
+          enabled: false
       ingress:
         enabled: true
         className: nginx  # Specify your ingress class
