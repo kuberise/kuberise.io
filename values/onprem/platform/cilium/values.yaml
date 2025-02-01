@@ -1,17 +1,10 @@
 cilium:
-  podSecurityContext: {}
-  envoy:
-    podSecurityContext: {}
   operator:
     replicas: 1
-    podSecurityContext: {}
-  nodeinit:
-    podSecurityContext: {}
   hubble:
     enabled: true
     relay:
       enabled: true
-      podSecurityContext: {}
     ui:
       enabled: true
       ingress:
