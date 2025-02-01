@@ -56,7 +56,7 @@ ArgocdApplications:
 
   cilium:
     enabled: true
-
+    syncWave: 1
 
   #=================================#
   #      Security & Auth            #
