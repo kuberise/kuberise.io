@@ -57,7 +57,11 @@ ArgocdApplications:
   cilium:
     enabled: true
     syncWave: 1
-
+    ignoreDifferences:
+      - group: "*"
+        kind: "*"
+        jsonPointers:
+        - /spec/template/spec/securityContext/appArmorProfile
   #=================================#
   #      Security & Auth            #
   #=================================#
