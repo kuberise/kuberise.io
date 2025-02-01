@@ -13,14 +13,6 @@ cilium:
           enabled: false
       ingress:
         enabled: true
-        className: nginx  # Specify your ingress class
+        className: nginx-external
         hosts:
-          - hubble.onprem.kuberise.dev  # Replace with your domain
-        annotations:
-          # Add any required annotations for your ingress controller
-          kubernetes.io/ingress.class: nginx
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
-        tls:
-          - hosts:
-              - hubble.onprem.kuberise.dev
-            secretName: hubble-tls-secret  # Optional: for HTTPS
+          - hubble.onprem.kuberise.dev
