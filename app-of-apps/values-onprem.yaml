@@ -55,8 +55,13 @@ ArgocdApplications:
     enabled: true
 
   cilium:
-    enabled: false
-
+    enabled: true
+    syncWave: 1
+    ignoreDifferences:
+      - group: "*"
+        kind: "*"
+        jsonPointers:
+        - /spec/template/spec/securityContext/appArmorProfile
   #=================================#
   #      Security & Auth            #
   #=================================#
@@ -113,7 +118,7 @@ ArgocdApplications:
     syncWave: 1
 
   opencost:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   #=================================#
