@@ -12,3 +12,9 @@ configs:
         groups:
           essential: true
       groupsAttributePath: groups
+
+
+server:
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned
