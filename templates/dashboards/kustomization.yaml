@@ -17,6 +17,9 @@ configMapGenerator:
   - name: ingress-nginx-dashboards
     files:
       - json/ingress-nginx-dashboard.json
+  - name: kyverno-dashboards
+    files:
+      - json/kyverno-rev2.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
