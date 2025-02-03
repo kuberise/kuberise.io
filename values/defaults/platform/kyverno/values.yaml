@@ -9,6 +9,6 @@ kyverno:
   cleanupController:
     serviceMonitor:
       enabled: true
-  reportController:
+  reportsController:
     serviceMonitor:
       enabled: true
