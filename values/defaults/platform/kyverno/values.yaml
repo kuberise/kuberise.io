@@ -1,4 +1,14 @@
 # Default values for kyverno
 kyverno:
-  serviceMonitor:
-    enabled: true
+  admissionController:
+    serviceMonitor:
+      enabled: true
+  backgroundController:
+    serviceMonitor:
+      enabled: true
+  cleanupController:
+    serviceMonitor:
+      enabled: true
+  reportController:
+    serviceMonitor:
+      enabled: true
