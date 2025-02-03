@@ -1,1 +1,4 @@
 # Default values for kyverno
+kyverno:
+  serviceMonitor:
+    enabled: true
