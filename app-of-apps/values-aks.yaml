@@ -100,7 +100,9 @@ ArgocdApplications:
 
   promtail:
     enabled: true
-
+  opencost:
+    enabled: true
+    # syncWave: 1
   #=================================#
   #      Example Applications       #
   #=================================#
