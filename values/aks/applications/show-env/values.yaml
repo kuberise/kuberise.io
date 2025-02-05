@@ -3,7 +3,8 @@ image:
 
 autoscaling:
   enabled: false
-replicaCount: 3
+
+replicaCount: 1
 
 env:
   Environment: dev

@@ -5,7 +5,7 @@ ArgocdApplications:
   #=================================#
 
   argocd-image-updater:
-    enabled: false
+    enabled: true
 
   raw:
     enabled: true
