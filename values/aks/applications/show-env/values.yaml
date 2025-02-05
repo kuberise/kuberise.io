@@ -1,6 +1,9 @@
 image:
   tag: latest
 
+autoscaling:
+  enabled: false
+
 replicaCount: 1
 
 env:

@@ -73,7 +73,7 @@ ArgocdApplications:
     enabled: false
 
   oauth2-proxy:
-    enabled: false
+    enabled: true
     # syncWave: 2
 
   external-secrets:
@@ -101,6 +101,9 @@ ArgocdApplications:
   promtail:
     enabled: true
 
+  opencost:
+    enabled: true
+    # syncWave: 1
   #=================================#
   #      Example Applications       #
   #=================================#
