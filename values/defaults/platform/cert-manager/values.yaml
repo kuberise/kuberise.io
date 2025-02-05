@@ -18,3 +18,4 @@ subdomains:
   - "prometheus"
   - "frontend-https"
   - "oauth2-proxy"
+  - "opencost"
