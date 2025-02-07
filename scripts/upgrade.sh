@@ -55,7 +55,35 @@ while getopts "hy" opt; do
     esac
 done
 
-# Rest of the script remains the same
+# Function to get index.yaml content from HTTP repository
+get_index_yaml() {
+    local repo_url=$1
+    # Remove trailing slash if present
+    repo_url=${repo_url%/}
+
+    # Add index.yaml to the URL
+    local index_url="${repo_url}/index.yaml"
+
+    # Download index.yaml using curl
+    local response
+    response=$(curl -s -L "$index_url")
+    if [ $? -eq 0 ]; then
+        echo "$response"
+    else
+        echo "Failed to fetch index.yaml from $index_url" >&2
+        return 1
+    fi
+}
+
+# Function to get latest version from index.yaml content
+get_latest_version_from_index() {
+    local index_content=$1
+    local chart_name=$2
+
+    # Use yq to parse the index.yaml and get the latest version
+    echo "$index_content" | yq e ".entries.${chart_name}[0].version" -
+}
+
 # Function to get the latest version of a chart from a repository
 get_latest_version() {
     local repo_url=$1
@@ -71,27 +99,25 @@ get_latest_version() {
             echo "$latest_version"
             return 0
         else
-            echo "Failed to fetch chart info from OCI registry"
+            echo "Failed to fetch chart info from OCI registry" >&2
             return 1
         fi
     fi
 
-    # Remove trailing slash if present
-    repo_url=${repo_url%/}
-
-    # Add helm repo temporarily with a unique name
-    local repo_hash=$(echo "$repo_url" | md5sum | cut -c1-8)
-    helm repo add "temp_${repo_hash}" "$repo_url" >/dev/null 2>&1
-
-    # Search for the latest version
-    local latest_version=$(helm search repo "temp_${repo_hash}/$chart_name" --versions --output json | jq -r '.[0].version' 2>/dev/null)
-
-    # Remove temporary repo
-    helm repo remove "temp_${repo_hash}" >/dev/null 2>&1
-
-    if [[ -n "$latest_version" ]]; then
-        echo "$latest_version"
+    # For HTTP-based repositories, use index.yaml
+    local index_content
+    index_content=$(get_index_yaml "$repo_url")
+    if [[ $? -eq 0 ]]; then
+        local latest_version
+        latest_version=$(get_latest_version_from_index "$index_content" "$chart_name")
+        if [[ -n "$latest_version" ]]; then
+            echo "$latest_version"
+            return 0
+        fi
     fi
+
+    echo "Failed to determine latest version" >&2
+    return 1
 }
 
 # Function to process a Chart.yaml file
