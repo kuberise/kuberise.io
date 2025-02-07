@@ -76,8 +76,20 @@ process_chart() {
 # Main script
 echo "Checking for helm chart dependency updates..."
 
-# Find all Chart.yaml files in the templates directory
-find templates -name Chart.yaml | while read -r chart_file; do
+# Store found Chart.yaml files in an array
+chart_files=$(find templates -name Chart.yaml | sort)
+# Print the list of found chart files
+echo "Found the following chart files:"
+echo "$chart_files"
+
+# Check if any files were found
+if [ ${#chart_files[@]} -eq 0 ]; then
+    echo "No Chart.yaml files found in templates directory"
+    exit 0
+fi
+
+# Process each chart file
+for chart_file in "${chart_files[@]}"; do
     process_chart "$chart_file"
 done
 
