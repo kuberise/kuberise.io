@@ -76,11 +76,12 @@ process_chart() {
 # Main script
 echo "Checking for helm chart dependency updates..."
 
-# Store found Chart.yaml files in an array
-chart_files=$(find templates -name Chart.yaml | sort)
+# Store found Chart.yaml files in an array - macOS compatible version
+IFS=$'\n' read -r -d '' -a chart_files < <(find templates -name Chart.yaml | sort)
+
 # Print the list of found chart files
-echo "Found the following chart files:"
-echo "$chart_files"
+# echo "Found the following chart files:"
+# printf '%s\n' "${chart_files[@]}"
 
 # Check if any files were found
 if [ ${#chart_files[@]} -eq 0 ]; then
