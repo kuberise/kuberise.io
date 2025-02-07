@@ -34,10 +34,10 @@ get_latest_version() {
 process_chart() {
     local chart_file=$1
     echo "Processing: $chart_file"
-    echo "----------------------------------------"
+    # echo "----------------------------------------"
 
     # Check if file has dependencies
-    if ! yq e '.dependencies' "$chart_file" >/dev/null 2>&1; then
+    if ! yq e -e '.dependencies' "$chart_file" > /dev/null 2>&1; then
         echo "No dependencies found in $chart_file"
         echo "----------------------------------------"
         return
