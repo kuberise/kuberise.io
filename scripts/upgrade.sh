@@ -39,7 +39,7 @@ list_dependencies() {
 
     # Print header
     printf "\nListing all chart dependencies:\n"
-    printf "%-40s %-30s %-20s %s\n" "CHART PATH" "DEPENDENCY" "VERSION" "REPOSITORY"
+    printf "%-30s %-20s %s\n" "DEPENDENCY" "VERSION" "REPOSITORY"
     printf "%s\n" "--------------------------------------------------------------------------------"
 
     for chart_file in "${chart_files[@]}"; do
@@ -56,13 +56,7 @@ list_dependencies() {
             local version=$(yq e ".dependencies[$i].version" "$chart_file")
             local repo=$(yq e ".dependencies[$i].repository" "$chart_file")
 
-            # Truncate chart_file path if too long
-            local chart_display="${chart_file}"
-            if [ ${#chart_display} -gt 39 ]; then
-                chart_display="...${chart_display: -36}"
-            fi
-
-            printf "%-40s %-30s %-20s %s\n" "$chart_display" "$name" "$version" "$repo"
+            printf "%-30s %-20s %s\n" "$name" "$version" "$repo"
         done
     done
 
