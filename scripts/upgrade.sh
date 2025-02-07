@@ -1,5 +1,61 @@
 #!/bin/bash
 
+# Function to display help message
+show_help() {
+    cat << EOF
+Usage: $(basename $0) [options]
+
+This script checks and updates Helm chart dependencies in all Chart.yaml files
+found in the templates directory. It compares current dependency versions with
+the latest available versions from their respective repositories.
+
+Options:
+    -h, --help    Show this help message
+    -y            Automatically update all dependencies without asking for confirmation
+                  (Default behavior is to ask for confirmation for each update)
+
+Examples:
+    $(basename $0)          # Run with confirmation prompts
+    $(basename $0) -y       # Run with automatic updates
+    $(basename $0) --help   # Show this help message
+
+The script will:
+1. Search for all Chart.yaml files in the templates directory
+2. Check each chart's dependencies
+3. Compare current versions with latest available versions
+4. Update versions if newer versions are available
+
+Supports both HTTP-based Helm repositories and OCI registries.
+EOF
+    exit 0
+}
+
+# Check for --help first
+for arg in "$@"; do
+    if [ "$arg" == "--help" ]; then
+        show_help
+    fi
+done
+
+# Parse command line arguments
+AUTO_CONFIRM=false
+while getopts "hy" opt; do
+    case ${opt} in
+        h )
+            show_help
+            ;;
+        y )
+            AUTO_CONFIRM=true
+            ;;
+        \? )
+            echo "Invalid option: -$OPTARG" 1>&2
+            echo "Use -h or --help for help" 1>&2
+            exit 1
+            ;;
+    esac
+done
+
+# Rest of the script remains the same
 # Function to get the latest version of a chart from a repository
 get_latest_version() {
     local repo_url=$1
@@ -67,12 +123,18 @@ process_chart() {
 
         if [[ $get_version_status -eq 0 && -n "$latest_version" && "$latest_version" != "$current_version" ]]; then
             echo "New version available: $latest_version"
-            read -p "Do you want to update $name from $current_version to $latest_version? (y/n) " -n 1 -r
-            echo
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                # Update the version using yq
+
+            # If AUTO_CONFIRM is true, update without asking
+            if $AUTO_CONFIRM; then
                 yq e ".dependencies[$i].version = \"$latest_version\"" -i "$chart_file"
                 echo "Updated $name to version $latest_version"
+            else
+                read -p "Do you want to update $name from $current_version to $latest_version? (y/n) " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    yq e ".dependencies[$i].version = \"$latest_version\"" -i "$chart_file"
+                    echo "Updated $name to version $latest_version"
+                fi
             fi
         elif [[ $get_version_status -eq 1 ]]; then
             echo "Failed to check version. Please verify manually."
@@ -84,6 +146,12 @@ process_chart() {
 }
 
 # Main script
+if $AUTO_CONFIRM; then
+    echo "Running in automatic update mode (no confirmation prompts)"
+else
+    echo "Running in interactive mode (will ask for confirmation before updates)"
+fi
+
 echo "Checking for helm chart dependency updates..."
 
 # Store found Chart.yaml files in an array - macOS compatible version
