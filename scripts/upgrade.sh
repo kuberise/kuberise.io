@@ -13,10 +13,13 @@ Options:
     -h, --help    Show this help message
     -y            Automatically update all dependencies without asking for confirmation
                   (Default behavior is to ask for confirmation for each update)
+    -l, --list    Show a list of all dependency charts and their current versions
+                  without checking for updates
 
 Examples:
     $(basename $0)          # Run with confirmation prompts
     $(basename $0) -y       # Run with automatic updates
+    $(basename $0) -l       # List all dependencies
     $(basename $0) --help   # Show this help message
 
 The script will:
@@ -30,6 +33,43 @@ EOF
     exit 0
 }
 
+# Function to list all dependencies
+list_dependencies() {
+    local chart_files=("$@")
+
+    # Print header
+    printf "\nListing all chart dependencies:\n"
+    printf "%-40s %-30s %-20s %s\n" "CHART PATH" "DEPENDENCY" "VERSION" "REPOSITORY"
+    printf "%s\n" "--------------------------------------------------------------------------------"
+
+    for chart_file in "${chart_files[@]}"; do
+        # Check if file has dependencies
+        if ! yq e -e '.dependencies' "$chart_file" > /dev/null 2>&1; then
+            continue
+        fi
+
+        # Get number of dependencies
+        local deps_count=$(yq e '.dependencies | length' "$chart_file")
+
+        for ((i=0; i<deps_count; i++)); do
+            local name=$(yq e ".dependencies[$i].name" "$chart_file")
+            local version=$(yq e ".dependencies[$i].version" "$chart_file")
+            local repo=$(yq e ".dependencies[$i].repository" "$chart_file")
+
+            # Truncate chart_file path if too long
+            local chart_display="${chart_file}"
+            if [ ${#chart_display} -gt 39 ]; then
+                chart_display="...${chart_display: -36}"
+            fi
+
+            printf "%-40s %-30s %-20s %s\n" "$chart_display" "$name" "$version" "$repo"
+        done
+    done
+
+    printf "\n"
+    exit 0
+}
+
 # Check for --help first
 for arg in "$@"; do
     if [ "$arg" == "--help" ]; then
@@ -39,13 +79,32 @@ done
 
 # Parse command line arguments
 AUTO_CONFIRM=false
-while getopts "hy" opt; do
+LIST_ONLY=false
+while getopts "hyl-:" opt; do
     case ${opt} in
         h )
             show_help
             ;;
         y )
             AUTO_CONFIRM=true
+            ;;
+        l )
+            LIST_ONLY=true
+            ;;
+        - )
+            case "${OPTARG}" in
+                help)
+                    show_help
+                    ;;
+                list)
+                    LIST_ONLY=true
+                    ;;
+                *)
+                    echo "Invalid option: --${OPTARG}" 1>&2
+                    echo "Use -h or --help for help" 1>&2
+                    exit 1
+                    ;;
+            esac
             ;;
         \? )
             echo "Invalid option: -$OPTARG" 1>&2
@@ -187,6 +246,11 @@ IFS=$'\n' read -r -d '' -a chart_files < <(find templates -name Chart.yaml | sor
 if [ ${#chart_files[@]} -eq 0 ]; then
     echo "No Chart.yaml files found in templates directory"
     exit 0
+fi
+
+# If list option is specified, show dependencies and exit
+if $LIST_ONLY; then
+    list_dependencies "${chart_files[@]}"
 fi
 
 # Process each chart file
