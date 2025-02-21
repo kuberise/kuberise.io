@@ -101,7 +101,7 @@ ArgocdApplications:
     enabled: false
 
   opencost:
-    enabled: true
+    enabled: false
   #=================================#
   #      Example Applications       #
   #=================================#
