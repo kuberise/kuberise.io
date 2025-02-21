@@ -148,6 +148,12 @@ ArgocdApplications:
   #      Example Applications       #
   #=================================#
 
+  grpc-server:
+    enabled: false
+    path: templates/generic-deployment
+    valuesFolder: applications
+    namespace: frontend
+
   # http container example with external traffic
   show-env:
     enabled: false
