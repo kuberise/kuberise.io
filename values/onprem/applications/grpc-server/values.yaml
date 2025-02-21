@@ -1,8 +1,8 @@
 
 useHttps: true
 
-env:
-  PORT: 443
+# env:
+  # PORT: 443
 
 containerPorts:
   https: 443
@@ -17,47 +17,3 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
     cert-manager.io/cluster-issuer: "selfsigned"
-#   tls:
-#     - secretName: "grpc-server"
-#       hosts:
-#         - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.global.domain }}'
-
-# volumes:
-# - name: tls-cert
-#   secret:
-#     secretName: frontend-https-tls
-
-# volumeMounts:
-# - name: tls-cert
-#   mountPath: /etc/nginx/certs
-#   readOnly: true
-
-# # sample https probes
-# livenessProbe:
-#   httpGet:
-#     path: /
-#     port: https
-#     scheme: HTTPS
-#   initialDelaySeconds: 10
-#   periodSeconds: 10
-#   timeoutSeconds: 1
-#   failureThreshold: 3
-# readinessProbe:
-#   httpGet:
-#     path: /
-#     port: https
-#     scheme: HTTPS
-#   initialDelaySeconds: 5
-#   periodSeconds: 5
-#   timeoutSeconds: 1
-#   successThreshold: 1
-#   failureThreshold: 3
-# startupProbe:
-#   httpGet:
-#     path: /
-#     port: https
-#     scheme: HTTPS
-#   initialDelaySeconds: 0
-#   periodSeconds: 10
-#   timeoutSeconds: 1
-#   failureThreshold: 30
