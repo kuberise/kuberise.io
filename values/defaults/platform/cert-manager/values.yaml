@@ -19,3 +19,4 @@ subdomains:
   - "frontend-https"
   - "oauth2-proxy"
   - "opencost"
+  - "grpc-server"

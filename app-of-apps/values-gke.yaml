@@ -72,7 +72,7 @@ ArgocdApplications:
     enabled: false
 
   oauth2-proxy:
-    enabled: false
+    enabled: true
     # syncWave: 2
 
   external-secrets:
@@ -89,7 +89,7 @@ ArgocdApplications:
     enabled: true
 
   metrics-server:
-    enabled: true
+    enabled: false # not needed for gke
 
   kube-prometheus-stack:
     enabled: false
@@ -100,9 +100,14 @@ ArgocdApplications:
   promtail:
     enabled: false
 
+  opencost:
+    enabled: false
   #=================================#
   #      Example Applications       #
   #=================================#
+
+  grpc-server:
+    enabled: true
 
   show-env:
     enabled: true
