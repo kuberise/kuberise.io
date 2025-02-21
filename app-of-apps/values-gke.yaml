@@ -72,7 +72,7 @@ ArgocdApplications:
     enabled: false
 
   oauth2-proxy:
-    enabled: false
+    enabled: true
     # syncWave: 2
 
   external-secrets:
@@ -100,9 +100,14 @@ ArgocdApplications:
   promtail:
     enabled: false
 
+  opencost:
+    enabled: true
   #=================================#
   #      Example Applications       #
   #=================================#
+
+  grpc-server:
+    enabled: true
 
   show-env:
     enabled: true
