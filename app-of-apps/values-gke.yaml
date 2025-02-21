@@ -89,7 +89,7 @@ ArgocdApplications:
     enabled: true
 
   metrics-server:
-    enabled: true
+    enabled: false # not needed for gke
 
   kube-prometheus-stack:
     enabled: false
