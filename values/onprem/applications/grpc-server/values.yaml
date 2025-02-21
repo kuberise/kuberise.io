@@ -1,6 +1,9 @@
 
 useHttps: true
 
+env:
+  PORT: 443
+
 containerPorts:
   https: 443
 
