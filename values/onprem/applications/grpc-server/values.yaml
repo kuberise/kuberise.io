@@ -15,7 +15,7 @@ service:
 ingress:
   className: nginx-external
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
     cert-manager.io/cluster-issuer: "selfsigned"
 #   tls:
 #     - secretName: "grpc-server"
