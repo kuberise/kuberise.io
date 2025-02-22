@@ -51,12 +51,6 @@ startupProbe:
 
 ingress:
   className: nginx-external
-  enabled: true
   annotations: # enable this when you want to use oauth2-proxy
     nginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start"
     nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
-  hosts:
-    - host: show-env.{{ .Values.global.domain }}
-      paths:
-        - path: /
-          pathType: Prefix
