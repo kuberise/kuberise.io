@@ -17,3 +17,7 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
     cert-manager.io/cluster-issuer: "selfsigned"
+  tls:
+    - secretName: "grpc-server-tls"
+      hosts:
+        - '{{ include "generic-deployment.fullname" . }}.{{ $.Values.global.domain }}'
