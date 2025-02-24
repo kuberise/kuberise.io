@@ -1,0 +1,18 @@
+loki-distributed:
+  ingester:
+    persistence:
+      enabled: true
+
+  querier:
+    persistence:
+      enabled: true
+
+  compactor:
+    persistence:
+      enabled: true
+
+  loki:
+    structuredConfig:
+      table_manager:
+        retention_deletes_enabled: true
+        retention_period: 168h # 7 days retention
