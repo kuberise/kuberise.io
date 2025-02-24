@@ -112,6 +112,11 @@ ArgocdApplications:
   loki:
     enabled: true
     syncWave: 1
+    ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/volumeClaimTemplates
 
   promtail:
     enabled: true
