@@ -1,1 +1,81 @@
-# rancher:
+rancher:
+  # Additional Trusted CAs.
+  # Enable this flag and add your CA certs as a secret named tls-ca-additional in the namespace.
+  # See README.md for details.
+  additionalTrustedCAs: false
+
+  # As of Rancher v2.5.0 this flag is deprecated and must be set to 'true' in order for Rancher to start
+  addLocal: "true"
+
+  # When starting Rancher for the first time, bootstrap the admin as restricted-admin
+  restrictedAdmin: false
+
+  # Control how the Rancher agents validate TLS connections
+  # Valid options: strict, or system-store
+  # Note, for new installations empty will default to strict on 2.9+, or system-store on 2.8 or older
+  agentTLSMode: ""
+
+  # Extra environment variables passed to the rancher pods.
+  # extraEnv:
+  # - name: CATTLE_TLS_MIN_VERSION
+  #   value: "1.0"
+
+  # Fully qualified name to reach your Rancher server
+  # hostname: rancher.my.org
+
+  ### ingress ###
+  # Readme for details and instruction on adding tls secrets.
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+
+    # configurationSnippet - Add additional Nginx configuration. This example statically sets a header on the ingress.
+    # configurationSnippet: |
+    #   more_set_input_headers "X-Forwarded-Host: {{ .Values.hostname }}";
+
+    tls:
+      # options: rancher, letsEncrypt, secret
+      source: rancher
+      secretName: tls-rancher-ingress
+
+  ### service ###
+  # Override to use NodePort or LoadBalancer service type - default is ClusterIP
+  service:
+    type: ""
+    annotations: {}
+
+  ### LetsEncrypt config ###
+  # ProTip: The production environment only allows you to register a name 5 times a week.
+  #         Use staging until you have your config right.
+  letsEncrypt:
+    # email: none@example.com
+    environment: production
+    ingress:
+      # options: traefik, nginx
+      class: ""
+  # If you are using certs signed by a private CA set to 'true' and set the 'tls-ca'
+  # in the 'rancher-system' namespace. See the README.md for details
+  privateCA: false
+
+  # Number of Rancher server replicas. Setting to negative number will dynamically between 0 and the abs(replicas) based on available nodes.
+  # of available nodes in the cluster
+  replicas: 1
+
+  #
+  # tls
+  #   Where to offload the TLS/SSL encryption
+  # - ingress (default)
+  # - external
+  tls: ingress
+
+  systemDefaultRegistry: ""
+
+  # Set to use the packaged system charts
+  useBundledSystemChart: false
+
+  # Certmanager version compatibility
+  certmanager:
+    version: ""
+
+  # Set a bootstrap password. If leave empty, a random password will be generated.
+  bootstrapPassword: ""
