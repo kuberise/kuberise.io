@@ -16,6 +16,9 @@ ArgocdApplications:
   team-setup:
     enabled: true
 
+  rancher:
+    enabled: true
+
   #=================================#
   #      Data Services          #
   #=================================#
