@@ -21,7 +21,7 @@ rancher:
   #   value: "1.0"
 
   # Fully qualified name to reach your Rancher server
-  hostname: rancher.{{ $.Values.global.domain }}
+  # hostname: rancher.example.com
 
   ### ingress ###
   # Readme for details and instruction on adding tls secrets.
