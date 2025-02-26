@@ -4,20 +4,6 @@ ArgocdApplications:
     enabled: false
     # syncWave: 1
 
-  actions-runner-controller:
-    enabled: false
-    repoURL: https://actions-runner-controller.github.io/actions-runner-controller
-    namespace: actions-runner-system
-    targetRevision: 0.22.0
-    chart: actions-runner-controller
-    syncWave: 0
-
-  actions-runner:
-    enabled: false
-    repoURL: https://github.com/kuberise/kuberise.git
-    namespace: actions-runner-system
-    syncWave: 1
-
   gitea:
     enabled: false
     repoURL: https://dl.gitea.io/charts
@@ -28,3 +14,10 @@ ArgocdApplications:
   hello:
     enabled: false
     type: kustomize
+
+  rancher:
+    enabled: false
+    repoURL: https://releases.rancher.com/server-charts/latest
+    namespace: cattle-system
+    targetRevision: 2.10.2
+    chart: rancher
