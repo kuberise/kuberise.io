@@ -137,7 +137,7 @@ ArgocdApplications:
   #=================================#
 
   ollama:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Example Applications       #
