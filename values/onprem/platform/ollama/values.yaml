@@ -16,8 +16,6 @@ ollama:
         - deepseek-r1
       run:
         - deepseek-r1
-    gpu:
-      enabled: true
 
   persistentVolume:
     enabled: true
