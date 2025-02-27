@@ -20,3 +20,4 @@ subdomains:
   - "oauth2-proxy"
   - "opencost"
   - "grpc-server"
+  - "rancher"

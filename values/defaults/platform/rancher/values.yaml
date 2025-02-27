@@ -3,53 +3,14 @@ rancher:
     enabled: true
     ingressClassName: nginx-external
 
-    # configurationSnippet - Add additional Nginx configuration. This example statically sets a header on the ingress.
-    # configurationSnippet: |
-    #   more_set_input_headers "X-Forwarded-Host: {{ .Values.hostname }}";
-
     tls:
       # options: rancher, letsEncrypt, secret
       source: secret
-      secretName: ""
+      secretName: "" # to use default whildcard cert in nginx-ingress
 
-  ### service ###
-  # Override to use NodePort or LoadBalancer service type - default is ClusterIP
-  service:
-    type: ""
-    annotations: {}
-
-  ### LetsEncrypt config ###
-  # ProTip: The production environment only allows you to register a name 5 times a week.
-  #         Use staging until you have your config right.
-  letsEncrypt:
-    # email: none@example.com
-    environment: production
-    ingress:
-      # options: traefik, nginx
-      class: ""
-  # If you are using certs signed by a private CA set to 'true' and set the 'tls-ca'
-  # in the 'rancher-system' namespace. See the README.md for details
-  privateCA: false
-
-  # Number of Rancher server replicas. Setting to negative number will dynamically between 0 and the abs(replicas) based on available nodes.
-  # of available nodes in the cluster
   replicas: 1
 
-  #
-  # tls
-  #   Where to offload the TLS/SSL encryption
-  # - ingress (default)
-  # - external
-  tls: ingress
-
   systemDefaultRegistry: ""
-
-  # Set to use the packaged system charts
-  useBundledSystemChart: false
-
-  # Certmanager version compatibility
-  certmanager:
-    version: ""
 
   # Set a bootstrap password. If leave empty, a random password will be generated.
   bootstrapPassword: ""
