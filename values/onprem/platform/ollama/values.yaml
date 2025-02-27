@@ -10,3 +10,12 @@ ollama:
     tls:
       - hosts:
           - ollama.onprem.kuberise.dev
+  ollama:
+    models:
+      pull:
+        - deepseek-r1
+      run:
+        - deepseek-r1
+
+  persistentVolume:
+    enabled: true
