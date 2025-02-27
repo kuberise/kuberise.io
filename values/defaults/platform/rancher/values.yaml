@@ -10,7 +10,7 @@ rancher:
     tls:
       # options: rancher, letsEncrypt, secret
       source: secret
-      secretName: tls-rancher-ingress
+      secretName: ""
 
   ### service ###
   # Override to use NodePort or LoadBalancer service type - default is ClusterIP
