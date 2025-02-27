@@ -106,6 +106,12 @@ ArgocdApplications:
       - post-delete-finalizer.argocd.argoproj.io
       - post-delete-finalizer.argocd.argoproj.io/cleanup
 
+  policy:
+    enabled: false
+    namespace: kyverno
+    path: values/{{ $.Values.global.platformName }}/platform/policy/
+    type: raw
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
@@ -142,6 +148,13 @@ ArgocdApplications:
     namespace: monitoring
 
   opencost:
+    enabled: false
+
+  #=================================#
+  #           AI Tools              #
+  #=================================#
+
+  ollama:
     enabled: false
 
   #=================================#

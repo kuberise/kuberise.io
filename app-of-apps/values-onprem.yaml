@@ -17,7 +17,7 @@ ArgocdApplications:
     enabled: true
 
   rancher:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Data Services          #
@@ -96,6 +96,9 @@ ArgocdApplications:
   kyverno:
     enabled: false
 
+  policy:
+    enabled: false
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
@@ -130,11 +133,18 @@ ArgocdApplications:
     syncWave: 1
 
   #=================================#
+  #           AI Tools              #
+  #=================================#
+
+  ollama:
+    enabled: false
+
+  #=================================#
   #      Example Applications       #
   #=================================#
 
   grpc-server:
-    enabled: true
+    enabled: false
 
   show-env:
     enabled: true
