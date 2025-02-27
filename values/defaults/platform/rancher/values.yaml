@@ -1,30 +1,4 @@
 rancher:
-  # Additional Trusted CAs.
-  # Enable this flag and add your CA certs as a secret named tls-ca-additional in the namespace.
-  # See README.md for details.
-  additionalTrustedCAs: false
-
-  # As of Rancher v2.5.0 this flag is deprecated and must be set to 'true' in order for Rancher to start
-  addLocal: "true"
-
-  # When starting Rancher for the first time, bootstrap the admin as restricted-admin
-  restrictedAdmin: false
-
-  # Control how the Rancher agents validate TLS connections
-  # Valid options: strict, or system-store
-  # Note, for new installations empty will default to strict on 2.9+, or system-store on 2.8 or older
-  agentTLSMode: ""
-
-  # Extra environment variables passed to the rancher pods.
-  # extraEnv:
-  # - name: CATTLE_TLS_MIN_VERSION
-  #   value: "1.0"
-
-  # Fully qualified name to reach your Rancher server
-  # hostname: rancher.example.com
-
-  ### ingress ###
-  # Readme for details and instruction on adding tls secrets.
   ingress:
     enabled: true
     ingressClassName: nginx-external
