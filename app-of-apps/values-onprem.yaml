@@ -141,7 +141,7 @@ ArgocdApplications:
   #=================================#
 
   grpc-server:
-    enabled: true
+    enabled: false
 
   show-env:
     enabled: true
