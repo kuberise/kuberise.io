@@ -17,7 +17,7 @@ ArgocdApplications:
     enabled: true
 
   rancher:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Data Services          #
