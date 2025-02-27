@@ -1,1 +1,2 @@
-# rancher:
+rancher:
+  hostname: rancher.airgap.kuberise.dev
