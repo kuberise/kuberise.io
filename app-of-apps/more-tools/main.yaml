@@ -6,10 +6,6 @@ ArgocdApplications:
 
   gitea:
     enabled: false
-    repoURL: https://dl.gitea.io/charts
-    namespace: gitea
-    targetRevision: 10.1.4
-    chart: gitea
 
   hello:
     enabled: false
@@ -18,3 +14,6 @@ ArgocdApplications:
   rancher:
     enabled: false
     namespace: cattle-system
+
+  vcluster:
+    enabled: false

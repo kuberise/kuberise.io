@@ -19,6 +19,12 @@ ArgocdApplications:
   rancher:
     enabled: false
 
+  vcluster:
+    enabled: true
+
+  gitea:
+    enabled: false
+
   #=================================#
   #      Data Services          #
   #=================================#
