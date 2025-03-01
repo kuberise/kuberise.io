@@ -10,3 +10,5 @@ gitea:
     tls:
       - hosts:
          - gitea.{{ $.Values.global.domain }}
+  admin:
+    existingSecret: gitea-admin-secret
