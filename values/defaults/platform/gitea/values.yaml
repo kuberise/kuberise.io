@@ -1,3 +1,19 @@
 gitea:
-  persistence:
+  ingress:
     enabled: true
+    className: nginx-external
+    hosts:
+      - host: gitea.{{ $.Values.global.domain }}
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - hosts:
+         - gitea.{{ $.Values.global.domain }}
+  gitea:
+    admin:
+      existingSecret: gitea-admin-secret
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true

@@ -19,6 +19,12 @@ ArgocdApplications:
   rancher:
     enabled: false
 
+  vcluster:
+    enabled: false
+
+  gitea:
+    enabled: false
+
   #=================================#
   #      Data Services          #
   #=================================#
@@ -58,7 +64,7 @@ ArgocdApplications:
     enabled: true
 
   cilium:
-    enabled: true
+    enabled: false
     syncWave: 1
     ignoreDifferences:
       - group: "*"
@@ -118,11 +124,6 @@ ArgocdApplications:
   loki:
     enabled: true
     syncWave: 1
-    ignoreDifferences:
-    - group: apps
-      kind: StatefulSet
-      jsonPointers:
-        - /spec/volumeClaimTemplates
 
   promtail:
     enabled: true

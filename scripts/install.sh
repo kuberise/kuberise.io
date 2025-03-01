@@ -303,6 +303,7 @@ NAMESPACE_MONITORING="monitoring"
 NAMESPACE_CERTMANAGER="cert-manager"
 NAMESPACE_EXTERNALDNS="external-dns"
 NAMESPACE_PGADMIN="pgadmin"
+NAMESPACE_GITEA="gitea"
 
 # Warning Message
 echo -n "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
@@ -330,6 +331,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_MONITORING"
 create_namespace "$CONTEXT" "$NAMESPACE_CERTMANAGER"
 create_namespace "$CONTEXT" "$NAMESPACE_EXTERNALDNS"
 create_namespace "$CONTEXT" "$NAMESPACE_PGADMIN"
+create_namespace "$CONTEXT" "$NAMESPACE_GITEA"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
@@ -347,6 +349,9 @@ generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 # Secrets for PostgreSQL
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname=app --from-literal=host=database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=dbname=* --from-literal=host=database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
+
+# Secrets for Gitea
+create_secret "$CONTEXT" "$NAMESPACE_GITEA" "gitea-admin-secret" "--from-literal=username=gitea_admin --from-literal=password=adminadmin --from-literal=email=admin@gitea.admin --from-literal=passwordMode=keepUpdated --type=kubernetes.io/basic-auth"
 
 # Keycloak and Backstage and Grafana secrets
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
