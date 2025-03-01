@@ -1,3 +1,5 @@
 gitea:
   postgresql-ha:
     enabled: false
+  redis-cluster:
+    enabled: false
