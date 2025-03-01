@@ -1,1 +1,14 @@
-# vcluster:
+vcluster:
+  controlPlane:
+    ingress:
+      enabled: true
+      # Host is the host where vCluster will be reachable
+      host: vcluster.onprem.kuberise.dev
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      spec:
+        tls:
+          - hosts:
+              - vcluster.onprem.kuberise.dev
