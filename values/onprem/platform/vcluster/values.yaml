@@ -9,6 +9,7 @@ vcluster:
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
       spec:
+        ingressClassName: nginx-external
         tls:
           - hosts:
               - vcluster.onprem.kuberise.dev
