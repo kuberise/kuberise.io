@@ -33,6 +33,7 @@ configs:
           jqPathExpressions:
             - .spec.template.spec.containers[].resources
             - .spec.template.spec.initContainers[].resources
+            - .spec.volumeClaimTemplates
       operators.coreos.com/ClusterServiceVersion:
         ignoreDifferences: |
           jqPathExpressions:
