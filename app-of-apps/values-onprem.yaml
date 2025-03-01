@@ -24,6 +24,11 @@ ArgocdApplications:
 
   gitea:
     enabled: true
+    ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/volumeClaimTemplates
 
   #=================================#
   #      Data Services          #
