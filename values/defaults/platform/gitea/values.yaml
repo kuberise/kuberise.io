@@ -13,3 +13,7 @@ gitea:
   gitea:
     admin:
       existingSecret: gitea-admin-secret
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true

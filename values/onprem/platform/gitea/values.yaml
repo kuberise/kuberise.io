@@ -1,0 +1,3 @@
+gitea:
+  postgresql-ha:
+    enabled: false

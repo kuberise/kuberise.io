@@ -351,7 +351,7 @@ create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=dbname=* --from-literal=host=database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
 
 # Secrets for Gitea
-create_secret "$CONTEXT" "$NAMESPACE_GITEA" "gitea-admin-secret" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD --from-literal=email=admin@gitea.admin --from-literal=passwordMode=keepUpdated --type=kubernetes.io/basic-auth"
+create_secret "$CONTEXT" "$NAMESPACE_GITEA" "gitea-admin-secret" "--from-literal=username=gitea_admin --from-literal=password=adminadmin --from-literal=email=admin@gitea.admin --from-literal=passwordMode=keepUpdated --type=kubernetes.io/basic-auth"
 
 # Keycloak and Backstage and Grafana secrets
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
