@@ -20,7 +20,7 @@ ArgocdApplications:
     enabled: false
 
   vcluster:
-    enabled: true
+    enabled: false
 
   gitea:
     enabled: false
