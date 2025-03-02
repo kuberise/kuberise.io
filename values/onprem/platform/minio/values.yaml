@@ -1,5 +1,8 @@
 minio-operator:
   console:
+    image:
+      repository: minio/minio
+      tag: RELEASE.2025-02-28T09-55-16Z
     ingress:
       enabled: true
       host: minio.onprem.kuberise.dev
