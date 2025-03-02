@@ -1,4 +1,7 @@
 core:
+  controller:
+    replicas: 1
+
   manager:
     enabled: true
     ingress:
@@ -6,3 +9,6 @@ core:
       host: neuvector.onprem.kuberise.dev
       ingressClassName: nginx-external
       tls: true
+
+    scanner:
+      replicas: 1
