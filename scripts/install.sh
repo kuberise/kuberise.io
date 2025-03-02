@@ -304,6 +304,7 @@ NAMESPACE_CERTMANAGER="cert-manager"
 NAMESPACE_EXTERNALDNS="external-dns"
 NAMESPACE_PGADMIN="pgadmin"
 NAMESPACE_GITEA="gitea"
+NAMESPACE_K8SGPT="k8sgpt"
 
 # Warning Message
 echo -n "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
@@ -332,6 +333,7 @@ create_namespace "$CONTEXT" "$NAMESPACE_CERTMANAGER"
 create_namespace "$CONTEXT" "$NAMESPACE_EXTERNALDNS"
 create_namespace "$CONTEXT" "$NAMESPACE_PGADMIN"
 create_namespace "$CONTEXT" "$NAMESPACE_GITEA"
+create_namespace "$CONTEXT" "$NAMESPACE_K8SGPT"
 
 # Create Secrets if TOKEN is provided
 if [ -n "${REPOSITORY_TOKEN}" ]; then
@@ -352,6 +354,11 @@ create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=
 
 # Secrets for Gitea
 create_secret "$CONTEXT" "$NAMESPACE_GITEA" "gitea-admin-secret" "--from-literal=username=gitea_admin --from-literal=password=adminadmin --from-literal=email=admin@gitea.admin --from-literal=passwordMode=keepUpdated --type=kubernetes.io/basic-auth"
+
+# Secrets for K8sGPT
+if [ -n "${OPENAI_API_KEY-}" ]; then
+  create_secret "$CONTEXT" "$NAMESPACE_K8SGPT" "openai-api" "--from-literal=openai-api-key=$OPENAI_API_KEY"
+fi
 
 # Keycloak and Backstage and Grafana secrets
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"

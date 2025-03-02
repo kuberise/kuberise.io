@@ -64,7 +64,7 @@ ArgocdApplications:
     enabled: true
 
   cilium:
-    enabled: false
+    enabled: true
     syncWave: 1
     ignoreDifferences:
       - group: "*"
@@ -94,7 +94,7 @@ ArgocdApplications:
 
   oauth2-proxy:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   external-secrets:
     enabled: false
@@ -138,7 +138,10 @@ ArgocdApplications:
   #=================================#
 
   ollama:
-    enabled: false
+    enabled: true
+
+  k8sgpt:
+    enabled: true
 
   #=================================#
   #      Example Applications       #
@@ -156,6 +159,7 @@ ArgocdApplications:
 
   frontend-https:
     enabled: true
+    syncWave: 1
 
   backend:
     enabled: true
