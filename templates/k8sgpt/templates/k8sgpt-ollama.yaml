@@ -9,12 +9,12 @@ spec:
     enabled: true
     model: deepseek-r1
     backend: ollama
+    baseUrl: http://ollama.ollama.svc.cluster.local:11434/v1
     backOff:
       # Enable backOff to implement rate limiting and avoid quota issues
       enabled: true
       # Increase maxRetries to give more attempts with exponential backoff
       maxRetries: 3
-      baseUrl: http://ollama.ollama.svc.cluster.local:11434/v1
     # anonymized: false
     # language: english
     # proxyEndpoint: https://10.255.30.150 # use proxyEndpoint to setup backend through an HTTP/HTTPS proxy
