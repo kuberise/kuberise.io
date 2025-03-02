@@ -31,7 +31,6 @@ spec:
     - Deployment
     - StatefulSet
     - Pod
-  schedule: "0 */4 * * *"  # Run every 4 hours
   # Enable caching to reduce API calls
   noCache: false
   #integrations:
