@@ -81,6 +81,9 @@ ArgocdApplications:
   kyverno:
     enabled: false
 
+  neuvector:
+    enabled: false
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#

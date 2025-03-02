@@ -105,6 +105,9 @@ ArgocdApplications:
   policy:
     enabled: false
 
+  neuvector:
+    enabled: true
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
