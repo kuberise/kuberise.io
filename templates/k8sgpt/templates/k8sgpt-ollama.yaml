@@ -8,7 +8,7 @@ spec:
   ai:
     enabled: true
     model: deepseek-r1
-    backend: ollama
+    backend: localai
     baseUrl: http://ollama.ollama.svc.cluster.local:11434/v1
     backOff:
       # Enable backOff to implement rate limiting and avoid quota issues
