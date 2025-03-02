@@ -10,21 +10,34 @@ spec:
     secret:
       name: openai-api
       key: openai-api-key
-    # backOff:
-    #  enabled: false
-    #  maxRetries: 5
+    backOff:
+      # Enable backOff to implement rate limiting and avoid quota issues
+      enabled: true
+      # Increase maxRetries to give more attempts with exponential backoff
+      maxRetries: 10
+      # Add initial delay between retries (in milliseconds)
+      initialDelayMs: 1000
+      # Add maximum delay between retries (in milliseconds)
+      maxDelayMs: 30000
     # anonymized: false
     # language: english
     # proxyEndpoint: https://10.255.30.150 # use proxyEndpoint to setup backend through an HTTP/HTTPS proxy
   noCache: false
   repository: ghcr.io/k8sgpt-ai/k8sgpt
   version: v0.3.48
+  # Set a schedule for analysis instead of continuous analysis
+  filters:
+    # Add specific filters to limit resources being analyzed
+    - Deployment
+    - StatefulSet
+    - Pod
+  schedule: "0 */4 * * *"  # Run every 4 hours
+  # Enable caching to reduce API calls
+  noCache: false
   #integrations:
   # trivy:
   #  enabled: true
   #  namespace: trivy-system
-  # filters:
-  #   - Ingress
   # sink:
   #   type: slack
   #   webhook: <webhook-url> # use the sink secret if you want to keep your webhook url private
