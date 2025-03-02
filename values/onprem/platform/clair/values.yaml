@@ -1,1 +1,9 @@
-# clair:
+clair:
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    hosts:
+      - clair.onprem.kuberise.dev
+    tls:
+      - hosts:
+        - clair.onprem.kuberise.dev
