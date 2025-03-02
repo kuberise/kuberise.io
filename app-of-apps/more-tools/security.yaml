@@ -13,3 +13,6 @@ ArgocdApplications:
 
   secrets-manager:
     enabled: false
+
+  neuvector:
+    enabled: false
