@@ -40,9 +40,11 @@ spec:
   # Set a schedule for analysis instead of continuous analysis
   filters:
     # Add specific filters to limit resources being analyzed
-    # - Deployment
+    - Deployment
     - StatefulSet
-    # - Pod
+    - Pod
+    - Secret
+    - Ingress
   # Enable caching to reduce API calls
   noCache: false
   #integrations:
