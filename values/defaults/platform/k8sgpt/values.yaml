@@ -1,1 +1,6 @@
-# k8sgpt-operator:
+k8sgpt-operator:
+  serviceMonitor:
+    enabled: true
+  grafanaDashboard:
+    enabled: true
+    namespace: monitoring
