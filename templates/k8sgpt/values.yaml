@@ -1,2 +1,5 @@
+# Enable OpenAI integration for k8sgpt
+enable_openai: false
+
 # Values for k8sgpt that are common for all clusters or environments
 # k8sgpt-operator:
