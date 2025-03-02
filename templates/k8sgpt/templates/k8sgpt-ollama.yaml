@@ -14,7 +14,7 @@ spec:
       # Enable backOff to implement rate limiting and avoid quota issues
       enabled: true
       # Increase maxRetries to give more attempts with exponential backoff
-      maxRetries: 3
+      maxRetries: 10
     # anonymized: false
     # language: english
     # proxyEndpoint: https://10.255.30.150 # use proxyEndpoint to setup backend through an HTTP/HTTPS proxy
