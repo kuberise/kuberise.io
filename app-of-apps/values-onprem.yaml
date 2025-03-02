@@ -41,6 +41,9 @@ ArgocdApplications:
   redis:
     enabled: false
 
+  minio:
+    enabled: true
+
   #=================================#
   #      Network Services           #
   #=================================#

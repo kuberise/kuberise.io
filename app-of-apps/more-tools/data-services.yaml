@@ -1,0 +1,8 @@
+# Additional data services tools
+ArgocdApplications:
+
+  redis:
+    enabled: false
+
+  minio:
+    enabled: false

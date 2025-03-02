@@ -1,0 +1,9 @@
+minio-operator:
+  console:
+    ingress:
+      enabled: true
+      host: minio.onprem.kuberise.dev
+      ingressClassName: nginx-external
+      tls:
+        - hosts:
+            - minio.onprem.kuberise.dev
