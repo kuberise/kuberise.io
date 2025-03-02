@@ -1,1 +1,4 @@
 # k8sgpt-operator:
+
+enable_openai: false
+enable_ollama: true

@@ -4,6 +4,3 @@ k8sgpt-operator:
   grafanaDashboard:
     enabled: true
     namespace: monitoring
-
-enable_openai: false
-enable_ollama: false
