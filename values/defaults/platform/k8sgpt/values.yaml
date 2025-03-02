@@ -5,4 +5,5 @@ k8sgpt-operator:
     enabled: true
     namespace: monitoring
 
-enable_ollama: true
+enable_openai: false
+enable_ollama: false
