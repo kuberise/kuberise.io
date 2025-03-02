@@ -3,7 +3,7 @@
 apiVersion: core.k8sgpt.ai/v1alpha1
 kind: K8sGPT
 metadata:
-  name: k8sgpt-openai
+  name: k8sgpt-ollama
 spec:
   ai:
     enabled: true
