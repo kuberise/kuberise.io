@@ -105,6 +105,9 @@ ArgocdApplications:
   policy:
     enabled: false
 
+  clair:
+    enabled: true
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
