@@ -138,7 +138,7 @@ ArgocdApplications:
   #=================================#
 
   ollama:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Example Applications       #
@@ -156,6 +156,7 @@ ArgocdApplications:
 
   frontend-https:
     enabled: true
+    syncWave: 1
 
   backend:
     enabled: true
