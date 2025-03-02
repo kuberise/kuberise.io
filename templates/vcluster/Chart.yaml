@@ -3,5 +3,5 @@ name: vcluster
 version: 1.0.0
 dependencies:
   - name: vcluster
-    version: 0.23.0
+    version: 0.24.0-alpha.2
     repository: https://charts.loft.sh

@@ -140,6 +140,9 @@ ArgocdApplications:
   ollama:
     enabled: true
 
+  k8sgpt:
+    enabled: true
+
   #=================================#
   #      Example Applications       #
   #=================================#
