@@ -9,6 +9,6 @@ core:
       host: neuvector.onprem.kuberise.dev
       ingressClassName: nginx-external
       tls: true
-
+  cve:
     scanner:
       replicas: 1
