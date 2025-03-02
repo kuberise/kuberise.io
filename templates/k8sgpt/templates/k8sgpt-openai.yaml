@@ -15,13 +15,27 @@ spec:
       enabled: true
       # Increase maxRetries to give more attempts with exponential backoff
       maxRetries: 10
-      # Add initial delay between retries (in milliseconds)
-      initialDelayMs: 1000
       # Add maximum delay between retries (in milliseconds)
       maxDelayMs: 30000
     # anonymized: false
     # language: english
     # proxyEndpoint: https://10.255.30.150 # use proxyEndpoint to setup backend through an HTTP/HTTPS proxy
+    # anonymized	<boolean>
+    # autoRemediation	<Object>
+    # backOff	<Object>
+    # backend	<string> -required-
+    #   enum: ibmwatsonxai, openai, localai, azureopenai, ....
+    # baseUrl	<string>
+    # enabled	<boolean>
+    # engine	<string>
+    # language	<string>
+    # maxTokens	<string>
+    # model	<string>
+    # providerId	<string>
+    # proxyEndpoint	<string>
+    # region	<string>
+    # secret	<Object>
+    # topk	<string>
   noCache: false
   repository: ghcr.io/k8sgpt-ai/k8sgpt
   version: v0.3.48
