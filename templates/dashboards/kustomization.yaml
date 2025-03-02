@@ -20,6 +20,9 @@ configMapGenerator:
   - name: kyverno-dashboards
     files:
       - json/kyverno-rev2.json
+  - name: minikube-workloak-dashboards
+    files:
+      - json/minikube-cluster-workload.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
