@@ -14,8 +14,8 @@
 # ./minikube-load-images.sh
 #
 
-# Point your shell to minikube's docker-daemon
-eval $(minikube docker-env)
+# Point your shell to minikube's docker-daemon (prevent word splitting by quoting)
+eval "$(minikube docker-env)"
 
 # Define source directory as a variable (defaults to ~/tmp/docker_images)
 SOURCE_DIR=~/tmp/docker_images
