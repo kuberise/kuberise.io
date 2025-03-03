@@ -100,7 +100,7 @@ ArgocdApplications:
     syncWave: 2
 
   external-secrets:
-    enabled: true
+    enabled: false
 
   kyverno:
     enabled: false
