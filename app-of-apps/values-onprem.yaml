@@ -5,7 +5,7 @@ ArgocdApplications:
   #=================================#
 
   argocd-image-updater:
-    enabled: true
+    enabled: false
 
   raw:
     enabled: true
@@ -17,7 +17,7 @@ ArgocdApplications:
     enabled: true
 
   rancher:
-    enabled: true
+    enabled: false
 
   vcluster:
     enabled: false
@@ -36,10 +36,10 @@ ArgocdApplications:
     enabled: true
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   redis:
-    enabled: true
+    enabled: false
 
   minio:
     enabled: false
@@ -90,7 +90,7 @@ ArgocdApplications:
     enabled: true
 
   vault:
-    enabled: true
+    enabled: false
 
   sealed-secrets:
     enabled: false
@@ -154,7 +154,7 @@ ArgocdApplications:
   #=================================#
 
   grpc-server:
-    enabled: true
+    enabled: false
 
   show-env:
     enabled: true
