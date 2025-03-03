@@ -17,3 +17,6 @@ ArgocdApplications:
 
   vcluster:
     enabled: false
+
+  tekton:
+    enabled: false

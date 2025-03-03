@@ -1,0 +1,10 @@
+apiVersion: v2
+name: tekton
+version: 1.0.0
+dependencies:
+  - name: tekton-pipeline
+    version: 1.0.2
+    repository: https://cdfoundation.github.io/tekton-helm-chart/
+  - name: edp-tekton-dashboard
+    version: 0.32.0
+    repository: https://epam.github.io/edp-helm-charts/stable
