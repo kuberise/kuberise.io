@@ -30,6 +30,8 @@ ArgocdApplications:
 
   pipeline:
     enabled: true
+    path: values/{{ $.Values.global.platformName }}/platform/pipeline
+    type: raw
 
   #=================================#
   #          Data Services          #
