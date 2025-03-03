@@ -49,7 +49,8 @@ spec:
     bucketDNS: false
     domains: {}
   image: quay.io/minio/minio:RELEASE.2024-11-07T00-52-20Z
-  imagePullSecret: {}
+  imagePullSecret:
+    name: ""
   mountPath: /export
   podManagementPolicy: Parallel
   pools:
