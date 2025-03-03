@@ -26,7 +26,7 @@ ArgocdApplications:
     enabled: false
 
   tekton:
-    enabled: true
+    enabled: false
 
   #=================================#
   #          Data Services          #
