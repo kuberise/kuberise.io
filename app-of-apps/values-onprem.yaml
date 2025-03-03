@@ -103,10 +103,10 @@ ArgocdApplications:
     enabled: true
 
   kyverno:
-    enabled: true
+    enabled: false
 
   policy:
-    enabled: true
+    enabled: false
 
   neuvector:
     enabled: false
