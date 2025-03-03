@@ -1,2 +1,4 @@
 # tekton-pipeline:
 #   # On-premises specific configurations
+# edp-tekton-dashboard:
+  # On-premises specific configuration for EDP Tekton Dashboard
