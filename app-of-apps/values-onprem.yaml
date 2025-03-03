@@ -93,7 +93,7 @@ ArgocdApplications:
     enabled: true
 
   sealed-secrets:
-    enabled: true
+    enabled: false
 
   oauth2-proxy:
     enabled: true
