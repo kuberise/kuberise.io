@@ -42,7 +42,7 @@ ArgocdApplications:
     enabled: false
 
   minio:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Network Services           #
