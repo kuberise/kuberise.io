@@ -28,6 +28,9 @@ ArgocdApplications:
   tekton-operator:
     enabled: true
 
+  pipeline:
+    enabled: true
+
   #=================================#
   #          Data Services          #
   #=================================#
