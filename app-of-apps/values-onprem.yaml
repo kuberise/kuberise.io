@@ -23,7 +23,7 @@ ArgocdApplications:
     enabled: false
 
   gitea:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Data Services          #
