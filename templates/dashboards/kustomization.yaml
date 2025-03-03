@@ -26,6 +26,12 @@ configMapGenerator:
   - name: minio-dashboards
     files:
       - json/minio-dashboard.json
+  - name: minio-bucket-dashboards
+    files:
+      - json/minio-bucket-dashboard.json
+  - name: minio-replication-dashboards
+    files:
+      - json/minio-replication-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
