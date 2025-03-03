@@ -11,19 +11,19 @@ ArgocdApplications:
     enabled: true
 
   backstage:
-    enabled: false
+    enabled: true
 
   team-setup:
     enabled: true
 
   rancher:
-    enabled: false
+    enabled: true
 
   vcluster:
-    enabled: false
+    enabled: true
 
   gitea:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Data Services          #
@@ -39,10 +39,10 @@ ArgocdApplications:
     enabled: true
 
   redis:
-    enabled: false
+    enabled: true
 
   minio:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Network Services           #
@@ -90,26 +90,26 @@ ArgocdApplications:
     enabled: true
 
   vault:
-    enabled: false
+    enabled: true
 
   sealed-secrets:
-    enabled: false
+    enabled: true
 
   oauth2-proxy:
     enabled: true
     syncWave: 2
 
   external-secrets:
-    enabled: false
+    enabled: true
 
   kyverno:
-    enabled: false
+    enabled: true
 
   policy:
-    enabled: false
+    enabled: true
 
   neuvector:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Monitoring Stack           #
@@ -144,17 +144,17 @@ ArgocdApplications:
   #=================================#
 
   ollama:
-    enabled: false
+    enabled: true
 
   k8sgpt:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Example Applications       #
   #=================================#
 
   grpc-server:
-    enabled: false
+    enabled: true
 
   show-env:
     enabled: true
