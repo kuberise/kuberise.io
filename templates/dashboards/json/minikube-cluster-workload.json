@@ -74,10 +74,10 @@
       "includeVars": true,
       "keepTime": true,
       "tags": [
-        "minikube"
+        "kubernetes-mixin"
       ],
       "targetBlank": false,
-      "title": "Minikube Cluster Workload",
+      "title": "Kubernetes",
       "type": "dashboards"
     }
   ],
@@ -2511,8 +2511,8 @@
   },
   "timepicker": {},
   "timezone": "utc",
-  "title": "Kubernetes / Compute Resources / Cluster",
-  "uid": "efa86fd1d0c121a26444b636a3f509a8",
+  "title": "Minikube Cluster Workload",
+  "uid": "efa86fd1d0c1oieuroieryiuy09a8",
   "version": 2,
   "weekStart": ""
 }
