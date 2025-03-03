@@ -1,4 +1,53 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "barchart",
+      "name": "Bar chart",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.5.2"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,7 +67,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 13,
+  "id": null,
   "links": [
     {
       "asDropdown": true,
@@ -931,7 +980,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=\"$cluster\"}) by (workload, namespace)) by (namespace)",
           "format": "table",
@@ -951,7 +1000,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(namespace_cpu:kube_pod_container_resource_requests:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
@@ -971,7 +1020,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(namespace_cpu:kube_pod_container_resource_limits:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
@@ -1174,7 +1223,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=\"$cluster\"}) by (workload, namespace)) by (namespace)",
           "format": "table",
@@ -1194,7 +1243,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(namespace_memory:kube_pod_container_resource_requests:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
@@ -1214,7 +1263,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(namespace_memory:kube_pod_container_resource_limits:sum{cluster=\"$cluster\"}) by (namespace)",
           "format": "table",
@@ -1890,8 +1939,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1990,8 +2038,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2090,8 +2137,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2190,8 +2236,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2278,8 +2323,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2426,7 +2470,6 @@
       "type": "barchart"
     }
   ],
-  "preload": false,
   "refresh": "10s",
   "schemaVersion": 40,
   "tags": [
@@ -2435,12 +2478,10 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "text": "default",
-          "value": "default"
-        },
+        "current": {},
         "label": "Data source",
         "name": "datasource",
+        "options": [],
         "query": "prometheus",
         "refresh": 1,
         "regex": "",
@@ -2448,13 +2489,15 @@
       },
       {
         "allValue": ".*",
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${datasource}"
+          "uid": "${DS_PROMETHEUS}"
         },
         "hide": 2,
         "label": "cluster",
         "name": "cluster",
+        "options": [],
         "query": "label_values(up{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\"}, cluster)",
         "refresh": 2,
         "sort": 1,
@@ -2463,13 +2506,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "Kubernetes / Compute Resources / Cluster",
   "uid": "efa86fd1d0c121a26444b636a3f509a8",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
