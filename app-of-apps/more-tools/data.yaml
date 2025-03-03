@@ -1,5 +1,2 @@
 # placeholder for more data tools
 ArgocdApplications:
-
-  redis:
-    enabled: false

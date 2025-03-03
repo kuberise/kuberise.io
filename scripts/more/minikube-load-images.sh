@@ -1,69 +1,62 @@
 #!/bin/bash
+#
+# Script: minikube-load-images.sh
+#
+# Description:
+# This script loads Docker images from tar files into the Minikube Docker daemon.
+# It connects to the Minikube Docker daemon, finds all .tar files in the specified source
+# directory, and loads each one into the Docker daemon. Operations run in parallel to
+# speed up the process, with the script waiting for all load operations to complete before exiting.
+#
+# This script complements minikube-save-images.sh, which can be used to save images first.
+#
+# Usage:
+# ./minikube-load-images.sh
+#
 
-# This script loads all the Docker images into the minikube cluster.
+# Point your shell to minikube's docker-daemon (prevent word splitting by quoting)
+eval "$(minikube docker-env)"
 
+# Define source directory as a variable (defaults to ~/tmp/docker_images)
+SOURCE_DIR=~/tmp/docker_images
 
-# This command configures your shell to use the Docker daemon inside the Minikube VM.
-# 'minikube -p minikube docker-env' prints out the necessary environment variables.
-# 'eval' executes the output of the 'minikube' command in the current shell.
-# eval $(minikube -p minikube docker-env)
+# Check if the source directory exists
+if [ ! -d "$SOURCE_DIR" ]; then
+  echo "Error: Source directory $SOURCE_DIR does not exist!"
+  exit 1
+fi
 
-# Define an array with all the Docker images
-# Command to generate the list of images:
-# docker images --format '"{{.Repository}}:{{.Tag}}"' | awk '{printf "  %s\n", $0}' | sed '1i\
-# images=(' | sed '$a\
-# )'
+# Array to keep track of background processes
+pids=()
 
-images=(
-  "ghcr.io/kuberise/show-env"
-  "nginx:alpine"
-  "dpage/pgadmin4:8.13"
-  "bitnami/external-dns:0.15.0-debian-12-r4"
-  "epamedp/keycloak-operator:1.23.0"
-  "quay.io/argoprojlabs/argocd-image-updater:v0.15.0"
-  "grafana/grafana:11.3.0"
-  "quay.io/prometheus/prometheus:v2.55.0"
-  "quay.io/prometheus-operator/prometheus-config-reloader:v0.77.2"
-  "quay.io/prometheus-operator/prometheus-operator:v0.77.2"
-  "registry.k8s.io/ingress-nginx/controller"
-  "registry.k8s.io/ingress-nginx/kube-webhook-certgen"
-  "quay.io/kiwigrid/k8s-sidecar:1.28.0"
-  "registry.k8s.io/metrics-server/metrics-server:v0.7.2"
-  "grafana/loki:2.9.10"
-  "quay.io/metallb/controller:v0.14.8"
-  "quay.io/metallb/speaker:v0.14.8"
-  "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.13.0"
-  "quay.io/prometheus/node-exporter:v1.8.2"
-  "quay.io/keycloak/keycloak:25.0.0"
-  "quay.io/jetstack/cert-manager-startupapicheck:v1.15.0"
-  "quay.io/jetstack/cert-manager-controller:v1.15.0"
-  "quay.io/jetstack/cert-manager-webhook:v1.15.0"
-  "quay.io/jetstack/cert-manager-cainjector:v1.15.0"
-  "public.ecr.aws/docker/library/redis:7.2.4-alpine"
-  "quay.io/argoproj/argocd:v2.11.0"
-  "grafana/promtail:3.0.0"
-  "quay.io/prometheus/alertmanager:v0.27.0"
-  "ghcr.io/cloudnative-pg/postgresql:16.1"
-  "ghcr.io/cloudnative-pg/cloudnative-pg:1.22.1"
-  "ghcr.io/dexidp/dex:v2.38.0"
-  "quay.io/frrouting/frr:9.1.0"
-  "nginxinc/nginx-unprivileged:1.20.2-alpine"
-  "nginx:1.16.0"
-)
+# Find all .tar files in the source directory
+echo "Looking for Docker image tar files in $SOURCE_DIR"
+for tar_file in "$SOURCE_DIR"/*.tar; do
+  # Skip if no files are found
+  if [ ! -f "$tar_file" ]; then
+    echo "No tar files found in $SOURCE_DIR"
+    break
+  fi
 
-# Load each image into the minikube cluster
-# for image in "${images[@]}"; do
-#   echo "Pull image: $image"
-#   docker pull "$image"
-# done
+  # Get base name of the file for display
+  base_name=$(basename "$tar_file")
+  echo "Starting load of $base_name into Minikube Docker daemon"
 
-# echo "All images have been pulled locally."
+  # Run docker load in background
+  docker load -i "$tar_file" &
 
-
-# Load each image into the minikube cluster
-for image in "${images[@]}"; do
-  echo "Loading image into minikube: $image"
-  minikube -p minikube image load "$image" --daemon # fetch the image directly from your local Docker daemon. to avoid unnecessary network transfers or registry operations.
+  # Store the process ID
+  pids+=($!)
 done
 
-echo "All images have been loaded into the minikube cluster."
+# Wait for all background processes to complete
+if [ ${#pids[@]} -gt 0 ]; then
+  echo "Waiting for all load operations to complete..."
+  for pid in "${pids[@]}"; do
+    wait $pid
+    echo "Process $pid completed"
+  done
+  echo "All images have been loaded into the Minikube Docker daemon"
+else
+  echo "No images were loaded"
+fi

@@ -5,7 +5,7 @@ ArgocdApplications:
   #=================================#
 
   argocd-image-updater:
-    enabled: true
+    enabled: false
 
   raw:
     enabled: true
@@ -36,10 +36,16 @@ ArgocdApplications:
     enabled: true
 
   pgadmin:
-    enabled: true
+    enabled: false
 
   redis:
     enabled: false
+
+  minio:
+    enabled: true
+
+  object-storage:
+    enabled: true
 
   #=================================#
   #      Network Services           #
@@ -106,7 +112,7 @@ ArgocdApplications:
     enabled: false
 
   neuvector:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #
@@ -114,7 +120,7 @@ ArgocdApplications:
 
   dashboards:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   metrics-server:
     enabled: true
@@ -122,15 +128,15 @@ ArgocdApplications:
 
   kube-prometheus-stack:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   loki:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   promtail:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   opencost:
     enabled: true

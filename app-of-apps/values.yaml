@@ -55,6 +55,17 @@ ArgocdApplications:
   pgadmin:
     enabled: false
 
+  redis:
+    enabled: false
+
+  minio:
+    enabled: false
+
+  object-storage:
+    enabled: false
+    path: values/{{ $.Values.global.platformName }}/platform/object-storage/
+    type: raw
+
   #=================================#
   #      Network Services           #
   #=================================#
