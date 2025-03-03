@@ -12,10 +12,6 @@ spec:
   # Number of MinIO servers/pods
   replicas: 1
 
-  # Secret for MinIO credentials (required)
-  credsSecret:
-    name: minio-creds-secret
-
   # Storage configuration (required)
   pools:
     - servers: 1
