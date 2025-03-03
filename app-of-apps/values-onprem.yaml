@@ -109,7 +109,7 @@ ArgocdApplications:
     enabled: true
 
   neuvector:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #
