@@ -4,8 +4,8 @@ metadata:
   name: storage-configuration
 stringData:
   config.env: |-
-    export MINIO_ROOT_USER="minio"
-    export MINIO_ROOT_PASSWORD="minio123"
+    export MINIO_ROOT_USER="admin"
+    export MINIO_ROOT_PASSWORD="admin"
     export MINIO_STORAGE_CLASS_STANDARD="EC:2"
     export MINIO_BROWSER="on"
 type: Opaque
