@@ -25,8 +25,8 @@ ArgocdApplications:
   gitea:
     enabled: false
 
-  tekton:
-    enabled: false
+  tekton-operator:
+    enabled: true
 
   #=================================#
   #          Data Services          #

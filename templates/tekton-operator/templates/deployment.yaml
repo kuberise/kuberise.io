@@ -1,0 +1,236 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tekton-operator.fullname" . }}
+  labels:
+    {{- include "tekton-operator.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "tekton-operator.operator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tekton-operator.operator.selectorLabels" . | nindent 8 }}
+        {{- include "tekton-operator.operator.podTemplateLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - env:
+            - name: SYSTEM_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              {{- if .Values.operator.operatorName }}
+              value: {{ .Values.operator.operatorName }}
+              {{- else }}
+              {{- if .Values.openshift.enabled }}
+              value: redhat-openshift-pipelines-operator
+              {{- else }}
+              value: tekton-operator
+              {{- end }}
+              {{- end }}
+            - name: IMAGE_PIPELINES_PROXY
+              value: {{ include "tekton-operator.webhook-proxy-image" . }}
+            - name: IMAGE_JOB_PRUNER_TKN
+              value: {{ include "tekton-operator.pruner-image" . }}
+            - name: METRICS_DOMAIN
+              value: {{ .Values.service.metricsDomain }}
+            - name: VERSION
+              value: {{ .Values.webhook.image.tag | default .Chart.AppVersion | quote }}
+            - name: AUTOINSTALL_COMPONENTS
+              value: {{ .Values.operator.autoInstallComponents | quote }}
+            - name: DEFAULT_TARGET_NAMESPACE
+              {{- if .Values.operator.defaultTargetNamespace }}
+              value: {{ .Values.operator.defaultTargetNamespace | quote }}
+              {{- else }}
+              {{- if .Values.openshift.enabled }}
+              value: openshift-pipelines
+              {{- else }}
+              value: tekton-pipelines
+              {{- end }}
+              {{- end }}
+            - name: CONFIG_OBSERVABILITY_NAME
+              value: {{ include "tekton-operator.fullname" . }}-observability
+          args:
+            - "-controllers"
+            - {{ .Values.controllers | default "tektonconfig,tektonpipeline,tektontrigger,tektonhub,tektonchain,tektonresult,tektondashboard,manualapprovalgate" | quote }}
+            - "-unique-process-name"
+            - "tekton-operator-lifecycle"
+          image: {{ include "tekton-operator.operator-image" . }}
+          imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
+          name: tekton-operator-lifecycle
+          resources:
+            {{- toYaml .Values.operator.resources | nindent 12 }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        - env:
+            - name: SYSTEM_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              {{- if .Values.operator.operatorName }}
+              value: {{ .Values.operator.operatorName }}
+              {{- else }}
+              {{- if .Values.openshift.enabled }}
+              value: redhat-openshift-pipelines-operator
+              {{- else }}
+              value: tekton-operator
+              {{- end }}
+              {{- end }}
+            - name: IMAGE_PIPELINES_PROXY
+              value: {{ include "tekton-operator.webhook-proxy-image" . }}
+            - name: METRICS_DOMAIN
+              value: {{ .Values.service.metricsDomain }}
+            - name: VERSION
+              value: {{ .Values.webhook.image.tag | default .Chart.AppVersion | quote }}
+            - name: AUTOINSTALL_COMPONENTS
+              value: {{ .Values.operator.autoInstallComponents | quote }}
+            - name: DEFAULT_TARGET_NAMESPACE
+              {{- if .Values.operator.defaultTargetNamespace }}
+              value: {{ .Values.operator.defaultTargetNamespace | quote }}
+              {{- else }}
+              {{- if .Values.openshift.enabled }}
+              value: openshift-pipelines
+              {{- else }}
+              value: tekton-pipelines
+              {{- end }}
+              {{- end }}
+            - name: CONFIG_OBSERVABILITY_NAME
+              value: {{ include "tekton-operator.fullname" . }}-observability
+          args:
+            - "-controllers"
+            - "tektoninstallerset"
+            - "-unique-process-name"
+            - "tekton-operator-cluster-operations"
+          image: {{ include "tekton-operator.operator-image" . }}
+          imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
+          name: tekton-operator-cluster-operations
+          resources:
+            {{- toYaml .Values.operator.resources | nindent 12 }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tekton-operator.serviceAccountName" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tekton-operator.fullname" . }}-webhook
+  labels:
+    {{- include "tekton-operator.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "tekton-operator.webhook.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tekton-operator.webhook.selectorLabels" . | nindent 8 }}
+        {{- include "tekton-operator.operator.podTemplateLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.webhook.hostNetwork }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- else }}
+      hostNetwork: false
+      {{- with .Values.webhook.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - env:
+            - name: SYSTEM_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CONFIG_LOGGING_NAME
+              value: {{ include "tekton-operator.fullname" . }}-config-logging
+            - name: WEBHOOK_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: WEBHOOK_SERVICE_NAME
+              value: {{ include "tekton-operator.fullname" . }}-webhook
+            - name: WEBHOOK_SECRET_NAME
+              value: {{ .Values.webhook.certSecret.name | default (include "tekton-operator.fullname" .) }}-webhook-certs
+            - name: WEBHOOK_PORT
+              value: {{ .Values.webhook.httpsWebhookPort | quote }}
+            - name: METRICS_DOMAIN
+              value: {{ .Values.service.metricsDomain }}
+          image: {{ include "tekton-operator.webhook-image" . }}
+          imagePullPolicy: {{ .Values.webhook.image.pullPolicy }}
+          name: {{ include "tekton-operator.operator-name" . -}}-webhook
+          resources:
+            {{- toYaml .Values.webhook.resources | nindent 12 }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.webhook.httpsWebhookPort }}
+              name: https-webhook
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tekton-operator.serviceAccountName" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -18,5 +18,5 @@ ArgocdApplications:
   vcluster:
     enabled: false
 
-  tekton:
+  tekton-operator:
     enabled: false
