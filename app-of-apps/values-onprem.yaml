@@ -117,7 +117,7 @@ ArgocdApplications:
 
   dashboards:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   metrics-server:
     enabled: true
@@ -125,15 +125,15 @@ ArgocdApplications:
 
   kube-prometheus-stack:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   loki:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   promtail:
     enabled: true
-    syncWave: 1
+    syncWave: 2
 
   opencost:
     enabled: true
