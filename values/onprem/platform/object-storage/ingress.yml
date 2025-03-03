@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx-external
+  rules:
+  - host: minio.onprem.kuberise.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: myminio-console
+            port:
+              name: https-console
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - minio.onprem.kuberise.dev

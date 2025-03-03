@@ -1,13 +1,7 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: minio-tenant
----
-apiVersion: v1
 kind: Secret
 metadata:
   name: storage-configuration
-  namespace: minio-tenant
 stringData:
   config.env: |-
     export MINIO_ROOT_USER="minio"
@@ -23,7 +17,6 @@ data:
 kind: Secret
 metadata:
   name: storage-user
-  namespace: minio-tenant
 type: Opaque
 ---
 apiVersion: minio.min.io/v2
@@ -36,7 +29,6 @@ metadata:
   labels:
     app: minio
   name: myminio
-  namespace: minio-tenant
 spec:
   certConfig: {}
   configuration:

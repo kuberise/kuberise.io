@@ -44,6 +44,9 @@ ArgocdApplications:
   minio:
     enabled: true
 
+  object-storage:
+    enabled: true
+
   #=================================#
   #      Network Services           #
   #=================================#
