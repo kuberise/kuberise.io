@@ -1,8 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "Minikube Cluster Workload",
-      "label": "Minikube",
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
       "description": "",
       "type": "datasource",
       "pluginId": "prometheus",
@@ -74,10 +74,10 @@
       "includeVars": true,
       "keepTime": true,
       "tags": [
-        "kubernetes-mixin"
+        "minikube"
       ],
       "targetBlank": false,
-      "title": "Kubernetes",
+      "title": "Minikube Cluster Workload",
       "type": "dashboards"
     }
   ],
