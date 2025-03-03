@@ -9,6 +9,7 @@ stringData:
     export MINIO_STORAGE_CLASS_STANDARD="EC:2"
     export MINIO_BROWSER="on"
 type: Opaque
+# FIXME: Use secret-manager for production
 ---
 apiVersion: v1
 data:
