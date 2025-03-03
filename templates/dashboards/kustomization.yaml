@@ -23,6 +23,9 @@ configMapGenerator:
   - name: minikube-workloak-dashboards
     files:
       - json/minikube-cluster-workload.json
+  - name: minio-dashboards
+    files:
+      - json/minio-dashboard.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:
