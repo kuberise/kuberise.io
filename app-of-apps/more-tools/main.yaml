@@ -17,12 +17,3 @@ ArgocdApplications:
 
   vcluster:
     enabled: false
-
-  tekton-operator:
-    enabled: false
-
-  pipeline:
-    enabled: false
-    path: values/{{ $.Values.global.platformName }}/platform/pipeline
-    type: raw
-    naemspace: tekton-operator
