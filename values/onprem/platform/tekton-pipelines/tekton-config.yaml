@@ -9,7 +9,7 @@ spec:
     annotations: {}
   profile: all
   config:
-    nodeSelector: <>
+    nodeSelector: {}
     tolerations: []
     priorityClassName: system-cluster-critical
   chain:
