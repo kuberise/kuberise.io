@@ -9,10 +9,10 @@ vault:
         enabled: true
         ingressClassName: nginx-external
         hosts:
-          - host: vault.{{ .Values.global.baseDomain }}
+          - host: vault.onprem.kuberise.dev
         tls:
          - hosts:
-             - vault.{{ .Values.global.baseDomain }}
+             - vault.onprem.kuberise.dev
 
     # Run Vault in "dev" mode. This requires no further setup, no state management,
     # and no initialization. This is useful for experimenting with Vault without
@@ -21,35 +21,6 @@ vault:
     # See https://developer.hashicorp.com/vault/docs/concepts/dev-server to know more
     dev:
       enabled: true
-
-    standalone:
-      enabled: true
-
-      # config is a raw string of default configuration when using a Stateful
-      # deployment. Default is to use a PersistentVolumeClaim mounted at /vault/data
-      # and store data there. This is only used when using a Replica count of 1, and
-      # using a stateful set. Supported formats are HCL and JSON.
-
-      # Note: Configuration files are stored in ConfigMaps so sensitive data
-      # such as passwords should be either mounted through extraSecretEnvironmentVars
-      # or through a Kube secret. For more information see:
-      # https://developer.hashicorp.com/vault/docs/platform/k8s/helm/run#protecting-sensitive-vault-configurations
-      config: |-
-        ui = true
-
-        listener "tcp" {
-          tls_disable = 1
-          address = "[::]:8200"
-          cluster_address = "[::]:8201"
-          Enable unauthenticated metrics access (necessary for Prometheus Operator)
-          telemetry {
-          unauthenticated_metrics_access = "true"
-          }
-        }
-        storage "file" {
-          path = "/vault/data"
-        }
-
 
   ui:
     enabled: true
