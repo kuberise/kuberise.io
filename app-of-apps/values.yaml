@@ -160,10 +160,10 @@ ArgocdApplications:
 
   vault:
     enabled: false
-    repoURL: https://helm.releases.hashicorp.com
+
+  vault-secret-operator:
+    enabled: false
     namespace: vault
-    targetRevision: 0.28.0
-    chart: vault
 
   secrets-manager:
     enabled: false
