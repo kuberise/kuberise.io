@@ -20,8 +20,3 @@ ArgocdApplications:
 
   tekton-operator:
     enabled: false
-
-  tekton-pipelines:
-    enabled: false
-    path: values/{{ $.Values.global.platformName }}/platform/tekton-pipelines
-    type: raw
