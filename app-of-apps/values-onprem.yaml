@@ -26,10 +26,10 @@ ArgocdApplications:
     enabled: false
 
   tekton-operator:
-    enabled: true
+    enabled: false
 
   tekton-pipelines:
-    enabled: true
+    enabled: false
 
   #=================================#
   #          Data Services          #
@@ -119,6 +119,13 @@ ArgocdApplications:
 
   neuvector:
     enabled: false
+
+  vault:
+    enabled: true
+
+  vault-secret-operator:
+    enabled: true
+    namespace: vault
 
   #=================================#
   #      Monitoring Stack           #
