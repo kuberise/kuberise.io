@@ -29,7 +29,7 @@ ArgocdApplications:
     enabled: true
 
   pipeline:
-    enabled: false
+    enabled: true
 
   #=================================#
   #          Data Services          #
