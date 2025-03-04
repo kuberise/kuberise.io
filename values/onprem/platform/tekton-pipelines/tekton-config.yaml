@@ -72,18 +72,18 @@ spec:
     params:
       - name: enable-devconsole-integration
         value: "true"
-    options:
-      disabled: false
-      configMaps: {}
-      deployments: {}
-      webhookConfigurationOptions: {}
+    # options:
+    #   disabled: false
+    #   configMaps: {}
+    #   deployments: {}
+    #   webhookConfigurationOptions: {}
   dashboard:
     readonly: true
-    options:
-      disabled: false
-      configMaps: {}
-      deployments: {}
-      webhookConfigurationOptions: {}
+    # options:
+    #   disabled: false
+    #   configMaps: {}
+    #   deployments: {}
+    #   webhookConfigurationOptions: {}
   platforms:
     openshift:
       pipelinesAsCode:
@@ -111,8 +111,8 @@ spec:
           remote-tasks: "true"
           secret-auto-create: "true"
           secret-github-app-token-scoped: "true"
-      options:
-        disabled: false
-        configMaps: {}
-        deployments: {}
-        webhookConfigurationOptions: {}
+      # options:
+      #   disabled: false
+      #   configMaps: {}
+      #   deployments: {}
+      #   webhookConfigurationOptions: {}
