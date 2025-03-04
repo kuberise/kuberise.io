@@ -26,7 +26,7 @@ ArgocdApplications:
     enabled: false
 
   tekton-operator:
-    enabled: false
+    enabled: true
 
   pipeline:
     enabled: false
