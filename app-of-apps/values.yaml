@@ -38,6 +38,34 @@ ArgocdApplications:
     enabled: false
     namespace: keycloak
 
+  backstage:
+    enabled: true
+    syncWave: 1
+
+  gitea:
+    enabled: false
+
+  hello:
+    enabled: false
+    type: kustomize
+
+  rancher:
+    enabled: false
+    namespace: cattle-system
+
+  vcluster:
+    enabled: false
+
+  # The helm chart coppied from the github repo manually. It is not available in the helm repo. Should be updated manually.
+  # https://github.com/tektoncd/operator/tree/release-v0.75.x
+  tekton-operator:
+    enabled: false
+
+  tekton-pipelines:
+    enabled: false
+    path: values/{{ $.Values.global.platformName }}/platform/tekton-pipelines
+    type: raw
+
   #=================================#
   #      Data Services              #
   #=================================#
@@ -87,6 +115,10 @@ ArgocdApplications:
   ingress-nginx-internal:
     enabled: false
 
+  # custom ingress resources
+  ingresses:
+    enabled: false
+
   cilium:
     enabled: false
 
@@ -122,6 +154,22 @@ ArgocdApplications:
     namespace: kyverno
     path: values/{{ $.Values.global.platformName }}/platform/policy/
     type: raw
+
+  sealed-secrets:
+    enabled: false
+
+  vault:
+    enabled: false
+    repoURL: https://helm.releases.hashicorp.com
+    namespace: vault
+    targetRevision: 0.28.0
+    chart: vault
+
+  secrets-manager:
+    enabled: false
+
+  neuvector:
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #

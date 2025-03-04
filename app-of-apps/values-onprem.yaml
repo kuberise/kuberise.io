@@ -25,8 +25,14 @@ ArgocdApplications:
   gitea:
     enabled: false
 
+  tekton-operator:
+    enabled: true
+
+  tekton-pipelines:
+    enabled: true
+
   #=================================#
-  #      Data Services          #
+  #          Data Services          #
   #=================================#
 
   database:
@@ -42,10 +48,10 @@ ArgocdApplications:
     enabled: false
 
   minio:
-    enabled: true
+    enabled: false
 
   object-storage:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Network Services           #
