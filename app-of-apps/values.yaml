@@ -56,6 +56,8 @@ ArgocdApplications:
   vcluster:
     enabled: false
 
+  # The helm chart coppied from the github repo manually. It is not available in the helm repo. Should be updated manually.
+  # https://github.com/tektoncd/operator/tree/release-v0.75.x
   tekton-operator:
     enabled: false
 
