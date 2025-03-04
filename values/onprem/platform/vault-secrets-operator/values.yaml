@@ -1,0 +1,4 @@
+vault-secrets-operator:
+  telemetry:
+    serviceMonitor:
+      enabled: true
