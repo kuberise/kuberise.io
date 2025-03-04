@@ -19,7 +19,7 @@ spec:
     coschedule: workspaces
     disable-affinity-assistant: false
     disable-creds-init: false
-    disable-home-env-overwrite: true
+    # disable-home-env-overwrite: true
     disable-working-directory-overwrite: true
     disable-inline-spec: "pipeline,pipelinerun,taskrun"
     enable-api-fields: beta
