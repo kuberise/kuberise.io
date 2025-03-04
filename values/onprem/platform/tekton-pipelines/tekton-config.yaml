@@ -53,11 +53,11 @@ spec:
       threads-per-controller: 2
       kube-api-qps: 5.0
       kube-api-burst: 10
-    options:
-      disabled: false
-      configMaps: {}
-      deployments: {}
-      webhookConfigurationOptions: {}
+    # options:
+    #   disabled: false
+    #   configMaps: {}
+    #   deployments: {}
+    #   webhookConfigurationOptions: {}
   pruner:
     disabled: false
     schedule: "0 8 * * *"
