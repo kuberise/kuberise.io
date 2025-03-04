@@ -1,7 +1,8 @@
 ArgocdApplications:
 
   backstage:
-    enabled: false
+    enabled: true
+    namespace: backstage-temp
     # syncWave: 1
 
   gitea:
