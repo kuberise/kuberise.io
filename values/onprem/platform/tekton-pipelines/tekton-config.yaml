@@ -9,8 +9,6 @@ spec:
     annotations: {}
   profile: all
   config:
-    nodeSelector: {}
-    tolerations: []
     priorityClassName: system-cluster-critical
   chain:
     disabled: false
@@ -78,41 +76,9 @@ spec:
     #   deployments: {}
     #   webhookConfigurationOptions: {}
   dashboard:
-    readonly: true
+    readonly: false
     # options:
     #   disabled: false
     #   configMaps: {}
     #   deployments: {}
     #   webhookConfigurationOptions: {}
-  platforms:
-    openshift:
-      pipelinesAsCode:
-        additionalPACControllers:
-          <controllerName>:
-            enable: true
-            configMapName:
-            secretName:
-            settings:
-        enable: true
-        settings:
-          application-name: Pipelines as Code CI
-          auto-configure-new-github-repo: "false"
-          bitbucket-cloud-check-source-ip: "true"
-          custom-console-name: ""
-          custom-console-url: ""
-          custom-console-url-pr-details: ""
-          custom-console-url-pr-tasklog: ""
-          error-detection-from-container-logs: "false"
-          error-detection-max-number-of-lines: "50"
-          error-detection-simple-regexp: ^(?P<filename>[^:]*):(?P<line>[0-9]+):(?P<column>[0-9]+):([]*)?(?P<error>.*)
-          error-log-snippet: "true"
-          hub-catalog-name: tekton
-          hub-url: https://api.hub.tekton.dev/v1
-          remote-tasks: "true"
-          secret-auto-create: "true"
-          secret-github-app-token-scoped: "true"
-      # options:
-      #   disabled: false
-      #   configMaps: {}
-      #   deployments: {}
-      #   webhookConfigurationOptions: {}
