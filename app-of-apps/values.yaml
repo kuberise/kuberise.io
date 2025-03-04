@@ -161,7 +161,7 @@ ArgocdApplications:
   vault:
     enabled: false
 
-  vault-secret-operator:
+  vault-secrets-operator:
     enabled: false
     namespace: vault
 
