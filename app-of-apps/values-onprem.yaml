@@ -28,7 +28,7 @@ ArgocdApplications:
   tekton-operator:
     enabled: true
 
-  pipeline:
+  tekton-pipelines:
     enabled: true
 
   #=================================#

@@ -38,15 +38,6 @@ ArgocdApplications:
     enabled: false
     namespace: keycloak
 
-  tekton-operator:
-    enabled: false
-
-  pipeline:
-    enabled: false
-    path: values/{{ $.Values.global.platformName }}/platform/pipeline
-    type: raw
-    naemspace: tekton-operator
-
   #=================================#
   #      Data Services              #
   #=================================#

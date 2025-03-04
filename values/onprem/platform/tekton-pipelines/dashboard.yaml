@@ -3,5 +3,5 @@ kind: TektonDashboard
 metadata:
   name: dashboard
 spec:
-  targetNamespace: pipeline
+  targetNamespace: tekton-pipelines
   readonly: false
