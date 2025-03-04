@@ -32,6 +32,9 @@ configMapGenerator:
   - name: minio-replication-dashboards
     files:
       - json/minio-replication-dashboard.json
+  - name: hashicorp-vault-dashboards
+    files:
+      - json/hashicorp-vault.json
 generatorOptions:
   disableNameSuffixHash: true
   labels:

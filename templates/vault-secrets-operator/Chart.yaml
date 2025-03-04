@@ -1,0 +1,7 @@
+apiVersion: v2
+name: vault-secrets-operator
+version: 1.0.0
+dependencies:
+  - name: vault-secrets-operator
+    version: 0.9.1
+    repository: https://helm.releases.hashicorp.com
