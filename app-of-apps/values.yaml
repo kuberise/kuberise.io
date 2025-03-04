@@ -165,6 +165,12 @@ ArgocdApplications:
     enabled: false
     namespace: vault
 
+  secrets:
+    enabled: false
+    namespace: vault
+    path: values/{{ $.Values.global.platformName }}/platform/secrets/
+    type: raw
+
   secrets-manager:
     enabled: false
 

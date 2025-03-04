@@ -127,6 +127,9 @@ ArgocdApplications:
     enabled: true
     namespace: vault
 
+  secrets:
+    enabled: true
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#
