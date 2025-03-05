@@ -121,14 +121,14 @@ ArgocdApplications:
     enabled: false
 
   vault:
-    enabled: true
+    enabled: false
 
   vault-secrets-operator:
-    enabled: true
+    enabled: false
     namespace: vault
 
   secrets:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Monitoring Stack           #
