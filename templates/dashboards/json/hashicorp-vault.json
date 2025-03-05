@@ -1,8 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "DS_PROMXY",
-      "label": "Promxy",
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
       "description": "",
       "type": "datasource",
       "pluginId": "prometheus",
