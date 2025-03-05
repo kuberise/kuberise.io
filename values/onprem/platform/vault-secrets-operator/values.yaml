@@ -17,4 +17,4 @@ vault-secrets-operator:
     kubernetes:
       role: "vault-secrets-operator"
       serviceAccount: "vault-secrets-operator"
-    allowedNamespaces: ["vault"]
+    allowedNamespaces: ["frontend"]
