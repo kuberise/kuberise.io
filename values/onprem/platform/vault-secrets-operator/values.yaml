@@ -15,8 +15,8 @@ vault-secrets-operator:
 
   defaultAuthMethod:
     enabled: true
-    namespace: vault-secrets-operator
+    namespace: vault
     kubernetes:
       role: "secrets-operator"
       serviceAccount: "vault-secrets-operator"
-    allowedNamespaces: ["frontend"]
+    allowedNamespaces: ["vault"]
