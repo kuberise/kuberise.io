@@ -7,16 +7,14 @@ vault-secrets-operator:
   defaultVaultConnection:
     # toggles the deployment of the VaultAuthMethod CR
     enabled: true
-
     # Address of the Vault Server
     address: http://vault.vault.svc.cluster.local:8200
-
     skipTLSVerify: true
 
   defaultAuthMethod:
     enabled: true
     namespace: vault
     kubernetes:
-      role: "secrets-operator"
+      role: "vault-secrets-operator"
       serviceAccount: "vault-secrets-operator"
     allowedNamespaces: ["vault"]
