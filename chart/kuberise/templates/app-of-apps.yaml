@@ -7,6 +7,9 @@ metadata:
   namespace: {{ .Values.namespaces.argoCD }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
 spec:
   sourceRepos:
   - '*'
@@ -31,6 +34,9 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
   labels:
     team: platform
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "2"
 spec:
   project: {{ .Values.global.platformName }}
   source:
