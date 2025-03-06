@@ -2,7 +2,7 @@ selfSignedCertificate:
   # used for internal applications that need to be accessed via HTTPS
   # or for onprem deployment where you don't have a domain
   enabled: true
-  createCaCertificate: false
+  generateCA: true
 
 letsEncrypt:
   enabled: true

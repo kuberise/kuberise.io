@@ -1,0 +1,11 @@
+apiVersion: v2
+name: kuberise
+description: A Helm chart to bootstrap the Kuberise.io platform
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: argo-cd
+    version: 7.8.7
+    repository: https://argoproj.github.io/argo-helm
+    condition: argo-cd.enabled

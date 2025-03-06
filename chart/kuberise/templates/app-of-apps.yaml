@@ -1,0 +1,64 @@
+{{- if .Values.appOfApps.enabled }}
+# Create ArgoCD project
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .Values.global.platformName }}
+  namespace: {{ .Values.namespaces.argoCD }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  sourceRepos:
+  - '*'
+  destinations:
+  - name: '*'
+    namespace: '*'
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+---
+# Create App of Apps
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps-{{ .Values.global.platformName }}
+  namespace: {{ .Values.namespaces.argoCD }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    team: platform
+spec:
+  project: {{ .Values.global.platformName }}
+  source:
+    repoURL: {{ .Values.git.repoURL }}
+    targetRevision: {{ .Values.git.targetRevision }}
+    path: ./app-of-apps
+    helm:
+      valueFiles:
+        - values-{{ .Values.global.platformName }}.yaml
+      parameters:
+        - name: global.spec.source.repoURL
+          value: {{ .Values.git.repoURL }}
+        - name: global.spec.source.targetRevision
+          value: {{ .Values.git.targetRevision }}
+        - name: global.spec.values.repoURL
+          value: {{ .Values.git.repoURL }}
+        - name: global.spec.values.targetRevision
+          value: {{ .Values.git.targetRevision }}
+        - name: global.platformName
+          value: {{ .Values.global.platformName }}
+        - name: global.domain
+          value: {{ .Values.global.domain }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{ .Values.namespaces.argoCD }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+{{- end }}

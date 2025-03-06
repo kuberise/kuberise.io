@@ -1,0 +1,196 @@
+# Global configuration
+global:
+  platformName: onprem
+  domain: onprem.kuberise.dev
+  adminPassword: admin
+  database:
+    superuserPassword: superpassword
+    appUsername: application
+    appPassword: apppassword
+
+# GitOps repository configuration
+git:
+  repoURL: https://github.com/kuberise/kuberise.git
+  targetRevision: HEAD
+
+  # RepositoryToken is required if your GitOps repository is private.
+  # Also required for ArgoCD Image Updater to update the code automatically
+  # whenever a new version of the container image is available
+  # If your repository is public and you don't use ArgoCD Image Updater, you can leave this empty
+  repositoryToken: ""
+
+# Cloudflare configuration for ExternalDNS and Cert-Manager DNS01 Challenge (optional)
+cloudflare:
+  enabled: false
+  apiToken: ""
+
+# OpenAI configuration for K8sGPT (optional)
+openai:
+  enabled: false
+  apiKey: ""
+
+# OAuth2 client secrets
+oauth2:
+  clientSecrets:
+    kubernetes: YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY
+    grafana: YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY
+    pgadmin: YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY
+    oauth2Proxy: YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY
+    argocd: YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY
+
+# Namespaces configuration
+namespaces:
+  argoCD: argocd
+  postgres: postgres
+  keycloak: keycloak
+  backstage: backstage
+  monitoring: monitoring
+  certManager: cert-manager
+  externalDns: external-dns
+  pgAdmin: pgadmin
+  gitea: gitea
+  k8sGPT: k8sgpt
+
+# CA certificate configuration
+ca:
+  enabled: true
+  namespaces:
+    - pgadmin
+    - monitoring
+    - argocd
+    - keycloak
+    - backstage
+    - postgres
+    - cert-manager
+    - external-dns
+
+# App of Apps configuration
+appOfApps:
+  enabled: true
+  project: kuberise
+  name: app-of-apps
+
+# ArgoCD configuration
+# argocd:
+#   enabled: true
+#   server:
+#     ingress:
+#       enabled: true
+#       ingressClassName: nginx
+#       annotations:
+#         cert-manager.io/cluster-issuer: selfsigned-ca-issuer
+#       tls:
+#         - hosts:
+#             - argocd.onprem.kuberise.dev
+#           secretName: argocd-server-tls
+#   configs:
+#     rbac:
+#       policy.csv: |
+#         g, platform-admins, role:admin
+#     cm:
+#       url: https://argocd.onprem.kuberise.dev
+#       oidc.config: |
+#         name: Keycloak
+#         issuer: https://keycloak.onprem.kuberise.dev/realms/platform
+#         clientID: argocd
+#         requestedScopes: ["openid", "profile", "email"]
+
+argo-cd:
+  enabled: true
+  global:
+    domain: argocd.onprem.kuberise.dev
+  configs:
+    secret:
+      argocdServerAdminPassword: $2a$10$IHd.1ewzsLeEjRE9gM0ojeO0bCjxjR2enpzmnhEgMeYvOeD0OHGoy # hash of admin
+    cm:
+      timeout.reconciliation: 5s
+      resource.customizations: |
+        argoproj.io/Application:
+          health.lua: |
+            hs = {}
+            hs.status = "Progressing"
+            hs.message = ""
+            if obj.status ~= nil then
+              if obj.status.health ~= nil then
+                hs.status = obj.status.health.status
+                if obj.status.health.message ~= nil then
+                  hs.message = obj.status.health.message
+                end
+              end
+            end
+            return hs
+        apps/Deployment:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .spec.template.spec.containers[].resources
+              - .spec.template.spec.initContainers[].resources
+        apps/DaemonSet:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .spec.template.spec.containers[].resources
+              - .spec.template.spec.initContainers[].resources
+              - .spec.template.spec.containers[].volumeMounts[].readOnly
+              - .spec.template.metadata.annotations
+        apps/StatefulSet:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .spec.template.spec.containers[].resources
+              - .spec.template.spec.initContainers[].resources
+              - .spec.volumeClaimTemplates
+        operators.coreos.com/ClusterServiceVersion:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .spec.install.spec.deployments[].spec.template.spec.containers[].ports[].protocol
+        admissionregistration.k8s.io/MutatingWebhookConfiguration:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .webhooks[].clientConfig.caBundle
+              - .webhooks[].namespaceSelector
+        admissionregistration.k8s.io/ValidatingWebhookConfiguration:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .webhooks[].clientConfig.caBundle
+              - .webhooks[].namespaceSelector
+        v1/Service:
+          ignoreDifferences: |
+            jqPathExpressions:
+              - .spec.ports[].nodePort
+      resource.compareoptions: |
+        # disables status field diffing in specified resource types
+        # 'crd' - CustomResourceDefinitions (default)
+        # 'all' - all resources
+        # 'none' - disabled
+        ignoreResourceStatusField: all
+        # ref: https://kyverno.io/docs/installation/platform-notes/
+        # You may want to also ignore differences in aggregated ClusterRoles which Kyverno uses by default.
+        # Aggregated ClusterRoles are built by aggregating other ClusterRoles in the cluster and are dynamic by nature,
+        # therefore desired and observed states cannot match.
+        ignoreAggregatedRoles: true
+    params:
+      server.insecure: true
+  controller:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  server:
+    insecure: true
+    ingress:
+      enabled: true
+      ingressClassName: nginx-external
+      servicePort: http
+      hostname: argocd.onprem.kuberise.dev
+      tls: true
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+    volumes:
+      - name: ca-cert
+        configMap:
+          name: ca-bundle
+    volumeMounts:
+      - name: ca-cert
+        mountPath: /etc/ssl/certs/ca-certificates.crt
+        subPath: ca.crt

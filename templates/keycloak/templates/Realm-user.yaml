@@ -6,12 +6,12 @@ spec:
   attributes:
     baz: jazz
     foo: bar
-  email: john.snow13@kuberise.com
+  email: admin@kuberise.com
   emailVerified: true
   enabled: true
-  firstName: John
+  firstName: Admin
   keepResource: true
-  lastName: Snow
+  lastName: User
   password: '12345678'
   realmRef:
     kind: KeycloakRealm
