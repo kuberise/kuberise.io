@@ -6,7 +6,7 @@ metadata:
   name: {{ .Values.global.platformName }}
   namespace: {{ .Values.namespaces.argoCD }}
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argoproj.io/resources-finalizer
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "1"
@@ -31,7 +31,7 @@ metadata:
   name: app-of-apps-{{ .Values.global.platformName }}
   namespace: {{ .Values.namespaces.argoCD }}
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argoproj.io/resources-finalizer
   labels:
     team: platform
   annotations:

@@ -1,0 +1,36 @@
+KUBERISE PLATFORM INSTALLATION
+
+Thank you for installing the Kuberise platform!
+
+Your installation is now in progress. Here's how to access your services:
+
+1. ArgoCD:
+   URL: https://argocd.{{ .Values.global.domain }}
+   Username: admin
+   Password: {{ .Values.global.adminPassword }}
+
+2. Grafana:
+   URL: https://grafana.{{ .Values.global.domain }}
+   Username: admin
+   Password: {{ .Values.global.adminPassword }}
+
+3. Keycloak:
+   URL: https://keycloak.{{ .Values.global.domain }}
+   Username: admin
+   Password: {{ .Values.global.adminPassword }}
+
+4. PGAdmin:
+   URL: https://pgadmin.{{ .Values.global.domain }}
+   (Login through Keycloak)
+
+5. OIDC Authentication:
+   To use OIDC authentication with Kubernetes:
+
+   $ kubectl config use-context oidc
+
+   This will authenticate through Keycloak for API access.
+
+For more information, visit: https://github.com/kuberise/kuberise
+
+If you encounter any issues, please report them at:
+https://github.com/kuberise/kuberise/issues
