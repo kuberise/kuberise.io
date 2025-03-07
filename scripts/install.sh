@@ -243,6 +243,41 @@ function secret_exists() {
   return $?
 }
 
+# Retrieves or generates a secret value
+#
+# This function checks if a secret exists in a namespace:
+# - If it doesn't exist, generates a random value
+# - If it exists, retrieves the value from the specified key
+#
+# Arguments:
+#   $1 - Kubernetes context
+#   $2 - Namespace
+#   $3 - Secret name
+#   $4 - Key in the secret to retrieve (default: 'password')
+#
+# Example usage:
+#   password=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE" "database-superuser" "password")
+#
+# Returns:
+#   The secret value (either retrieved or newly generated)
+function get_or_generate_secret() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+  local key=${4:-"password"}  # Default key is "password" if not specified
+
+  local secret_value
+  if ! secret_exists "$context" "$namespace" "$secret_name"; then
+    echo "Generating random value for $secret_name" >&2
+    secret_value=$(generate_random_secret)
+  else
+    echo "Secret $secret_name already exists, reusing it" >&2
+    secret_value=$(kubectl get secret "$secret_name" --context "$context" -n "$namespace" -o jsonpath="{.data.$key}" | base64 -d)
+  fi
+
+  echo "$secret_value"
+}
+
 # Creates or reuses an OAuth2 client secret for a given client
 #
 # This function manages OAuth2 client secrets across multiple namespaces:
@@ -303,8 +338,6 @@ DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberi
 REPOSITORY_TOKEN=${6:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-superpassword}
-# Generate random password for PG_APP_PASSWORD which is database password used by the platform services
 PG_APP_USERNAME=application
 PG_APP_PASSWORD=${PG_APP_PASSWORD:-apppassword}
 
@@ -376,7 +409,7 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
 
   # create_secret "$CONTEXT" "$NAMESPACE_ARGOCD" "argocd-repo-green-services" "--from-literal=name=green-services --from-literal=username=x --from-literal=password=$REPOSITORY_TOKEN --from-literal=url=https://github.com/kuberise/green-services.git --from-literal=type=git"
   # label_secret "$CONTEXT" "$NAMESPACE_ARGOCD" "argocd-repo-green-services" "argocd.argoproj.io/secret-type=repository"
-  # TODO: Generation of teams and their repositories and projects will be done later by backstage
+  # TODO: Generation of teams and their repositories and projects will be done later
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
@@ -384,6 +417,8 @@ generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 
 # Secrets for PostgreSQL
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname=app --from-literal=host=database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
+
+PG_SUPERUSER_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "password")
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=dbname=* --from-literal=host=database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
 
 # Secrets for Gitea
