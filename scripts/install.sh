@@ -331,7 +331,7 @@ function create_oauth2_client_secret() {
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
 CONTEXT=${1:-}                                          # example: platform-cluster
-PLATFORM_NAME=${2:-local}                               # example: local, dta, azure etc. (default: local)
+PLATFORM_NAME=${2:-onprem}                               # example: local, dta, azure etc. (default: local)
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
 DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberise.dev
@@ -354,11 +354,6 @@ if [ -z "$CONTEXT" ]; then
   echo "CONTEXT is undefined" 1>&2
   exit 2
 fi
-
-# if [ -z "$ADMIN_PASSWORD" ]; then
-#   echo "The ADMIN_PASSWORD environment variable is not set."
-#   exit 1
-# fi
 
 # Namespace Definitions
 NAMESPACE_ARGOCD="argocd"
