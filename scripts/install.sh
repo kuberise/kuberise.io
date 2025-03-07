@@ -272,7 +272,7 @@ function create_oauth2_client_secret() {
   # Check if the secret exists in the primary namespace
   local secret_value
   if secret_exists "$context" "$primary_namespace" "${client_name}-oauth2-client-secret"; then
-    echo "Secret ${client_name}-oauth2-client-secret already exists in $primary_namespace, reusing it" >&2
+    echo "Secret ${client_name}-oauth2-client-secret already exists in $primary_namespace, reusing it" >&2 # If you write to stdout, it will be returned. If you write to stderr, it will not be returned.
     secret_value=$(kubectl get secret "${client_name}-oauth2-client-secret" --context "$context" -n "$primary_namespace" -o jsonpath='{.data.client-secret}' | base64 -d)
   else
     echo "Generating new secret for ${client_name}-oauth2-client-secret" >&2
@@ -289,7 +289,7 @@ function create_oauth2_client_secret() {
   done
 
   # Return the secret value only
-  echo "$secret_value"
+  echo "$secret_value" # The only line that writes to stdout. This will be returned.
 }
 
 # Variables Initialization
@@ -432,7 +432,7 @@ kubernetes_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK"
 configure_oidc_auth "$CONTEXT" "$kubernetes_secret" "$DOMAIN"
 
 # Grafana OAuth2 Secrets
-create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana" "$NAMESPACE_MONITORING" > /dev/null
+create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana" "$NAMESPACE_MONITORING" > /dev/null # If you don't consume the generated secret, it will be written to stdout.
 
 # PGAdmin OAuth2 Secrets
 create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin" "$NAMESPACE_PGADMIN" > /dev/null
