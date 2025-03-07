@@ -231,7 +231,7 @@ function configure_oidc_auth() {
 
 function generate_random_secret() {
   # Generate a random string of 32 characters
-  openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32
+  openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32
 }
 
 function secret_exists() {
