@@ -339,7 +339,6 @@ REPOSITORY_TOKEN=${6:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
 PG_APP_USERNAME=application
-PG_APP_PASSWORD=${PG_APP_PASSWORD:-apppassword}
 
 if [ -z "$REPO_URL" ]; then
     echo "REPO_URL is undefined" 1>&2
@@ -384,12 +383,6 @@ fi
 
 check_required_tools
 
-# Install PodMonitor and ServiceMonitor CRDs to ensure other charts can be installed even if Prometheus is disabled.
-# This can be skipped if the kube-prometheus-stack-crd is enabled.
-# kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
-# kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml
-
-
 # Create Namespaces
 create_namespace "$CONTEXT" "$NAMESPACE_ARGOCD"
 create_namespace "$CONTEXT" "$NAMESPACE_CNPG"
@@ -416,6 +409,7 @@ fi
 generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 
 # Secrets for PostgreSQL
+PG_APP_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "password")
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname=app --from-literal=host=database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
 
 PG_SUPERUSER_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "password")
