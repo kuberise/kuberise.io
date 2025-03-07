@@ -5,7 +5,7 @@ set -euo pipefail
 # Function Definitions
 
 function check_required_tools() {
-  local required_tools=("kubectl" "helm" "htpasswd")
+  local required_tools=("kubectl" "helm" "htpasswd" "openssl")
   for tool in "${required_tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo "$tool could not be found, please install it."
@@ -140,7 +140,7 @@ metadata:
   namespace: $namespace
   # Finalizer that ensures that project is not deleted until it is not referenced by any application
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argoproj.io/resources-finalizer
 spec:
   sourceRepos:
   - '*'
@@ -164,7 +164,7 @@ metadata:
   name: app-of-apps-$platform_name
   namespace: $namespace
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argoproj.io/resources-finalizer
   labels:
     team: platform
 spec:
@@ -200,30 +200,6 @@ spec:
 EOF
 }
 
-function install_keycloak_operator() {
-  # Installs the OLM (Operator Lifecycle Manager)
-  curl -sSL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh | bash -s v0.30.0 || true
-
-  echo "Installing Keycloak Operator..."
-  cat << EOF | kubectl apply -f -
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: keycloak-operator-group
----
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: keycloak-operator-subscription
-spec:
-  channel: alpha
-  name: keycloak-operator
-  source: operatorhubio-catalog
-  sourceNamespace: olm
-  installPlanApproval: Automatic
-EOF
-}
-
 function configure_oidc_auth() {
   local context=$1
   local client_secret=$2
@@ -251,6 +227,69 @@ function configure_oidc_auth() {
     --namespace=default
 
   echo "OIDC authentication configured. Use 'kubectl config use-context oidc' to switch to OIDC authentication."
+}
+
+function generate_random_secret() {
+  # Generate a random string of 32 characters
+  openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c 32
+}
+
+function secret_exists() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+
+  kubectl get secret "$secret_name" --context "$context" -n "$namespace" &>/dev/null
+  return $?
+}
+
+# Creates or reuses an OAuth2 client secret for a given client
+#
+# This function manages OAuth2 client secrets across multiple namespaces:
+# - First checks if the secret already exists in the primary namespace
+# - If it exists, reuses the existing secret value
+# - If not, generates a new random secret
+# - Creates or updates the secret in all specified additional namespaces
+# - Returns the secret value for further use
+#
+# Arguments:
+#   $1 - Kubernetes context
+#   $2 - Primary namespace (usually keycloak)
+#   $3 - Client name (e.g., kubernetes, grafana, argocd)
+#   $4+ - Additional namespaces to create the secret in (optional)
+#
+# Example usage:
+#   secret=$(create_oauth2_client_secret "$CONTEXT" "keycloak" "grafana" "monitoring")
+#
+# Returns:
+#   The secret value
+function create_oauth2_client_secret() {
+  local context=$1
+  local primary_namespace=$2
+  local client_name=$3
+  local additional_namespaces=("${@:4}")
+
+  # Check if the secret exists in the primary namespace
+  local secret_value
+  if secret_exists "$context" "$primary_namespace" "${client_name}-oauth2-client-secret"; then
+    echo "Secret ${client_name}-oauth2-client-secret already exists in $primary_namespace, reusing it" >&2
+    secret_value=$(kubectl get secret "${client_name}-oauth2-client-secret" --context "$context" -n "$primary_namespace" -o jsonpath='{.data.client-secret}' | base64 -d)
+  else
+    echo "Generating new secret for ${client_name}-oauth2-client-secret" >&2
+    secret_value=$(generate_random_secret)
+    create_secret "$context" "$primary_namespace" "${client_name}-oauth2-client-secret" "--from-literal=client-secret=$secret_value" >&2
+  fi
+
+  # Create/update the secret in additional namespaces
+  for namespace in "${additional_namespaces[@]}"; do
+    if [ -n "$namespace" ]; then
+      echo "Creating/updating ${client_name}-oauth2-client-secret in namespace $namespace" >&2
+      create_secret "$context" "$namespace" "${client_name}-oauth2-client-secret" "--from-literal=client-secret=$secret_value" >&2
+    fi
+  done
+
+  # Return the secret value only
+  echo "$secret_value"
 }
 
 # Variables Initialization
@@ -389,30 +428,29 @@ deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "
 # ------------------------------------------------------------
 
 # Kubernetes OAuth2 Client Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+kubernetes_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes" "")
+configure_oidc_auth "$CONTEXT" "$kubernetes_secret" "$DOMAIN"
 
 # Grafana OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana" "$NAMESPACE_MONITORING" > /dev/null
 
 # PGAdmin OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin" "$NAMESPACE_PGADMIN" > /dev/null
 
 # OAuth2-Proxy OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+oauth2_proxy_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy" "")
+# Create additional fields needed for oauth2-proxy
+cookie_secret=$(generate_random_secret)
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "--from-literal=client-secret=$oauth2_proxy_secret --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=$cookie_secret"
 
 # ArgoCD OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64)
+argocd_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd" "")
+ARGOCD_CLIENT_SECRET=$(echo -n "$argocd_secret" | base64)
 kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
 "
 # ----------------------------------------------------------------
 
-# Get the client secret from the kubernetes-oauth2-client-secret
-CLIENT_SECRET=$(kubectl get secret kubernetes-oauth2-client-secret -n keycloak -o jsonpath='{.data.client-secret}' | base64 -d)
-configure_oidc_auth "$CONTEXT" "$CLIENT_SECRET" "$DOMAIN"
 
 echo "Installation completed successfully."
