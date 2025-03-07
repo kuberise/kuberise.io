@@ -5,7 +5,7 @@ set -euo pipefail
 # Function Definitions
 
 function check_required_tools() {
-  local required_tools=("kubectl" "helm" "htpasswd")
+  local required_tools=("kubectl" "helm" "htpasswd" "openssl")
   for tool in "${required_tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo "$tool could not be found, please install it."
@@ -140,7 +140,7 @@ metadata:
   namespace: $namespace
   # Finalizer that ensures that project is not deleted until it is not referenced by any application
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argoproj.io/resources-finalizer
 spec:
   sourceRepos:
   - '*'
@@ -164,7 +164,7 @@ metadata:
   name: app-of-apps-$platform_name
   namespace: $namespace
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argoproj.io/resources-finalizer
   labels:
     team: platform
 spec:
@@ -200,30 +200,6 @@ spec:
 EOF
 }
 
-function install_keycloak_operator() {
-  # Installs the OLM (Operator Lifecycle Manager)
-  curl -sSL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh | bash -s v0.30.0 || true
-
-  echo "Installing Keycloak Operator..."
-  cat << EOF | kubectl apply -f -
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: keycloak-operator-group
----
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: keycloak-operator-subscription
-spec:
-  channel: alpha
-  name: keycloak-operator
-  source: operatorhubio-catalog
-  sourceNamespace: olm
-  installPlanApproval: Automatic
-EOF
-}
-
 function configure_oidc_auth() {
   local context=$1
   local client_secret=$2
@@ -253,21 +229,67 @@ function configure_oidc_auth() {
   echo "OIDC authentication configured. Use 'kubectl config use-context oidc' to switch to OIDC authentication."
 }
 
+function generate_random_secret() {
+  # Generate a random string of 32 characters
+  openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32
+}
+
+function secret_exists() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+
+  kubectl get secret "$secret_name" --context "$context" -n "$namespace" &>/dev/null
+  return $?
+}
+
+# Retrieves or generates a secret value
+#
+# This function checks if a secret exists in a namespace:
+# - If it doesn't exist, generates a random value
+# - If it exists, retrieves the value from the specified key
+#
+# Arguments:
+#   $1 - Kubernetes context
+#   $2 - Namespace
+#   $3 - Secret name
+#   $4 - Key in the secret to retrieve (default: 'password')
+#
+# Example usage:
+#   password=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE" "database-superuser" "password")
+#
+# Returns:
+#   The secret value (either retrieved or newly generated)
+function get_or_generate_secret() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+  local key=${4:-"password"}  # Default key is "password" if not specified
+
+  local secret_value
+  if ! secret_exists "$context" "$namespace" "$secret_name"; then
+    echo "Generating random value for $secret_name" >&2
+    secret_value=$(generate_random_secret)
+  else
+    echo "Secret $secret_name already exists, reusing it" >&2
+    secret_value=$(kubectl get secret "$secret_name" --context "$context" -n "$namespace" -o jsonpath="{.data.$key}" | base64 -d)
+  fi
+
+  echo "$secret_value"
+}
+
 # Variables Initialization
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
 CONTEXT=${1:-}                                          # example: platform-cluster
-PLATFORM_NAME=${2:-local}                               # example: local, dta, azure etc. (default: local)
+PLATFORM_NAME=${2:-onprem}                               # example: local, dta, azure etc. (default: local)
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
 DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberise.dev
 REPOSITORY_TOKEN=${6:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-PG_SUPERUSER_PASSWORD=${PG_SUPERUSER_PASSWORD:-superpassword}
-# Generate random password for PG_APP_PASSWORD which is database password used by the platform services
 PG_APP_USERNAME=application
-PG_APP_PASSWORD=${PG_APP_PASSWORD:-apppassword}
 
 if [ -z "$REPO_URL" ]; then
     echo "REPO_URL is undefined" 1>&2
@@ -283,11 +305,6 @@ if [ -z "$CONTEXT" ]; then
   echo "CONTEXT is undefined" 1>&2
   exit 2
 fi
-
-# if [ -z "$ADMIN_PASSWORD" ]; then
-#   echo "The ADMIN_PASSWORD environment variable is not set."
-#   exit 1
-# fi
 
 # Namespace Definitions
 NAMESPACE_ARGOCD="argocd"
@@ -312,12 +329,6 @@ fi
 
 check_required_tools
 
-# Install PodMonitor and ServiceMonitor CRDs to ensure other charts can be installed even if Prometheus is disabled.
-# This can be skipped if the kube-prometheus-stack-crd is enabled.
-# kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
-# kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/refs/heads/main/charts/kube-prometheus-stack/charts/crds/crds/crd-podmonitors.yaml
-
-
 # Create Namespaces
 create_namespace "$CONTEXT" "$NAMESPACE_ARGOCD"
 create_namespace "$CONTEXT" "$NAMESPACE_CNPG"
@@ -337,14 +348,17 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
 
   # create_secret "$CONTEXT" "$NAMESPACE_ARGOCD" "argocd-repo-green-services" "--from-literal=name=green-services --from-literal=username=x --from-literal=password=$REPOSITORY_TOKEN --from-literal=url=https://github.com/kuberise/green-services.git --from-literal=type=git"
   # label_secret "$CONTEXT" "$NAMESPACE_ARGOCD" "argocd-repo-green-services" "argocd.argoproj.io/secret-type=repository"
-  # TODO: Generation of teams and their repositories and projects will be done later by backstage
+  # TODO: Generation of teams and their repositories and projects will be done later
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
 generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
 
 # Secrets for PostgreSQL
+PG_APP_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "password")
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "--from-literal=dbname=app --from-literal=host=database-rw --from-literal=username=$PG_APP_USERNAME --from-literal=user=$PG_APP_USERNAME --from-literal=port=5432 --from-literal=password=$PG_APP_PASSWORD --type=kubernetes.io/basic-auth"
+
+PG_SUPERUSER_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "password")
 create_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-superuser" "--from-literal=dbname=* --from-literal=host=database-rw --from-literal=username=postgres --from-literal=user=postgres --from-literal=port=5432 --from-literal=password=$PG_SUPERUSER_PASSWORD --type=kubernetes.io/basic-auth"
 
 # Secrets for Gitea
@@ -388,31 +402,41 @@ deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "
 # Generate OAuth2 Client Secrets for Keycloak Authentication
 # ------------------------------------------------------------
 
-# Kubernetes OAuth2 Client Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+# Kubernetes OAuth2 Client Secret
+echo "Setting up Kubernetes OAuth2 client secret..."
+kubernetes_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "--from-literal=client-secret=$kubernetes_secret"
+configure_oidc_auth "$CONTEXT" "$kubernetes_secret" "$DOMAIN"
 
-# Grafana OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+# Grafana OAuth2 Secret
+echo "Setting up Grafana OAuth2 client secret..."
+grafana_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=$grafana_secret"
+# Create in monitoring namespace too
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=$grafana_secret"
 
-# PGAdmin OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+# PGAdmin OAuth2 Secret
+echo "Setting up PGAdmin OAuth2 client secret..."
+pgadmin_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=$pgadmin_secret"
+# Create in pgadmin namespace too
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=$pgadmin_secret"
 
-# OAuth2-Proxy OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
+# OAuth2-Proxy OAuth2 Secret
+echo "Setting up OAuth2-Proxy client secret..."
+oauth2_proxy_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "client-secret")
+# Create additional fields needed for oauth2-proxy
+cookie_secret=$(generate_random_secret)
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "--from-literal=client-secret=$oauth2_proxy_secret --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=$cookie_secret"
 
-# ArgoCD OAuth2 Secrets
-create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY"
-ARGOCD_CLIENT_SECRET=$(echo -n 'YqNdS8SBbI2iNPV0zs0LpUstTfy5iXKY' | base64)
+# ArgoCD OAuth2 Secret
+echo "Setting up ArgoCD OAuth2 client secret..."
+argocd_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=$argocd_secret"
+ARGOCD_CLIENT_SECRET=$(echo -n "$argocd_secret" | base64)
 kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
 "
-# ----------------------------------------------------------------
-
-# Get the client secret from the kubernetes-oauth2-client-secret
-CLIENT_SECRET=$(kubectl get secret kubernetes-oauth2-client-secret -n keycloak -o jsonpath='{.data.client-secret}' | base64 -d)
-configure_oidc_auth "$CONTEXT" "$CLIENT_SECRET" "$DOMAIN"
 
 echo "Installation completed successfully."
