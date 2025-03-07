@@ -278,55 +278,6 @@ function get_or_generate_secret() {
   echo "$secret_value"
 }
 
-# Creates or reuses an OAuth2 client secret for a given client
-#
-# This function manages OAuth2 client secrets across multiple namespaces:
-# - First checks if the secret already exists in the primary namespace
-# - If it exists, reuses the existing secret value
-# - If not, generates a new random secret
-# - Creates or updates the secret in all specified additional namespaces
-# - Returns the secret value for further use
-#
-# Arguments:
-#   $1 - Kubernetes context
-#   $2 - Primary namespace (usually keycloak)
-#   $3 - Client name (e.g., kubernetes, grafana, argocd)
-#   $4+ - Additional namespaces to create the secret in (optional)
-#
-# Example usage:
-#   secret=$(create_oauth2_client_secret "$CONTEXT" "keycloak" "grafana" "monitoring")
-#
-# Returns:
-#   The secret value
-function create_oauth2_client_secret() {
-  local context=$1
-  local primary_namespace=$2
-  local client_name=$3
-  local additional_namespaces=("${@:4}")
-
-  # Check if the secret exists in the primary namespace
-  local secret_value
-  if secret_exists "$context" "$primary_namespace" "${client_name}-oauth2-client-secret"; then
-    echo "Secret ${client_name}-oauth2-client-secret already exists in $primary_namespace, reusing it" >&2 # If you write to stdout, it will be returned. If you write to stderr, it will not be returned.
-    secret_value=$(kubectl get secret "${client_name}-oauth2-client-secret" --context "$context" -n "$primary_namespace" -o jsonpath='{.data.client-secret}' | base64 -d)
-  else
-    echo "Generating new secret for ${client_name}-oauth2-client-secret" >&2
-    secret_value=$(generate_random_secret)
-    create_secret "$context" "$primary_namespace" "${client_name}-oauth2-client-secret" "--from-literal=client-secret=$secret_value" >&2
-  fi
-
-  # Create/update the secret in additional namespaces
-  for namespace in "${additional_namespaces[@]}"; do
-    if [ -n "$namespace" ]; then
-      echo "Creating/updating ${client_name}-oauth2-client-secret in namespace $namespace" >&2
-      create_secret "$context" "$namespace" "${client_name}-oauth2-client-secret" "--from-literal=client-secret=$secret_value" >&2
-    fi
-  done
-
-  # Return the secret value only
-  echo "$secret_value" # The only line that writes to stdout. This will be returned.
-}
-
 # Variables Initialization
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
@@ -451,30 +402,41 @@ deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "
 # Generate OAuth2 Client Secrets for Keycloak Authentication
 # ------------------------------------------------------------
 
-# Kubernetes OAuth2 Client Secrets
-kubernetes_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes" "")
+# Kubernetes OAuth2 Client Secret
+echo "Setting up Kubernetes OAuth2 client secret..."
+kubernetes_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "--from-literal=client-secret=$kubernetes_secret"
 configure_oidc_auth "$CONTEXT" "$kubernetes_secret" "$DOMAIN"
 
-# Grafana OAuth2 Secrets
-create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana" "$NAMESPACE_MONITORING" > /dev/null # If you don't consume the generated secret, it will be written to stdout.
+# Grafana OAuth2 Secret
+echo "Setting up Grafana OAuth2 client secret..."
+grafana_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "grafana-oauth2-client-secret" "--from-literal=client-secret=$grafana_secret"
+# Create in monitoring namespace too
+create_secret "$CONTEXT" "$NAMESPACE_MONITORING" "grafana-oauth2-client-secret" "--from-literal=client-secret=$grafana_secret"
 
-# PGAdmin OAuth2 Secrets
-create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin" "$NAMESPACE_PGADMIN" > /dev/null
+# PGAdmin OAuth2 Secret
+echo "Setting up PGAdmin OAuth2 client secret..."
+pgadmin_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=$pgadmin_secret"
+# Create in pgadmin namespace too
+create_secret "$CONTEXT" "$NAMESPACE_PGADMIN" "pgadmin-oauth2-client-secret" "--from-literal=client-secret=$pgadmin_secret"
 
-# OAuth2-Proxy OAuth2 Secrets
-oauth2_proxy_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy" "")
+# OAuth2-Proxy OAuth2 Secret
+echo "Setting up OAuth2-Proxy client secret..."
+oauth2_proxy_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "client-secret")
 # Create additional fields needed for oauth2-proxy
 cookie_secret=$(generate_random_secret)
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "oauth2-proxy-oauth2-client-secret" "--from-literal=client-secret=$oauth2_proxy_secret --from-literal=client-id=oauth2-proxy --from-literal=cookie-secret=$cookie_secret"
 
-# ArgoCD OAuth2 Secrets
-argocd_secret=$(create_oauth2_client_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd" "")
+# ArgoCD OAuth2 Secret
+echo "Setting up ArgoCD OAuth2 client secret..."
+argocd_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "client-secret")
+create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=$argocd_secret"
 ARGOCD_CLIENT_SECRET=$(echo -n "$argocd_secret" | base64)
 kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
 "
-# ----------------------------------------------------------------
-
 
 echo "Installation completed successfully."
