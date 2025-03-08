@@ -25,7 +25,7 @@ ArgocdApplications:
     enabled: false
     path: values/{{ $.Values.global.platformName }}/platform/raw
     type: raw
-    recursive: true
+    recursive: false
 
   argocd-image-updater:
     enabled: false
@@ -39,7 +39,7 @@ ArgocdApplications:
     namespace: keycloak
 
   backstage:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   gitea:
@@ -191,7 +191,7 @@ ArgocdApplications:
     namespace: kube-system
 
   kube-prometheus-stack-crds:
-    enabled: true # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
+    enabled: false # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
     repoURL: https://github.com/prometheus-community/helm-charts.git
     path: charts/kube-prometheus-stack/charts/crds
     namespace: monitoring
