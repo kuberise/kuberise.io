@@ -98,9 +98,6 @@ ArgocdApplications:
   cert-manager:
     enabled: true
 
-  vault:
-    enabled: false
-
   sealed-secrets:
     enabled: false
 
