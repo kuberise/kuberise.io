@@ -14,7 +14,7 @@ ArgocdApplications:
     enabled: false
 
   team-setup:
-    enabled: true
+    enabled: false
 
   rancher:
     enabled: false
@@ -76,7 +76,7 @@ ArgocdApplications:
     enabled: true
 
   cilium:
-    enabled: true
+    enabled: false
     syncWave: 1
     ignoreDifferences:
       - group: "*"
@@ -102,7 +102,7 @@ ArgocdApplications:
     enabled: false
 
   oauth2-proxy:
-    enabled: true
+    enabled: false
     syncWave: 2
 
   external-secrets:
