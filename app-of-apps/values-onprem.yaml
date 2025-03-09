@@ -31,6 +31,9 @@ ArgocdApplications:
   tekton-pipelines:
     enabled: false
 
+  keda:
+    enabled: true
+
   #=================================#
   #          Data Services          #
   #=================================#
