@@ -41,16 +41,16 @@ function label_secret() {
 
 function generate_ca_cert_and_key() {
   local context=$1
-  local platform_name=$2
+  local cluster_name=$2
 
-  # Validate platform_name is provided
-  if [ -z "$platform_name" ]; then
-    echo "platform_name is required as an input parameter."
+  # Validate cluster_name is provided
+  if [ -z "$cluster_name" ]; then
+    echo "cluster_name is required as an input parameter."
     return 1
   fi
 
   # Define the directory and file paths
-  DIR=".env/$platform_name"
+  DIR=".env/$cluster_name"
   CERT="$DIR/ca.crt"
   KEY="$DIR/ca.key"
   CA_BUNDLE="$DIR/ca-bundle.crt"
@@ -126,7 +126,7 @@ function install_argocd() {
 function deploy_app_of_apps() {
   local context="$1"
   local namespace="$2"
-  local platform_name="$3"
+  local cluster_name="$3"
   local git_repo="$4"
   local git_revision="$5"
   local domain="$6"
@@ -136,7 +136,7 @@ cat <<EOF | kubectl apply --context $context -n $namespace -f -
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: $platform_name
+  name: $cluster_name
   namespace: $namespace
   # Finalizer that ensures that project is not deleted until it is not referenced by any application
   finalizers:
@@ -161,21 +161,21 @@ EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps-$platform_name
+  name: app-of-apps-$cluster_name
   namespace: $namespace
   finalizers:
     - argoproj.io/resources-finalizer
   labels:
     team: platform
 spec:
-  project: $platform_name
+  project: $cluster_name
   source:
     repoURL: $git_repo
     targetRevision: $git_revision
     path: ./app-of-apps
     helm:
       valueFiles:
-        - values-$platform_name.yaml
+        - values-$cluster_name.yaml
       parameters:
         - name: global.spec.source.repoURL
           value: $git_repo
@@ -185,8 +185,8 @@ spec:
           value: $git_repo
         - name: global.spec.values.targetRevision
           value: $git_revision
-        - name: global.platformName
-          value: $platform_name
+        - name: global.clusterName
+          value: $cluster_name
         - name: global.domain
           value: $domain
   destination:
@@ -282,7 +282,7 @@ function get_or_generate_secret() {
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
 CONTEXT=${1:-}                                          # example: platform-cluster
-PLATFORM_NAME=${2:-onprem}                               # example: local, dta, azure etc. (default: local)
+CLUSTER_NAME=${2:-onprem}                               # example: local, dta, azure etc. (default: local)
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
 DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberise.dev
@@ -319,7 +319,7 @@ NAMESPACE_GITEA="gitea"
 NAMESPACE_K8SGPT="k8sgpt"
 
 # Warning Message
-echo -n "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
+echo -n "WARNING: This script will install the cluster '$CLUSTER_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
 
 read confirmation
 if [ "$confirmation" != "yes" ]; then
@@ -352,7 +352,7 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
-generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
+generate_ca_cert_and_key "$CONTEXT" "$CLUSTER_NAME"
 
 # Secrets for PostgreSQL
 PG_APP_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "password")
@@ -389,13 +389,13 @@ fi
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
 
 # Install ArgoCD with custom values and admin password
-VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
+VALUES_FILE="values/$CLUSTER_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
 
 
 
 # Apply ArgoCD project and app of apps configuration
-deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
+deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$CLUSTER_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
 
 
 # ------------------------------------------------------------

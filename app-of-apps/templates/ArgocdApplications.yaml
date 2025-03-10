@@ -19,7 +19,7 @@ metadata:
   labels:
     team: platform
 spec:
-  project: {{ $.Values.global.platformName }}
+  project: {{ $.Values.global.clusterName }}
   source:
     repoURL: {{ default $.Values.global.spec.source.repoURL .repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
@@ -42,10 +42,10 @@ spec:
         - {{ .values }}
         {{- else if hasKey . "valuesFolder"}}
         - ../../values/defaults/{{ .valuesFolder }}/{{ $name }}/values.yaml
-        - ../../values/{{ $.Values.global.platformName }}/{{ .valuesFolder }}/{{ $name }}/values.yaml
+        - ../../values/{{ $.Values.global.clusterName }}/{{ .valuesFolder }}/{{ $name }}/values.yaml
         {{- else }}
         - ../../values/defaults/platform/{{ $name }}/values.yaml
-        - ../../values/{{ $.Values.global.platformName }}/platform/{{ $name }}/values.yaml
+        - ../../values/{{ $.Values.global.clusterName }}/platform/{{ $name }}/values.yaml
         {{- end }}
       parameters:
         - name: global.domain
