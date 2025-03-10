@@ -41,16 +41,16 @@ function label_secret() {
 
 function generate_ca_cert_and_key() {
   local context=$1
-  local platform_name=$2
+  local cluster_name=$2
 
-  # Validate platform_name is provided
-  if [ -z "$platform_name" ]; then
-    echo "platform_name is required as an input parameter."
+  # Validate cluster_name is provided
+  if [ -z "$cluster_name" ]; then
+    echo "cluster_name is required as an input parameter."
     return 1
   fi
 
   # Define the directory and file paths
-  DIR=".env/$platform_name"
+  DIR=".env/$cluster_name"
   CERT="$DIR/ca.crt"
   KEY="$DIR/ca.key"
   CA_BUNDLE="$DIR/ca-bundle.crt"
@@ -126,7 +126,7 @@ function install_argocd() {
 function deploy_app_of_apps() {
   local context="$1"
   local namespace="$2"
-  local platform_name="$3"
+  local cluster_name="$3"
   local git_repo="$4"
   local git_revision="$5"
   local domain="$6"
@@ -136,7 +136,7 @@ cat <<EOF | kubectl apply --context $context -n $namespace -f -
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: $platform_name
+  name: $cluster_name
   namespace: $namespace
   # Finalizer that ensures that project is not deleted until it is not referenced by any application
   finalizers:
@@ -161,21 +161,21 @@ EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps-$platform_name
+  name: app-of-apps-$cluster_name
   namespace: $namespace
   finalizers:
     - argoproj.io/resources-finalizer
   labels:
     team: platform
 spec:
-  project: $platform_name
+  project: $cluster_name
   source:
     repoURL: $git_repo
     targetRevision: $git_revision
     path: ./app-of-apps
     helm:
       valueFiles:
-        - values-$platform_name.yaml
+        - values-$cluster_name.yaml
       parameters:
         - name: global.spec.source.repoURL
           value: $git_repo
@@ -185,8 +185,8 @@ spec:
           value: $git_repo
         - name: global.spec.values.targetRevision
           value: $git_revision
-        - name: global.platformName
-          value: $platform_name
+        - name: global.clusterName
+          value: $cluster_name
         - name: global.domain
           value: $domain
   destination:
@@ -204,14 +204,19 @@ function configure_oidc_auth() {
   local context=$1
   local client_secret=$2
   local domain=$3
+  local cluster_name=$4
 
   echo "Configuring OIDC authentication in kubeconfig..."
 
   # Get cluster info from current context
-  local cluster_name=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"$context\")].context.cluster}")
+  local cluster_name_k8s=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"$context\")].context.cluster}")
 
-  # Add/Update oidc user
-  kubectl config set-credentials oidc \
+  # Create user name with cluster name
+  local oidc_user="oidc-$cluster_name"
+  local oidc_context="oidc-$cluster_name"
+
+  # Add/Update oidc user with cluster name in the name
+  kubectl config set-credentials "$oidc_user" \
     --exec-api-version=client.authentication.k8s.io/v1beta1 \
     --exec-command=kubectl \
     --exec-arg=oidc-login \
@@ -221,12 +226,12 @@ function configure_oidc_auth() {
     --exec-arg=--oidc-client-secret=$client_secret
 
   # Add/Update oidc context using the same cluster as original context
-  kubectl config set-context oidc \
-    --cluster=$cluster_name \
-    --user=oidc \
+  kubectl config set-context "$oidc_context" \
+    --cluster=$cluster_name_k8s \
+    --user="$oidc_user" \
     --namespace=default
 
-  echo "OIDC authentication configured. Use 'kubectl config use-context oidc' to switch to OIDC authentication."
+  echo "OIDC authentication configured. Use 'kubectl config use-context $oidc_context' to switch to OIDC authentication."
 }
 
 function generate_random_secret() {
@@ -281,8 +286,8 @@ function get_or_generate_secret() {
 # Variables Initialization
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
-CONTEXT=${1:-}                                          # example: platform-cluster
-PLATFORM_NAME=${2:-onprem}                               # example: local, dta, azure etc. (default: local)
+CONTEXT=${1:-}                                          # example: minikube
+CLUSTER_NAME=${2:-onprem}                               # example: onprem, dta, azure etc. (default: onprem)
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
 DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberise.dev
@@ -319,7 +324,7 @@ NAMESPACE_GITEA="gitea"
 NAMESPACE_K8SGPT="k8sgpt"
 
 # Warning Message
-echo -n "WARNING: This script will install the platform '$PLATFORM_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
+echo -n "WARNING: This script will install the cluster '$CLUSTER_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
 
 read confirmation
 if [ "$confirmation" != "yes" ]; then
@@ -352,7 +357,7 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
-generate_ca_cert_and_key "$CONTEXT" "$PLATFORM_NAME"
+generate_ca_cert_and_key "$CONTEXT" "$CLUSTER_NAME"
 
 # Secrets for PostgreSQL
 PG_APP_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "password")
@@ -389,13 +394,13 @@ fi
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
 
 # Install ArgoCD with custom values and admin password
-VALUES_FILE="values/$PLATFORM_NAME/platform/argocd/values.yaml"
+VALUES_FILE="values/$CLUSTER_NAME/platform/argocd/values.yaml"
 install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
 
 
 
 # Apply ArgoCD project and app of apps configuration
-deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
+deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$CLUSTER_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
 
 
 # ------------------------------------------------------------
@@ -406,7 +411,7 @@ deploy_app_of_apps "$CONTEXT" "$NAMESPACE_ARGOCD" "$PLATFORM_NAME" "$REPO_URL" "
 echo "Setting up Kubernetes OAuth2 client secret..."
 kubernetes_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "client-secret")
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "kubernetes-oauth2-client-secret" "--from-literal=client-secret=$kubernetes_secret"
-configure_oidc_auth "$CONTEXT" "$kubernetes_secret" "$DOMAIN"
+configure_oidc_auth "$CONTEXT" "$kubernetes_secret" "$DOMAIN" "$CLUSTER_NAME"
 
 # Grafana OAuth2 Secret
 echo "Setting up Grafana OAuth2 client secret..."

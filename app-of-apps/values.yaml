@@ -1,6 +1,6 @@
 # some of the values will be filled by install.sh script
 global:
-  platformName: x
+  clusterName: x
   domain: x
 
   automated: true
@@ -23,7 +23,7 @@ ArgocdApplications:
 
   raw:
     enabled: false
-    path: values/{{ $.Values.global.platformName }}/platform/raw
+    path: values/{{ $.Values.global.clusterName }}/platform/raw
     type: raw
     recursive: false
 
@@ -63,7 +63,7 @@ ArgocdApplications:
 
   tekton-pipelines:
     enabled: false
-    path: values/{{ $.Values.global.platformName }}/platform/tekton-pipelines
+    path: values/{{ $.Values.global.clusterName }}/platform/tekton-pipelines
     type: raw
 
   keda:
@@ -76,7 +76,7 @@ ArgocdApplications:
   database:
     enabled: false
     namespace: postgres
-    path: values/{{ $.Values.global.platformName }}/platform/database/
+    path: values/{{ $.Values.global.clusterName }}/platform/database/
     type: raw
 
   postgres-operator:
@@ -94,7 +94,7 @@ ArgocdApplications:
 
   object-storage:
     enabled: false
-    path: values/{{ $.Values.global.platformName }}/platform/object-storage/
+    path: values/{{ $.Values.global.clusterName }}/platform/object-storage/
     type: raw
 
   #=================================#
@@ -155,7 +155,7 @@ ArgocdApplications:
   policy:
     enabled: false
     namespace: kyverno
-    path: values/{{ $.Values.global.platformName }}/platform/policy/
+    path: values/{{ $.Values.global.clusterName }}/platform/policy/
     type: raw
 
   sealed-secrets:
@@ -171,7 +171,7 @@ ArgocdApplications:
   secrets:
     enabled: false
     namespace: vault
-    path: values/{{ $.Values.global.platformName }}/platform/secrets/
+    path: values/{{ $.Values.global.clusterName }}/platform/secrets/
     type: raw
 
   secrets-manager:

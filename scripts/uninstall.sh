@@ -26,7 +26,7 @@ function uninstall_argocd() {
 
 
 CONTEXT=${1-}
-PLATFORM_NAME=${2}
+CLUSTER_NAME=${2}
 
 # context MUST be set to connect to the k8s cluster
 if [ -z "${CONTEXT}" ]
@@ -35,9 +35,9 @@ then
   exit 2
 fi
 
-if [ -z "${PLATFORM_NAME}" ]
+if [ -z "${CLUSTER_NAME}" ]
 then
-  echo 1>&2 PLATFORM_NAME is undefined
+  echo 1>&2 CLUSTER_NAME is undefined
   exit 2
 fi
 
@@ -48,7 +48,7 @@ namespaces=("argocd" "cloudnative-pg" "keycloak" "backstage" "ingress-nginx-inte
 namespaces_str=$(IFS=$'\n'; echo "${namespaces[*]}")
 
 # Prompt for confirmation
-read -p "This script will remove the '$PLATFORM_NAME' platform from the '$CONTEXT' Kubernetes context. It will also delete the following namespaces:
+read -p "This script will remove the '$CLUSTER_NAME' cluster from the '$CONTEXT' Kubernetes context. It will also delete the following namespaces:
 
 $namespaces_str
 
@@ -63,8 +63,8 @@ fi
 # Continue with uninstallation
 # namespace
 NAMESPACE=argocd
-kubectl delete --context $CONTEXT -n $NAMESPACE application app-of-apps-$PLATFORM_NAME > /dev/null 2>&1
-kubectl delete --context $CONTEXT -n $NAMESPACE appproject $PLATFORM_NAME > /dev/null 2>&1
+kubectl delete --context $CONTEXT -n $NAMESPACE application app-of-apps-$CLUSTER_NAME > /dev/null 2>&1
+kubectl delete --context $CONTEXT -n $NAMESPACE appproject $CLUSTER_NAME > /dev/null 2>&1
 
 helm uninstall argocd -n argocd --kube-context $CONTEXT -n $NAMESPACE > /dev/null 2>&1
 
