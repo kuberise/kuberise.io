@@ -16,7 +16,8 @@ ollama:
         - deepseek-r1:1.5b
         - gemma3:4b
       run:
-        - deepseek-r1:1.5b
+        - gemma3:4b
+        # - deepseek-r1:1.5b
 
   persistentVolume:
     enabled: true
