@@ -73,7 +73,7 @@ ArgocdApplications:
     enabled: true
 
   ingress-nginx-internal:
-    enabled: true
+    enabled: false
 
   ingress-nginx-external:
     enabled: true
@@ -176,15 +176,15 @@ ArgocdApplications:
     enabled: false
 
   show-env:
-    enabled: true
+    enabled: false
     annotations:
       argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
       argocd-image-updater.argoproj.io/update-strategy: digest
       argocd-image-updater.argoproj.io/write-back-method: git
 
   frontend-https:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   backend:
-    enabled: true
+    enabled: false
