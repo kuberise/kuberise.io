@@ -7,7 +7,7 @@ metadata:
 spec:
   ai:
     enabled: true
-    model: deepseek-r1:1.5b
+    model: llama3.2:3b
     backend: ollama
     baseUrl: http://ollama.ollama.svc.cluster.local:11434/
     backOff:
@@ -18,22 +18,22 @@ spec:
     # anonymized: false
     # language: english
     # proxyEndpoint: https://10.255.30.150 # use proxyEndpoint to setup backend through an HTTP/HTTPS proxy
-    # anonymized	<boolean>
-    # autoRemediation	<Object>
-    # backOff	<Object>
-    # backend	<string> -required-
+    # anonymized <boolean>
+    # autoRemediation <Object>
+    # backOff <Object>
+    # backend <string> -required-
     # options: openai, localai, ollama, azureopenai, cohere, amazonbedrock, amazonsagemaker, google, huggingface, noopai, googlevertexai, ibmwatsonxai
-    # baseUrl	<string>
-    # enabled	<boolean>
-    # engine	<string>
-    # language	<string>
-    # maxTokens	<string>
-    # model	<string>
-    # providerId	<string>
-    # proxyEndpoint	<string>
-    # region	<string>
-    # secret	<Object>
-    # topk	<string>
+    # baseUrl <string>
+    # enabled <boolean>
+    # engine <string>
+    # language <string>
+    # maxTokens <string>
+    # model <string>
+    # providerId <string>
+    # proxyEndpoint <string>
+    # region <string>
+    # secret <Object>
+    # topk <string>
   noCache: false
   repository: ghcr.io/k8sgpt-ai/k8sgpt
   version: v0.3.48
