@@ -1,0 +1,18 @@
+open-webui:
+  ollama:
+    enabled: false
+  pipelines:
+    enabled: false
+
+  ollamaUrls:
+    - http://ollama.ollama.svc.cluster.local:11434
+
+  ingress:
+    enabled: true
+    class: nginx-external
+    host: webui.onprem.kuberise.dev
+    tls: true
+
+  enableOpenaiApi: false
+
+  # TODO: Enable postgres database

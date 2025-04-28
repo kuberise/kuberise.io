@@ -165,6 +165,9 @@ ArgocdApplications:
   ollama:
     enabled: true
 
+  open-webui:
+    enabled: true
+
   k8sgpt:
     enabled: true
 
