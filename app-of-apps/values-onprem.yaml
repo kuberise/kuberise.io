@@ -163,10 +163,10 @@ ArgocdApplications:
   #=================================#
 
   ollama:
-    enabled: false
+    enabled: true
 
   k8sgpt:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Example Applications       #
