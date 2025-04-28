@@ -135,23 +135,23 @@ ArgocdApplications:
   #=================================#
 
   dashboards:
-    enabled: flase
+    enabled: false
     syncWave: 2
 
   metrics-server:
-    enabled: flase
+    enabled: false
     syncWave: 1
 
   kube-prometheus-stack:
-    enabled: flase
+    enabled: false
     syncWave: 2
 
   loki:
-    enabled: flase
+    enabled: false
     syncWave: 2
 
   promtail:
-    enabled: flase
+    enabled: false
     syncWave: 2
 
   opencost:
