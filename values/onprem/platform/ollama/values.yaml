@@ -24,3 +24,5 @@ ollama:
     enabled: true
     minReplicas: 1
     maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 60
