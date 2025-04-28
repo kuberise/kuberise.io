@@ -32,7 +32,7 @@ ArgocdApplications:
     enabled: false
 
   keda:
-    enabled: true
+    enabled: false
 
   #=================================#
   #          Data Services          #
@@ -135,27 +135,27 @@ ArgocdApplications:
   #=================================#
 
   dashboards:
-    enabled: true
+    enabled: flase
     syncWave: 2
 
   metrics-server:
-    enabled: true
+    enabled: flase
     syncWave: 1
 
   kube-prometheus-stack:
-    enabled: true
+    enabled: flase
     syncWave: 2
 
   loki:
-    enabled: true
+    enabled: flase
     syncWave: 2
 
   promtail:
-    enabled: true
+    enabled: flase
     syncWave: 2
 
   opencost:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   #=================================#
