@@ -15,6 +15,7 @@ ollama:
       pull:
         - deepseek-r1:1.5b
         - gemma3:4b
+        - llama3.2:3b
       run:
         - gemma3:4b
         # - deepseek-r1:1.5b
