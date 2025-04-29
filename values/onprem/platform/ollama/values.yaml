@@ -10,6 +10,7 @@ ollama:
     tls:
       - hosts:
           - ollama.onprem.kuberise.dev
+  replicaCount: 1
   ollama:
     models:
       pull:
@@ -17,7 +18,7 @@ ollama:
         - gemma3:4b
         - llama3.2:3b
       run:
-        - llama3.2:3b
+        - gemma3:4b
 
   persistentVolume:
     enabled: true
@@ -28,3 +29,5 @@ ollama:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
+
+# TODO: Retain the PV when disable Ollama to keep the downloaded models
