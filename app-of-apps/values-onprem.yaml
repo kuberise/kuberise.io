@@ -166,7 +166,7 @@ ArgocdApplications:
     enabled: true
 
   open-webui:
-    enabled: false
+    enabled: true
 
   k8sgpt:
     enabled: false
