@@ -9,32 +9,12 @@ spec:
     enabled: true
     model: llama3.2:3b
     backend: localai
-    baseUrl: http://ollama.ollama.svc.cluster.local:11434/
+    baseUrl: http://ollama.ollama.svc.cluster.local:11434/api
     backOff:
       # Enable backOff to implement rate limiting and avoid quota issues
       enabled: true
       # Increase maxRetries to give more attempts with exponential backoff
       maxRetries: 30
-    # anonymized: false
-    # language: english
-    # proxyEndpoint: https://10.255.30.150 # use proxyEndpoint to setup backend through an HTTP/HTTPS proxy
-    # anonymized <boolean>
-    # autoRemediation <Object>
-    # backOff <Object>
-    # backend <string> -required-
-    # options: openai, localai, ollama, azureopenai, cohere, amazonbedrock, amazonsagemaker, google, huggingface, noopai, googlevertexai, ibmwatsonxai
-    # baseUrl <string>
-    # enabled <boolean>
-    # engine <string>
-    # language <string>
-    # maxTokens <string>
-    # model <string>
-    # providerId <string>
-    # proxyEndpoint <string>
-    # region <string>
-    # secret <Object>
-    # topk <string>
-  noCache: false
   repository: ghcr.io/k8sgpt-ai/k8sgpt
   version: v0.4.13
   # Set a schedule for analysis instead of continuous analysis
@@ -47,17 +27,4 @@ spec:
     - Ingress
   # Enable caching to reduce API calls
   noCache: false
-  #integrations:
-  # trivy:
-  #  enabled: true
-  #  namespace: trivy-system
-  # sink:
-  #   type: slack
-  #   webhook: <webhook-url> # use the sink secret if you want to keep your webhook url private
-  #   secret:
-  #     name: slack-webhook
-  #     key: url
-  #extraOptions:
-  #   backstage:
-  #     enabled: true
 {{- end }}
