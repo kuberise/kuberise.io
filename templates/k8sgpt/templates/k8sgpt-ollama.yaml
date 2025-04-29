@@ -7,8 +7,8 @@ metadata:
 spec:
   ai:
     enabled: true
-    model: "gemma3:4b"
     backend: localai
+    model: "gemma3:4b"
     baseUrl: http://ollama.ollama.svc.cluster.local:11434/
     backOff:
       # Enable backOff to implement rate limiting and avoid quota issues
