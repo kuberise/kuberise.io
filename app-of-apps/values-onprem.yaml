@@ -169,7 +169,7 @@ ArgocdApplications:
     enabled: true
 
   local-ai:
-    enabled: true
+    enabled: false
 
   k8sgpt:
     enabled: true
