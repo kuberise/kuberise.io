@@ -163,13 +163,13 @@ ArgocdApplications:
   #=================================#
 
   ollama:
-    enabled: true
+    enabled: false
 
   open-webui:
-    enabled: true
+    enabled: false
 
   k8sgpt:
-    enabled: true
+    enabled: false
 
   #=================================#
   #      Example Applications       #
