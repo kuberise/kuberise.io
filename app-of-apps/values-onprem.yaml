@@ -169,7 +169,7 @@ ArgocdApplications:
     enabled: true
 
   k8sgpt:
-    enabled: false
+    enabled: true
 
   #=================================#
   #      Example Applications       #
