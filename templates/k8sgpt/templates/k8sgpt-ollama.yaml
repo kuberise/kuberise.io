@@ -17,7 +17,7 @@ spec:
       # Increase maxRetries to give more attempts with exponential backoff
       maxRetries: 30
   repository: ghcr.io/k8sgpt-ai/k8sgpt
-  version: v0.4.13
+  version: v0.3.48
   # Set a schedule for analysis instead of continuous analysis
   filters:
     # Add specific filters to limit resources being analyzed
