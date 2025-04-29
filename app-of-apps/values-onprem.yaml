@@ -186,7 +186,7 @@ ArgocdApplications:
       argocd-image-updater.argoproj.io/write-back-method: git
 
   frontend-https:
-    enabled: false
+    enabled: true
     syncWave: 1
 
   backend:
