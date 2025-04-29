@@ -9,7 +9,7 @@ spec:
     enabled: true
     backend: localai
     model: llama3.2
-    baseUrl: http://ollama.ollama.svc.cluster.local:11434
+    baseUrl: http://ollama.ollama.svc.cluster.local:11434/v1
     # backOff:
     #   # Enable backOff to implement rate limiting and avoid quota issues
     #   enabled: true
