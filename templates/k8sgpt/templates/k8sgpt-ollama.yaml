@@ -7,7 +7,8 @@ metadata:
 spec:
   ai:
     enabled: true
-    model: llama3.2:3b
+    model: "llama3.2:3b"
+    engine: "llama3.2:3b"
     backend: localai
     baseUrl: http://ollama.ollama.svc.cluster.local:11434/api
     backOff:
