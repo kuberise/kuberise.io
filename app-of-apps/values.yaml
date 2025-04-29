@@ -231,6 +231,9 @@ ArgocdApplications:
   k8sgpt:
     enabled: false
 
+  local-ai:
+    enabled: false
+
   #=================================#
   #      Example Applications       #
   #=================================#

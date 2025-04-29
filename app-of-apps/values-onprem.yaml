@@ -168,6 +168,9 @@ ArgocdApplications:
   open-webui:
     enabled: true
 
+  local-ai:
+    enabled: true
+
   k8sgpt:
     enabled: true
 
