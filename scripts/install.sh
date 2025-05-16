@@ -119,7 +119,7 @@ function install_argocd() {
     --set global.domain=argocd."$domain" \
     --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" \
     --repo https://argoproj.github.io/argo-helm \
-    --version 7.7.22 \
+    --version 7.9.0 \
     argocd argo-cd > /dev/null
 }
 
