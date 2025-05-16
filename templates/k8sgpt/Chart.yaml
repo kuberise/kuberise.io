@@ -3,5 +3,5 @@ name: k8sgpt
 version: 1.0.0
 dependencies:
   - name: k8sgpt-operator
-    version: 0.2.15
+    version: 0.2.18
     repository: https://charts.k8sgpt.ai/
