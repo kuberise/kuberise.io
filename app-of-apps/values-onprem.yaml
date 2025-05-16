@@ -39,10 +39,10 @@ ArgocdApplications:
   #=================================#
 
   database:
-    enabled: true
+    enabled: false
 
   postgres-operator:
-    enabled: true
+    enabled: false
 
   pgadmin:
     enabled: false
@@ -61,7 +61,7 @@ ArgocdApplications:
   #=================================#
 
   metallb:
-    enabled: true
+    enabled: false
     ignoreDifferences:
       - group: apiextensions.k8s.io
         kind: CustomResourceDefinition
@@ -70,7 +70,7 @@ ArgocdApplications:
           - /spec/conversion/webhook/clientConfig/caBundle
 
   external-dns:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: false
@@ -91,11 +91,11 @@ ArgocdApplications:
   #=================================#
 
   keycloak:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   keycloak-operator:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   cert-manager:
@@ -189,7 +189,7 @@ ArgocdApplications:
       argocd-image-updater.argoproj.io/write-back-method: git
 
   frontend-https:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   backend:
