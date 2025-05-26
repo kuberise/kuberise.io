@@ -1,6 +1,0 @@
-sealed-secrets:
-  global:
-    imageRegistry: registry:5000
-
-    security:
-      allowInsecureImages: true

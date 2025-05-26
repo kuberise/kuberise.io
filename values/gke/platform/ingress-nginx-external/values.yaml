@@ -1,9 +1,0 @@
-ingress-nginx:
-  controller:
-    service:
-      annotations:
-        cloud.google.com/load-balancer-type: External
-        external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.global.domain }}"
-        external-dns.alpha.kubernetes.io/owner: "gke-externaldns"
-    extraArgs:
-      default-ssl-certificate: cert-manager/ssl-certificate-letsencrypt

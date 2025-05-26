@@ -1,3 +1,0 @@
-argocd-image-updater:
-  image:
-    repository: registry:5000/argoprojlabs/argocd-image-updater

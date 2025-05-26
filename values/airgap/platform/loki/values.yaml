@@ -1,4 +1,0 @@
-loki-distributed:
-  global:
-    image:
-      registry: registry:5000

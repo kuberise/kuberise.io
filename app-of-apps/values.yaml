@@ -18,115 +18,7 @@ global:
 ArgocdApplications:
 
   #=================================#
-  #      Platform Core Apps         #
-  #=================================#
-
-  raw:
-    enabled: false
-    path: values/{{ $.Values.global.clusterName }}/platform/raw
-    type: raw
-    recursive: false
-
-  argocd-image-updater:
-    enabled: false
-    namespace: argocd
-
-  teams-namespaces:
-    enabled: false
-
-  team-setup:
-    enabled: false
-    namespace: keycloak
-
-  backstage:
-    enabled: false
-    syncWave: 1
-
-  gitea:
-    enabled: false
-
-  hello:
-    enabled: false
-    type: kustomize
-
-  rancher:
-    enabled: false
-    namespace: cattle-system
-
-  vcluster:
-    enabled: false
-
-  # The helm chart coppied from the github repo manually. It is not available in the helm repo. Should be updated manually.
-  # https://github.com/tektoncd/operator/tree/release-v0.75.x
-  tekton-operator:
-    enabled: false
-
-  tekton-pipelines:
-    enabled: false
-    path: values/{{ $.Values.global.clusterName }}/platform/tekton-pipelines
-    type: raw
-
-  keda:
-    enabled: false
-
-  #=================================#
-  #      Data Services              #
-  #=================================#
-
-  database:
-    enabled: false
-    namespace: postgres
-    path: values/{{ $.Values.global.clusterName }}/platform/database/
-    type: raw
-
-  postgres-operator:
-    enabled: false
-    namespace: postgres
-
-  pgadmin:
-    enabled: false
-
-  redis:
-    enabled: false
-
-  minio:
-    enabled: false
-
-  object-storage:
-    enabled: false
-    path: values/{{ $.Values.global.clusterName }}/platform/object-storage/
-    type: raw
-
-  #=================================#
-  #      Network Services           #
-  #=================================#
-
-  metallb:
-    enabled: false
-
-  internal-dns:
-    enabled: false
-    path: templates/external-dns
-
-  external-dns:
-    enabled: false
-    path: templates/external-dns
-
-  ingress-nginx-external:
-    enabled: false
-
-  ingress-nginx-internal:
-    enabled: false
-
-  # custom ingress resources
-  ingresses:
-    enabled: false
-
-  cilium:
-    enabled: false
-
-  #=================================#
-  #      Security & Auth            #
+  #      Platform Tools             #
   #=================================#
 
   keycloak:
@@ -138,10 +30,6 @@ ArgocdApplications:
 
   external-secrets:
     enabled: false
-
-  oauth2-proxy:
-    enabled: false
-    namespace: keycloak
 
   cert-manager:
     enabled: false
@@ -158,54 +46,10 @@ ArgocdApplications:
     path: values/{{ $.Values.global.clusterName }}/platform/policy/
     type: raw
 
-  sealed-secrets:
-    enabled: false
-
-  vault:
-    enabled: false
-
-  vault-secrets-operator:
-    enabled: false
-    namespace: vault
-
-  secrets:
-    enabled: false
-    namespace: vault
-    path: values/{{ $.Values.global.clusterName }}/platform/secrets/
-    type: raw
-
-  secrets-manager:
-    enabled: false
-
-  neuvector:
-    enabled: false
-
-  #=================================#
-  #      Monitoring Stack           #
-  #=================================#
-
   dashboards:
     enabled: false
     namespace: monitoring
     type: kustomize
-
-  metrics-server:
-    enabled: false
-    namespace: kube-system
-
-  kube-prometheus-stack-crds:
-    enabled: true # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
-    repoURL: https://github.com/prometheus-community/helm-charts.git
-    path: charts/kube-prometheus-stack/charts/crds
-    namespace: monitoring
-    targetRevision: kube-prometheus-stack-69.7.2
-    type: raw
-
-  kube-prometheus-stack:
-    enabled: false
-    namespace: monitoring
-    syncOptions:
-      - ServerSideApply=false
 
   loki:
     enabled: false
@@ -219,17 +63,7 @@ ArgocdApplications:
     enabled: false
 
   #=================================#
-  #           AI Tools              #
-  #=================================#
-
-  ollama:
-    enabled: false
-
-  k8sgpt:
-    enabled: false
-
-  #=================================#
-  #      Example Applications       #
+  #      Developer Applications       #
   #=================================#
 
   grpc-server:

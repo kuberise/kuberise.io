@@ -1,0 +1,14 @@
+cilium:
+  operator:
+    replicas: 1
+  hubble:
+    enabled: true
+    relay:
+      enabled: true
+    ui:
+      enabled: true
+      ingress:
+        enabled: true
+        className: nginx-external
+        hosts:
+          - hubble.onprem.kuberise.dev

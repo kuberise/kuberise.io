@@ -1,4 +1,0 @@
-keycloakx:
-  image:
-    # The Keycloak image repository
-    repository: registry:5000/keycloak/keycloak

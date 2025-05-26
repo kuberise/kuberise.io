@@ -1,0 +1,58 @@
+ArgocdApplications:
+
+  #=================================#
+  #      Platform Tools             #
+  #=================================#
+
+  keycloak:
+    enabled: true
+    syncWave: 1
+
+  keycloak-operator:
+    enabled: true
+    syncWave: 1
+
+  cert-manager:
+    enabled: true
+
+  external-secrets:
+    enabled: false
+
+  kyverno:
+    enabled: false
+
+  policy:
+    enabled: false
+
+  dashboards:
+    enabled: true
+    syncWave: 2
+
+  loki:
+    enabled: true
+    syncWave: 2
+
+  promtail:
+    enabled: true
+    syncWave: 2
+
+  opencost:
+    enabled: true
+    syncWave: 1
+
+  #=================================#
+  #      Developer Applications     #
+  #=================================#
+
+  grpc-server:
+    enabled: false
+
+  show-env:
+    enabled: true
+
+  frontend-https:
+    enabled: true
+    syncWave: 1
+
+  backend:
+    enabled: true

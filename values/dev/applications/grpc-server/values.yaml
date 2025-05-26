@@ -1,0 +1,19 @@
+
+useHttps: true
+
+env:
+  PORT: 443
+
+containerPorts:
+  https: 443
+
+service:
+  type: ClusterIP
+  ports:
+    https: 443
+
+ingress:
+  className: nginx-external
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    cert-manager.io/cluster-issuer: "selfsigned"
