@@ -23,7 +23,8 @@ service:
     http: 80
     https: 443
 
-imagePullSecrets: []
+imagePullSecrets:
+- name: ghcr-secret
 nameOverride: ""
 fullnameOverride: ""
 
