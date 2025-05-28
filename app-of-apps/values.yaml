@@ -67,7 +67,7 @@ ArgocdApplications:
   #=================================#
 
   # a sample of microservice with internal traffic
-  backend:
+  price-peek:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications

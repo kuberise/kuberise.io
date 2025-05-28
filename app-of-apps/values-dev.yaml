@@ -38,15 +38,5 @@ ArgocdApplications:
   #      Developer Applications     #
   #=================================#
 
-  grpc-server:
-    enabled: false
-
-  show-env:
-    enabled: false
-
-  frontend-https:
-    enabled: false
-    syncWave: 1
-
-  backend:
-    enabled: false
+  price-peek:
+    enabled: true
