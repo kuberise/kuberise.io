@@ -1,7 +1,0 @@
-fullnameOverride: grpc-server
-
-image:
-  repository: ghcr.io/kuberise/grpc-server
-  tag: latest
-
-replicaCount: 1

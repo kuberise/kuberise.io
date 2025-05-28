@@ -1,7 +1,0 @@
-fullnameOverride: show-env
-
-image:
-  repository: ghcr.io/kuberise/show-env
-  tag: latest
-
-replicaCount: 1

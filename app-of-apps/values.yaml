@@ -66,34 +66,8 @@ ArgocdApplications:
   #      Developer Applications       #
   #=================================#
 
-  grpc-server:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-    namespace: frontend
-
-  # http container example with external traffic
-  show-env:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-    namespace: frontend
-
-  # https container example with external traffic that receives traffic over https from ingress controller
-  frontend-https:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-    namespace: frontend
-
   # a sample of microservice with internal traffic
   backend:
-    enabled: false
-    path: templates/generic-deployment
-    valuesFolder: applications
-
-  # a sample of microservice with internal traffic
-  api:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications

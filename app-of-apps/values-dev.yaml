@@ -5,39 +5,33 @@ ArgocdApplications:
   #=================================#
 
   keycloak:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   keycloak-operator:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   cert-manager:
-    enabled: true
+    enabled: false
 
   external-secrets:
     enabled: false
 
-  kyverno:
-    enabled: false
-
-  policy:
-    enabled: false
-
   dashboards:
-    enabled: true
+    enabled: false
     syncWave: 2
 
   loki:
-    enabled: true
+    enabled: false
     syncWave: 2
 
   promtail:
-    enabled: true
+    enabled: false
     syncWave: 2
 
   opencost:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   #=================================#
@@ -48,11 +42,11 @@ ArgocdApplications:
     enabled: false
 
   show-env:
-    enabled: true
+    enabled: false
 
   frontend-https:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   backend:
-    enabled: true
+    enabled: false
