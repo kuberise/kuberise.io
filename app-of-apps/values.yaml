@@ -65,6 +65,10 @@ ArgocdApplications:
   ingress-nginx-external:
     enabled: false
 
+  kube-prometheus-stack-crds:
+    enabled: true # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
+    namespace: monitoring
+
   #=================================#
   #      Developer Applications       #
   #=================================#
