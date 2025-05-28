@@ -1,0 +1,27 @@
+useHttps: false
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/maartenvanwersch/price-peek
+  tag: main
+
+containerPorts:
+  http: 8080
+
+service:
+  type: ClusterIP
+  ports:
+    http: 8080
+
+# ingress:
+#   enabled: true
+#   className: nginx-internal
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#   hosts:
+#     - host: kuberise.internal
+#       paths:
+#         - path: /backend
+#           pathType: Prefix
+#   tls: []
