@@ -62,6 +62,9 @@ ArgocdApplications:
   opencost:
     enabled: false
 
+  ingress-nginx-external:
+    enabled: false
+
   #=================================#
   #      Developer Applications       #
   #=================================#

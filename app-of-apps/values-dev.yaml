@@ -34,6 +34,9 @@ ArgocdApplications:
     enabled: false
     syncWave: 1
 
+  ingress-nginx-external:
+    enabled: true
+
   #=================================#
   #      Developer Applications     #
   #=================================#
