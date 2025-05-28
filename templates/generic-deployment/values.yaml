@@ -108,10 +108,14 @@ tolerations: []
 
 affinity: {}
 
-env: {}
-  # varName1: value1
-  # varName2: value2
-
+env:
+  PORT: 8080
+  GO_ENV: production
+  CORS_ALLOWED_ORIGINS: *
+  PROJECT_ID: suio-moneyys-prod
+  GIN_MODE: release
+  VERTEX_AI_LOCATION: us-central1
+  GOOGLE_APPLICATION_CREDENTIALS: /service-account.json
 # sample http probes
 # livenessProbe:
 #   httpGet:
