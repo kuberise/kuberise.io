@@ -23,8 +23,7 @@ service:
     http: 80
     https: 443
 
-imagePullSecrets:
-- name: ghcr-secret
+imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -108,14 +107,10 @@ tolerations: []
 
 affinity: {}
 
-env:
-  PORT: 8080
-  GO_ENV: production
-  CORS_ALLOWED_ORIGINS: *
-  PROJECT_ID: suio-moneyys-prod
-  GIN_MODE: release
-  VERTEX_AI_LOCATION: us-central1
-  GOOGLE_APPLICATION_CREDENTIALS: /service-account.json
+env: {}
+  # varName1: value1
+  # varName2: value2
+
 # sample http probes
 # livenessProbe:
 #   httpGet:

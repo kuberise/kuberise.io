@@ -25,3 +25,15 @@ service:
 #         - path: /backend
 #           pathType: Prefix
 #   tls: []
+
+env:
+  PORT: 8080
+  GO_ENV: production
+  CORS_ALLOWED_ORIGINS: *
+  PROJECT_ID: suio-moneyys-prod
+  GIN_MODE: release
+  VERTEX_AI_LOCATION: us-central1
+  GOOGLE_APPLICATION_CREDENTIALS: /service-account.json
+
+imagePullSecrets:
+  - name: ghcr-secret
