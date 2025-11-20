@@ -155,7 +155,7 @@ ArgocdApplications:
     syncWave: 2
 
   opencost:
-    enabled: true
+    enabled: false
     syncWave: 1
 
   #=================================#
