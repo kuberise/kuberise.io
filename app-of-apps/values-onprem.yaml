@@ -70,7 +70,7 @@ ArgocdApplications:
           - /spec/conversion/webhook/clientConfig/caBundle
 
   external-dns:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: true
