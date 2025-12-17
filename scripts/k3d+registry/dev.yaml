@@ -24,9 +24,9 @@ options:
       - arg: --disable-network-policy
         nodeFilters:
           - server:*
-      # - arg: --flannel-backend=none
-      #   nodeFilters:
-      #     - server:*
+      - arg: --flannel-backend=none
+        nodeFilters:
+          - server:*
 env:
   - envVar: HTTP_PROXY=http://registry-proxy:3128
     nodeFilters:
@@ -38,11 +38,11 @@ env:
     nodeFilters:
       - all
 volumes:
-  - volume: /Users/mojtaba/docker_registry_proxy/certs/ca.crt:/etc/ssl/certs/registry-proxy-ca.pem
+  - volume: __HOME_DIR__/docker_registry_proxy/certs/ca.crt:/etc/ssl/certs/registry-proxy-ca.pem
     nodeFilters:
       - all
   # Add this volume mount to keep container image storage when you delete and recreate the cluster
-  - volume: /Users/mojtaba/tmp/k3d_docker_images:/var/lib/rancher/k3s/agent/containerd/io.containerd.content.v1.content
+  - volume: __HOME_DIR__/tmp/k3d_docker_images:/var/lib/rancher/k3s/agent/containerd/io.containerd.content.v1.content
     nodeFilters:
       - all
 # ports:
