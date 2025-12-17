@@ -53,7 +53,10 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
   - `install.sh`: Main installation script that sets up the platform
   - `uninstall.sh`: Uninstallation script
   - `upgrade.sh`: Upgrade script for the version of external helm charts used in the project
-  - `k3d+registry`: Scripts for creating local k3d clusters with local cache registry
+  - `k3d+registry/`: Scripts for local multi-cluster development setup
+    - Creates two k3d clusters (shared and dev) connected via Cilium ClusterMesh
+    - Sets up Docker registry proxy for local image caching
+    - See "Local Development with k3d Clusters" section for details
   - `more/`: Additional utility scripts
 
 ### Application Types
@@ -183,6 +186,61 @@ The `scripts/install.sh` script:
 - `REVISION`: Branch/tag/commit SHA
 - `DOMAIN`: Base domain for services
 - `TOKEN`: Optional Git token for private repos
+
+### Local Development with k3d Clusters
+
+The `scripts/k3d+registry/` directory contains scripts for setting up a local multi-cluster development environment using k3d.
+
+#### Purpose
+These scripts create two local k3d clusters connected via Cilium ClusterMesh:
+- **shared cluster**: Hosts platform shared tools and observability components (Prometheus, Loki, Grafana, etc.)
+- **dev cluster**: Hosts developer applications
+
+The clusters are connected via Cilium ClusterMesh, enabling developer applications in the dev cluster to send logs and metrics to observability platform components in the shared cluster.
+
+#### Scripts Overview
+
+- **`start.sh`**: Main script that:
+  1. Starts a Docker registry proxy for caching container images
+  2. Creates two k3d clusters (`shared` and `dev`) on the same network (`kuberise`)
+  3. Configures both clusters to use the registry proxy for faster image pulls
+  4. Sets up persistent image storage to preserve pulled images across cluster recreations
+
+- **`docker-registry-proxy.sh`**: Creates a local Docker registry proxy container that:
+  - Caches images from major registries (registry.k8s.io, gcr.io, quay.io, ghcr.io, public.ecr.aws)
+  - Reduces bandwidth usage and speeds up image pulls
+  - Runs on the `kuberise` network for cluster access
+
+- **`shared.yaml`**: k3d configuration for the shared cluster
+  - Disables Traefik, ServiceLB, and NetworkPolicy (to allow Cilium installation)
+  - Configures registry proxy environment variables
+  - Sets up persistent image storage
+
+- **`dev.yaml`**: k3d configuration for the dev cluster
+  - Same configuration as shared cluster
+  - Both clusters share the same network for ClusterMesh connectivity
+
+- **`delete-all.sh`**: Utility script to delete both clusters
+
+#### Usage
+```bash
+# Create both clusters
+./scripts/k3d+registry/start.sh
+
+# After clusters are created, install Cilium CNI and ClusterMesh
+# Then run install.sh for each cluster:
+./scripts/install.sh k3d-shared shared <REPO_URL> <REVISION> <DOMAIN>
+./scripts/install.sh k3d-dev dev <REPO_URL> <REVISION> <DOMAIN>
+
+# Delete both clusters
+./scripts/k3d+registry/delete-all.sh
+```
+
+#### Architecture Notes
+- Both clusters are on the same Docker network (`kuberise`) enabling direct communication
+- Cilium is installed as the CNI in both clusters
+- Cilium ClusterMesh connects the clusters, allowing cross-cluster service discovery and networking
+- The registry proxy provides local caching and reduces external registry dependencies
 
 ## Development Guidelines
 
