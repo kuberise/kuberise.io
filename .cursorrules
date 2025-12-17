@@ -1,0 +1,249 @@
+# kuberise.io Project Rules
+
+## Project Overview
+kuberise.io is a free open source internal developer platform for Kubernetes environments. It provides tools and templates for fast and easy installation to help developers focus on business applications rather than infrastructure setup and configuration.
+
+The platform uses GitOps principles with ArgoCD for declarative application management and follows the app-of-apps pattern for managing multi-cluster, multi-cloud, multi-environment, multi-application, multi-values architecture.
+
+## Architecture & Design Patterns
+
+### GitOps & App-of-Apps Pattern
+- Uses ArgoCD for GitOps-based application deployment
+- App-of-apps pattern: `app-of-apps/` contains the root ArgoCD Application that manages all other applications
+- All applications are defined as ArgoCD Applications in `app-of-apps/templates/ArgocdApplications.yaml`
+- Applications are enabled/disabled via values files
+
+### Multi-Cluster Support
+The project supports multiple Kubernetes clusters. These clusters can represent:
+- Different environments (e.g., dev, test, prod clusters)
+- Multiple regional clusters for the same environment (e.g., multiple regional production clusters: prod-us-east, prod-us-west, prod-eu)
+- Multi-cloud or hybrid architectures
+
+All clusters use the same templates in templates/ folder.
+
+Each cluster has its own values directory:
+- `values/{cluster}/platform/` for the configuration of the platform components
+- `values/{cluster}/applications/` for the configuration of the developer applications
+
+### Value File Hierarchy
+Values files follow a specific hierarchy for overrides:
+1. Default values: `values/defaults/platform/{component}/values.yaml`
+2. Cluster-specific overrides: `values/{cluster}/platform/{component}/values.yaml`
+
+ArgoCD Applications automatically merge these files in order (defaults first, then cluster-specific).
+
+## Directory Structure
+
+### Key Directories
+- `app-of-apps/`: Root Helm chart for ArgoCD app-of-apps pattern
+  - `values.yaml`: Main configuration with all ArgoCD Applications definitions
+  - `values-{cluster}.yaml`: Cluster-specific overrides
+  - `templates/ArgocdApplications.yaml`: Template that generates ArgoCD Application manifests
+
+- `templates/`: Helm chart templates for platform components
+  - Each component has its own subdirectory (e.g., `templates/keycloak/`, `templates/cert-manager/`)
+  - Contains `Chart.yaml` and `templates/` directory with Kubernetes manifests
+  - Some components use external Helm charts (referenced via `repoURL`)
+
+- `values/`: Configuration values organized by cluster
+  - `values/{cluster}/platform/`: Platform component configurations
+  - `values/{cluster}/applications/`: Application-specific configurations
+
+- `scripts/`: Installation and utility scripts
+  - `install.sh`: Main installation script that sets up the platform
+  - `uninstall.sh`: Uninstallation script
+  - `upgrade.sh`: Upgrade script for the version of external helm charts used in the project
+  - `k3d+registry`: Scripts for creating local k3d clusters with local cache registry
+  - `more/`: Additional utility scripts
+
+### Application Types
+ArgoCD Applications support three types:
+1. `helm`: Default type, uses Helm charts (most common)
+2. `kustomize`: Uses Kustomize for manifest management
+3. `raw`: Direct Kubernetes manifests without templating
+
+## Coding Conventions
+
+### YAML Formatting
+- Use 2-space indentation
+- Follow Kubernetes YAML best practices
+- Use meaningful comments to explain complex configurations
+- Group related configurations together
+
+### Helm Chart Structure
+- Follow Helm 3 best practices
+- Use `_helpers.tpl` for reusable template functions
+- Chart names should match directory names (kebab-case)
+- Include `Chart.yaml` with proper versioning
+
+### Naming Conventions
+- Component names: kebab-case (e.g., `cert-manager`, `external-dns`)
+- Namespace names: Usually match component name or follow Kubernetes conventions
+- Resource names: Use Helm template functions like `{{ include "component.fullname" . }}`
+
+### Value File Patterns
+- Always provide sensible defaults in `values/defaults/`
+- Cluster-specific values should only override what's necessary
+- Use `global.domain` for domain configuration (injected by install script)
+- Use `global.cluster` for cluster-specific references
+
+### ArgoCD Application Configuration
+- Applications are defined in `app-of-apps/values.yaml` under `ArgocdApplications`
+- Each application has:
+  - `enabled`: Boolean to enable/disable
+  - `namespace`: Target namespace (defaults to component name)
+  - `path`: Path to Helm chart or manifests
+  - `type`: Application type (helm/kustomize/raw)
+  - `syncWave`: Optional sync wave for ordering
+  - `syncOptions`: Optional sync options
+  - `finalizer`: Optional finalizers
+
+### Domain Configuration
+- All services use subdomains of `global.domain`
+- Pattern: `{service-name}.{global.domain}`
+- Example: `keycloak.minikube.kuberise.dev`
+
+## Platform Components
+
+### Core Platform Services
+- **ArgoCD**: GitOps continuous delivery tool
+- **ArgoCD Image Updater**: Automated image updates
+- **Backstage**: Developer portal
+- **Gitea**: Git repository hosting
+- **Rancher**: Kubernetes management platform
+- **vcluster**: Virtual Kubernetes clusters
+
+### Data Services
+- **PostgreSQL Operator (CloudNativePG)**: Managed PostgreSQL databases
+- **pgAdmin**: PostgreSQL administration tool
+- **Redis**: In-memory data store
+- **MinIO**: Object storage
+
+### Network Services
+- **MetalLB**: Load balancer for bare metal/on-prem
+- **External DNS**: DNS record management
+- **Ingress NGINX**: Ingress controller (internal/external)
+- **Cilium**: CNI and network policy enforcement
+
+### Security & Authentication
+- **Keycloak**: Identity and access management
+- **Keycloak Operator**: Keycloak lifecycle management
+- **OAuth2 Proxy**: Authentication proxy
+- **External Secrets Operator**: Secret management
+- **Sealed Secrets**: Encrypted secrets
+- **Vault**: Secrets management
+- **Vault Secrets Operator**: Vault integration
+- **Cert Manager**: Certificate management
+- **Kyverno**: Policy engine
+- **NeuVector**: Container security
+
+### Monitoring & Observability
+- **Prometheus Stack**: Metrics collection and alerting
+- **Loki**: Log aggregation
+- **Promtail**: Log shipper
+- **OpenCost**: Cost monitoring
+- **Metrics Server**: Kubernetes metrics API
+- **Dashboards**: Grafana dashboards (kustomize-based)
+
+### AI & Developer Tools
+- **Ollama**: LLM inference server
+- **k8sgpt**: Kubernetes AI assistant
+
+### CI/CD
+- **Tekton Operator**: Kubernetes-native CI/CD pipelines
+
+### Example Applications
+- `generic-deployment`: Reusable Helm chart for deploying applications
+- Example apps: `show-env`, `frontend-https`, `backend`, `api`, `grpc-server`
+
+## Installation Process
+
+### Prerequisites
+- CLI tools: `kubectl`, `helm`, `htpasswd`, `git`, `openssl`
+- GitHub account or git repository
+- Kubernetes cluster (kind, minikube, or cloud provider)
+- K9s recommended for dashboard
+
+### Installation Script
+The `scripts/install.sh` script:
+1. Validates required tools
+2. Creates necessary namespaces and secrets
+3. Generates CA certificates if needed
+4. Installs ArgoCD
+5. Creates the root ArgoCD Application (app-of-apps)
+6. Configures Git repository access
+
+### Installation Parameters
+```bash
+./scripts/install.sh [CONTEXT] [NAME] [REPO_URL] [REVISION] [DOMAIN] [TOKEN]
+```
+- `CONTEXT`: Kubernetes context name
+- `NAME`: Cluster name (must match values directory, e.g., `aks`, `eks`, `gke`, `onprem`, `airgap`)
+- `REPO_URL`: Git repository URL
+- `REVISION`: Branch/tag/commit SHA
+- `DOMAIN`: Base domain for services
+- `TOKEN`: Optional Git token for private repos
+
+## Development Guidelines
+
+### Adding a New Component
+1. Create Helm chart in `templates/{component-name}/`
+2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty.
+3. Add cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` even if it is empty.
+4. Add application definition to `app-of-apps/values.yaml` under `ArgocdApplications`
+5. Set `enabled: false` by default
+6. Add application definition to `app-of-apps/values-{cluster}.yaml` under `ArgocdApplications`
+7. Set `enabled: true` if the component is going to be installed in that cluster.
+8. Document component in the documentation.
+
+### Modifying Existing Components
+1. Update Helm chart templates in `templates/{component}/`
+2. Update default values in `values/defaults/platform/{component}/values.yaml`
+3. Check cluster-specific overrides in `values/{cluster}/platform/{component}/values.yaml`
+4. Test with at least one cluster before committing
+
+### Script Development
+- Use `set -euo pipefail` in bash scripts
+- Include error handling and validation
+- Add comments explaining complex logic
+
+### Testing
+- Test installations on different clusters when possible
+- Verify ArgoCD sync status after changes
+- Check that values merge correctly (defaults + cluster-specific)
+
+## Common Patterns
+
+### Helm Value Injection
+- Use `global.domain` for domain configuration
+- Use `global.cluster` for cluster-specific settings
+- Values are injected via ArgoCD Application's `helm.parameters`
+
+### Sync Waves
+- Use `syncWave` annotation to control application deployment order
+- Lower numbers deploy first
+- Example: `syncWave: 1` for dependencies, `syncWave: 2` for dependents
+
+### Namespace Management
+- Most components deploy to their own namespace
+- Namespace is usually the component name
+- Namespaces are created automatically via `CreateNamespace=true` sync option
+
+### Resource Naming
+- Use Helm template helpers for consistent naming
+- Pattern: `{{ include "component.fullname" . }}`
+- Include component name in all resources
+
+## Important Notes
+
+- Always test changes in a development cluster first
+- Keep values files organized and well-commented
+- Follow semantic versioning for chart versions
+- Document breaking changes in RELEASE_NOTES.md
+- Maintain backward compatibility when possible
+- Use ArgoCD sync policies appropriately (automated vs manual)
+
+## References
+- Project README: `README.md`
+- Release Notes: `RELEASE_NOTES.md`
+- Documentation: <https://kuberise.io>
