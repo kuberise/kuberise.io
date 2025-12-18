@@ -5,7 +5,7 @@ set -euo pipefail
 # Function Definitions
 
 function check_required_tools() {
-  local required_tools=("kubectl" "helm" "htpasswd" "openssl" "cilium")
+  local required_tools=("kubectl" "helm" "htpasswd" "openssl" "cilium" "yq")
   for tool in "${required_tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo "$tool could not be found, please install it."
@@ -286,15 +286,67 @@ function install_cilium() {
   local cluster_name=$2
 
   echo "Installing Cilium ..."
-  # repo url:
   # helm install cilium cilium/cilium --version 1.17.2 --namespace kube-system
 
-  helm upgrade --install --kube-context "$context" -n "kube-system" --wait \
-    -f values/defaults/platform/cilium/values.yaml \
-    -f values/$cluster_name/platform/cilium/values.yaml \
-    --repo https://helm.cilium.io/ \
-    --version 1.18.5 \
-    cilium cilium
+  # Build helm command arguments
+  local helm_args=(
+    "upgrade"
+    "--install"
+    "--kube-context" "$context"
+    "-n" "kube-system"
+    "--wait"
+    "-f" "values/defaults/platform/cilium/values.yaml"
+    "-f" "values/$cluster_name/platform/cilium/values.yaml"
+  )
+
+  # Detect node IPs for ClusterMesh configuration if needed
+  # Note: k8sServiceHost is set to "auto" in values files, which automatically
+  # reads from the cluster-info ConfigMap - no manual override needed
+  local temp_values_file=""
+  local node_ip
+  node_ip=$(kubectl get nodes --context "$context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+
+  # Update ClusterMesh IP for the current cluster if ClusterMesh config exists
+  # This ensures the ClusterMesh API server is accessible at the correct node IP
+  if [ -n "$node_ip" ]; then
+    local clustermesh_cluster_name
+    clustermesh_cluster_name=$(yq eval '.cluster.name' "values/$cluster_name/platform/cilium/values.yaml" 2>/dev/null || echo "")
+
+    if [ -n "$clustermesh_cluster_name" ] && grep -q "clustermesh:" "values/$cluster_name/platform/cilium/values.yaml" 2>/dev/null; then
+      echo "Updating ClusterMesh IP for cluster '$clustermesh_cluster_name' to $node_ip"
+      # Create a temporary values file to override the ClusterMesh IP
+      temp_values_file=$(mktemp)
+      cat > "$temp_values_file" <<EOF
+clustermesh:
+  config:
+    clusters:
+    - name: $clustermesh_cluster_name
+      ips:
+      - $node_ip
+EOF
+      helm_args+=("-f" "$temp_values_file")
+    fi
+  fi
+
+  helm_args+=(
+    "--repo" "https://helm.cilium.io/"
+    "--version" "1.18.5"
+    "cilium"
+    "cilium"
+  )
+
+  helm "${helm_args[@]}"
+  local helm_exit_code=$?
+
+  # Clean up temporary values file if it was created
+  if [ -n "$temp_values_file" ] && [ -f "$temp_values_file" ]; then
+    rm -f "$temp_values_file"
+  fi
+
+  # Return the helm exit code
+  if [ $helm_exit_code -ne 0 ]; then
+    return $helm_exit_code
+  fi
 
   echo "Cilium installation completed."
 }

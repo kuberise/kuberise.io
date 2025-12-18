@@ -32,7 +32,7 @@ else
     -v ~/docker_registry_proxy/mirror_cache:/docker_mirror_cache \
     -v ~/docker_registry_proxy/certs:/ca \
     -e ENABLE_MANIFEST_CACHE=true \
-    -e REGISTRIES="registry.k8s.io gcr.io quay.io ghcr.io public.ecr.aws ecr-public.aws.com" \
+    -e REGISTRIES="registry.k8s.io gcr.io quay.io ghcr.io public.ecr.aws" \
     -e VERIFY_SSL=false \
     rpardini/docker-registry-proxy:0.6.5
 fi

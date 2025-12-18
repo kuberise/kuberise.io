@@ -1,4 +1,4 @@
-k8sServiceHost: 192.168.58.6
+k8sServiceHost: "auto"
 k8sServicePort: "6443"
 kubeProxyReplacement: "false"
 
@@ -7,6 +7,9 @@ bpf:
 
 ipam:
   mode: kubernetes
+
+# Configure IPv4 native routing CIDR to match cluster pod CIDR
+ipv4NativeRoutingCIDR: "10.44.0.0/16"
 
 operator:
   replicas: 1
@@ -21,7 +24,7 @@ hubble:
       enabled: true
       className: nginx-external
       hosts:
-        - hubble.dev.kuberise.dev
+        - hubble-app.dev.kuberise.dev
 
 cluster:
   name: dev-app-onprem-one
@@ -56,9 +59,7 @@ clustermesh:
     clusters:
     - name: dev-shared-onprem
       port: 32379
-      ips:
-      - 192.168.58.4
+      # IPs are set dynamically by install.sh script
     - name: dev-app-onprem-one
       port: 32379
-      ips:
-      - 192.168.58.6
+      # IPs are set dynamically by install.sh script

@@ -27,6 +27,12 @@ options:
       - arg: --flannel-backend=none
         nodeFilters:
           - server:*
+      - arg: --cluster-cidr=10.44.0.0/16
+        nodeFilters:
+          - server:*
+      - arg: --service-cidr=10.45.0.0/16
+        nodeFilters:
+          - server:*
 env:
   - envVar: HTTP_PROXY=http://registry-proxy:3128
     nodeFilters:
