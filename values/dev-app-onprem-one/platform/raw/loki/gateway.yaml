@@ -12,6 +12,8 @@ spec:
     port: 80
     protocol: TCP
     targetPort: http
-  # No selector needed - ClusterMesh will sync endpoints from the shared cluster
-  # where Loki pods are actually running
+  selector:
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki-distributed
   type: ClusterIP
