@@ -12,7 +12,7 @@ ArgocdApplications:
   #=================================#
 
   external-dns:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: true
