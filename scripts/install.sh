@@ -286,7 +286,6 @@ function install_cilium() {
   local cluster_name=$2
 
   echo "Installing Cilium ..."
-  # helm install cilium cilium/cilium --version 1.17.2 --namespace kube-system
 
   # Build helm command arguments
   local helm_args=(
@@ -299,38 +298,67 @@ function install_cilium() {
     "-f" "values/$cluster_name/platform/cilium/values.yaml"
   )
 
-  # Detect node IPs for ClusterMesh configuration if needed
-  # Note: k8sServiceHost is set to "auto" in values files, which automatically
-  # reads from the cluster-info ConfigMap - no manual override needed
+  # Dynamic ClusterMesh Configuration
   local temp_values_file=""
-  local node_ip
-  node_ip=$(kubectl get nodes --context "$context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
-  if [ -n "$node_ip" ]; then
-    echo "Detected node IP: $node_ip"
+  temp_values_file=$(mktemp)
+
+  # Get current node IP
+  local current_node_ip
+  current_node_ip=$(kubectl get nodes --context "$context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+
+  if [ -n "$current_node_ip" ]; then
+    echo "Detected current node IP: $current_node_ip"
+    echo "k8sServiceHost: $current_node_ip" > "$temp_values_file"
   fi
 
-  # Update ClusterMesh IP for the current cluster if ClusterMesh config exists
-  # This ensures the ClusterMesh API server is accessible at the correct node IP
-  if [ -n "$node_ip" ]; then
-    local clustermesh_cluster_name
-    clustermesh_cluster_name=$(yq eval '.cluster.name' "values/$cluster_name/platform/cilium/values.yaml" 2>/dev/null || echo "")
+  # Check if ClusterMesh is configured in values
+  # We use yq to check if the clusters list is not empty
+  local clusters_list
+  clusters_list=$(yq eval '.clustermesh.config.clusters[].name' "values/$cluster_name/platform/cilium/values.yaml" 2>/dev/null || echo "")
 
-    if [ -n "$clustermesh_cluster_name" ] && grep -q "clustermesh:" "values/$cluster_name/platform/cilium/values.yaml" 2>/dev/null; then
-      echo "Updating ClusterMesh IP for cluster '$clustermesh_cluster_name' to $node_ip"
-      # Create a temporary values file to override the ClusterMesh IP
-      temp_values_file=$(mktemp)
-      cat > "$temp_values_file" <<EOF
-k8sServiceHost: $node_ip
-clustermesh:
-  config:
-    clusters:
-    - name: $clustermesh_cluster_name
-      ips:
-      - $node_ip
-EOF
-      helm_args+=("-f" "$temp_values_file")
-    fi
+  if [ -n "$clusters_list" ]; then
+      echo "Configuring ClusterMesh..."
+      echo "clustermesh:" >> "$temp_values_file"
+      echo "  config:" >> "$temp_values_file"
+      echo "    clusters:" >> "$temp_values_file"
+
+      for remote_cluster in $clusters_list; do
+          local remote_ip=""
+          local remote_port="32379" # Default port
+
+          if [ "$remote_cluster" == "$cluster_name" ]; then
+             # It's the current cluster
+             remote_ip="$current_node_ip"
+          else
+             # Try to find IP for remote cluster (assuming k3d context naming convention or if context exists matching the name)
+             # First check if there is a context with the exact name, or k3d-name
+             local remote_context=""
+             if kubectl config get-contexts "$remote_cluster" &>/dev/null; then
+                 remote_context="$remote_cluster"
+             elif kubectl config get-contexts "k3d-$remote_cluster" &>/dev/null; then
+                 remote_context="k3d-$remote_cluster"
+             fi
+
+             if [ -n "$remote_context" ]; then
+                 remote_ip=$(kubectl get nodes --context "$remote_context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+                 if [ -n "$remote_ip" ]; then
+                     echo "  - Resolved IP for remote cluster '$remote_cluster' (context: $remote_context): $remote_ip"
+                 fi
+             else
+                echo "  - Warning: Could not find context for remote cluster '$remote_cluster'. IP will not be set."
+             fi
+          fi
+
+          echo "    - name: $remote_cluster" >> "$temp_values_file"
+          echo "      port: $remote_port" >> "$temp_values_file"
+          if [ -n "$remote_ip" ]; then
+              echo "      ips:" >> "$temp_values_file"
+              echo "      - $remote_ip" >> "$temp_values_file"
+          fi
+      done
   fi
+
+  helm_args+=("-f" "$temp_values_file")
 
   helm_args+=(
     "--repo" "https://helm.cilium.io/"
@@ -342,8 +370,8 @@ EOF
   helm "${helm_args[@]}"
   local helm_exit_code=$?
 
-  # Clean up temporary values file if it was created
-  if [ -n "$temp_values_file" ] && [ -f "$temp_values_file" ]; then
+  # Clean up temporary values file
+  if [ -f "$temp_values_file" ]; then
     rm -f "$temp_values_file"
   fi
 
@@ -351,6 +379,11 @@ EOF
   if [ $helm_exit_code -ne 0 ]; then
     return $helm_exit_code
   fi
+
+  # Restart Cilium agents to ensure they pick up the new config (especially important for ClusterMesh)
+  echo "Restarting Cilium agents..."
+  kubectl rollout restart ds/cilium -n kube-system --context "$context"
+  kubectl rollout status ds/cilium -n kube-system --context "$context" --timeout=60s
 
   echo "Cilium installation completed."
 }
