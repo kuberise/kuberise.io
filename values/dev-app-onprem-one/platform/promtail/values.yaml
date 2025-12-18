@@ -1,7 +1,9 @@
 promtail:
   config:
     clients:
-      - url: http://loki-loki-distributed-gateway/loki/api/v1/push
+      # Access Loki via Cilium Global Service (service.cilium.io/global: "true")
+      # The service is accessible across clusters via ClusterMesh
+      - url: http://loki-loki-distributed-gateway.monitoring.svc.cluster.local/loki/api/v1/push
       # If you're using authentication
       # basic_auth:
       #   username: <username>

@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     service.cilium.io/global: "true"
-    service.cilium.io/shared: "false"
+    service.cilium.io/shared: "true"
   name: loki-loki-distributed-gateway
   namespace: monitoring
 spec:
@@ -12,8 +12,6 @@ spec:
     port: 80
     protocol: TCP
     targetPort: http
-  selector:
-    app.kubernetes.io/component: gateway
-    app.kubernetes.io/instance: loki
-    app.kubernetes.io/name: loki-distributed
+  # No selector needed - ClusterMesh will sync endpoints from the shared cluster
+  # where Loki pods are actually running
   type: ClusterIP
