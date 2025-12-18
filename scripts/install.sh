@@ -327,26 +327,26 @@ function install_cilium() {
           local remote_port="32379" # Default port
 
           if [ "$remote_cluster" == "$cluster_name" ]; then
-             # It's the current cluster
-             remote_ip="$current_node_ip"
+            # It's the current cluster
+            remote_ip="$current_node_ip"
           else
-             # Try to find IP for remote cluster (assuming k3d context naming convention or if context exists matching the name)
-             # First check if there is a context with the exact name, or k3d-name
-             local remote_context=""
-             if kubectl config get-contexts "$remote_cluster" &>/dev/null; then
-                 remote_context="$remote_cluster"
-             elif kubectl config get-contexts "k3d-$remote_cluster" &>/dev/null; then
-                 remote_context="k3d-$remote_cluster"
-             fi
+            # Try to find IP for remote cluster (assuming k3d context naming convention or if context exists matching the name)
+            # First check if there is a context with the exact name, or k3d-name
+            local remote_context=""
+            if kubectl config get-contexts "$remote_cluster" &>/dev/null; then
+                remote_context="$remote_cluster"
+            elif kubectl config get-contexts "k3d-$remote_cluster" &>/dev/null; then
+                remote_context="k3d-$remote_cluster"
+            fi
 
-             if [ -n "$remote_context" ]; then
-                 remote_ip=$(kubectl get nodes --context "$remote_context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
-                 if [ -n "$remote_ip" ]; then
-                     echo "  - Resolved IP for remote cluster '$remote_cluster' (context: $remote_context): $remote_ip"
-                 fi
-             else
-                echo "  - Warning: Could not find context for remote cluster '$remote_cluster'. IP will not be set."
-             fi
+            if [ -n "$remote_context" ]; then
+                remote_ip=$(kubectl get nodes --context "$remote_context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+                if [ -n "$remote_ip" ]; then
+                    echo "  - Resolved IP for remote cluster '$remote_cluster' (context: $remote_context): $remote_ip"
+                fi
+            else
+              echo "  - Warning: Could not find context for remote cluster '$remote_cluster'. IP will not be set."
+            fi
           fi
 
           echo "    - name: $remote_cluster" >> "$temp_values_file"
