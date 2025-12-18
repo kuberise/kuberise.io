@@ -139,7 +139,7 @@ ArgocdApplications:
     # syncWave: 2
 
   metrics-server:
-    enabled: true
+    enabled: false
     # syncWave: 1
 
   kube-prometheus-stack:
