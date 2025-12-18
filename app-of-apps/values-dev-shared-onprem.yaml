@@ -61,7 +61,7 @@ ArgocdApplications:
   #=================================#
 
   metallb:
-    enabled: true
+    enabled: false # k3d has built-in metallb called ServiceLB
     ignoreDifferences:
       - group: apiextensions.k8s.io
         kind: CustomResourceDefinition

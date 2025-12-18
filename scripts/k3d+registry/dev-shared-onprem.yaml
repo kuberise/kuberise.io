@@ -18,9 +18,9 @@ options:
       - arg: --disable=traefik
         nodeFilters:
           - server:*
-      - arg: --disable=servicelb
-        nodeFilters:
-          - server:*
+      # - arg: --disable=servicelb # No need for metallb in k3d, because ServiceLB does the same job
+      #   nodeFilters:
+      #     - server:*
       - arg: --disable-network-policy
         nodeFilters:
           - server:*
@@ -45,8 +45,9 @@ volumes:
   - volume: __HOME_DIR__/tmp/k3d_docker_images:/var/lib/rancher/k3s/agent/containerd/io.containerd.content.v1.content
     nodeFilters:
       - all
-# ports:
-#   - port: 80:80
-#     nodeFilters:
-#       - loadbalancer
-#   - port: 443:443
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+      - loadbalancer

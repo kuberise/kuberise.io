@@ -1,6 +1,6 @@
 # redis:
 #   image:
-#     repository: docker.io/library/redis
+#     repository: docker.io/library/redis # useful if aws ecr is not available
 
 configs:
   cm:
