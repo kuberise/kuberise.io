@@ -1,4 +1,4 @@
-k8sServiceHost: "auto"
+k8sServiceHost: ""
 k8sServicePort: "6443"
 kubeProxyReplacement: "false"
 
@@ -28,7 +28,7 @@ hubble:
 
 cluster:
   name: dev-app-onprem-one
-  id: 11
+  id: 11 # 1 to 10 are reserved for shared clusters, 11 upwards are reserved for developer app clusters
 
 # prometheus:
 #   metricsService: true

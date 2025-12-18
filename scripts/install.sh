@@ -305,6 +305,9 @@ function install_cilium() {
   local temp_values_file=""
   local node_ip
   node_ip=$(kubectl get nodes --context "$context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+  if [ -n "$node_ip" ]; then
+    echo "Detected node IP: $node_ip"
+  fi
 
   # Update ClusterMesh IP for the current cluster if ClusterMesh config exists
   # This ensures the ClusterMesh API server is accessible at the correct node IP
@@ -317,6 +320,7 @@ function install_cilium() {
       # Create a temporary values file to override the ClusterMesh IP
       temp_values_file=$(mktemp)
       cat > "$temp_values_file" <<EOF
+k8sServiceHost: $node_ip
 clustermesh:
   config:
     clusters:
