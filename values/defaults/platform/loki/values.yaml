@@ -16,3 +16,16 @@ loki-distributed:
       table_manager:
         retention_deletes_enabled: true
         retention_period: 168h # 7 days retention
+
+  gateway:
+    ingress:
+      enabled: true
+      ingressClassName: nginx-external
+      hosts:
+        - host: loki-gateway.shared.kuberise.dev
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - loki-gateway.shared.kuberise.dev
