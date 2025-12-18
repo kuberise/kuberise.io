@@ -458,7 +458,7 @@ echo "Setting up ArgoCD OAuth2 client secret..."
 argocd_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "client-secret")
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=$argocd_secret"
 ARGOCD_CLIENT_SECRET=$(echo -n "$argocd_secret" | base64)
-kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
+kubectl patch secret argocd-secret --context "$CONTEXT" -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
 "
