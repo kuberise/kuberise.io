@@ -7,8 +7,8 @@ NETWORK_NAME="${NETWORK_NAME:-kuberise}"
 echo "Deleting k3d clusters..."
 
 # Delete clusters (ignore errors if they don't exist)
-k3d cluster delete dev 2>/dev/null || true
-k3d cluster delete shared 2>/dev/null || true
+k3d cluster delete dev-shared-onprem 2>/dev/null || true
+k3d cluster delete dev-app-onprem-one 2>/dev/null || true
 
 # echo "Stopping and removing registry proxy container..."
 # # Stop and remove registry proxy container (ignore errors if it doesn't exist)

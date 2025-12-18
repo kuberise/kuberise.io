@@ -28,44 +28,50 @@ echo "Waiting for registry proxy to be ready..."
 sleep 2
 
 # Create temporary YAML files with expanded paths
-SHARED_YAML_TMP=$(mktemp)
-DEV_YAML_TMP=$(mktemp)
+DEV_SHARED_ONPREM_YAML_TMP=$(mktemp)
+DEV_APP_ONPREM_ONE_YAML_TMP=$(mktemp)
 
-# Process shared.yaml: replace placeholders with actual paths
-sed "s|__HOME_DIR__|${HOME_DIR}|g" "$SCRIPT_DIR/shared.yaml" > "$SHARED_YAML_TMP"
+# Process dev-shared-onprem.yaml: replace placeholders with actual paths
+sed "s|__HOME_DIR__|${HOME_DIR}|g" "$SCRIPT_DIR/dev-shared-onprem.yaml" > "$DEV_SHARED_ONPREM_YAML_TMP"
 
-# Process dev.yaml: replace placeholders with actual paths
-sed "s|__HOME_DIR__|${HOME_DIR}|g" "$SCRIPT_DIR/dev.yaml" > "$DEV_YAML_TMP"
+# Process dev-app-onprem-one.yaml: replace placeholders with actual paths
+sed "s|__HOME_DIR__|${HOME_DIR}|g" "$SCRIPT_DIR/dev-app-onprem-one.yaml" > "$DEV_APP_ONPREM_ONE_YAML_TMP"
 
 # Cleanup function
 cleanup() {
-  rm -f "$SHARED_YAML_TMP" "$DEV_YAML_TMP"
+  rm -f "$DEV_SHARED_ONPREM_YAML_TMP" "$DEV_APP_ONPREM_ONE_YAML_TMP"
 }
 trap cleanup EXIT
 
-# Create shared cluster
-if k3d cluster get shared >/dev/null 2>&1; then
-  echo "k3d cluster 'shared' already exists"
+# Create dev-shared-onprem cluster
+if k3d cluster get dev-shared-onprem >/dev/null 2>&1; then
+  echo "k3d cluster 'dev-shared-onprem' already exists"
 else
-  echo "Creating k3d cluster 'shared'..."
-  k3d cluster create shared --config "$SHARED_YAML_TMP"
+  echo "Creating k3d cluster 'dev-shared-onprem'..."
+  k3d cluster create dev-shared-onprem --config "$DEV_SHARED_ONPREM_YAML_TMP"
 fi
 
-# Create dev cluster
-if k3d cluster get dev >/dev/null 2>&1; then
-  echo "k3d cluster 'dev' already exists"
+# Create dev-app-onprem-one cluster
+if k3d cluster get dev-app-onprem-one >/dev/null 2>&1; then
+  echo "k3d cluster 'dev-app-onprem-one' already exists"
 else
-  echo "Creating k3d cluster 'dev'..."
-  k3d cluster create dev --config "$DEV_YAML_TMP"
+  echo "Creating k3d cluster 'dev-app-onprem-one'..."
+  k3d cluster create dev-app-onprem-one --config "$DEV_APP_ONPREM_ONE_YAML_TMP"
 fi
 
 echo ""
 echo "✓ Both clusters created successfully!"
-echo "  - shared cluster: k3d-shared"
-echo "  - dev cluster: k3d-dev"
+echo "  - dev-shared-onprem cluster: k3d-dev-shared-onprem"
+echo "  - dev-app-onprem-one cluster: k3d-dev-app-onprem-one"
 echo ""
 echo "Next steps:"
 echo "  1. Install Cilium CNI and ClusterMesh in both clusters"
 echo "  2. Run install.sh for each cluster:"
-echo "     ./scripts/install.sh k3d-shared shared <REPO_URL> <REVISION> <DOMAIN>"
-echo "     ./scripts/install.sh k3d-dev dev <REPO_URL> <REVISION> <DOMAIN>"
+echo "     ./scripts/install.sh k3d-dev-shared-onprem dev-shared-onprem <REPO_URL> <REVISION> <DOMAIN> <CILIUM_ID> <GITHUB_TOKEN>"
+echo "     ./scripts/install.sh k3d-dev-app-onprem-one dev-app-onprem-one <REPO_URL> <REVISION> <DOMAIN> <CILIUM_ID> <GITHUB_TOKEN>"
+
+
+
+REVISION=localregistry
+./scripts/install.sh k3d-dev-shared-onprem dev-shared-onprem https://github.com/kuberise/kuberise.io.git $REVISION dev.kuberise.dev 1 $GITHUB_TOKEN
+# ./scripts/install.sh k3d-dev-app-onprem-one dev-app-onprem-one https://github.com/kuberise/kuberise.io.git $REVISION dev.kuberise.dev 11 $GITHUB_TOKEN
