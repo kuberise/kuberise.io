@@ -9,7 +9,7 @@ options:
   k3d:
     wait: true
     timeout: "60s"
-    disableLoadbalancer: true
+    # disableLoadbalancer: true
   kubeconfig:
     updateDefaultKubeconfig: true
     switchCurrentContext: true
@@ -50,4 +50,5 @@ ports:
     nodeFilters:
       - loadbalancer
   - port: 443:443
+    nodeFilters:
       - loadbalancer

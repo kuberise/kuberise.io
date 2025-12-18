@@ -1,0 +1,22 @@
+promtail:
+  config:
+    clients:
+      - url: http://loki-loki-distributed-gateway/loki/api/v1/push
+      # If you're using authentication
+      # basic_auth:
+      #   username: <username>
+      #   password: <password>
+      # Optional: Add an org id header if your Loki setup uses multi-tenancy
+      # headers:
+      #   X-Scope-OrgID: dev-cluster
+
+  # Ensure scraping all namespaces in your dev cluster
+  scrapeConfigs:
+    - job_name: kubernetes-pods
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        # Add a label to identify logs from dev cluster
+        - action: replace
+          replacement: dev-cluster
+          target_label: cluster
