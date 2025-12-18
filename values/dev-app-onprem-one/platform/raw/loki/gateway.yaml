@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     service.cilium.io/global: "true"
-    service.cilium.io/shared: "true"
+    service.cilium.io/shared: "false"
   name: loki-loki-distributed-gateway
   namespace: monitoring
 spec:
