@@ -139,7 +139,7 @@ ArgocdApplications:
     # syncWave: 2
 
   metrics-server:
-    enabled: false
+    enabled: false # k3d has built-in metrics-server
     # syncWave: 1
 
   kube-prometheus-stack:

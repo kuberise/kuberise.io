@@ -1,3 +1,7 @@
+# redis:
+#   image:
+#     repository: docker.io/library/redis
+
 configs:
   cm:
     timeout.reconciliation: 5s
