@@ -1,0 +1,26 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-labels
+spec:
+  rules:
+  - name: check-team
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - default
+    skipBackgroundRequests: true
+    validate:
+      allowExistingViolations: true
+      failureAction: Enforce
+      message: "label 'team' is required"
+      pattern:
+        metadata:
+          labels:
+            team: "?*"
+
+# then try: k run nginx --image nginx
+# then try: k run nginx --image nginx --labels='team=alpha'

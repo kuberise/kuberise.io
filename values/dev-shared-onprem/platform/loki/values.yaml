@@ -1,0 +1,6 @@
+loki-distributed:
+  gateway:
+    service:
+      annotations:
+        service.cilium.io/global: "true"
+        service.cilium.io/shared: "true"

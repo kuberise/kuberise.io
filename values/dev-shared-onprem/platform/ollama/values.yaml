@@ -1,0 +1,23 @@
+ollama:
+  ingress:
+    enabled: true
+    className: nginx-external
+    hosts:
+      - host: ollama.dev.kuberise.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - hosts:
+          - ollama.dev.kuberise.dev
+  ollama:
+    models:
+      pull:
+        - deepseek-r1:1.5b
+        # - deepseek-r1:7b
+      run:
+        - deepseek-r1:1.5b
+        # - deepseek-r1:7b
+
+  persistentVolume:
+    enabled: true

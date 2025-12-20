@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-labels
+spec:
+  rules:
+  - name: add-project
+    skipBackgroundRequests: true
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+          namespaces:
+          - default
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            +(project): bravo

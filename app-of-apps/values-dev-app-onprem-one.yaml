@@ -1,0 +1,52 @@
+ArgocdApplications:
+
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
+
+  raw:
+    enabled: true
+
+  #=================================#
+  #      Network Services           #
+  #=================================#
+
+  external-dns:
+    enabled: false
+
+  ingress-nginx-internal:
+    enabled: true
+
+  ingress-nginx-external:
+    enabled: true
+
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
+
+  cert-manager:
+    enabled: true
+
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
+
+  promtail:
+    enabled: true
+
+  #=================================#
+  #      Example Applications       #
+  #=================================#
+
+  show-env:
+    enabled: true
+    annotations:
+      argocd-image-updater.argoproj.io/image-list: ghcr.io/kuberise/show-env:latest
+      argocd-image-updater.argoproj.io/update-strategy: digest
+      argocd-image-updater.argoproj.io/write-back-method: git
+
+  frontend-https:
+    enabled: true
+
+  backend:
+    enabled: true

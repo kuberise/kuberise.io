@@ -5,7 +5,7 @@ set -euo pipefail
 # Function Definitions
 
 function check_required_tools() {
-  local required_tools=("kubectl" "helm" "htpasswd" "openssl")
+  local required_tools=("kubectl" "helm" "htpasswd" "openssl" "cilium" "yq")
   for tool in "${required_tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       echo "$tool could not be found, please install it."
@@ -41,16 +41,9 @@ function label_secret() {
 
 function generate_ca_cert_and_key() {
   local context=$1
-  local cluster_name=$2
-
-  # Validate cluster_name is provided
-  if [ -z "$cluster_name" ]; then
-    echo "cluster_name is required as an input parameter."
-    return 1
-  fi
 
   # Define the directory and file paths
-  DIR=".env/$cluster_name"
+  DIR=".env"
   CERT="$DIR/ca.crt"
   KEY="$DIR/ca.key"
   CA_BUNDLE="$DIR/ca-bundle.crt"
@@ -73,7 +66,12 @@ function generate_ca_cert_and_key() {
 
   # Download Let's Encrypt root certificate and create CA bundle
   echo "Creating CA bundle with self-signed and Let's Encrypt certificates..."
-  curl -sL https://letsencrypt.org/certs/isrgrootx1.pem > "$DIR/letsencrypt.crt"
+
+  # Get the directory of the script
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  # Copy the local letsencrypt.crt file instead of downloading it
+  cp "$SCRIPT_DIR/letsencrypt.crt" "$DIR/letsencrypt.crt"
+
   cat "$CERT" "$DIR/letsencrypt.crt" > "$CA_BUNDLE"
   rm "$DIR/letsencrypt.crt"  # Clean up temporary file
 
@@ -102,7 +100,7 @@ function generate_ca_cert_and_key() {
 function install_argocd() {
   local context=$1
   local namespace=$2
-  local values_file=$3
+  local cluster_name=$3
   local admin_password=$4
   local domain=$5
   echo "Installing ArgoCD using Helm..."
@@ -114,12 +112,12 @@ function install_argocd() {
     --create-namespace  \
     --wait \
     -f values/defaults/platform/argocd/values.yaml \
-    -f "$values_file" \
+    -f values/$cluster_name/platform/argocd/values.yaml \
     --set server.ingress.hostname=argocd."$domain" \
     --set global.domain=argocd."$domain" \
     --set configs.secret.argocdServerAdminPassword="$BCRYPT_HASH" \
     --repo https://argoproj.github.io/argo-helm \
-    --version 7.9.0 \
+    --version 9.1.8 \
     argocd argo-cd > /dev/null
 }
 
@@ -283,6 +281,113 @@ function get_or_generate_secret() {
   echo "$secret_value"
 }
 
+function install_cilium() {
+  local context=$1
+  local cluster_name=$2
+
+  echo "Installing Cilium ..."
+
+  # Build helm command arguments
+  local helm_args=(
+    "upgrade"
+    "--install"
+    "--kube-context" "$context"
+    "-n" "kube-system"
+    "--wait"
+    "-f" "values/defaults/platform/cilium/values.yaml"
+    "-f" "values/$cluster_name/platform/cilium/values.yaml"
+  )
+
+  # Dynamic ClusterMesh Configuration
+  local temp_values_file=""
+  temp_values_file=$(mktemp)
+
+  # Get current node IP
+  local current_node_ip
+  current_node_ip=$(kubectl get nodes --context "$context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+
+  if [ -n "$current_node_ip" ]; then
+    echo "Detected current node IP: $current_node_ip"
+    echo "k8sServiceHost: $current_node_ip" > "$temp_values_file"
+  fi
+
+  # Check if ClusterMesh is configured in values
+  # We use yq to check if the clusters list is not empty
+  local clusters_list
+  clusters_list=$(yq eval '.clustermesh.config.clusters[].name' "values/$cluster_name/platform/cilium/values.yaml" 2>/dev/null || echo "")
+
+  if [ -n "$clusters_list" ]; then
+      echo "Configuring ClusterMesh..."
+      echo "clustermesh:" >> "$temp_values_file"
+      echo "  config:" >> "$temp_values_file"
+      echo "    clusters:" >> "$temp_values_file"
+
+      for remote_cluster in $clusters_list; do
+          local remote_ip=""
+          local remote_port="32379" # Default port
+
+          if [ "$remote_cluster" == "$cluster_name" ]; then
+            # It's the current cluster
+            remote_ip="$current_node_ip"
+          else
+            # Try to find IP for remote cluster (assuming k3d context naming convention or if context exists matching the name)
+            # First check if there is a context with the exact name, or k3d-name
+            local remote_context=""
+            if kubectl config get-contexts "$remote_cluster" &>/dev/null; then
+                remote_context="$remote_cluster"
+            elif kubectl config get-contexts "k3d-$remote_cluster" &>/dev/null; then
+                remote_context="k3d-$remote_cluster"
+            fi
+
+            if [ -n "$remote_context" ]; then
+                remote_ip=$(kubectl get nodes --context "$remote_context" -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || echo "")
+                if [ -n "$remote_ip" ]; then
+                    echo "  - Resolved IP for remote cluster '$remote_cluster' (context: $remote_context): $remote_ip"
+                fi
+            else
+              echo "  - Warning: Could not find context for remote cluster '$remote_cluster'. IP will not be set."
+            fi
+          fi
+
+          echo "    - name: $remote_cluster" >> "$temp_values_file"
+          echo "      port: $remote_port" >> "$temp_values_file"
+          if [ -n "$remote_ip" ]; then
+              echo "      ips:" >> "$temp_values_file"
+              echo "      - $remote_ip" >> "$temp_values_file"
+          fi
+      done
+  fi
+
+  helm_args+=("-f" "$temp_values_file")
+
+  helm_args+=(
+    "--repo" "https://helm.cilium.io/"
+    "--version" "1.18.5"
+    "cilium"
+    "cilium"
+  )
+
+  helm "${helm_args[@]}"
+  local helm_exit_code=$?
+
+  # Clean up temporary values file
+  if [ -f "$temp_values_file" ]; then
+    rm -f "$temp_values_file"
+  fi
+
+  # Return the helm exit code
+  if [ $helm_exit_code -ne 0 ]; then
+    return $helm_exit_code
+  fi
+
+  # Restart Cilium agents to ensure they pick up the new config (especially important for ClusterMesh)
+  echo "Restarting Cilium agents..."
+  kubectl rollout restart ds/cilium -n kube-system --context "$context"
+  kubectl rollout status ds/cilium -n kube-system --context "$context" --timeout=60s
+
+  echo "Cilium installation completed."
+}
+
 # Variables Initialization
 # example: ./scripts/install.sh minikube local https://github.com/kuberise/kuberise.git main 127.0.0.1.nip.io $GITHUB_TOKEN
 
@@ -291,7 +396,8 @@ CLUSTER_NAME=${2:-onprem}                               # example: onprem, dta, 
 REPO_URL=${3:-}                                         # example: https://github.com/kuberise/kuberise.git
 TARGET_REVISION=${4:-HEAD}                              # example: HEAD, main, master, v1.0.0, release
 DOMAIN=${5:-onprem.kuberise.dev}                        # example: onprem.kuberise.dev
-REPOSITORY_TOKEN=${6:-}
+CLUSTER_ID=${6:-1}                                      # example: 1, 2, 3, etc. (default: 1)
+REPOSITORY_TOKEN=${7:-}
 
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
 PG_APP_USERNAME=application
@@ -324,13 +430,13 @@ NAMESPACE_GITEA="gitea"
 NAMESPACE_K8SGPT="k8sgpt"
 
 # Warning Message
-echo -n "WARNING: This script will install the cluster '$CLUSTER_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
+# echo -n "WARNING: This script will install the cluster '$CLUSTER_NAME' in the Kubernetes context '$CONTEXT'. Please confirm that you want to proceed by typing 'yes':"
 
-read confirmation
-if [ "$confirmation" != "yes" ]; then
-  echo "Installation aborted."
-  exit 0
-fi
+# read confirmation
+# if [ "$confirmation" != "yes" ]; then
+#   echo "Installation aborted."
+#   exit 0
+# fi
 
 check_required_tools
 
@@ -357,7 +463,7 @@ if [ -n "${REPOSITORY_TOKEN}" ]; then
   # TODO: Or get a list of teams and their repositories and create repo secret and project for each of them in a loop
 fi
 
-generate_ca_cert_and_key "$CONTEXT" "$CLUSTER_NAME"
+generate_ca_cert_and_key "$CONTEXT"
 
 # Secrets for PostgreSQL
 PG_APP_PASSWORD=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_CNPG" "database-app" "password")
@@ -373,6 +479,9 @@ create_secret "$CONTEXT" "$NAMESPACE_GITEA" "gitea-admin-secret" "--from-literal
 if [ -n "${OPENAI_API_KEY-}" ]; then
   create_secret "$CONTEXT" "$NAMESPACE_K8SGPT" "openai-api" "--from-literal=openai-api-key=$OPENAI_API_KEY"
 fi
+
+# Install Cilium before any other components
+install_cilium "$CONTEXT" "$CLUSTER_NAME"
 
 # Keycloak and Backstage and Grafana secrets
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "pg-secret" "--from-literal=KC_DB_USERNAME=$PG_APP_USERNAME --from-literal=KC_DB_PASSWORD=$PG_APP_PASSWORD"
@@ -394,8 +503,7 @@ fi
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "keycloak-access" "--from-literal=username=admin --from-literal=password=$ADMIN_PASSWORD"
 
 # Install ArgoCD with custom values and admin password
-VALUES_FILE="values/$CLUSTER_NAME/platform/argocd/values.yaml"
-install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$VALUES_FILE" "$ADMIN_PASSWORD" "$DOMAIN"
+install_argocd "$CONTEXT" "$NAMESPACE_ARGOCD" "$CLUSTER_NAME" "$ADMIN_PASSWORD" "$DOMAIN"
 
 
 
@@ -439,7 +547,7 @@ echo "Setting up ArgoCD OAuth2 client secret..."
 argocd_secret=$(get_or_generate_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "client-secret")
 create_secret "$CONTEXT" "$NAMESPACE_KEYCLOAK" "argocd-oauth2-client-secret" "--from-literal=client-secret=$argocd_secret"
 ARGOCD_CLIENT_SECRET=$(echo -n "$argocd_secret" | base64)
-kubectl patch secret argocd-secret -n $NAMESPACE_ARGOCD --patch "
+kubectl patch secret argocd-secret --context "$CONTEXT" -n $NAMESPACE_ARGOCD --patch "
 data:
   oidc.keycloak.clientSecret: $ARGOCD_CLIENT_SECRET
 "
