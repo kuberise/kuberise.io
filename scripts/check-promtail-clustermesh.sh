@@ -157,3 +157,4 @@ else
     echo "  2. Ensure service has: service.cilium.io/shared: \"true\""
     echo "  3. Verify ClusterMesh connectivity between clusters"
 fi
+
