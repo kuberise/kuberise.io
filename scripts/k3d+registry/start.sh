@@ -74,6 +74,6 @@ echo "     ./scripts/install.sh k3d-dev-app-onprem-one dev-app-onprem-one <REPO_
 
 # cluster ID 1 to 10 are reserved for shared clusters
 # cluster ID 11 upwards are reserved for developer app clusters
-REVISION=localregistry
+REVISION=main
 ./scripts/install.sh k3d-dev-shared-onprem dev-shared-onprem https://github.com/kuberise/kuberise.io.git $REVISION dev.kuberise.dev 1 $GITHUB_TOKEN
 ./scripts/install.sh k3d-dev-app-onprem-one dev-app-onprem-one https://github.com/kuberise/kuberise.io.git $REVISION dev.kuberise.dev 11 $GITHUB_TOKEN
