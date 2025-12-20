@@ -11,12 +11,6 @@ ArgocdApplications:
   #      Network Services           #
   #=================================#
 
-  external-dns:
-    enabled: false
-
-  ingress-nginx-internal:
-    enabled: true
-
   ingress-nginx-external:
     enabled: true
 
@@ -49,4 +43,4 @@ ArgocdApplications:
     enabled: true
 
   backend:
-    enabled: true
+    enabled: false
