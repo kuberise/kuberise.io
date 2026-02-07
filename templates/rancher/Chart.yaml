@@ -3,5 +3,5 @@ name: rancher
 version: 1.0.0
 dependencies:
   - name: rancher
-    version: 2.13.0
+    version: 2.13.2
     repository: https://releases.rancher.com/server-charts/latest

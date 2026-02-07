@@ -83,6 +83,14 @@ ArgoCD Applications support three types:
 - Component names: kebab-case (e.g., `cert-manager`, `external-dns`)
 - Namespace names: Usually match component name or follow Kubernetes conventions
 - Resource names: Use Helm template functions like `{{ include "component.fullname" . }}`
+- Cluster names: kebab-case following this pattern: [environment]-[type(shared/app)]-[provider]-[region]. Examples:
+  - prod-app-aws-frankfort
+  - acc-app-aws-frankfort
+  - prod-shared-gcp-groningen
+  - dev-shared-onprem-one
+  - dev-app-onprem-one
+  - dev-app-onprem-two
+
 
 ### Value File Patterns
 - Always provide sensible defaults in `values/defaults/`
