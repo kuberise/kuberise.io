@@ -115,7 +115,8 @@ ArgoCD Applications support three types:
   - `path`: Path to Helm chart or manifests
   - `type`: Application type (helm/kustomize/raw)
   - `syncWave`: Optional sync wave for ordering
-  - `syncOptions`: Optional sync options
+  - `serverSideApply`: Optional boolean to control ServerSideApply (defaults to true)
+  - `syncOptions`: Optional additional sync options (additive, does not replace defaults)
   - `finalizers`: Optional additional finalizers
 
 ### Domain Configuration

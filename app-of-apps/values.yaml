@@ -197,8 +197,7 @@ ArgocdApplications:
   kube-prometheus-stack:
     enabled: false
     namespace: monitoring
-    syncOptions:
-      - ServerSideApply=false
+    serverSideApply: false
 
   loki:
     enabled: false
