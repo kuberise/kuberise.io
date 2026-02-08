@@ -13,7 +13,7 @@ metadata:
     {{- end }}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
-  {{- range .finalizer }}
+  {{- range .finalizers }}
   - {{ . }}
   {{- end }}
   labels:

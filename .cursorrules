@@ -116,7 +116,7 @@ ArgoCD Applications support three types:
   - `type`: Application type (helm/kustomize/raw)
   - `syncWave`: Optional sync wave for ordering
   - `syncOptions`: Optional sync options
-  - `finalizer`: Optional finalizers
+  - `finalizers`: Optional additional finalizers
 
 ### Domain Configuration
 - All services use subdomains of `global.domain`
