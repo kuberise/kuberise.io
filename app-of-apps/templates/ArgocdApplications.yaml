@@ -57,7 +57,7 @@ spec:
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
-    {{- if $app.recursive }}
+    {{- if and (eq $applicationType "raw") $app.recursive }}
     directory:
       recurse: true
     {{- end }}
