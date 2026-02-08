@@ -73,8 +73,10 @@ spec:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: true
+      allowEmpty: false
     {{- end }}
+    retry:
+      refresh: true
     syncOptions:
       - CreateNamespace=true
       {{- if .syncOptions }}
