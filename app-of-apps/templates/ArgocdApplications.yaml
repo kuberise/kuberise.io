@@ -20,6 +20,7 @@ metadata:
   labels:
     team: {{ default "platform" $app.team }}
 spec:
+  revisionHistoryLimit: {{ default 3 (default $.Values.global.revisionHistoryLimit $app.revisionHistoryLimit) }}
   project: {{ $.Values.global.clusterName }}
   source:
     repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}

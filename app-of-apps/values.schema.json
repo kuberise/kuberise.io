@@ -27,6 +27,12 @@
           "description": "Whether ArgoCD sync policy should be automated (prune + selfHeal). Defaults to true.",
           "default": true
         },
+        "revisionHistoryLimit": {
+          "type": "integer",
+          "description": "Default number of revisions to keep for all ArgoCD Applications. Defaults to 3.",
+          "minimum": 0,
+          "default": 3
+        },
         "spec": {
           "type": "object",
           "description": "Source and destination configuration for ArgoCD Applications.",
@@ -174,6 +180,11 @@
         "automated": {
           "type": "boolean",
           "description": "Override the global automated sync policy for this application."
+        },
+        "revisionHistoryLimit": {
+          "type": "integer",
+          "description": "Override the global revisionHistoryLimit for this application.",
+          "minimum": 0
         },
         "destinationServer": {
           "type": "string",

@@ -4,6 +4,7 @@ global:
   domain: x
 
   automated: true
+  revisionHistoryLimit: 3
   spec:
     destination:
       server: https://kubernetes.default.svc
