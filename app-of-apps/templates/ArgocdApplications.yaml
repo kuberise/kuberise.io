@@ -17,7 +17,7 @@ metadata:
   - {{ . }}
   {{- end }}
   labels:
-    team: platform
+    team: {{ default "platform" $app.team }}
 spec:
   project: {{ $.Values.global.clusterName }}
   source:

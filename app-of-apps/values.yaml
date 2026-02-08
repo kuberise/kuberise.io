@@ -229,6 +229,7 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: frontend
+    team: frontend
 
   # http container example with external traffic
   show-env:
@@ -236,6 +237,7 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: frontend
+    team: frontend
 
   # https container example with external traffic that receives traffic over https from ingress controller
   frontend-https:
@@ -243,12 +245,14 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: frontend
+    team: frontend
 
   # a sample of microservice with internal traffic
   backend:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+    team: backend
 
   # a sample of microservice with internal traffic
   api:
@@ -256,3 +260,4 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: backend
+    team: backend

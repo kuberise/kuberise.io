@@ -120,6 +120,7 @@ ArgoCD Applications support three types:
   - `serverSideApply`: Optional boolean to control ServerSideApply (defaults to true)
   - `syncOptions`: Optional additional sync options (additive, does not replace defaults)
   - `finalizers`: Optional additional finalizers
+  - `team`: Optional team name label (defaults to `platform`)
 
 ### Domain Configuration
 - All services use subdomains of `global.domain`
