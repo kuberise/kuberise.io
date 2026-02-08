@@ -4,6 +4,7 @@ global:
   domain: x
 
   automated: true
+  revisionHistoryLimit: 3
   spec:
     destination:
       server: https://kubernetes.default.svc
@@ -55,7 +56,7 @@ ArgocdApplications:
   vcluster:
     enabled: false
 
-  # The helm chart coppied from the github repo manually. It is not available in the helm repo. Should be updated manually.
+  # The helm chart copied from the github repo manually. It is not available in the helm repo. Should be updated manually.
   # https://github.com/tektoncd/operator/tree/release-v0.75.x
   tekton-operator:
     enabled: false
@@ -117,6 +118,17 @@ ArgocdApplications:
   ingress-nginx-internal:
     enabled: false
 
+  cilium:
+    enabled: false
+    namespace: kube-system
+
+  aws-lb-controller:
+    enabled: false
+    namespace: kube-system
+
+  external-dns-sigs:
+    enabled: false
+
   # custom ingress resources
   ingresses:
     enabled: false
@@ -144,7 +156,7 @@ ArgocdApplications:
 
   kyverno:
     enabled: false
-    finalizer:
+    finalizers:
       - post-delete-finalizer.argocd.argoproj.io
       - post-delete-finalizer.argocd.argoproj.io/cleanup
 
@@ -197,8 +209,7 @@ ArgocdApplications:
   kube-prometheus-stack:
     enabled: false
     namespace: monitoring
-    syncOptions:
-      - ServerSideApply=false
+    serverSideApply: false
 
   loki:
     enabled: false
@@ -230,6 +241,7 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: frontend
+    team: frontend
 
   # http container example with external traffic
   show-env:
@@ -237,6 +249,7 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: frontend
+    team: frontend
 
   # https container example with external traffic that receives traffic over https from ingress controller
   frontend-https:
@@ -244,12 +257,14 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: frontend
+    team: frontend
 
   # a sample of microservice with internal traffic
   backend:
     enabled: false
     path: templates/generic-deployment
     valuesFolder: applications
+    team: backend
 
   # a sample of microservice with internal traffic
   api:
@@ -257,3 +272,4 @@ ArgocdApplications:
     path: templates/generic-deployment
     valuesFolder: applications
     namespace: backend
+    team: backend

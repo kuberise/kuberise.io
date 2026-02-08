@@ -1,48 +1,49 @@
 {{- range $name, $app := .Values.ArgocdApplications -}}
-{{- $applicationType := default "helm" .type }}
-{{- if .enabled }}
+{{- $applicationType := default "helm" $app.type }}
+{{- if $app.enabled }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: {{ $name }}
-  namespace: argocd
+  # namespace is inherited from the parent app-of-apps destination namespace,
+  # which is set in scripts/install.sh (deploy_app_of_apps function).
   annotations:
-    argocd.argoproj.io/sync-wave: "{{ default 1 .syncWave }}"
-    {{- if .annotations }}
-      {{- toYaml .annotations | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "{{ default 1 $app.syncWave }}"
+    {{- if $app.annotations }}
+      {{- toYaml $app.annotations | nindent 4 }}
     {{- end }}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
-  {{- range .finalizer }}
+  {{- range $app.finalizers }}
   - {{ . }}
   {{- end }}
   labels:
-    team: platform
+    team: {{ default "platform" $app.team }}
 spec:
+  revisionHistoryLimit: {{ default 3 (default $.Values.global.revisionHistoryLimit $app.revisionHistoryLimit) }}
   project: {{ $.Values.global.clusterName }}
   source:
-    repoURL: {{ default $.Values.global.spec.source.repoURL .repoURL }}
-    targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
-    {{- if .plugin }}
-    plugin:
-      {{- toYaml .plugin | nindent 4 }}
-    {{- end }}
+    repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}
+    targetRevision: {{ default $.Values.global.spec.source.targetRevision $app.targetRevision }}
   {{- if eq $applicationType "helm" }}
-    {{- if hasKey . "chart"}}
-    chart: {{ .chart }}
-    {{- else if hasKey . "path"}}
-    path: {{ .path }}
+    {{- if hasKey $app "chart"}}
+    chart: {{ $app.chart }}
+    {{- else if hasKey $app "path"}}
+    path: {{ tpl $app.path $ }}
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
     helm:
-      # ignoreMissingValueFiles: true
+      ignoreMissingValueFiles: true # adr 0002
       valueFiles:
-        {{- if hasKey . "values"}}
-        - {{ .values }}
-        {{- else if hasKey . "valuesFolder"}}
-        - ../../values/defaults/{{ .valuesFolder }}/{{ $name }}/values.yaml
-        - ../../values/{{ $.Values.global.clusterName }}/{{ .valuesFolder }}/{{ $name }}/values.yaml
+        {{- if hasKey $app "values"}}
+        {{- range $app.values }}
+        - {{ . }}
+        {{- end }}
+        {{- else if hasKey $app "valuesFolder"}}
+        - ../../values/defaults/{{ $app.valuesFolder }}/{{ $name }}/values.yaml
+        - ../../values/{{ $.Values.global.clusterName }}/{{ $app.valuesFolder }}/{{ $name }}/values.yaml
         {{- else }}
         - ../../values/defaults/platform/{{ $name }}/values.yaml
         - ../../values/{{ $.Values.global.clusterName }}/platform/{{ $name }}/values.yaml
@@ -50,40 +51,53 @@ spec:
       parameters:
         - name: global.domain
           value: {{ $.Values.global.domain }}
+        - name: global.clusterName
+          value: {{ $.Values.global.clusterName }}
   {{- else }}
-    {{- if hasKey . "path"}}
-    path: {{ tpl .path $ }}
+    {{- if hasKey $app "path"}}
+    path: {{ tpl $app.path $ }}
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
-    {{- if .recursive }}
+    {{- if and (eq $applicationType "raw") $app.recursive }}
     directory:
       recurse: true
     {{- end }}
   {{- end }}
   destination:
-    namespace: {{ default $name .namespace }}
-    server: {{ default $.Values.global.spec.destination.server .destinationServer }}
+    namespace: {{ default $name $app.namespace }}
+    server: {{ default $.Values.global.spec.destination.server $app.destinationServer }}
   syncPolicy:
-    {{- if default $.Values.global.automated .automated }}
+    {{- $automated := $.Values.global.automated }}
+    {{- if hasKey $app "automated" }}
+      {{- $automated = $app.automated }}
+    {{- end }}
+    {{- if $automated }}
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: true
+      allowEmpty: false
     {{- end }}
+    retry:
+      refresh: true
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m
     syncOptions:
       - CreateNamespace=true
-      {{- if .syncOptions }}
-      {{- range .syncOptions }}
-      - {{ . }}
-      {{- end }}
+      {{- if hasKey $app "serverSideApply" }}
+      - ServerSideApply={{ $app.serverSideApply }}
       {{- else }}
       - ServerSideApply=true
       {{- end }}
-  {{- if .ignoreDifferences }}
+      {{- range $app.syncOptions }}
+      - {{ . }}
+      {{- end }}
+  {{- if $app.ignoreDifferences }}
   ignoreDifferences:
-    {{- toYaml .ignoreDifferences | nindent 4 }}
+    {{- toYaml $app.ignoreDifferences | nindent 4 }}
   {{- end }}
----
 {{- end }}
 {{- end }}

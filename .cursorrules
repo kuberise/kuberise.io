@@ -59,6 +59,12 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
     - See "Local Development with k3d Clusters" section for details
   - `more/`: Additional utility scripts
 
+- `docs/adr/`: Architecture Decision Records (ADR)
+  - ADRs are stored in `docs/adr/` as numbered markdown files (e.g., `0001-sync-policy-configuration.md`)
+  - Use the standard ADR format: Status, Context, Decision, Consequences
+  - Document rejected alternatives within the relevant accepted ADR under the Decision section
+  - When a decision is replaced, create a new ADR and update the old one's status to "Superseded by ADR-XXXX"
+
 ### Application Types
 ArgoCD Applications support three types:
 1. `helm`: Default type, uses Helm charts (most common)
@@ -94,7 +100,10 @@ ArgoCD Applications support three types:
 
 ### Value File Patterns
 - Always provide sensible defaults in `values/defaults/`
-- Cluster-specific values should only override what's necessary
+- Default value files (`values/defaults/platform/{component}/values.yaml`) must always exist, even if empty, to serve as placeholders showing the available components
+- Cluster-specific value files (`values/{cluster}/platform/{component}/values.yaml`) should only be created when there are actual overrides needed; do NOT create empty placeholder files in cluster directories
+- The ArgoCD template uses `ignoreMissingValueFiles: true`, so missing cluster-specific value files are silently skipped and only defaults are applied
+- See ADR-0002 for the rationale behind this convention
 - Use `global.domain` for domain configuration (injected by install script)
 - Use `global.cluster` for cluster-specific references
 
@@ -105,9 +114,13 @@ ArgoCD Applications support three types:
   - `namespace`: Target namespace (defaults to component name)
   - `path`: Path to Helm chart or manifests
   - `type`: Application type (helm/kustomize/raw)
+  - `values`: Optional list of custom value file paths (must always be a list, even for a single file) to override the default value file convention
+  - `valuesFolder`: Optional folder name to use instead of `platform` in the default value file paths (for example for applications rather than platform components)
   - `syncWave`: Optional sync wave for ordering
-  - `syncOptions`: Optional sync options
-  - `finalizer`: Optional finalizers
+  - `serverSideApply`: Optional boolean to control ServerSideApply (defaults to true)
+  - `syncOptions`: Optional additional sync options (additive, does not replace defaults)
+  - `finalizers`: Optional additional finalizers
+  - `team`: Optional team name label (defaults to `platform`)
 
 ### Domain Configuration
 - All services use subdomains of `global.domain`
@@ -254,13 +267,16 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 
 ### Adding a New Component
 1. Create Helm chart in `templates/{component-name}/`
-2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty.
-3. Add cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` even if it is empty.
+2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty (placeholder files in defaults are required).
+3. Only create cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` if there are actual overrides for that cluster. Do NOT create empty placeholder files in cluster directories (see ADR-0002).
 4. Add application definition to `app-of-apps/values.yaml` under `ArgocdApplications`
 5. Set `enabled: false` by default
 6. Add application definition to `app-of-apps/values-{cluster}.yaml` under `ArgocdApplications`
 7. Set `enabled: true` if the component is going to be installed in that cluster.
 8. Document component in the documentation.
+
+### Adding a New Field to ArgoCD Application Template
+When adding a new property to `app-of-apps/templates/ArgocdApplications.yaml`, you must also add the property to `app-of-apps/values.schema.json` under `definitions.argocdApplication.properties`. Failing to do so will cause a schema validation error when the new field is used (see ADR-0009).
 
 ### Modifying Existing Components
 1. Update Helm chart templates in `templates/{component}/`
@@ -308,6 +324,10 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 - Document breaking changes in RELEASE_NOTES.md
 - Maintain backward compatibility when possible
 - Use ArgoCD sync policies appropriately (automated vs manual)
+
+### Explicit default values
+
+Being explicit about defaults improves readability -- anyone reading the template immediately sees the full set of parameters decisions without needing to know defaults from memory. It makes the intent clear. This is a common and well-regarded practice, especially in infrastructure-as-code where the consequences of misconfiguration can be significant. Explicit is better than implicit.
 
 ## References
 - Project README: `README.md`

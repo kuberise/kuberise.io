@@ -32,7 +32,7 @@ ArgocdApplications:
     enabled: false
 
   keda:
-    enabled: true
+    enabled: false
 
   #=================================#
   #          Data Services          #

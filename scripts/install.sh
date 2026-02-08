@@ -129,30 +129,11 @@ function deploy_app_of_apps() {
   local git_revision="$5"
   local domain="$6"
 
-# create argocd project
-cat <<EOF | kubectl apply --context $context -n $namespace -f -
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: $cluster_name
-  namespace: $namespace
-  # Finalizer that ensures that project is not deleted until it is not referenced by any application
-  finalizers:
-    - argoproj.io/resources-finalizer
-spec:
-  sourceRepos:
-  - '*'
-  destinations:
-  - name: '*'
-    namespace: '*'
-    server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
-  namespaceResourceWhitelist:
-  - group: '*'
-    kind: '*'
-EOF
+# create argocd project (rendered from the app-of-apps chart to keep a single source of truth, see ADR-0013)
+  helm template "app-of-apps-$cluster_name" ./app-of-apps \
+    --set global.clusterName="$cluster_name" \
+    --show-only templates/AppProject.yaml | \
+    kubectl apply --context "$context" -n "$namespace" -f -
 
 # create app of apps
   kubectl apply --context "$context" -n "$namespace" -f - <<EOF

@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "app-of-apps values",
+  "description": "Schema for the app-of-apps Helm chart values. Validates the structure of ArgoCD Application definitions to catch typos and misconfigurations early.",
+  "type": "object",
+  "required": ["global", "ArgocdApplications"],
+  "additionalProperties": false,
+  "properties": {
+    "global": {
+      "type": "object",
+      "description": "Global configuration injected by install.sh and used across all applications.",
+      "required": ["clusterName", "domain"],
+      "additionalProperties": false,
+      "properties": {
+        "clusterName": {
+          "type": "string",
+          "description": "Name of the target cluster. Must match a directory under values/.",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "description": "Base domain for all platform services (e.g., minikube.kuberise.dev).",
+          "minLength": 1
+        },
+        "automated": {
+          "type": "boolean",
+          "description": "Whether ArgoCD sync policy should be automated (prune + selfHeal). Defaults to true.",
+          "default": true
+        },
+        "revisionHistoryLimit": {
+          "type": "integer",
+          "description": "Default number of revisions to keep for all ArgoCD Applications. Defaults to 3.",
+          "minimum": 0,
+          "default": 3
+        },
+        "spec": {
+          "type": "object",
+          "description": "Source and destination configuration for ArgoCD Applications.",
+          "additionalProperties": false,
+          "properties": {
+            "destination": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "server": {
+                  "type": "string",
+                  "description": "Kubernetes API server URL."
+                }
+              }
+            },
+            "source": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "repoURL": {
+                  "type": "string",
+                  "description": "Git repository URL for application sources."
+                },
+                "targetRevision": {
+                  "type": "string",
+                  "description": "Git branch, tag, or commit SHA."
+                }
+              }
+            },
+            "values": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "repoURL": {
+                  "type": "string",
+                  "description": "Git repository URL for values files (multi-source)."
+                },
+                "targetRevision": {
+                  "type": "string",
+                  "description": "Git branch, tag, or commit SHA for values files."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ArgocdApplications": {
+      "type": "object",
+      "description": "Map of ArgoCD Application definitions. Keys are application names.",
+      "additionalProperties": {
+        "$ref": "#/definitions/argocdApplication"
+      }
+    }
+  },
+  "definitions": {
+    "argocdApplication": {
+      "type": "object",
+      "description": "Definition for a single ArgoCD Application.",
+      "required": ["enabled"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this application should be deployed. Required for every application."
+        },
+        "type": {
+          "type": "string",
+          "description": "Application type. Determines how ArgoCD processes the source.",
+          "enum": ["helm", "kustomize", "raw"],
+          "default": "helm"
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Target Kubernetes namespace. Defaults to the application name."
+        },
+        "path": {
+          "type": "string",
+          "description": "Path to the Helm chart, Kustomize directory, or raw manifests. Defaults to templates/{name}."
+        },
+        "chart": {
+          "type": "string",
+          "description": "Helm chart name when using a chart repository instead of a Git path."
+        },
+        "repoURL": {
+          "type": "string",
+          "description": "Override the global source repoURL for this application."
+        },
+        "targetRevision": {
+          "type": "string",
+          "description": "Override the global source targetRevision for this application."
+        },
+        "values": {
+          "type": "array",
+          "description": "Custom list of value file paths. Overrides the default value file convention. Must always be a list, even for a single file.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "valuesFolder": {
+          "type": "string",
+          "description": "Folder name to use instead of 'platform' in default value file paths (e.g., 'applications')."
+        },
+        "syncWave": {
+          "type": "integer",
+          "description": "ArgoCD sync wave for ordering application deployment. Lower numbers deploy first.",
+          "default": 1
+        },
+        "serverSideApply": {
+          "type": "boolean",
+          "description": "Whether to use Kubernetes Server-Side Apply. Defaults to true.",
+          "default": true
+        },
+        "syncOptions": {
+          "type": "array",
+          "description": "Additional ArgoCD sync options (additive, does not replace defaults).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "finalizers": {
+          "type": "array",
+          "description": "Additional finalizers beyond the default resources-finalizer.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "team": {
+          "type": "string",
+          "description": "Team name label for the application. Defaults to 'platform'.",
+          "default": "platform"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations for the ArgoCD Application metadata.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "recursive": {
+          "type": "boolean",
+          "description": "Whether to enable recursive directory processing (for raw/kustomize types)."
+        },
+        "automated": {
+          "type": "boolean",
+          "description": "Override the global automated sync policy for this application."
+        },
+        "revisionHistoryLimit": {
+          "type": "integer",
+          "description": "Override the global revisionHistoryLimit for this application.",
+          "minimum": 0
+        },
+        "destinationServer": {
+          "type": "string",
+          "description": "Override the global destination server URL for this application."
+        },
+        "ignoreDifferences": {
+          "type": "array",
+          "description": "List of resource difference rules for ArgoCD to ignore during sync.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "group": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "jsonPointers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "jqPathExpressions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "managedFieldsManagers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  }
+}
