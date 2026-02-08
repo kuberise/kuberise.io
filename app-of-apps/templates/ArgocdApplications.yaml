@@ -1,6 +1,7 @@
 {{- range $name, $app := .Values.ArgocdApplications -}}
 {{- $applicationType := default "helm" $app.type }}
 {{- if $app.enabled }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -98,6 +99,5 @@ spec:
   ignoreDifferences:
     {{- toYaml $app.ignoreDifferences | nindent 4 }}
   {{- end }}
----
 {{- end }}
 {{- end }}
