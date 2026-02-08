@@ -101,15 +101,18 @@ ArgocdApplications:
     repoURL: https://cloudnative-pg.github.io/charts
     targetRevision: 0.27.1
 
+  pgadmin-config:
+    enabled: false
+    namespace: pgadmin
+    # pgadmin-config deploys BEFORE pgadmin because pgadmin mounts the
+    # pgadmin ConfigMap created by this config chart.
+    syncWave: 1
+
   pgadmin:
     enabled: false
     chart: pgadmin4
     repoURL: https://helm.runix.net
     targetRevision: 1.57.0
-
-  pgadmin-config:
-    enabled: false
-    namespace: pgadmin
     syncWave: 2
 
   redis:
@@ -196,15 +199,18 @@ ArgocdApplications:
   #      Security & Auth            #
   #=================================#
 
+  keycloak-config:
+    enabled: false
+    namespace: keycloak
+    # keycloak-config deploys BEFORE keycloak because keycloak mounts the
+    # keycloak-tls secret created by the Certificate in this config chart.
+    syncWave: 1
+
   keycloak:
     enabled: false
     chart: keycloakx
     repoURL: https://codecentric.github.io/helm-charts
     targetRevision: 7.1.7
-
-  keycloak-config:
-    enabled: false
-    namespace: keycloak
     syncWave: 2
 
   keycloak-operator:

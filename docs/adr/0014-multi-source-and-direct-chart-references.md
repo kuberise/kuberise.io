@@ -71,7 +71,10 @@ Components that previously bundled external chart dependencies with custom Kuber
 | pgadmin | `pgadmin` (upstream chart) | `pgadmin-config` (ConfigMap with OAuth2 config) |
 | k8sgpt | `k8sgpt` (upstream chart) | `k8sgpt-config` (K8sGPT CRs for OpenAI/Ollama) |
 
-Config charts use `syncWave: 2` (default is 1) to ensure the operator and its CRDs are installed before the configuration resources.
+The sync wave ordering depends on the dependency direction:
+
+- **Config depends on operator CRDs** (most cases): operator at wave 1, config at wave 2. Examples: `cert-manager` (wave 1) + `cert-manager-config` (wave 2), `metallb` + `metallb-config`, `k8sgpt` + `k8sgpt-config`.
+- **Operator depends on config output** (reversed dependency): config at wave 1, operator at wave 2. Examples: `keycloak-config` (wave 1, creates Certificate -> keycloak-tls secret) + `keycloak` (wave 2, mounts that secret), `pgadmin-config` (wave 1, creates ConfigMap) + `pgadmin` (wave 2, mounts that ConfigMap).
 
 This is consistent with the existing patterns: `kyverno` + `policy`, `postgres-operator` + `database`, `external-secrets` + `secrets-manager`, `vault` + `secrets`.
 
