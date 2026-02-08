@@ -1,5 +1,32 @@
 # Release Notes
 
+## [0.0.8] - 8 February 2026
+
+### Refactored ArgoCD App-of-Apps Template
+
+This release is a major refactoring of the ArgoCD Application template and the overall app-of-apps configuration. All decisions are documented as Architecture Decision Records (ADR-0001 through ADR-0013).
+
+### Added
+- **JSON Schema validation** (`values.schema.json`) for ArgoCD Application definitions to catch typos and misconfigurations early.
+- **Declarative AppProject** managed as a Helm template instead of imperatively in `install.sh`.
+- **Retry with exponential backoff** on sync failures (5 retries, 10s–3m).
+- **`global.clusterName`** injected as a Helm parameter into all downstream charts.
+- **`team` label** per application (defaults to `platform`) for team-based filtering and access control.
+- **`values` and `valuesFolder` fields** for flexible value file overrides per application.
+- **`revisionHistoryLimit`** (default 3) to reduce etcd bloat, overridable per app.
+- **`cilium` and `aws-lb-controller`** added as available platform components (disabled by default).
+- 13 Architecture Decision Records documenting all design choices.
+
+### Changed
+- **`ignoreMissingValueFiles: true`** — ArgoCD now silently skips missing cluster-specific value files.
+- **`serverSideApply`** separated into its own boolean (defaults to `true`); `syncOptions` is now purely additive.
+- **`allowEmpty: false`** on automated sync to prevent accidental deletion of all resources.
+- **Dynamic path resolution** using Helm `tpl` function for paths containing template expressions.
+- `install.sh` updated to render and apply the AppProject via Helm.
+
+### Removed
+- ~100 empty cluster-specific value files across `aks`, `eks`, `gke`, `airgap`, and `dev-*` directories, now unnecessary thanks to `ignoreMissingValueFiles`.
+
 ## [0.0.7] - 4 July 2024
 
 New Features and Integrations
