@@ -117,6 +117,17 @@ ArgocdApplications:
   ingress-nginx-internal:
     enabled: false
 
+  cilium:
+    enabled: false
+    namespace: kube-system
+
+  aws-lb-controller:
+    enabled: false
+    namespace: kube-system
+
+  external-dns-sigs:
+    enabled: false
+
   # custom ingress resources
   ingresses:
     enabled: false
