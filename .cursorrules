@@ -114,6 +114,8 @@ ArgoCD Applications support three types:
   - `namespace`: Target namespace (defaults to component name)
   - `path`: Path to Helm chart or manifests
   - `type`: Application type (helm/kustomize/raw)
+  - `values`: Optional list of custom value file paths (must always be a list, even for a single file) to override the default value file convention
+  - `valuesFolder`: Optional folder name to use instead of `platform` in the default value file paths
   - `syncWave`: Optional sync wave for ordering
   - `serverSideApply`: Optional boolean to control ServerSideApply (defaults to true)
   - `syncOptions`: Optional additional sync options (additive, does not replace defaults)

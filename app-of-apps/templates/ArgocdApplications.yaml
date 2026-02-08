@@ -39,12 +39,8 @@ spec:
       ignoreMissingValueFiles: true # adr 0002
       valueFiles:
         {{- if hasKey . "values"}}
-        {{- if kindIs "slice" .values }}
         {{- range .values }}
         - {{ . }}
-        {{- end }}
-        {{- else }}
-        - {{ .values }}
         {{- end }}
         {{- else if hasKey . "valuesFolder"}}
         - ../../values/defaults/{{ .valuesFolder }}/{{ $name }}/values.yaml
