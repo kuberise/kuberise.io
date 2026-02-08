@@ -5,7 +5,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: {{ $name }}
-  namespace: argocd
+  # namespace is inherited from the parent app-of-apps destination namespace,
+  # which is set in scripts/install.sh (deploy_app_of_apps function).
   annotations:
     argocd.argoproj.io/sync-wave: "{{ default 1 $app.syncWave }}"
     {{- if $app.annotations }}
