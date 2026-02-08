@@ -31,10 +31,19 @@ This solves the bootstrapping problem while keeping the AppProject defined in ex
 1. **Bootstrap time**: The install script renders the AppProject template from the chart and applies it via `kubectl apply`. Then it creates the app-of-apps Application as before.
 2. **Steady state**: When ArgoCD syncs the app-of-apps chart, it renders the same AppProject template, detects the existing resource, and adopts it. From that point on, `selfHeal: true` ensures any manual drift is reverted.
 
+### Why only the AppProject and not the app-of-apps Application
+
+The same `helm template --show-only` approach could be applied to the root app-of-apps Application itself, turning it into a self-managing resource. We deliberately chose **not** to do this:
+
+- If ArgoCD manages its own root Application, a bad Git commit that breaks the app-of-apps spec would be applied automatically, potentially making the entire platform unrecoverable without manual intervention.
+- Keeping the root app-of-apps Application as a manually-managed bootstrap resource (defined only in `install.sh`) acts as a safety guardrail. It can only be changed by re-running the install script, not by a Git push.
+- The AppProject does not carry this risk -- a misconfigured project can be corrected by re-running the install script or editing the chart, and it does not affect ArgoCD's ability to sync.
+
 ### Alternatives considered
 
 - **Keep the imperative definition in `install.sh` and add a duplicate in the chart**: This works but requires maintaining two copies of the same manifest. Any change to the AppProject spec must be applied in both places, which is error-prone.
 - **Only define the AppProject in the chart, skip the bootstrap apply**: This does not work because the app-of-apps Application cannot be created without the project already existing.
+- **Apply the same pattern to the app-of-apps Application**: Rejected because making the root Application self-managing removes the safety guardrail against bad Git commits breaking the entire platform (see above).
 
 ## Consequences
 
@@ -42,3 +51,4 @@ This solves the bootstrapping problem while keeping the AppProject defined in ex
 - The install script depends on `helm` being available locally (it was already a prerequisite for the project).
 - ArgoCD manages the AppProject declaratively after the initial bootstrap, reverting any manual drift.
 - Changes to the AppProject spec are made in the Helm template and take effect both for new installations (via `install.sh`) and existing clusters (via ArgoCD sync).
+- The root app-of-apps Application remains a manually-managed bootstrap resource, providing a safety guardrail against self-inflicted misconfiguration.
