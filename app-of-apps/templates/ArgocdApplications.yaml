@@ -50,6 +50,8 @@ spec:
       parameters:
         - name: global.domain
           value: {{ $.Values.global.domain }}
+        - name: global.clusterName
+          value: {{ $.Values.global.clusterName }}
   {{- else }}
     {{- if hasKey . "path"}}
     path: {{ tpl .path $ }}
