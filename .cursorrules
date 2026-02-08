@@ -59,6 +59,12 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
     - See "Local Development with k3d Clusters" section for details
   - `more/`: Additional utility scripts
 
+- `docs/adr/`: Architecture Decision Records (ADR)
+  - ADRs are stored in `docs/adr/` as numbered markdown files (e.g., `0001-sync-policy-configuration.md`)
+  - Use the standard ADR format: Status, Context, Decision, Consequences
+  - Document rejected alternatives within the relevant accepted ADR under the Decision section
+  - When a decision is replaced, create a new ADR and update the old one's status to "Superseded by ADR-XXXX"
+
 ### Application Types
 ArgoCD Applications support three types:
 1. `helm`: Default type, uses Helm charts (most common)
@@ -308,6 +314,10 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 - Document breaking changes in RELEASE_NOTES.md
 - Maintain backward compatibility when possible
 - Use ArgoCD sync policies appropriately (automated vs manual)
+
+### Explicit default values
+
+Being explicit about defaults improves readability -- anyone reading the template immediately sees the full set of parameters decisions without needing to know defaults from memory. It makes the intent clear. This is a common and well-regarded practice, especially in infrastructure-as-code where the consequences of misconfiguration can be significant. Explicit is better than implicit.
 
 ## References
 - Project README: `README.md`

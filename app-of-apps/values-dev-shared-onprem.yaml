@@ -11,8 +11,7 @@ ArgocdApplications:
     enabled: true
 
   backstage:
-    enabled: true
-    automated: true
+    enabled: false
 
   team-setup:
     enabled: false
@@ -33,7 +32,7 @@ ArgocdApplications:
     enabled: false
 
   keda:
-    enabled: true
+    enabled: false
 
   #=================================#
   #          Data Services          #
