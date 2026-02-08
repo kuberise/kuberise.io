@@ -100,7 +100,10 @@ ArgoCD Applications support three types:
 
 ### Value File Patterns
 - Always provide sensible defaults in `values/defaults/`
-- Cluster-specific values should only override what's necessary
+- Default value files (`values/defaults/platform/{component}/values.yaml`) must always exist, even if empty, to serve as placeholders showing the available components
+- Cluster-specific value files (`values/{cluster}/platform/{component}/values.yaml`) should only be created when there are actual overrides needed; do NOT create empty placeholder files in cluster directories
+- The ArgoCD template uses `ignoreMissingValueFiles: true`, so missing cluster-specific value files are silently skipped and only defaults are applied
+- See ADR-0002 for the rationale behind this convention
 - Use `global.domain` for domain configuration (injected by install script)
 - Use `global.cluster` for cluster-specific references
 
@@ -260,8 +263,8 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 
 ### Adding a New Component
 1. Create Helm chart in `templates/{component-name}/`
-2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty.
-3. Add cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` even if it is empty.
+2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty (placeholder files in defaults are required).
+3. Only create cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` if there are actual overrides for that cluster. Do NOT create empty placeholder files in cluster directories (see ADR-0002).
 4. Add application definition to `app-of-apps/values.yaml` under `ArgocdApplications`
 5. Set `enabled: false` by default
 6. Add application definition to `app-of-apps/values-{cluster}.yaml` under `ArgocdApplications`

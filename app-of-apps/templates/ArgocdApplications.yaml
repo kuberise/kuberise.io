@@ -36,7 +36,7 @@ spec:
     path: templates/{{ $name }}
     {{- end }}
     helm:
-      # ignoreMissingValueFiles: true
+      ignoreMissingValueFiles: true # adr 0002
       valueFiles:
         {{- if hasKey . "values"}}
         - {{ .values }}
