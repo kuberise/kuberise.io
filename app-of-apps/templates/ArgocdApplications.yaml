@@ -65,7 +65,11 @@ spec:
     namespace: {{ default $name .namespace }}
     server: {{ default $.Values.global.spec.destination.server .destinationServer }}
   syncPolicy:
-    {{- if default $.Values.global.automated .automated }}
+    {{- $automated := $.Values.global.automated }}
+    {{- if hasKey . "automated" }}
+      {{- $automated = .automated }}
+    {{- end }}
+    {{- if $automated }}
     automated:
       prune: true
       selfHeal: true
