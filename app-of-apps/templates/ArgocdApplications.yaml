@@ -31,7 +31,7 @@ spec:
     {{- if hasKey . "chart"}}
     chart: {{ .chart }}
     {{- else if hasKey . "path"}}
-    path: {{ .path }}
+    path: {{ tpl .path $ }}
     {{- else }}
     path: templates/{{ $name }}
     {{- end }}
