@@ -275,6 +275,9 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 7. Set `enabled: true` if the component is going to be installed in that cluster.
 8. Document component in the documentation.
 
+### Adding a New Field to ArgoCD Application Template
+When adding a new property to `app-of-apps/templates/ArgocdApplications.yaml`, you must also add the property to `app-of-apps/values.schema.json` under `definitions.argocdApplication.properties`. Failing to do so will cause a schema validation error when the new field is used (see ADR-0009).
+
 ### Modifying Existing Components
 1. Update Helm chart templates in `templates/{component}/`
 2. Update default values in `values/defaults/platform/{component}/values.yaml`
