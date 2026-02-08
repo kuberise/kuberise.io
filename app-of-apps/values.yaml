@@ -236,7 +236,6 @@ ArgocdApplications:
   cert-manager-config:
     enabled: false
     namespace: cert-manager
-    syncWave: 2
 
   kyverno:
     enabled: false
