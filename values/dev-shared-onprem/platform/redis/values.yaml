@@ -1,16 +1,10 @@
-redis:
-
-  architecture: standalone
-
-  auth:
-    enabled: true
-
-  master:
-    persistence:
-      enabled: false
-
-  replica:
-    replicaCount: 0
-
-  sentinel:
+architecture: standalone
+auth:
+  enabled: true
+master:
+  persistence:
     enabled: false
+replica:
+  replicaCount: 0
+sentinel:
+  enabled: false

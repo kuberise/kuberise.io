@@ -13,13 +13,34 @@ The platform uses GitOps principles with ArgoCD for declarative application mana
 - All applications are defined as ArgoCD Applications in `app-of-apps/templates/ArgocdApplications.yaml`
 - Applications are enabled/disabled via values files
 
+### Multi-Source ArgoCD Applications
+- Helm-type applications use `spec.sources` (plural) with two sources:
+  1. **Chart source**: Direct reference to external Helm chart repository (via `chart` + `repoURL` + `targetRevision`) or path to a local chart
+  2. **Values source**: A `ref: values` source pointing to the Git repository containing value files
+- Value files use `$values/` prefix to reference files from the values repository
+- Non-Helm applications (kustomize, raw) continue to use single-source `spec.source`
+- See ADR-0014 for the rationale behind this architecture
+
+### External Chart References
+- External Helm charts are referenced directly in `app-of-apps/values.yaml` using `chart`, `repoURL`, and `targetRevision` fields
+- No wrapper charts or local Chart.yaml dependencies for external charts
+- Values are passed directly to the upstream chart (no subchart nesting)
+- The `scripts/upgrade.sh` script reads chart references from `values.yaml` to check for updates
+
+### Operator + Config Chart Pattern
+- Components that install an operator AND need custom configuration resources are split into two ArgoCD Applications:
+  - **Operator app**: References the upstream chart directly (e.g., `cert-manager`)
+  - **Config app**: A small local chart with CRD instances and configuration (e.g., `cert-manager-config`)
+- Config charts use `syncWave: 2` to ensure the operator and CRDs are installed first
+- Examples: `cert-manager` + `cert-manager-config`, `keycloak` + `keycloak-config`, `kyverno` + `policy`, `postgres-operator` + `database`
+
 ### Multi-Cluster Support
 The project supports multiple Kubernetes clusters. These clusters can represent:
 - Different environments (e.g., dev, test, prod clusters)
 - Multiple regional clusters for the same environment (e.g., multiple regional production clusters: prod-us-east, prod-us-west, prod-eu)
 - Multi-cloud or hybrid architectures
 
-All clusters use the same templates in templates/ folder.
+All clusters share the same charts in the `charts/` folder and the same external chart references in `values.yaml`.
 
 Each cluster has its own values directory:
 - `values/{cluster}/platform/` for the configuration of the platform components
@@ -36,14 +57,14 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
 
 ### Key Directories
 - `app-of-apps/`: Root Helm chart for ArgoCD app-of-apps pattern
-  - `values.yaml`: Main configuration with all ArgoCD Applications definitions
+  - `values.yaml`: Main configuration with all ArgoCD Applications definitions (including external chart references)
   - `values-{cluster}.yaml`: Cluster-specific overrides
   - `templates/ArgocdApplications.yaml`: Template that generates ArgoCD Application manifests
 
-- `templates/`: Helm chart templates for platform components
-  - Each component has its own subdirectory (e.g., `templates/keycloak/`, `templates/cert-manager/`)
-  - Contains `Chart.yaml` and `templates/` directory with Kubernetes manifests
-  - Some components use external Helm charts (referenced via `repoURL`)
+- `charts/`: Local Helm charts and kustomize applications (only for components not available from external repositories)
+  - Local charts: `backstage`, `generic-deployment`, `ingresses`, `kube-prometheus-stack-crds`, `secrets-manager`, `team-setup`, `teams-namespaces`, `tekton-operator`
+  - Config charts: `cert-manager-config`, `keycloak-config`, `metallb-config`, `pgadmin-config`, `k8sgpt-config`
+  - Kustomize apps: `dashboards`, `hello`
 
 - `values/`: Configuration values organized by cluster
   - `values/{cluster}/platform/`: Platform component configurations
@@ -52,7 +73,7 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
 - `scripts/`: Installation and utility scripts
   - `install.sh`: Main installation script that sets up the platform
   - `uninstall.sh`: Uninstallation script
-  - `upgrade.sh`: Upgrade script for the version of external helm charts used in the project
+  - `upgrade.sh`: Upgrade script that checks for newer versions of external charts referenced in `values.yaml`
   - `k3d+registry/`: Scripts for local multi-cluster development setup
     - Creates two k3d clusters (shared and dev) connected via Cilium ClusterMesh
     - Sets up Docker registry proxy for local image caching
@@ -104,6 +125,7 @@ ArgoCD Applications support three types:
 - Cluster-specific value files (`values/{cluster}/platform/{component}/values.yaml`) should only be created when there are actual overrides needed; do NOT create empty placeholder files in cluster directories
 - The ArgoCD template uses `ignoreMissingValueFiles: true`, so missing cluster-specific value files are silently skipped and only defaults are applied
 - See ADR-0002 for the rationale behind this convention
+- Values are passed directly to upstream charts (no subchart nesting prefix)
 - Use `global.domain` for domain configuration (injected by install script)
 - Use `global.cluster` for cluster-specific references
 
@@ -112,10 +134,15 @@ ArgoCD Applications support three types:
 - Each application has:
   - `enabled`: Boolean to enable/disable
   - `namespace`: Target namespace (defaults to component name)
-  - `path`: Path to Helm chart or manifests
+  - `path`: Path to local Helm chart or manifests (defaults to `charts/{name}`)
+  - `chart`: Helm chart name for external chart repositories
+  - `repoURL`: External Helm chart repository URL
+  - `targetRevision`: External Helm chart version
   - `type`: Application type (helm/kustomize/raw)
-  - `values`: Optional list of custom value file paths (must always be a list, even for a single file) to override the default value file convention
-  - `valuesFolder`: Optional folder name to use instead of `platform` in the default value file paths (for example for applications rather than platform components)
+  - `values`: Optional list of custom value file paths (use `$values/` prefix) to override the default value file convention
+  - `valuesFolder`: Optional folder name to use instead of `platform` in the default value file paths
+  - `valuesRepoURL`: Optional override for the values repository URL (split-repo topology)
+  - `valuesTargetRevision`: Optional override for the values repository revision
   - `syncWave`: Optional sync wave for ordering
   - `serverSideApply`: Optional boolean to control ServerSideApply (defaults to true)
   - `syncOptions`: Optional additional sync options (additive, does not replace defaults)
@@ -265,24 +292,29 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 
 ## Development Guidelines
 
-### Adding a New Component
-1. Create Helm chart in `templates/{component-name}/`
-2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty (placeholder files in defaults are required).
-3. Only create cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` if there are actual overrides for that cluster. Do NOT create empty placeholder files in cluster directories (see ADR-0002).
-4. Add application definition to `app-of-apps/values.yaml` under `ArgocdApplications`
-5. Set `enabled: false` by default
-6. Add application definition to `app-of-apps/values-{cluster}.yaml` under `ArgocdApplications`
-7. Set `enabled: true` if the component is going to be installed in that cluster.
+### Adding a New External Component
+1. Add application definition to `app-of-apps/values.yaml` under `ArgocdApplications` with `chart`, `repoURL`, and `targetRevision` fields
+2. Set `enabled: false` by default
+3. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty (placeholder files in defaults are required). Values should be at the top level (no subchart nesting).
+4. Only create cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` if there are actual overrides for that cluster. Do NOT create empty placeholder files in cluster directories (see ADR-0002).
+5. Add application definition to `app-of-apps/values-{cluster}.yaml` under `ArgocdApplications`
+6. Set `enabled: true` if the component is going to be installed in that cluster.
+7. If the component needs custom CRD instances or configuration resources, create a separate config chart in `charts/{component-name}-config/` and a corresponding config app entry (see Operator + Config Chart Pattern).
 8. Document component in the documentation.
+
+### Adding a New Local Chart
+1. Create Helm chart in `charts/{component-name}/`
+2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty
+3. Add application definition to `app-of-apps/values.yaml` (no `chart`/`repoURL`/`targetRevision` needed; defaults to `charts/{name}` path)
+4. Follow the same cluster enable/disable pattern as external components
 
 ### Adding a New Field to ArgoCD Application Template
 When adding a new property to `app-of-apps/templates/ArgocdApplications.yaml`, you must also add the property to `app-of-apps/values.schema.json` under `definitions.argocdApplication.properties`. Failing to do so will cause a schema validation error when the new field is used (see ADR-0009).
 
 ### Modifying Existing Components
-1. Update Helm chart templates in `templates/{component}/`
-2. Update default values in `values/defaults/platform/{component}/values.yaml`
-3. Check cluster-specific overrides in `values/{cluster}/platform/{component}/values.yaml`
-4. Test with at least one cluster before committing
+1. Update values in `values/defaults/platform/{component}/values.yaml` (for external charts) or chart templates in `charts/{component}/` (for local charts)
+2. Check cluster-specific overrides in `values/{cluster}/platform/{component}/values.yaml`
+3. Test with at least one cluster before committing
 
 ### Script Development
 - Use `set -euo pipefail` in bash scripts
@@ -304,7 +336,7 @@ When adding a new property to `app-of-apps/templates/ArgocdApplications.yaml`, y
 ### Sync Waves
 - Use `syncWave` annotation to control application deployment order
 - Lower numbers deploy first
-- Example: `syncWave: 1` for dependencies, `syncWave: 2` for dependents
+- Example: `syncWave: 1` for operators, `syncWave: 2` for config charts that depend on operator CRDs
 
 ### Namespace Management
 - Most components deploy to their own namespace

@@ -1,3 +1,2 @@
-pgadmin4:
-  persistentVolume:
-    storageClass: managed-csi
+persistentVolume:
+  storageClass: managed-csi

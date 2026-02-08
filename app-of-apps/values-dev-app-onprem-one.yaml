@@ -27,6 +27,9 @@ ArgocdApplications:
   cert-manager:
     enabled: true
 
+  cert-manager-config:
+    enabled: true
+
   #=================================#
   #      Monitoring Stack           #
   #=================================#

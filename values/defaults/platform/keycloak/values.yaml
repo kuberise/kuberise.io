@@ -1,97 +1,96 @@
-keycloakx:
-  fullnameOverride: keycloak
-  http:
-    relativePath: "/"
-  command:
-    - "/opt/keycloak/bin/kc.sh"
-    - "--verbose"
-    - "start"
-    - "--features=token-exchange"
-    - "--https-certificate-file=/etc/tls/tls.crt"
-    - "--https-certificate-key-file=/etc/tls/tls.key"
-    - "--health-enabled=true"
-    # - "--hostname=keycloak.{{ .Values.global.domain }}"
-    - "--hostname-strict=false"
-    - "--http-enabled=false"
+fullnameOverride: keycloak
+http:
+  relativePath: "/"
+command:
+  - "/opt/keycloak/bin/kc.sh"
+  - "--verbose"
+  - "start"
+  - "--features=token-exchange"
+  - "--https-certificate-file=/etc/tls/tls.crt"
+  - "--https-certificate-key-file=/etc/tls/tls.key"
+  - "--health-enabled=true"
+  # - "--hostname=keycloak.{{ .Values.global.domain }}"
+  - "--hostname-strict=false"
+  - "--http-enabled=false"
 
-  ingress:
-    enabled: true
-    ingressClassName: nginx-external
-    servicePort: https
-    annotations:
-      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    rules:
-      - host: keycloak.{{ .Values.global.domain }}
-        paths:
-          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
-            pathType: Prefix
-    tls:
-      - hosts:
-          - keycloak.{{ .Values.global.domain }}
-  metrics:
-    enabled: true
+ingress:
+  enabled: true
+  ingressClassName: nginx-external
+  servicePort: https
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  rules:
+    - host: keycloak.{{ .Values.global.domain }}
+      paths:
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+          pathType: Prefix
+  tls:
+    - hosts:
+        - keycloak.{{ .Values.global.domain }}
+metrics:
+  enabled: true
 
-  serviceMonitor:
-    enabled: true
-    path: /metrics
-    labels:
-      app.kubernetes.io/part-of: kube-prometheus-stack
+serviceMonitor:
+  enabled: true
+  path: /metrics
+  labels:
+    app.kubernetes.io/part-of: kube-prometheus-stack
 
-  extraEnv: |
-    - name: JAVA_OPTS_APPEND
-      value: >-
-        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-    - name: KC_DB_URL
-      value: "jdbc:postgresql://database-rw.postgres.svc.cluster.local:5432/app"
-    - name: KC_DB
-      value: postgres
-
-
-  extraEnvFrom: |
-    - secretRef:
-        name: pg-secret
-    - secretRef:
-        name: admin-secret
-
-  extraVolumes: |
-    - name: keycloak-tls
-      secret:
-        secretName: keycloak-tls
-  extraVolumeMounts: |
-    - name: keycloak-tls
-      mountPath: /etc/tls
-      readOnly: true
+extraEnv: |
+  - name: JAVA_OPTS_APPEND
+    value: >-
+      -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+  - name: KC_DB_URL
+    value: "jdbc:postgresql://database-rw.postgres.svc.cluster.local:5432/app"
+  - name: KC_DB
+    value: postgres
 
 
-  livenessProbe: |
-    failureThreshold: 3
-    httpGet:
-      path: /health/live
-      port: http-internal
-      scheme: HTTPS
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 5
+extraEnvFrom: |
+  - secretRef:
+      name: pg-secret
+  - secretRef:
+      name: admin-secret
 
-  readinessProbe: |
-    failureThreshold: 3
-    httpGet:
-      path: /health/ready
-      port: http-internal
-      scheme: HTTPS
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
+extraVolumes: |
+  - name: keycloak-tls
+    secret:
+      secretName: keycloak-tls
+extraVolumeMounts: |
+  - name: keycloak-tls
+    mountPath: /etc/tls
+    readOnly: true
 
-  startupProbe: |
-    failureThreshold: 60
-    httpGet:
-      path: /health
-      port: http-internal
-      scheme: HTTPS
-    initialDelaySeconds: 15
-    periodSeconds: 5
-    successThreshold: 1
-    timeoutSeconds: 1
+
+livenessProbe: |
+  failureThreshold: 3
+  httpGet:
+    path: /health/live
+    port: http-internal
+    scheme: HTTPS
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 5
+
+readinessProbe: |
+  failureThreshold: 3
+  httpGet:
+    path: /health/ready
+    port: http-internal
+    scheme: HTTPS
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+
+startupProbe: |
+  failureThreshold: 60
+  httpGet:
+    path: /health
+    port: http-internal
+    scheme: HTTPS
+  initialDelaySeconds: 15
+  periodSeconds: 5
+  successThreshold: 1
+  timeoutSeconds: 1

@@ -1,4 +1,3 @@
-cloudnative-pg:
-  monitoring:
-    # -- Specifies whether the monitoring should be enabled. Requires Prometheus Operator CRDs.
-    podMonitorEnabled: true
+monitoring:
+  # -- Specifies whether the monitoring should be enabled. Requires Prometheus Operator CRDs.
+  podMonitorEnabled: true

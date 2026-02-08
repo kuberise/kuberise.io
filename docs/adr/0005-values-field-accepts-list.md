@@ -43,7 +43,7 @@ Multiple applications using the same Helm chart (e.g., `generic-deployment`) may
 ```yaml
 my-frontend:
   enabled: true
-  path: templates/generic-deployment
+  path: charts/generic-deployment
   values:
     - ../../values/defaults/applications/shared-frontend/values.yaml
     - ../../values/defaults/applications/my-frontend/values.yaml

@@ -1,30 +1,29 @@
-ingress-nginx:
-  controller:
-    metrics:
+controller:
+  metrics:
+    enabled: true
+    serviceMonitor:
       enabled: true
-      serviceMonitor:
-        enabled: true
-    ingressClassResource:
-      enabled: true
-      name: nginx-external
-      default: false
-      controllerValue: "k8s.io/ingress-nginx-external"
+  ingressClassResource:
+    enabled: true
+    name: nginx-external
+    default: false
+    controllerValue: "k8s.io/ingress-nginx-external"
 
-    ingressClass: nginx-external
+  ingressClass: nginx-external
 
-    watchIngressWithoutClass: false
-    electionID: ingress-controller-leader-external
-    ingressClassByName: true
+  watchIngressWithoutClass: false
+  electionID: ingress-controller-leader-external
+  ingressClassByName: true
 
-    # Configures the ingress controller instead of adding annotations to all ingresses
-    config:
-      ssl-redirect: "true"
-      force-ssl-redirect: "true"
-      www-redirect: "true"
-      from-to-www-redirect: "true"
-      limit-rps: "5"
-      limit-rpm: "300"
-      limit-connections: "10"
-      proxy-body-size: "8m"
-      # whitelist-source-range: "10.0.0.0/24,172.10.0.1"
-      # denylist-source-range: "10.0.0.0/24,172.10.0.1"
+  # Configures the ingress controller instead of adding annotations to all ingresses
+  config:
+    ssl-redirect: "true"
+    force-ssl-redirect: "true"
+    www-redirect: "true"
+    from-to-www-redirect: "true"
+    limit-rps: "5"
+    limit-rpm: "300"
+    limit-connections: "10"
+    proxy-body-size: "8m"
+    # whitelist-source-range: "10.0.0.0/24,172.10.0.1"
+    # denylist-source-range: "10.0.0.0/24,172.10.0.1"

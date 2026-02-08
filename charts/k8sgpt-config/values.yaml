@@ -1,0 +1,5 @@
+# Enable OpenAI integration for k8sgpt
+enable_openai: false
+
+# Enable Ollama integration for k8sgpt
+enable_ollama: false

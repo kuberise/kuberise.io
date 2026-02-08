@@ -41,7 +41,9 @@ ArgocdApplications:
 
   internal-dns: # bitnami chart doesn't work well with azure-private-dns provider
     enabled: true
-    path: templates/external-dns-sigs
+    chart: external-dns
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: 1.20.0
 
   external-dns:
     enabled: true
@@ -63,10 +65,16 @@ ArgocdApplications:
     enabled: true
     # syncWave: 1
 
+  keycloak-config:
+    enabled: true
+
   keycloak-operator:
     enabled: true
 
   cert-manager:
+    enabled: true
+
+  cert-manager-config:
     enabled: true
 
   vault:

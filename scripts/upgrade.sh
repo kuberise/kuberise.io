@@ -5,62 +5,30 @@ show_help() {
     cat << EOF
 Usage: $(basename $0) [options]
 
-This script checks and updates Helm chart dependencies in all Chart.yaml files
-found in the templates directory. It compares current dependency versions with
+This script checks and updates external Helm chart versions referenced in the
+app-of-apps values.yaml file. It compares current targetRevision versions with
 the latest available versions from their respective repositories.
 
 Options:
     -h, --help    Show this help message
     -y            Automatically update all dependencies without asking for confirmation
                   (Default behavior is to ask for confirmation for each update)
-    -l, --list    Show a list of all dependency charts and their current versions
+    -l, --list    Show a list of all external chart references and their current versions
                   without checking for updates
 
 Examples:
     $(basename $0)          # Run with confirmation prompts
     $(basename $0) -y       # Run with automatic updates
-    $(basename $0) -l       # List all dependencies
+    $(basename $0) -l       # List all external chart references
     $(basename $0) --help   # Show this help message
 
 The script will:
-1. Search for all Chart.yaml files in the templates directory
-2. Check each chart's dependencies
-3. Compare current versions with latest available versions
-4. Update versions if newer versions are available
+1. Parse app-of-apps/values.yaml for applications with chart and repoURL fields
+2. Check each chart's current targetRevision against the latest available version
+3. Update targetRevision if newer versions are available
 
 Supports both HTTP-based Helm repositories and OCI registries.
 EOF
-    exit 0
-}
-
-# Function to list all dependencies
-list_dependencies() {
-    local chart_files=("$@")
-
-    # Print header
-    printf "\nListing all chart dependencies:\n"
-    printf "%-30s %-20s %s\n" "DEPENDENCY" "VERSION" "REPOSITORY"
-    printf "%s\n" "--------------------------------------------------------------------------------"
-
-    for chart_file in "${chart_files[@]}"; do
-        # Check if file has dependencies
-        if ! yq e -e '.dependencies' "$chart_file" > /dev/null 2>&1; then
-            continue
-        fi
-
-        # Get number of dependencies
-        local deps_count=$(yq e '.dependencies | length' "$chart_file")
-
-        for ((i=0; i<deps_count; i++)); do
-            local name=$(yq e ".dependencies[$i].name" "$chart_file")
-            local version=$(yq e ".dependencies[$i].version" "$chart_file")
-            local repo=$(yq e ".dependencies[$i].repository" "$chart_file")
-
-            printf "%-30s %-20s %s\n" "$name" "$version" "$repo"
-        done
-    done
-
-    printf "\n"
     exit 0
 }
 
@@ -108,16 +76,18 @@ while getopts "hyl-:" opt; do
     esac
 done
 
+VALUES_FILE="app-of-apps/values.yaml"
+
+if [ ! -f "$VALUES_FILE" ]; then
+    echo "Error: $VALUES_FILE not found. Run this script from the repository root."
+    exit 1
+fi
+
 # Function to get index.yaml content from HTTP repository
 get_index_yaml() {
     local repo_url=$1
-    # Remove trailing slash if present
     repo_url=${repo_url%/}
-
-    # Add index.yaml to the URL
     local index_url="${repo_url}/index.yaml"
-
-    # Download index.yaml using curl
     local response
     response=$(curl -s -L "$index_url")
     if [ $? -eq 0 ]; then
@@ -132,8 +102,6 @@ get_index_yaml() {
 get_latest_version_from_index() {
     local index_content=$1
     local chart_name=$2
-
-    # Use yq to parse the index.yaml and get the latest version
     echo "$index_content" | yq e ".entries.${chart_name}[0].version" -
 }
 
@@ -141,11 +109,9 @@ get_latest_version_from_index() {
 get_latest_version() {
     local repo_url=$1
     local chart_name=$2
-    local current_version=$3
 
     # Handle OCI registry
     if [[ $repo_url == oci://* ]]; then
-        # Get chart info using helm show chart
         local chart_info=$(helm show chart "$repo_url/$chart_name" 2>/dev/null)
         if [[ $? -eq 0 ]]; then
             local latest_version=$(echo "$chart_info" | yq e '.version' -)
@@ -173,83 +139,72 @@ get_latest_version() {
     return 1
 }
 
-# Function to process a Chart.yaml file
-process_chart() {
-    local chart_file=$1
-    echo "Processing: $chart_file"
+# Get all application names that have a chart field
+app_names=$(yq e '.ArgocdApplications | to_entries[] | select(.value.chart != null) | .key' "$VALUES_FILE")
 
-    # Check if file has dependencies
-    if ! yq e -e '.dependencies' "$chart_file" > /dev/null 2>&1; then
-        echo "No dependencies found in $chart_file"
-        echo "----------------------------------------"
-        return
-    fi
+if [ -z "$app_names" ]; then
+    echo "No external chart references found in $VALUES_FILE"
+    exit 0
+fi
 
-    # Get number of dependencies
-    local deps_count=$(yq e '.dependencies | length' "$chart_file")
+# List mode
+if $LIST_ONLY; then
+    printf "\nListing all external chart references:\n"
+    printf "%-30s %-25s %-15s %s\n" "APPLICATION" "CHART" "VERSION" "REPOSITORY"
+    printf "%s\n" "------------------------------------------------------------------------------------------------------------"
 
-    for ((i=0; i<deps_count; i++)); do
-        local name=$(yq e ".dependencies[$i].name" "$chart_file")
-        local current_version=$(yq e ".dependencies[$i].version" "$chart_file")
-        local repo=$(yq e ".dependencies[$i].repository" "$chart_file")
+    while IFS= read -r app_name; do
+        chart=$(yq e ".ArgocdApplications.\"$app_name\".chart" "$VALUES_FILE")
+        version=$(yq e ".ArgocdApplications.\"$app_name\".targetRevision" "$VALUES_FILE")
+        repo=$(yq e ".ArgocdApplications.\"$app_name\".repoURL" "$VALUES_FILE")
+        printf "%-30s %-25s %-15s %s\n" "$app_name" "$chart" "$version" "$repo"
+    done <<< "$app_names"
 
-        echo "Checking dependency: $name"
-        echo "Current version: $current_version"
-        echo "Repository: $repo"
+    printf "\n"
+    exit 0
+fi
 
-        local latest_version=$(get_latest_version "$repo" "$name" "$current_version")
-        local get_version_status=$?
-
-        if [[ $get_version_status -eq 0 && -n "$latest_version" && "$latest_version" != "$current_version" ]]; then
-            echo "New version available: $latest_version"
-
-            # If AUTO_CONFIRM is true, update without asking
-            if $AUTO_CONFIRM; then
-                yq e ".dependencies[$i].version = \"$latest_version\"" -i "$chart_file"
-                echo "Updated $name to version $latest_version"
-            else
-                read -p "Do you want to update $name from $current_version to $latest_version? (y/n) " -n 1 -r
-                echo
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    yq e ".dependencies[$i].version = \"$latest_version\"" -i "$chart_file"
-                    echo "Updated $name to version $latest_version"
-                fi
-            fi
-        elif [[ $get_version_status -eq 1 ]]; then
-            echo "Failed to check version. Please verify manually."
-        else
-            echo "Already using the latest version"
-        fi
-        echo "----------------------------------------"
-    done
-}
-
-# Main script
+# Update mode
 if $AUTO_CONFIRM; then
     echo "Running in automatic update mode (no confirmation prompts)"
 else
     echo "Running in interactive mode (will ask for confirmation before updates)"
 fi
 
-echo "Checking for helm chart dependency updates..."
+echo "Checking for external chart version updates..."
 
-# Store found Chart.yaml files in an array - macOS compatible version
-IFS=$'\n' read -r -d '' -a chart_files < <(find templates -name Chart.yaml | sort)
+while IFS= read -r app_name; do
+    chart=$(yq e ".ArgocdApplications.\"$app_name\".chart" "$VALUES_FILE")
+    current_version=$(yq e ".ArgocdApplications.\"$app_name\".targetRevision" "$VALUES_FILE")
+    repo=$(yq e ".ArgocdApplications.\"$app_name\".repoURL" "$VALUES_FILE")
 
-# Check if any files were found
-if [ ${#chart_files[@]} -eq 0 ]; then
-    echo "No Chart.yaml files found in templates directory"
-    exit 0
-fi
+    echo "Checking: $app_name ($chart)"
+    echo "  Current version: $current_version"
+    echo "  Repository: $repo"
 
-# If list option is specified, show dependencies and exit
-if $LIST_ONLY; then
-    list_dependencies "${chart_files[@]}"
-fi
+    latest_version=$(get_latest_version "$repo" "$chart")
+    local_status=$?
 
-# Process each chart file
-for chart_file in "${chart_files[@]}"; do
-    process_chart "$chart_file"
-done
+    if [[ $local_status -eq 0 && -n "$latest_version" && "$latest_version" != "$current_version" ]]; then
+        echo "  New version available: $latest_version"
 
-echo "Finished checking all charts"
+        if $AUTO_CONFIRM; then
+            yq e ".ArgocdApplications.\"$app_name\".targetRevision = \"$latest_version\"" -i "$VALUES_FILE"
+            echo "  Updated $app_name to version $latest_version"
+        else
+            read -p "  Update $app_name from $current_version to $latest_version? (y/n) " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                yq e ".ArgocdApplications.\"$app_name\".targetRevision = \"$latest_version\"" -i "$VALUES_FILE"
+                echo "  Updated $app_name to version $latest_version"
+            fi
+        fi
+    elif [[ $local_status -eq 1 ]]; then
+        echo "  Failed to check version. Please verify manually."
+    else
+        echo "  Already using the latest version"
+    fi
+    echo "----------------------------------------"
+done <<< "$app_names"
+
+echo "Finished checking all external charts"

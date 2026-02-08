@@ -1,9 +1,7 @@
-ingress-nginx:
-  controller:
-    watchIngressWithoutClass: false
-
-    service:
-      annotations:
-        external-dns.alpha.kubernetes.io/internal-hostname: kuberise.internal
-        external-dns.alpha.kubernetes.io/access: private
-        external-dns.alpha.kubernetes.io/owner: private-dns
+controller:
+  watchIngressWithoutClass: false
+  service:
+    annotations:
+      external-dns.alpha.kubernetes.io/internal-hostname: kuberise.internal
+      external-dns.alpha.kubernetes.io/access: private
+      external-dns.alpha.kubernetes.io/owner: private-dns

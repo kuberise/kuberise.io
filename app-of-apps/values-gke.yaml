@@ -62,10 +62,16 @@ ArgocdApplications:
     enabled: true
     # syncWave: 1
 
+  keycloak-config:
+    enabled: true
+
   keycloak-operator:
     enabled: true
 
   cert-manager:
+    enabled: true
+
+  cert-manager-config:
     enabled: true
 
   vault:

@@ -1,4 +1,3 @@
-kyverno:
-  global:
-    image:
-      registry: registry:5000
+global:
+  image:
+    registry: registry:5000

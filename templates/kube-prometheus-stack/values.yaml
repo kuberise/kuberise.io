@@ -1,4 +1,0 @@
-# Default values for kube-prometheus-stack
-kube-prometheus-stack:
-  crds:
-    enabled: false

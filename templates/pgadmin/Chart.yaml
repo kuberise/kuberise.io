@@ -1,7 +1,0 @@
-apiVersion: v2
-name: pgadmin
-version: 1.0.0
-dependencies:
-  - name: pgadmin4
-    repository: https://helm.runix.net
-    version: 1.57.0
