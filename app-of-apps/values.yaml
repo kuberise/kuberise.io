@@ -313,7 +313,7 @@ ArgocdApplications:
     namespace: monitoring
     serverSideApply: false
     chart: kube-prometheus-stack
-    repoURL: oci://ghcr.io/prometheus-community/charts
+    repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: 81.5.0
 
   loki:
