@@ -179,11 +179,6 @@
           "type": "string",
           "description": "Override the global destination server URL for this application."
         },
-        "plugin": {
-          "type": "object",
-          "description": "ArgoCD config management plugin configuration.",
-          "additionalProperties": true
-        },
         "ignoreDifferences": {
           "type": "array",
           "description": "List of resource difference rules for ArgoCD to ignore during sync.",

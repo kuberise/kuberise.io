@@ -24,10 +24,6 @@ spec:
   source:
     repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision $app.targetRevision }}
-    {{- if $app.plugin }}
-    plugin:
-      {{- toYaml $app.plugin | nindent 4 }}
-    {{- end }}
   {{- if eq $applicationType "helm" }}
     {{- if hasKey $app "chart"}}
     chart: {{ $app.chart }}
