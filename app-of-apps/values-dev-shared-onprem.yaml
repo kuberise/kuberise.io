@@ -12,7 +12,7 @@ ArgocdApplications:
 
   backstage:
     enabled: true
-    automated: false
+    automated: true
 
   team-setup:
     enabled: false
