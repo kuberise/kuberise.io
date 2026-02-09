@@ -106,14 +106,14 @@ ArgocdApplications:
     namespace: pgadmin
     # pgadmin-config deploys BEFORE pgadmin because pgadmin mounts the
     # pgadmin ConfigMap created by this config chart.
-    syncWave: 1
+    # syncWave: 1
 
   pgadmin:
     enabled: false
     chart: pgadmin4
     repoURL: https://helm.runix.net
     targetRevision: 1.57.0
-    syncWave: 2
+    # syncWave: 2
 
   redis:
     enabled: false
@@ -145,7 +145,7 @@ ArgocdApplications:
   metallb-config:
     enabled: false
     namespace: metallb
-    syncWave: 2
+    # syncWave: 2
 
   internal-dns:
     enabled: false
@@ -158,6 +158,12 @@ ArgocdApplications:
     chart: external-dns
     repoURL: oci://registry-1.docker.io/bitnamicharts
     targetRevision: 9.0.3
+
+  external-dns-sigs: # bitnami chart doesn't work well with azure-private-dns provider
+    enabled: false
+    chart: external-dns
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: 1.20.0
 
   ingress-nginx-external:
     enabled: false
@@ -204,14 +210,14 @@ ArgocdApplications:
     namespace: keycloak
     # keycloak-config deploys BEFORE keycloak because keycloak mounts the
     # keycloak-tls secret created by the Certificate in this config chart.
-    syncWave: 1
+    # syncWave: 1
 
   keycloak:
     enabled: false
     chart: keycloakx
     repoURL: https://codecentric.github.io/helm-charts
     targetRevision: 7.1.7
-    syncWave: 2
+    # syncWave: 2
 
   keycloak-operator:
     enabled: false
@@ -360,7 +366,7 @@ ArgocdApplications:
   k8sgpt-config:
     enabled: false
     namespace: k8sgpt
-    syncWave: 2
+    # syncWave: 2
 
   #=================================#
   #      Example Applications       #

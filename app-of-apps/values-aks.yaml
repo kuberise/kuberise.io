@@ -39,14 +39,11 @@ ArgocdApplications:
   #      Network Services           #
   #=================================#
 
-  internal-dns: # bitnami chart doesn't work well with azure-private-dns provider
+  external-dns-sigs: # bitnami chart doesn't work well with azure-private-dns provider
     enabled: true
-    chart: external-dns
-    repoURL: https://kubernetes-sigs.github.io/external-dns/
-    targetRevision: 1.20.0
 
   external-dns:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: true
