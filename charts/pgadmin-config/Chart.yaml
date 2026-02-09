@@ -1,0 +1,6 @@
+apiVersion: v2
+name: pgadmin-config
+description: pgAdmin configuration including OAuth2 integration with Keycloak
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

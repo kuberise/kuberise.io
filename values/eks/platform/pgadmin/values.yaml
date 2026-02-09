@@ -1,3 +1,2 @@
-pgadmin4:
-  persistentVolume:
-    storageClass: gp2
+persistentVolume:
+  storageClass: gp2

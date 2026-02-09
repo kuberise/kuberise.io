@@ -1,20 +1,19 @@
-vcluster:
-  controlPlane:
-    ingress:
-      enabled: true
-      # Host is the host where vCluster will be reachable
-      host: vcluster.dev.kuberise.dev
-      annotations:
-        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-        nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      spec:
-        ingressClassName: nginx-external
-        tls:
-          - hosts:
-              - vcluster.dev.kuberise.dev
-  exportKubeConfig:
-    context: vcluster
-    server: vcluster.dev.kuberise.dev
-    secret:
-      name: vcluster-kubeconfig
+controlPlane:
+  ingress:
+    enabled: true
+    # Host is the host where vCluster will be reachable
+    host: vcluster.dev.kuberise.dev
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    spec:
+      ingressClassName: nginx-external
+      tls:
+        - hosts:
+            - vcluster.dev.kuberise.dev
+exportKubeConfig:
+  context: vcluster
+  server: vcluster.dev.kuberise.dev
+  secret:
+    name: vcluster-kubeconfig

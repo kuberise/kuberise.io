@@ -1,7 +1,0 @@
-apiVersion: v2
-name: minio
-version: 1.0.0
-dependencies:
-  - name: operator
-    version: 7.1.1
-    repository: https://operator.min.io

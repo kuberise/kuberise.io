@@ -1,23 +1,2 @@
-selfSignedCertificate:
-  # used for internal applications that need to be accessed via HTTPS
-  # or for onprem deployment where you don't have a domain
-  enabled: true
-  generateCA: false # use external generated CA
-
-letsEncrypt:
-  enabled: true
-  server: production # production or staging
-  challenge: http01 # http01 or dns01
-
-subdomains:
-  - "argocd"
-  - "pgadmin"
-  - "show-env"
-  - "keycloak"
-  - "grafana"
-  - "prometheus"
-  - "frontend-https"
-  - "oauth2-proxy"
-  - "opencost"
-  - "grpc-server"
-  - "rancher"
+installCRDs: true
+namespace: cert-manager

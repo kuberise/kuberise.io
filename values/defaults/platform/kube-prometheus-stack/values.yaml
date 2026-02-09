@@ -1,98 +1,100 @@
-kube-prometheus-stack:
-  grafana:
-    datasources:
-      datasources.yaml:
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          url: http://loki-loki-distributed-gateway
-          isDefault: false
-          jsonData:
-            httpHeaderName1: 'X-Scope-OrgID'
-          secureJsonData:
-            httpHeaderValue1: 'platform'
+crds:
+  enabled: false
 
-    adminPassword: ""
-    admin:
-      existingSecret: grafana-admin
-      passwordKey: admin-password
-      userKey: admin-user
+grafana:
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-loki-distributed-gateway
+        isDefault: false
+        jsonData:
+          httpHeaderName1: 'X-Scope-OrgID'
+        secureJsonData:
+          httpHeaderValue1: 'platform'
 
-    grafana.ini:
-      server:
-        domain: grafana.{{ .Values.global.domain }}
-        root_url: https://grafana.{{ .Values.global.domain }}
-      auth:
-        disable_login_form: false
-        oauth_auto_login: false
-        disable_signout_menu: false
-      auth.generic_oauth:
-        enabled: true
-        name: Keycloak
-        allow_sign_up: true
-        client_id: grafana
-        client_secret: "${GRAFANA_OAUTH2_CLIENT_SECRET}"
-        scopes: openid profile email
-        email_attribute_path: email
-        login_attribute_path: username
-        name_attribute_path: full_name
-        auth_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/auth
-        token_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/token
-        api_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/userinfo
-        role_attribute_path: contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
-        signout_redirect_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/logout?post_logout_redirect_uri=https://grafana.{{ .Values.global.domain }}/login
+  adminPassword: ""
+  admin:
+    existingSecret: grafana-admin
+    passwordKey: admin-password
+    userKey: admin-user
 
-    envValueFrom:
-      GRAFANA_OAUTH2_CLIENT_SECRET:
-        secretKeyRef:
-          name: grafana-oauth2-client-secret
-          key: client-secret
-
-    extraVolumes:
-      - name: ca-certificates
-        configMap:
-          name: ca-bundle
-
-    extraVolumeMounts:
-      - name: ca-certificates
-        mountPath: /etc/ssl/certs/ca-certificates.crt
-        subPath: ca.crt
-
-    ingress:
+  grafana.ini:
+    server:
+      domain: grafana.{{ .Values.global.domain }}
+      root_url: https://grafana.{{ .Values.global.domain }}
+    auth:
+      disable_login_form: false
+      oauth_auto_login: false
+      disable_signout_menu: false
+    auth.generic_oauth:
       enabled: true
-      ingressClassName: nginx-external
-      hosts:
-        - grafana.{{ .Values.global.domain }}
-      tls:
-      - hosts:
-        - grafana.{{ .Values.global.domain }}
+      name: Keycloak
+      allow_sign_up: true
+      client_id: grafana
+      client_secret: "${GRAFANA_OAUTH2_CLIENT_SECRET}"
+      scopes: openid profile email
+      email_attribute_path: email
+      login_attribute_path: username
+      name_attribute_path: full_name
+      auth_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/auth
+      token_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/token
+      api_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/userinfo
+      role_attribute_path: contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
+      signout_redirect_url: https://keycloak.{{ .Values.global.domain }}/realms/platform/protocol/openid-connect/logout?post_logout_redirect_uri=https://grafana.{{ .Values.global.domain }}/login
 
-  prometheus:
-    prometheusSpec:
-      # Select all ServiceMonitors
-      serviceMonitorSelector: {}
-      # Select all PodMonitors
-      podMonitorSelector: {}
-      # Select ServiceMonitors from all namespaces
-      serviceMonitorNamespaceSelector: {}
-      # Select PodMonitors from all namespaces
-      podMonitorNamespaceSelector: {}
-      # Allow selection of ServiceMonitors from all namespaces
-      serviceMonitorSelectorNilUsesHelmValues: false
-      # Allow selection of PodMonitors from all namespaces
-      podMonitorSelectorNilUsesHelmValues: false
+  envValueFrom:
+    GRAFANA_OAUTH2_CLIENT_SECRET:
+      secretKeyRef:
+        name: grafana-oauth2-client-secret
+        key: client-secret
 
-    ingress:
-      enabled: true
-      ingressClassName: nginx-external
-      # annotations: # enable this when you want to use oauth2-proxy for prometheus
-      #   nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
-      #   nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
-      #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email,X-Scope-OrgID
-      hosts:
-        - prometheus.{{ .Values.global.domain }}
-      tls:
-      - hosts:
-        - prometheus.{{ .Values.global.domain }}
+  extraVolumes:
+    - name: ca-certificates
+      configMap:
+        name: ca-bundle
+
+  extraVolumeMounts:
+    - name: ca-certificates
+      mountPath: /etc/ssl/certs/ca-certificates.crt
+      subPath: ca.crt
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    hosts:
+      - grafana.{{ .Values.global.domain }}
+    tls:
+    - hosts:
+      - grafana.{{ .Values.global.domain }}
+
+prometheus:
+  prometheusSpec:
+    # Select all ServiceMonitors
+    serviceMonitorSelector: {}
+    # Select all PodMonitors
+    podMonitorSelector: {}
+    # Select ServiceMonitors from all namespaces
+    serviceMonitorNamespaceSelector: {}
+    # Select PodMonitors from all namespaces
+    podMonitorNamespaceSelector: {}
+    # Allow selection of ServiceMonitors from all namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    # Allow selection of PodMonitors from all namespaces
+    podMonitorSelectorNilUsesHelmValues: false
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx-external
+    # annotations: # enable this when you want to use oauth2-proxy for prometheus
+    #   nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start
+    #   nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/auth
+    #   nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email,X-Scope-OrgID
+    hosts:
+      - prometheus.{{ .Values.global.domain }}
+    tls:
+    - hosts:
+      - prometheus.{{ .Values.global.domain }}

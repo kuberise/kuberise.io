@@ -1,7 +1,0 @@
-apiVersion: v2
-name: sealed-secrets
-version: 1.0.0
-dependencies:
-  - name: sealed-secrets
-    version: 2.5.19
-    repository: oci://registry-1.docker.io/bitnamicharts

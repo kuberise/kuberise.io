@@ -39,12 +39,11 @@ ArgocdApplications:
   #      Network Services           #
   #=================================#
 
-  internal-dns: # bitnami chart doesn't work well with azure-private-dns provider
+  external-dns-sigs: # bitnami chart doesn't work well with azure-private-dns provider
     enabled: true
-    path: templates/external-dns-sigs
 
   external-dns:
-    enabled: true
+    enabled: false
 
   ingress-nginx-internal:
     enabled: true
@@ -63,10 +62,16 @@ ArgocdApplications:
     enabled: true
     # syncWave: 1
 
+  keycloak-config:
+    enabled: true
+
   keycloak-operator:
     enabled: true
 
   cert-manager:
+    enabled: true
+
+  cert-manager-config:
     enabled: true
 
   vault:

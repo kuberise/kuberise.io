@@ -1,33 +1,32 @@
-pgadmin4:
-  extraConfigmapMounts:
-    - name: configmap
-      configMap: pgadmin
-      mountPath: /pgadmin4/config_local.py
-      subPath: config_local.py
-      readOnly: true
-    - name: ca-bundle
-      mountPath: /etc/ssl/certs/ca-bundle.crt
-      subPath: ca.crt
-      configMap: ca-bundle
-      readOnly: true
-  envVarsExtra:
-    - name: REQUESTS_CA_BUNDLE
-      value: /etc/ssl/certs/ca-bundle.crt
-    - name: SSL_CERT_FILE
-      value: /etc/ssl/certs/ca-bundle.crt
-    - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: pgadmin-oauth2-client-secret
-          key: client-secret
-  ingress:
-    enabled: true
-    ingressClassName: nginx-external
-    hosts:
-      - host: pgadmin.{{ .Values.global.domain }}
-        paths:
-        - path: /
-          pathType: Prefix
-    tls:
-    - hosts:
-      - pgadmin.{{ .Values.global.domain }}
+extraConfigmapMounts:
+  - name: configmap
+    configMap: pgadmin
+    mountPath: /pgadmin4/config_local.py
+    subPath: config_local.py
+    readOnly: true
+  - name: ca-bundle
+    mountPath: /etc/ssl/certs/ca-bundle.crt
+    subPath: ca.crt
+    configMap: ca-bundle
+    readOnly: true
+envVarsExtra:
+  - name: REQUESTS_CA_BUNDLE
+    value: /etc/ssl/certs/ca-bundle.crt
+  - name: SSL_CERT_FILE
+    value: /etc/ssl/certs/ca-bundle.crt
+  - name: KEYCLOAK_OAUTH2_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: pgadmin-oauth2-client-secret
+        key: client-secret
+ingress:
+  enabled: true
+  ingressClassName: nginx-external
+  hosts:
+    - host: pgadmin.{{ .Values.global.domain }}
+      paths:
+      - path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - pgadmin.{{ .Values.global.domain }}

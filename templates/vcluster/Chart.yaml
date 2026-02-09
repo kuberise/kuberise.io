@@ -1,7 +1,0 @@
-apiVersion: v2
-name: vcluster
-version: 1.0.0
-dependencies:
-  - name: vcluster
-    version: 0.32.0-next.0
-    repository: https://charts.loft.sh

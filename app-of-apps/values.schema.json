@@ -111,7 +111,7 @@
         },
         "path": {
           "type": "string",
-          "description": "Path to the Helm chart, Kustomize directory, or raw manifests. Defaults to templates/{name}."
+          "description": "Path to the Helm chart, Kustomize directory, or raw manifests. Defaults to charts/{name}."
         },
         "chart": {
           "type": "string",
@@ -119,15 +119,23 @@
         },
         "repoURL": {
           "type": "string",
-          "description": "Override the global source repoURL for this application."
+          "description": "Override the global source repoURL for this application (e.g., external Helm chart repository URL)."
         },
         "targetRevision": {
           "type": "string",
-          "description": "Override the global source targetRevision for this application."
+          "description": "Override the global source targetRevision for this application (e.g., external Helm chart version)."
+        },
+        "valuesRepoURL": {
+          "type": "string",
+          "description": "Override the global values repoURL for this application (multi-source split-repo topology)."
+        },
+        "valuesTargetRevision": {
+          "type": "string",
+          "description": "Override the global values targetRevision for this application (multi-source split-repo topology)."
         },
         "values": {
           "type": "array",
-          "description": "Custom list of value file paths. Overrides the default value file convention. Must always be a list, even for a single file.",
+          "description": "Custom list of value file paths. Overrides the default value file convention. Must always be a list, even for a single file. Use $values/ prefix for files from the values repository.",
           "items": {
             "type": "string"
           },

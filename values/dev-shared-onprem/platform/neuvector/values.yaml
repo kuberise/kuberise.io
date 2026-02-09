@@ -1,14 +1,12 @@
-core:
-  controller:
-    replicas: 1
-
-  manager:
+controller:
+  replicas: 1
+manager:
+  enabled: true
+  ingress:
     enabled: true
-    ingress:
-      enabled: true
-      host: neuvector.dev.kuberise.dev
-      ingressClassName: nginx-external
-      tls: true
-  cve:
-    scanner:
-      replicas: 1
+    host: neuvector.dev.kuberise.dev
+    ingressClassName: nginx-external
+    tls: true
+cve:
+  scanner:
+    replicas: 1

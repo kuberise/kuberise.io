@@ -161,7 +161,7 @@ spec:
         - name: global.spec.source.targetRevision
           value: $git_revision
         - name: global.spec.values.repoURL
-          value: $git_repo
+          value: $git_repo                       # by default the values repository is the same as the application repository. It can be overridden in the values file per application.
         - name: global.spec.values.targetRevision
           value: $git_revision
         - name: global.clusterName

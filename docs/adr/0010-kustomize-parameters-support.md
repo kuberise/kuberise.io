@@ -29,5 +29,5 @@ When a concrete need arises for kustomize parameters, the implementation should:
 ## Consequences
 
 - Kustomize-type applications that need parameters like `namePrefix`, `images`, or `commonLabels` cannot be configured through values files until this is implemented.
-- Workaround: such applications can be defined directly as raw ArgoCD Application manifests in `templates/` instead of going through the app-of-apps template.
+- Workaround: such applications can be defined directly as raw ArgoCD Application manifests in `charts/` instead of going through the app-of-apps template.
 - No impact on existing applications, as none currently require these kustomize features.

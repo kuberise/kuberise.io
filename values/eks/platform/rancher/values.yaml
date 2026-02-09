@@ -1,2 +1,1 @@
-rancher:
-  hostname: rancher.eks.kuberise.dev
+hostname: rancher.eks.kuberise.dev

@@ -1,0 +1,11 @@
+selfSignedCertificate:
+  enabled: false
+  generateCA: false
+
+letsEncrypt:
+  enabled: false
+  email: a@b.com
+  server: production # production or staging
+  challenge: http01 # http01 or dns01
+
+subdomains: [] # subdomains to include in the certificate

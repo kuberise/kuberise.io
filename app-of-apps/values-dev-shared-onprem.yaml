@@ -85,11 +85,17 @@ ArgocdApplications:
     enabled: true
     # syncWave: 1
 
+  keycloak-config:
+    enabled: true
+
   keycloak-operator:
     enabled: true
     # syncWave: 1
 
   cert-manager:
+    enabled: true
+
+  cert-manager-config:
     enabled: true
 
   sealed-secrets:
