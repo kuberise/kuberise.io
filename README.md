@@ -1,34 +1,69 @@
 ![kuberise logo](logo.svg)
 # kuberise.io
 
-kuberise.io is a free open source internal developer platform for Kubernetes environment. The goal is to provide tools and templates in Kubernetes environment by a fast and easy installation to help developers focus on the development of the business applications rather than installation and configuration of side tools and preparations of the environments and automation.
+**A free, open-source internal developer platform for Kubernetes.**
 
-## Prerequisites
+kuberise.io gives you a production-ready platform on any Kubernetes cluster -- local, cloud, or on-prem -- in minutes. It bundles battle-tested open-source tools (ArgoCD, Prometheus, Keycloak, Backstage, and many more) so your team can focus on building business applications instead of wiring up infrastructure.
 
-- CLI tools: kubectl, helm, htpasswd, git, openssl
-- A Github account or another git repository system
-- [K9s](https://k9scli.io/topics/install/) for dashboard (recommended)
-- A [kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation) kubernetes cluster for local installation (`kind create cluster`) or any other kubernetes cluster
-- [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) for loadBalancer services and ingresses in kind cluster.
+## Why kuberise.io?
 
-## Installation
+- **Fast setup** -- go from an empty cluster to a fully configured platform with a single command.
+- **GitOps by default** -- every change is declarative, version-controlled, and auditable via ArgoCD.
+- **Multi-cluster, multi-cloud** -- manage dev, staging, and production clusters across providers with the same codebase.
+- **Modular** -- enable only the components you need; disable everything else.
+- **No vendor lock-in** -- pure open-source stack, runs anywhere Kubernetes runs.
 
-1. Fork this repository [https://github.com/kuberise/kuberise.io](https://github.com/kuberise/kuberise.io) into your Github account.
-2. Clone your new repository in your local computer and enter to the folder.
-3. Run this command:
+## Quick Start
+
+### Prerequisites
+
+- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`, `cilium`, `yq`, `git`
+- A Kubernetes cluster ([k3d](https://k3d.io), [kind](https://kind.sigs.k8s.io), minikube, or any cloud provider)
+
+### Install
+
+1. Fork and clone this repository.
+2. Run the install script:
+
 ```bash
-./scripts/install.sh [CONTEXT] [NAME] [REPO_URL] [REVISION] [DOMAIN] [TOKEN]
-```
-- [CONTEXT] This is your kubernetes context. You can find your current kubernetes context by running this command: `kubectl config current-context`
-- [NAME] This is the name of your platform. For this name there should be a values-[NAME].yaml in app-of-apps folder and also a [NAME] folder in values folder for all configurations.
-- [REPO_URL] This is the url of your forked repository.
-- [REVISION] This is the branch or commit sha or tag of the commit that you want to use for this installation. For example you can write "main" to deploy from the main branch.
-- [DOMAIN] This is the domain for the cluster. All platform services and applications would be subdomain of this domain, for example: keycloak.[DOMAIN]. If you are deploying into minikube you can choose minikube.kuberise.dev for the domain then your keycloak address would be keycloak.minikube.kuberise.dev
-- [TOKEN] If you are pushing this code to a private repository, you have to put a token here so the ArgoCD can access your repository. If your repository is public, skip this parameter.
-
-Example: If you deployed a kubernetes cluster using `minikube start` and your platform name is `local-example` then this would be the installation command:
-```bash
-./scripts/install.sh minikube local-example https://github.com/kuberise/kuberise.git main minikube.kuberise.dev
+./scripts/install.sh <CONTEXT> <NAME> <REPO_URL> <REVISION> <DOMAIN> [TOKEN]
 ```
 
-For more information please read documentations here: [kuberise.io](https://kuberise.io)
+| Parameter | Description |
+|-----------|-------------|
+| `CONTEXT` | Kubernetes context (`kubectl config current-context`) |
+| `NAME` | Cluster name -- must match an `app-of-apps/values-<NAME>.yaml` file and a `values/<NAME>/` directory |
+| `REPO_URL` | URL of your forked repository |
+| `REVISION` | Branch, tag, or commit SHA to deploy |
+| `DOMAIN` | Base domain for all services (e.g. `minikube.kuberise.dev`) |
+| `TOKEN` | *(optional)* Git token for private repositories |
+
+**Example** using a local k3d cluster:
+
+```bash
+./scripts/install.sh k3d-dev dev-app-onprem-one https://github.com/<you>/kuberise.io.git main k3d.kuberise.dev
+```
+
+### Uninstall
+
+```bash
+./scripts/uninstall.sh <CONTEXT> <NAME>
+```
+
+## Documentation
+
+Full documentation, architecture decisions, and guides are available at **[kuberise.io](https://kuberise.io)**.
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+kuberise.io is dual-licensed:
+
+- **Open-source use** -- The source code is available under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). You are free to read, use, modify, and distribute the software for personal, educational, or internal evaluation purposes under the terms of the AGPL-3.0.
+
+- **Commercial use** -- If you want to use kuberise.io to provide commercial services, sell products, or run a business without complying with the AGPL-3.0 obligations (such as releasing your modifications under the same license), you must obtain a commercial license. See [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) for details, or contact us at **license@kuberise.io**.
+
+By contributing to this project, you agree that your contributions will be licensed under the AGPL-3.0 and that the project maintainers may offer them under a commercial license as well.
