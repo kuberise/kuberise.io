@@ -83,6 +83,23 @@ if [ ! -f "$VALUES_FILE" ]; then
     exit 1
 fi
 
+# Update targetRevision for a specific app using awk instead of yq -i,
+# because yq -i strips blank lines and reorganizes comments.
+update_target_revision() {
+    local app_name=$1
+    local new_version=$2
+    local tmpfile
+    tmpfile=$(mktemp)
+    awk -v app="  ${app_name}:" -v ver="$new_version" '
+        /^  [^ #]/ { in_app = (index($0, app) == 1) }
+        in_app && /^    targetRevision:/ {
+            sub(/targetRevision: .*/, "targetRevision: " ver)
+            in_app = 0
+        }
+        { print }
+    ' "$VALUES_FILE" > "$tmpfile" && mv "$tmpfile" "$VALUES_FILE"
+}
+
 # Function to get index.yaml content from HTTP repository
 get_index_yaml() {
     local repo_url=$1
@@ -189,13 +206,13 @@ while IFS= read -r app_name; do
         echo "  New version available: $latest_version"
 
         if $AUTO_CONFIRM; then
-            yq e ".ArgocdApplications.\"$app_name\".targetRevision = \"$latest_version\"" -i "$VALUES_FILE"
+            update_target_revision "$app_name" "$latest_version"
             echo "  Updated $app_name to version $latest_version"
         else
             read -p "  Update $app_name from $current_version to $latest_version? (y/n) " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
-                yq e ".ArgocdApplications.\"$app_name\".targetRevision = \"$latest_version\"" -i "$VALUES_FILE"
+                update_target_revision "$app_name" "$latest_version"
                 echo "  Updated $app_name to version $latest_version"
             fi
         fi

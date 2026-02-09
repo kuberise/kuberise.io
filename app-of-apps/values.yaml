@@ -119,7 +119,7 @@ ArgocdApplications:
     enabled: false
     chart: redis
     repoURL: oci://registry-1.docker.io/bitnamicharts
-    targetRevision: 24.1.3
+    targetRevision: 24.1.6
 
   minio:
     enabled: false
@@ -182,7 +182,7 @@ ArgocdApplications:
     namespace: kube-system
     chart: cilium
     repoURL: https://helm.cilium.io/
-    targetRevision: 1.18.5
+    targetRevision: 1.19.0
 
   aws-lb-controller:
     enabled: false
