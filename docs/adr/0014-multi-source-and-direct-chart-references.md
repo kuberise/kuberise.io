@@ -8,15 +8,13 @@ Accepted
 
 The platform previously used "wrapper charts" to install external Helm charts. Each external chart (e.g., cert-manager, ingress-nginx, kube-prometheus-stack) had a local directory under `templates/` containing a `Chart.yaml` with the external chart listed as a dependency. This pattern had several drawbacks:
 
-1. **Indirect dependency management.** Upgrading an external chart required editing `Chart.yaml`, running `helm dependency update`, and committing the `Chart.lock` and downloaded `.tgz` archive. This added friction and binary artifacts to the Git repository.
+1. **Value nesting.** Because external charts were installed as subcharts, all values had to be nested under the subchart alias key (e.g., `ingress-nginx:`, `keycloakx:`, `kube-prometheus-stack:`). This was confusing for users who expected to pass values directly as documented by the upstream chart.
 
-2. **Value nesting.** Because external charts were installed as subcharts, all values had to be nested under the subchart alias key (e.g., `ingress-nginx:`, `keycloakx:`, `kube-prometheus-stack:`). This was confusing for users who expected to pass values directly as documented by the upstream chart.
+2. **Mixed responsibilities.** Some wrapper charts bundled both the external chart dependency AND custom Kubernetes resources (e.g., cert-manager included ClusterIssuers/Certificates, keycloak included KeycloakClients/Realms). This coupled operator installation with operator configuration, making it harder to reason about sync ordering and failure isolation.
 
-3. **Mixed responsibilities.** Some wrapper charts bundled both the external chart dependency AND custom Kubernetes resources (e.g., cert-manager included ClusterIssuers/Certificates, keycloak included KeycloakClients/Realms). This coupled operator installation with operator configuration, making it harder to reason about sync ordering and failure isolation.
+3. **Inconsistent architecture.** Some components already separated operator from configuration (e.g., `kyverno` + `policy`, `postgres-operator` + `database`), but others did not (e.g., `cert-manager`, `keycloak`). The codebase lacked a consistent pattern.
 
-4. **Inconsistent architecture.** Some components already separated operator from configuration (e.g., `kyverno` + `policy`, `postgres-operator` + `database`), but others did not (e.g., `cert-manager`, `keycloak`). The codebase lacked a consistent pattern.
-
-5. **No split-repo support.** The single-source design prevented value files from residing in a separate Git repository, which blocks developer-owned configuration (ADR-0008).
+4. **No split-repo support.** The single-source design prevented value files from residing in a separate Git repository, which blocks developer-owned configuration (ADR-0008).
 
 ## Decision
 
@@ -57,7 +55,7 @@ cert-manager:
   targetRevision: v1.20.0-alpha.1
 ```
 
-This eliminates the need for wrapper charts, `Chart.lock` files, and downloaded chart archives in the Git repository.
+This eliminates the need for wrapper charts.
 
 ### 3. Operator + config chart separation
 
@@ -115,11 +113,9 @@ The `scripts/upgrade.sh` script has been rewritten to read chart references from
 
 ### Positive
 
-- **Simpler upgrades.** Updating an external chart version is a one-line change to `targetRevision` in `values.yaml`. No `helm dependency update`, no lock files, no binary archives.
 - **Cleaner values.** Users pass values exactly as documented by upstream charts, without subchart nesting.
 - **Consistent separation.** All components now follow the operator + config pattern where applicable.
 - **Split-repo ready.** Developer teams can own their application values in separate repositories.
-- **Smaller repository.** No more downloaded chart archives (`charts/*.tgz`) or `Chart.lock` files.
 - **Better failure isolation.** Operator installation failures don't block config resources and vice versa.
 
 ### Negative
@@ -127,4 +123,3 @@ The `scripts/upgrade.sh` script has been rewritten to read chart references from
 - **More ArgoCD Applications.** Five additional config applications (cert-manager-config, keycloak-config, metallb-config, pgadmin-config, k8sgpt-config). This is a minor increase in the ArgoCD UI.
 - **Sync wave dependency.** Config charts depend on their operator being ready (CRDs must exist). The `syncWave: 2` annotation handles this, but it adds an ordering constraint.
 - **Breaking change for existing clusters.** All value files have been un-nested, and wrapper chart directories have been removed. Existing clusters must be redeployed or carefully migrated.
-- **ArgoCD multi-source maturity.** While multi-source is now generally available in ArgoCD 2.14+, some UI features may not fully support it yet.
