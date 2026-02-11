@@ -301,6 +301,7 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 6. Set `enabled: true` if the component is going to be installed in that cluster.
 7. If the component needs custom CRD instances or configuration resources, create a separate config chart in `charts/{component-name}-config/` and a corresponding config app entry (see Operator + Config Chart Pattern).
 8. Document component in the documentation.
+9. **Website update**: Update the kuberise.io website (https.kuberise.io repo): add the tool's name and logo to the homepage.
 
 ### Adding a New Local Chart
 1. Create Helm chart in `charts/{component-name}/`
