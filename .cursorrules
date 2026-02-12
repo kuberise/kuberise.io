@@ -358,6 +358,10 @@ When adding a new property to `app-of-apps/templates/ArgocdApplications.yaml`, y
 - Maintain backward compatibility when possible
 - Use ArgoCD sync policies appropriately (automated vs manual)
 
+### Writing style
+
+Never use the em dash (—, "big dash") in any text. Use a regular hyphen (-), en dash (–) for ranges, or rephrase with commas or parentheses instead.
+
 ### Explicit default values
 
 Being explicit about defaults improves readability -- anyone reading the template immediately sees the full set of parameters decisions without needing to know defaults from memory. It makes the intent clear. This is a common and well-regarded practice, especially in infrastructure-as-code where the consequences of misconfiguration can be significant. Explicit is better than implicit.
