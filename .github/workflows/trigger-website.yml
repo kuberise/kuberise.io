@@ -1,0 +1,14 @@
+# .github/workflows/trigger-website.yml
+name: Trigger website rebuild
+
+on:
+  push:
+    branches: [main]
+    paths: ['docs/public/**']
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages deploy
+        run: curl -s -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
