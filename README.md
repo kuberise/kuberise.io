@@ -26,22 +26,26 @@ kuberise.io gives you a production-ready platform on any Kubernetes cluster -- l
 2. Run the install script:
 
 ```bash
-./scripts/install.sh <CONTEXT> <NAME> <REPO_URL> <REVISION> <DOMAIN> [TOKEN]
+./scripts/install.sh --context <CONTEXT> --cluster <NAME> \
+  --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> \
+  [--token <TOKEN>]
 ```
 
-| Parameter | Description |
-|-----------|-------------|
-| `CONTEXT` | Kubernetes context (`kubectl config current-context`) |
-| `NAME` | Cluster name -- must match an `app-of-apps/values-<NAME>.yaml` file and a `values/<NAME>/` directory |
-| `REPO_URL` | URL of your forked repository |
-| `REVISION` | Branch, tag, or commit SHA to deploy |
-| `DOMAIN` | Base domain for all services (e.g. `minikube.kuberise.dev`) |
-| `TOKEN` | *(optional)* Git token for private repositories |
+| Flag | Description |
+|------|-------------|
+| `--context` | **(required)** Kubernetes context (`kubectl config current-context`) |
+| `--repo` | **(required)** URL of your forked repository |
+| `--cluster` | Cluster name -- must match an `app-of-apps/values-<NAME>.yaml` file and a `values/<NAME>/` directory (default: `onprem`) |
+| `--revision` | Branch, tag, or commit SHA to deploy (default: `HEAD`) |
+| `--domain` | Base domain for all services, e.g. `minikube.kuberise.dev` (default: `onprem.kuberise.dev`) |
+| `--token` | Git token for private repositories (optional) |
 
 **Example** using a local k3d cluster:
 
 ```bash
-./scripts/install.sh k3d-dev dev-app-onprem-one https://github.com/<you>/kuberise.io.git main k3d.kuberise.dev
+./scripts/install.sh --context k3d-dev --cluster dev-app-onprem-one \
+  --repo https://github.com/<you>/kuberise.io.git \
+  --revision main --domain k3d.kuberise.dev
 ```
 
 ### Uninstall

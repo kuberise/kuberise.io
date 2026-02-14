@@ -210,30 +210,36 @@ ArgoCD Applications support three types:
 ## Installation Process
 
 ### Prerequisites
-- CLI tools: `kubectl`, `helm`, `htpasswd`, `git`, `openssl`
+- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`, `cilium`, `yq`, `git`
 - GitHub account or git repository
 - Kubernetes cluster (kind, minikube, or cloud provider)
 - K9s recommended for dashboard
 
 ### Installation Script
 The `scripts/install.sh` script:
-1. Validates required tools
+1. Validates required tools and cluster connectivity
 2. Creates necessary namespaces and secrets
 3. Generates CA certificates if needed
-4. Installs ArgoCD
-5. Creates the root ArgoCD Application (app-of-apps)
-6. Configures Git repository access
+4. Installs Cilium (CNI)
+5. Installs ArgoCD
+6. Creates the root ArgoCD Application (app-of-apps)
+7. Configures Git repository access
+8. Configures OAuth2 client secrets
 
 ### Installation Parameters
 ```bash
-./scripts/install.sh [CONTEXT] [NAME] [REPO_URL] [REVISION] [DOMAIN] [TOKEN]
+./scripts/install.sh --context <CONTEXT> --cluster <NAME> \
+  --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> \
+  [--token <TOKEN>]
 ```
-- `CONTEXT`: Kubernetes context name
-- `NAME`: Cluster name (must match values directory, e.g., `aks`, `eks`, `gke`, `onprem`, `airgap`)
-- `REPO_URL`: Git repository URL
-- `REVISION`: Branch/tag/commit SHA
-- `DOMAIN`: Base domain for services
-- `TOKEN`: Optional Git token for private repos
+- `--context`: **(required)** Kubernetes context name
+- `--repo`: **(required)** Git repository URL
+- `--cluster`: Cluster name, must match values directory (default: `onprem`)
+- `--revision`: Branch/tag/commit SHA (default: `HEAD`)
+- `--domain`: Base domain for services (default: `onprem.kuberise.dev`)
+- `--token`: Optional Git token for private repos
+
+Environment variables: `ADMIN_PASSWORD`, `GITEA_ADMIN_PASSWORD`, `CLOUDFLARE_API_TOKEN`, `OPENAI_API_KEY`. Run `./scripts/install.sh --help` for details.
 
 ### Local Development with k3d Clusters
 
@@ -275,10 +281,9 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 # Create both clusters
 ./scripts/k3d+registry/start.sh
 
-# After clusters are created, install Cilium CNI and ClusterMesh
-# Then run install.sh for each cluster:
-./scripts/install.sh k3d-shared shared <REPO_URL> <REVISION> <DOMAIN>
-./scripts/install.sh k3d-dev dev <REPO_URL> <REVISION> <DOMAIN>
+# After clusters are created, run install.sh for each cluster:
+./scripts/install.sh --context k3d-shared --cluster shared --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN>
+./scripts/install.sh --context k3d-dev --cluster dev --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN>
 
 # Delete both clusters
 ./scripts/k3d+registry/delete-all.sh

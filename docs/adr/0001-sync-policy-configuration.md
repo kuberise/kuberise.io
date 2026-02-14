@@ -29,9 +29,9 @@ Key ArgoCD sync policy options we evaluated:
 
 All applications use `automated` sync with `prune: true` and `selfHeal: true` by default, controlled by `global.automated` in the values file.
 
-### 2. Set allowEmpty to false
+### 2. Rely on allowEmpty defaulting to false
 
-We set `allowEmpty: false` to prevent ArgoCD from pruning all resources if a Helm chart accidentally renders zero manifests.
+We rely on ArgoCD's default `allowEmpty: false` to prevent pruning all resources if a Helm chart accidentally renders zero manifests.
 
 #### Why allowEmpty: false
 
@@ -47,9 +47,17 @@ With `allowEmpty: false`, ArgoCD refuses to prune in this case, acting as a safe
 
 The only downside is that intentionally emptying an application requires a manual sync, which is a rare operation and an acceptable trade-off for the safety it provides.
 
-#### Why we keep allowEmpty: false explicit in the template
+#### Why we do NOT set allowEmpty: false explicitly
 
-Although `false` is the default value for `allowEmpty`, we explicitly include it in the template. This makes the sync policy self-documenting -- anyone reading the template immediately sees the full set of decisions without needing to recall ArgoCD's defaults from memory. Explicit is better than implicit, especially in infrastructure-as-code where misconfiguration can have significant consequences.
+We originally set `allowEmpty: false` explicitly in the template for readability. However, the ArgoCD Application CRD defines the `allowEmpty` field with Go's `omitempty` JSON tag. For booleans, `omitempty` causes the JSON serializer to strip the field when its value is `false` (the zero value). This creates a permanent OutOfSync loop:
+
+1. The template renders `allowEmpty: false` in the desired manifest.
+2. ArgoCD applies it to the API server.
+3. The API server serializes the object back without `allowEmpty` (stripped by `omitempty`).
+4. ArgoCD reads the live manifest, sees no `allowEmpty` field, compares it to the desired `allowEmpty: false`, and detects a diff.
+5. The application stays OutOfSync forever.
+
+Since `false` is already the default, omitting the field changes nothing in behavior. A YAML comment in the template documents the intent instead.
 
 ### 3. Do not use automated.enabled field
 
@@ -80,6 +88,6 @@ We enable `retry.refresh: true` so that when a sync fails and ArgoCD retries, it
 
 - Applications auto-sync and self-heal by default, enabling fully GitOps-driven deployments.
 - Per-application override is possible by setting `automated: false` in the application's values.
-- Empty application state is protected against accidental pruning via `allowEmpty: false`.
+- Empty application state is protected against accidental pruning via `allowEmpty` defaulting to `false`.
 - Sync retries pick up the latest Git state, reducing recovery time after pushing fixes.
-- The template is explicit about all sync policy options, improving readability.
+- The template documents all sync policy decisions via explicit values and comments.

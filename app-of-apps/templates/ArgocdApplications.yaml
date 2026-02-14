@@ -82,7 +82,10 @@ spec:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: false
+      # allowEmpty defaults to false - ArgoCD refuses to prune when all resources
+      # vanish, acting as a safety net against accidental full deletion (ADR-0001).
+      # Not set explicitly because the CRD field has omitempty, which strips
+      # false values on serialization, causing permanent OutOfSync.
     {{- end }}
     retry:
       refresh: true

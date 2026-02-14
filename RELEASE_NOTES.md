@@ -1,5 +1,20 @@
 # Release Notes
 
+## [0.2.0] - 14 February 2026
+
+### Improved Install UX: Named Flags, Clearer Prerequisites, and Docs
+
+This release improves the installation experience and documentation for Kuberise.io by switching the install script from positional arguments to named flags, clarifying prerequisites, and updating all related docs to match.
+
+### Added
+- **`cilium` and `yq` as prerequisites** - Added to `.cursorrules` and `1.index.md` so users know exactly which CLI tools to install before starting.
+- **Detailed parameter descriptions** - Each install script parameter now includes a description and its default value in `2.installation.md`.
+
+### Changed
+- **Named flags in `install.sh`** - The installation script now uses `--context`, `--cluster`, `--repo`, `--revision`, `--domain`, and `--token` flags instead of positional arguments, reducing confusion and making invocations self-documenting.
+- **Updated installation docs** - `2.installation.md` now reflects the new flag-based invocation with clear parameter guidance.
+- **Improved local development instructions** - Clarified the steps for setting up k3d clusters and running the install script per cluster.
+
 ## [0.1.0] - 9 February 2026
 
 ### Multi-Source ArgoCD Applications and Direct External Chart References

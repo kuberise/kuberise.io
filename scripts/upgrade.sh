@@ -6,8 +6,9 @@ show_help() {
 Usage: $(basename $0) [options]
 
 This script checks and updates external Helm chart versions referenced in the
-app-of-apps values.yaml file. It compares current targetRevision versions with
-the latest available versions from their respective repositories.
+app-of-apps values.yaml file and the ArgoCD/Cilium chart versions in
+scripts/install.sh. It compares current versions with the latest available
+versions from their respective repositories.
 
 Options:
     -h, --help    Show this help message
@@ -24,8 +25,9 @@ Examples:
 
 The script will:
 1. Parse app-of-apps/values.yaml for applications with chart and repoURL fields
-2. Check each chart's current targetRevision against the latest available version
-3. Update targetRevision if newer versions are available
+2. Check ArgoCD and Cilium chart versions in scripts/install.sh
+3. Check each chart's current version against the latest available version
+4. Update versions if newer versions are available
 
 Supports both HTTP-based Helm repositories and OCI registries.
 EOF
@@ -77,9 +79,15 @@ while getopts "hyl-:" opt; do
 done
 
 VALUES_FILE="app-of-apps/values.yaml"
+INSTALL_SCRIPT="scripts/install.sh"
 
 if [ ! -f "$VALUES_FILE" ]; then
     echo "Error: $VALUES_FILE not found. Run this script from the repository root."
+    exit 1
+fi
+
+if [ ! -f "$INSTALL_SCRIPT" ]; then
+    echo "Error: $INSTALL_SCRIPT not found. Run this script from the repository root."
     exit 1
 fi
 
@@ -98,6 +106,30 @@ update_target_revision() {
         }
         { print }
     ' "$VALUES_FILE" > "$tmpfile" && mv "$tmpfile" "$VALUES_FILE"
+}
+
+# ── Install script chart version helpers ──────────────────────────
+
+# Install script charts: VAR_PREFIX|chart_name|repo_url
+INSTALL_SCRIPT_CHARTS=(
+    "ARGOCD|argo-cd|https://argoproj.github.io/argo-helm"
+    "CILIUM|cilium|https://helm.cilium.io/"
+)
+
+# Read the current chart version from install.sh
+get_install_script_version() {
+    local var_prefix=$1
+    grep "^readonly ${var_prefix}_CHART_VERSION=" "$INSTALL_SCRIPT" | sed 's/.*="\(.*\)"/\1/'
+}
+
+# Update the chart version constant in install.sh
+update_install_script_version() {
+    local var_prefix=$1
+    local new_version=$2
+    local tmpfile
+    tmpfile=$(mktemp)
+    sed "s/^readonly ${var_prefix}_CHART_VERSION=\".*\"/readonly ${var_prefix}_CHART_VERSION=\"${new_version}\"/" \
+        "$INSTALL_SCRIPT" > "$tmpfile" && mv "$tmpfile" "$INSTALL_SCRIPT"
 }
 
 # Function to get index.yaml content from HTTP repository
@@ -177,6 +209,15 @@ if $LIST_ONLY; then
         printf "%-30s %-25s %-15s %s\n" "$app_name" "$chart" "$version" "$repo"
     done <<< "$app_names"
 
+    printf "\n%-30s %-25s %-15s %s\n" "INSTALL SCRIPT" "CHART" "VERSION" "REPOSITORY"
+    printf "%s\n" "------------------------------------------------------------------------------------------------------------"
+
+    for entry in "${INSTALL_SCRIPT_CHARTS[@]}"; do
+        IFS='|' read -r var_prefix chart_name repo_url <<< "$entry"
+        version=$(get_install_script_version "$var_prefix")
+        printf "%-30s %-25s %-15s %s\n" "$var_prefix" "$chart_name" "$version" "$repo_url"
+    done
+
     printf "\n"
     exit 0
 fi
@@ -223,5 +264,41 @@ while IFS= read -r app_name; do
     fi
     echo "----------------------------------------"
 done <<< "$app_names"
+
+echo ""
+echo "Checking install script chart versions (scripts/install.sh)..."
+
+for entry in "${INSTALL_SCRIPT_CHARTS[@]}"; do
+    IFS='|' read -r var_prefix chart_name repo_url <<< "$entry"
+    current_version=$(get_install_script_version "$var_prefix")
+
+    echo "Checking: $var_prefix ($chart_name)"
+    echo "  Current version: $current_version"
+    echo "  Repository: $repo_url"
+
+    latest_version=$(get_latest_version "$repo_url" "$chart_name")
+    local_status=$?
+
+    if [[ $local_status -eq 0 && -n "$latest_version" && "$latest_version" != "$current_version" ]]; then
+        echo "  New version available: $latest_version"
+
+        if $AUTO_CONFIRM; then
+            update_install_script_version "$var_prefix" "$latest_version"
+            echo "  Updated $var_prefix in $INSTALL_SCRIPT to version $latest_version"
+        else
+            read -p "  Update $var_prefix from $current_version to $latest_version? (y/n) " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                update_install_script_version "$var_prefix" "$latest_version"
+                echo "  Updated $var_prefix in $INSTALL_SCRIPT to version $latest_version"
+            fi
+        fi
+    elif [[ $local_status -eq 1 ]]; then
+        echo "  Failed to check version. Please verify manually."
+    else
+        echo "  Already using the latest version"
+    fi
+    echo "----------------------------------------"
+done
 
 echo "Finished checking all external charts"

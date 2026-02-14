@@ -21,6 +21,9 @@ options:
       # - arg: --disable=servicelb # No need for metallb in k3d, because ServiceLB does the same job
       #   nodeFilters:
       #     - server:*
+      - arg: --disable=metrics-server
+        nodeFilters:
+          - server:*
       - arg: --disable-network-policy
         nodeFilters:
           - server:*
