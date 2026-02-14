@@ -136,7 +136,7 @@ ArgocdApplications:
     # syncWave: 2
 
   metrics-server:
-    enabled: false # k3d has built-in metrics-server
+    enabled: true # enable this if k3d or other cluster provider doesn't install it by default
     # syncWave: 1
 
   kube-prometheus-stack:

@@ -67,13 +67,23 @@ echo ""
 echo "Next steps:"
 echo "  1. Install Cilium CNI and ClusterMesh in both clusters"
 echo "  2. Run install.sh for each cluster:"
-echo "     ./scripts/install.sh k3d-dev-shared-onprem dev-shared-onprem <REPO_URL> <REVISION> <DOMAIN> <CILIUM_ID> <GITHUB_TOKEN>"
-echo "     ./scripts/install.sh k3d-dev-app-onprem-one dev-app-onprem-one <REPO_URL> <REVISION> <DOMAIN> <CILIUM_ID> <GITHUB_TOKEN>"
+echo "     ./scripts/install.sh --context k3d-dev-shared-onprem --cluster dev-shared-onprem --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]"
+echo "     ./scripts/install.sh --context k3d-dev-app-onprem-one --cluster dev-app-onprem-one --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]"
+
+REVISION=main
+./scripts/install.sh \
+  --context k3d-dev-shared-onprem \
+  --cluster dev-shared-onprem \
+  --repo https://github.com/kuberise/kuberise.io.git \
+  --revision "$REVISION" \
+  --domain dev.kuberise.dev \
+  --token "$GITHUB_TOKEN"
 
 
-
-# cluster ID 1 to 10 are reserved for shared clusters
-# cluster ID 11 upwards are reserved for developer app clusters
-REVISION=multisource
-./scripts/install.sh k3d-dev-shared-onprem dev-shared-onprem https://github.com/kuberise/kuberise.io.git $REVISION dev.kuberise.dev 1 $GITHUB_TOKEN
-./scripts/install.sh k3d-dev-app-onprem-one dev-app-onprem-one https://github.com/kuberise/kuberise.io.git $REVISION dev.kuberise.dev 11 $GITHUB_TOKEN
+./scripts/install.sh \
+  --context k3d-dev-app-onprem-one \
+  --cluster dev-app-onprem-one \
+  --repo https://github.com/kuberise/kuberise.io.git \
+  --revision "$REVISION" \
+  --domain dev.kuberise.dev \
+  --token "$GITHUB_TOKEN"

@@ -112,14 +112,14 @@ ArgocdApplications:
     enabled: false
     chart: pgadmin4
     repoURL: https://helm.runix.net
-    targetRevision: 1.57.0
+    targetRevision: 1.59.0
     # syncWave: 2
 
   redis:
     enabled: false
     chart: redis
     repoURL: oci://registry-1.docker.io/bitnamicharts
-    targetRevision: 24.1.6
+    targetRevision: 25.2.0
 
   minio:
     enabled: false
@@ -216,7 +216,7 @@ ArgocdApplications:
     enabled: false
     chart: keycloakx
     repoURL: https://codecentric.github.io/helm-charts
-    targetRevision: 7.1.7
+    targetRevision: 7.1.8
     # syncWave: 2
 
   keycloak-operator:
@@ -268,7 +268,7 @@ ArgocdApplications:
     enabled: false
     chart: sealed-secrets
     repoURL: oci://registry-1.docker.io/bitnamicharts
-    targetRevision: 2.5.19
+    targetRevision: 2.18.1
 
   vault:
     enabled: false
@@ -296,7 +296,7 @@ ArgocdApplications:
     enabled: false
     chart: core
     repoURL: https://neuvector.github.io/neuvector-helm/
-    targetRevision: 2.8.10
+    targetRevision: 2.8.11
 
   #=================================#
   #      Monitoring Stack           #
@@ -325,7 +325,7 @@ ArgocdApplications:
     serverSideApply: false
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 81.5.0
+    targetRevision: 81.6.7
 
   loki:
     enabled: false
@@ -345,7 +345,7 @@ ArgocdApplications:
     enabled: false
     chart: opencost
     repoURL: https://opencost.github.io/opencost-helm-chart
-    targetRevision: 2.5.5
+    targetRevision: 2.5.8
 
   #=================================#
   #           AI Tools              #
@@ -355,7 +355,7 @@ ArgocdApplications:
     enabled: false
     chart: ollama
     repoURL: https://otwld.github.io/ollama-helm/
-    targetRevision: 1.41.0
+    targetRevision: 1.42.0
 
   k8sgpt:
     enabled: false
