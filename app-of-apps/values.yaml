@@ -191,12 +191,6 @@ ArgocdApplications:
     repoURL: https://aws.github.io/eks-charts
     targetRevision: 3.0.0
 
-  external-dns-sigs:
-    enabled: false
-    chart: external-dns
-    repoURL: https://kubernetes-sigs.github.io/external-dns/
-    targetRevision: 1.20.0
-
   # custom ingress resources
   ingresses:
     enabled: false
