@@ -4,3 +4,9 @@ temp
 images.tar
 .obsidian
 todo
+
+# Pro overlay files (symlinked from kuberise-pro repository)
+charts/pro-*
+values/defaults/platform/pro-*
+app-of-apps/values-pro-*.yaml
+scripts/*-pro.sh

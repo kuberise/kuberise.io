@@ -335,9 +335,14 @@ function deploy_app_of_apps() {
   local git_repo=$3
   local git_revision=$4
   local domain=$5
+  local values_repo=${6:-$git_repo}
+  local values_revision=${7:-$git_revision}
+  local defaults_repo=${8:-$git_repo}
+  local defaults_revision=${9:-$git_revision}
+  local aoa_name=${10:-app-of-apps}
 
   # Create ArgoCD project (rendered from the app-of-apps chart to keep a single source of truth, see ADR-0013)
-  helm template "app-of-apps-$cluster_name" ./app-of-apps \
+  helm template "$aoa_name-$cluster_name" ./app-of-apps \
     --set global.clusterName="$cluster_name" \
     --show-only templates/AppProject.yaml | \
     kubectl apply --context "$context" -n argocd -f - | filter_unchanged
@@ -350,32 +355,40 @@ function deploy_app_of_apps() {
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps-$cluster_name
+  name: $aoa_name-$cluster_name
   namespace: argocd
   labels:
     team: platform
 spec:
   project: $cluster_name
-  source:
-    repoURL: $git_repo
-    targetRevision: $git_revision
-    path: ./app-of-apps
-    helm:
-      valueFiles:
-        - values-$cluster_name.yaml
-      parameters:
-        - name: global.spec.source.repoURL
-          value: $git_repo
-        - name: global.spec.source.targetRevision
-          value: $git_revision
-        - name: global.spec.values.repoURL
-          value: $git_repo
-        - name: global.spec.values.targetRevision
-          value: $git_revision
-        - name: global.clusterName
-          value: $cluster_name
-        - name: global.domain
-          value: $domain
+  sources:
+    - repoURL: $git_repo
+      targetRevision: $git_revision
+      path: ./app-of-apps
+      helm:
+        ignoreMissingValueFiles: true
+        valueFiles:
+          - \$values/app-of-apps/values-$cluster_name.yaml
+        parameters:
+          - name: global.spec.source.repoURL
+            value: $git_repo
+          - name: global.spec.source.targetRevision
+            value: $git_revision
+          - name: global.spec.values.repoURL
+            value: $values_repo
+          - name: global.spec.values.targetRevision
+            value: $values_revision
+          - name: global.spec.defaults.repoURL
+            value: $defaults_repo
+          - name: global.spec.defaults.targetRevision
+            value: $defaults_revision
+          - name: global.clusterName
+            value: $cluster_name
+          - name: global.domain
+            value: $domain
+    - repoURL: $values_repo
+      targetRevision: $values_revision
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -435,6 +448,26 @@ function configure_repo_access() {
       --from-literal=url="$REPO_URL" \
       --from-literal=type=git
     label_secret "$CONTEXT" "argocd" "argocd-repo-platform" "argocd.argoproj.io/secret-type=repository"
+
+    if [[ "$VALUES_REPO" != "$REPO_URL" ]]; then
+      create_secret "$CONTEXT" "argocd" "argocd-repo-values" \
+        --from-literal=name=kuberise-values \
+        --from-literal=username=x \
+        --from-literal=password="$TOKEN" \
+        --from-literal=url="$VALUES_REPO" \
+        --from-literal=type=git
+      label_secret "$CONTEXT" "argocd" "argocd-repo-values" "argocd.argoproj.io/secret-type=repository"
+    fi
+
+    if [[ "$DEFAULTS_REPO" != "$REPO_URL" ]] && [[ "$DEFAULTS_REPO" != "$VALUES_REPO" ]]; then
+      create_secret "$CONTEXT" "argocd" "argocd-repo-defaults" \
+        --from-literal=name=kuberise-defaults \
+        --from-literal=username=x \
+        --from-literal=password="$TOKEN" \
+        --from-literal=url="$DEFAULTS_REPO" \
+        --from-literal=type=git
+      label_secret "$CONTEXT" "argocd" "argocd-repo-defaults" "argocd.argoproj.io/secret-type=repository"
+    fi
 
     if [ -n "${TEAM_REPOSITORIES:-}" ]; then
       local team_repo_pairs
@@ -641,6 +674,11 @@ Optional flags:
   --revision REV           Branch, tag, or commit SHA (default: HEAD)
   --domain DOMAIN          Base domain for services (default: onprem.kuberise.dev)
   --token TOKEN            Git token for private repositories
+  --values-repo URL        Git repo for cluster values (default: same as --repo)
+  --values-revision REV    Revision for values repo (default: same as --revision)
+  --defaults-repo URL      Git repo for default values (default: same as --repo)
+  --defaults-revision REV  Revision for defaults repo (default: same as --revision)
+  --name NAME              App-of-apps name suffix (default: app-of-apps)
   -h, --help               Show this help message
 
 Environment variables:
@@ -669,21 +707,36 @@ function parse_args() {
   TARGET_REVISION="HEAD"
   DOMAIN="onprem.kuberise.dev"
   TOKEN=""
+  VALUES_REPO=""
+  VALUES_REVISION=""
+  DEFAULTS_REPO=""
+  DEFAULTS_REVISION=""
+  APP_OF_APPS_NAME=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --context)    CONTEXT="$2";          shift 2 ;;
-      --cluster)    CLUSTER_NAME="$2";     shift 2 ;;
-      --repo)       REPO_URL="$2";         shift 2 ;;
-      --revision)   TARGET_REVISION="$2";  shift 2 ;;
-      --domain)     DOMAIN="$2";           shift 2 ;;
-      --token)      TOKEN="$2";            shift 2 ;;
-      --help|-h)    usage; exit 0 ;;
-      *)            log_error "Unknown option: $1"; usage; exit 1 ;;
+      --context)            CONTEXT="$2";            shift 2 ;;
+      --cluster)            CLUSTER_NAME="$2";       shift 2 ;;
+      --repo)               REPO_URL="$2";           shift 2 ;;
+      --revision)           TARGET_REVISION="$2";    shift 2 ;;
+      --domain)             DOMAIN="$2";             shift 2 ;;
+      --token)              TOKEN="$2";              shift 2 ;;
+      --values-repo)        VALUES_REPO="$2";        shift 2 ;;
+      --values-revision)    VALUES_REVISION="$2";    shift 2 ;;
+      --defaults-repo)      DEFAULTS_REPO="$2";      shift 2 ;;
+      --defaults-revision)  DEFAULTS_REVISION="$2";  shift 2 ;;
+      --name)               APP_OF_APPS_NAME="$2";   shift 2 ;;
+      --help|-h)            usage; exit 0 ;;
+      *)                    log_error "Unknown option: $1"; usage; exit 1 ;;
     esac
   done
 
   ADMIN_PASSWORD="${ADMIN_PASSWORD:-admin}"
+  VALUES_REPO="${VALUES_REPO:-$REPO_URL}"
+  VALUES_REVISION="${VALUES_REVISION:-$TARGET_REVISION}"
+  DEFAULTS_REPO="${DEFAULTS_REPO:-$REPO_URL}"
+  DEFAULTS_REVISION="${DEFAULTS_REVISION:-$TARGET_REVISION}"
+  APP_OF_APPS_NAME="${APP_OF_APPS_NAME:-app-of-apps}"
 }
 
 function validate() {
@@ -727,6 +780,14 @@ function check_required_tools() {
   done
 }
 
+# ── Extension Point ────────────────────────────────────────────────
+
+# No-op by default. Pro install script can source install.sh and override
+# this function to deploy additional app-of-apps layers (pro, client).
+function deploy_additional_layers() {
+  :
+}
+
 # ── Main ───────────────────────────────────────────────────────────
 
 function main() {
@@ -755,7 +816,10 @@ function main() {
   install_argocd "$CONTEXT" "$CLUSTER_NAME" "$ADMIN_PASSWORD" "$DOMAIN"
 
   log_step "Deploying app-of-apps"
-  deploy_app_of_apps "$CONTEXT" "$CLUSTER_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN"
+  deploy_app_of_apps "$CONTEXT" "$CLUSTER_NAME" "$REPO_URL" "$TARGET_REVISION" "$DOMAIN" \
+    "$VALUES_REPO" "$VALUES_REVISION" "$DEFAULTS_REPO" "$DEFAULTS_REVISION" "$APP_OF_APPS_NAME"
+
+  deploy_additional_layers
 
   log_step "Configuring OAuth2 clients"
   configure_oauth2_clients

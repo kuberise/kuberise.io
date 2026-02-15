@@ -24,6 +24,14 @@ spec:
   revisionHistoryLimit: {{ default 3 (default $.Values.global.revisionHistoryLimit $app.revisionHistoryLimit) }}
   project: {{ $.Values.global.clusterName }}
 {{- if eq $applicationType "helm" }}
+  {{- $defaultsRepoURL := (default $.Values.global.spec.source.repoURL $.Values.global.spec.defaults.repoURL) }}
+  {{- $defaultsTargetRevision := (default $.Values.global.spec.source.targetRevision $.Values.global.spec.defaults.targetRevision) }}
+  {{- if hasKey $app "defaultsRepoURL" }}
+    {{- $defaultsRepoURL = $app.defaultsRepoURL }}
+  {{- end }}
+  {{- if hasKey $app "defaultsTargetRevision" }}
+    {{- $defaultsTargetRevision = $app.defaultsTargetRevision }}
+  {{- end }}
   sources:
     - repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}
       targetRevision: {{ default $.Values.global.spec.source.targetRevision $app.targetRevision }}
@@ -42,10 +50,10 @@ spec:
           - {{ . }}
           {{- end }}
           {{- else if hasKey $app "valuesFolder" }}
-          - $values/values/defaults/{{ $app.valuesFolder }}/{{ $name }}/values.yaml
+          - $defaults/values/defaults/{{ $app.valuesFolder }}/{{ $name }}/values.yaml
           - $values/values/{{ $.Values.global.clusterName }}/{{ $app.valuesFolder }}/{{ $name }}/values.yaml
           {{- else }}
-          - $values/values/defaults/platform/{{ $name }}/values.yaml
+          - $defaults/values/defaults/platform/{{ $name }}/values.yaml
           - $values/values/{{ $.Values.global.clusterName }}/platform/{{ $name }}/values.yaml
           {{- end }}
         parameters:
@@ -56,6 +64,9 @@ spec:
     - repoURL: {{ default $.Values.global.spec.values.repoURL $app.valuesRepoURL }}
       targetRevision: {{ default $.Values.global.spec.values.targetRevision $app.valuesTargetRevision }}
       ref: values
+    - repoURL: {{ default $defaultsRepoURL $app.defaultsRepoURL }}
+      targetRevision: {{ default $defaultsTargetRevision $app.defaultsTargetRevision }}
+      ref: defaults
 {{- else }}
   source:
     repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}
