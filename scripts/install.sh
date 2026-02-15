@@ -806,8 +806,8 @@ function main() {
   log_step "Creating database secrets"
   create_database_secrets
 
-  log_step "Installing Cilium"
-  install_cilium "$CONTEXT" "$CLUSTER_NAME"
+  # log_step "Installing Cilium"
+  # install_cilium "$CONTEXT" "$CLUSTER_NAME"
 
   log_step "Creating application secrets"
   create_application_secrets
