@@ -1,5 +1,6 @@
-# some of the values will be filled by install.sh script
+# some of the values will be filled by kr deploy
 global:
+  argoProject: kuberise
   clusterName: x
   domain: x
 

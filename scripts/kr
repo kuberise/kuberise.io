@@ -611,6 +611,8 @@ spec:
         valueFiles:
           - \$values/app-of-apps/values-$aoa_name.yaml
         parameters:
+          - name: global.argoProject
+            value: kuberise
           - name: global.spec.source.repoURL
             value: $git_repo
           - name: global.spec.source.targetRevision

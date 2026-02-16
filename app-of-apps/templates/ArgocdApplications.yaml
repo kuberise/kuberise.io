@@ -7,7 +7,7 @@ kind: Application
 metadata:
   name: {{ $name }}
   # namespace is inherited from the parent app-of-apps destination namespace,
-  # which is set in scripts/install.sh (deploy_app_of_apps function).
+  # which is set by kr deploy (create_app_of_apps function).
   annotations:
     argocd.argoproj.io/sync-wave: "{{ default 1 $app.syncWave }}"
     {{- if $app.annotations }}
@@ -22,7 +22,7 @@ metadata:
     team: {{ default "platform" $app.team }}
 spec:
   revisionHistoryLimit: {{ default 3 (default $.Values.global.revisionHistoryLimit $app.revisionHistoryLimit) }}
-  project: {{ $.Values.global.clusterName }}
+  project: {{ $.Values.global.argoProject }}
 {{- if eq $applicationType "helm" }}
   {{- $defaultsRepoURL := (default $.Values.global.spec.source.repoURL $.Values.global.spec.defaults.repoURL) }}
   {{- $defaultsTargetRevision := (default $.Values.global.spec.source.targetRevision $.Values.global.spec.defaults.targetRevision) }}

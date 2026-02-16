@@ -8,10 +8,15 @@
   "properties": {
     "global": {
       "type": "object",
-      "description": "Global configuration injected by install.sh and used across all applications.",
+      "description": "Global configuration injected by kr deploy and used across all applications.",
       "required": ["clusterName", "domain"],
       "additionalProperties": false,
       "properties": {
+        "argoProject": {
+          "type": "string",
+          "description": "ArgoCD AppProject name that all child applications belong to. Defaults to kuberise.",
+          "default": "kuberise"
+        },
         "clusterName": {
           "type": "string",
           "description": "Name of the target cluster. Must match a directory under values/.",
