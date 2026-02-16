@@ -199,15 +199,15 @@ function collect_uninstall_namespaces() {
 # ── Uninstall Functions ────────────────────────────────────────────
 
 function remove_app_of_apps() {
-  # Step 1: Delete all app-of-apps Applications matching this cluster.
-  # In OSS there is one (app-of-apps-$CLUSTER_NAME). In pro/client setups
-  # there can be up to three (app-of-apps-pro-$CLUSTER_NAME, etc.).
+  # Step 1: Delete all app-of-apps Applications.
+  # In OSS there is one (app-of-apps-platform). In pro/client setups
+  # there can be up to three (app-of-apps-pro, app-of-apps-acme, etc.).
   # No finalizer per ADR-0018, so deletion is instant.
   log_info "Deleting app-of-apps ArgoCD application(s)..."
   local aoa_apps
   aoa_apps=$(kubectl get applications -n argocd -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
   for app in $aoa_apps; do
-    if [[ "$app" == *app-of-apps*-"$CLUSTER_NAME" ]]; then
+    if [[ "$app" == app-of-apps-* ]]; then
       log_info "  Deleting $app"
       kubectl delete -n argocd application "$app" --ignore-not-found 2>/dev/null || true
     fi
@@ -218,9 +218,9 @@ function remove_app_of_apps() {
 
   # Step 3: Remove AppProject finalizers so delete can succeed, then delete.
   log_info "Deleting ArgoCD project..."
-  kubectl patch appproject "$CLUSTER_NAME" -n argocd \
+  kubectl patch appproject kuberise -n argocd \
     --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
-  kubectl delete -n argocd appproject "$CLUSTER_NAME" --ignore-not-found 2>/dev/null || true
+  kubectl delete -n argocd appproject kuberise --ignore-not-found 2>/dev/null || true
 }
 
 function get_application_names() {

@@ -49,7 +49,7 @@ kr deploy --context <CONTEXT> --cluster <NAME> \
 | `deploy` | `--cluster` | Cluster name (default: `onprem`) |
 | `deploy` | `--domain` | Base domain (default: `onprem.kuberise.dev`) |
 | `deploy` | `--revision` | Branch, tag, or commit SHA (default: `HEAD`) |
-| `deploy` | `--name` | App-of-apps name for multi-layer setups (default: `app-of-apps`) |
+| `deploy` | `--name` | Layer identifier for multi-layer setups (default: `platform`) |
 | `deploy` | `--token` | Git token for private repositories (optional) |
 
 Run `kr init --help` or `kr deploy --help` for the full list of flags.
@@ -73,12 +73,12 @@ Deploy multiple layers (OSS, Pro, Client) by calling `kr deploy` with different 
 # Pro layer
 kr deploy --context k3d-dev --cluster dev-app-onprem-one \
   --repo https://github.com/kuberise/kuberise-pro.git \
-  --name app-of-apps-pro --token $TOKEN ...
+  --name pro --token $TOKEN ...
 
 # Client layer
 kr deploy --context k3d-dev --cluster dev-app-onprem-one \
   --repo https://github.com/org/client.git \
-  --name app-of-apps-client --token $TOKEN ...
+  --name acme --token $TOKEN ...
 ```
 
 ### Uninstall

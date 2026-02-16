@@ -9,7 +9,7 @@ This release introduces `kr`, a standalone CLI tool that replaces `install.sh` w
 ### Added
 - **`kr` CLI tool** (`scripts/kr`) - standalone bash script with subcommands: `version`, `init`, `deploy`, `uninstall`.
 - **`kr init`** - bootstraps a cluster with namespaces, secrets, CA certificates, and ArgoCD (minimal --set flags only). Optionally installs Cilium with `--cilium`. No values files or repo clone required.
-- **`kr deploy`** - deploys an app-of-apps layer with per-layer repo secrets (prefixed by `--name` to avoid conflicts between OSS/Pro/Client layers). Can be called multiple times with different `--name` values.
+- **`kr deploy`** - deploys an app-of-apps layer. The `--name` flag is a short layer identifier (default: `platform`) that controls the Application name (`app-of-apps-{name}`), enabler file (`values-{name}.yaml`), and repo secret (`argocd-repo-{name}`). Can be called multiple times with different `--name` values (e.g., `--name pro`, `--name acme`).
 - **`kr uninstall`** - full teardown (migrated from `uninstall.sh`), including stuck resource cleanup and kubeconfig removal.
 - **Inline AppProject** - generated directly via kubectl apply instead of `helm template`, removing the dependency on a local repo checkout during deploy.
 - **Embedded Let's Encrypt certificate** - the ISRG Root X1 certificate is embedded in the script instead of read from a file.
@@ -18,7 +18,7 @@ This release introduces `kr`, a standalone CLI tool that replaces `install.sh` w
 ### Changed
 - **ArgoCD bootstrap is now minimal** - installs with `--set` flags only (admin password, insecure mode, ClusterIP). Full configuration (ingress, OIDC, health checks, resource customizations) is applied via GitOps after `kr deploy`.
 - **Cilium bootstrap is now minimal** - installs a bare CNI. Advanced configuration (ClusterMesh, etc.) is applied via GitOps after `kr deploy`.
-- **Repo access secrets include layer name** - secret names use the `--name` prefix (e.g., `argocd-repo-app-of-apps-pro`) to prevent conflicts when deploying multiple layers.
+- **Repo access secrets include layer name** - secret names use the `--name` identifier (e.g., `argocd-repo-pro`, `argocd-repo-acme`) to prevent conflicts when deploying multiple layers.
 
 ### Removed
 - **`scripts/install.sh`** - replaced by `kr init` + `kr deploy`.

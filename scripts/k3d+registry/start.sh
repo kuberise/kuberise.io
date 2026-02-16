@@ -76,7 +76,7 @@ kr deploy --context k3d-dev-shared-onprem --cluster dev \
           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
           --domain dev.kuberise.dev --token $GITHUB_TOKEN
 
-kr deploy --context k3d-dev-shared-onprem --cluster dev-client --name app-of-apps-acme\
+kr deploy --context k3d-dev-shared-onprem --cluster dev-client --name acme \
           --repo https://github.com/kuberise/kuberise-client.git --revision main \
           --defaults-repo https://github.com/kuberise/kuberise-client.git --defaults-revision main \
           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
