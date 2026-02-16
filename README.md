@@ -17,41 +17,74 @@ kuberise.io gives you a production-ready platform on any Kubernetes cluster -- l
 
 ### Prerequisites
 
-- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`, `cilium`, `yq`, `git`
+- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`
 - A Kubernetes cluster ([k3d](https://k3d.io), [kind](https://kind.sigs.k8s.io), minikube, or any cloud provider)
 
-### Install
-
-1. Fork and clone this repository.
-2. Run the install script:
+### Install the `kr` CLI
 
 ```bash
-./scripts/install.sh --context <CONTEXT> --cluster <NAME> \
+curl -sSL https://raw.githubusercontent.com/kuberise/kuberise.io/main/scripts/install-kr.sh | sh
+```
+
+### Bootstrap and Deploy
+
+```bash
+# 1. Bootstrap the cluster (namespaces, secrets, CA, ArgoCD)
+kr init --context <CONTEXT> --cluster <NAME> --domain <DOMAIN>
+
+# 2. Deploy the platform (app-of-apps layer)
+kr deploy --context <CONTEXT> --cluster <NAME> \
   --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> \
   [--token <TOKEN>]
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--context` | **(required)** Kubernetes context (`kubectl config current-context`) |
-| `--repo` | **(required)** URL of your forked repository |
-| `--cluster` | Cluster name -- must match an `app-of-apps/values-<NAME>.yaml` file and a `values/<NAME>/` directory (default: `onprem`) |
-| `--revision` | Branch, tag, or commit SHA to deploy (default: `HEAD`) |
-| `--domain` | Base domain for all services, e.g. `minikube.kuberise.dev` (default: `onprem.kuberise.dev`) |
-| `--token` | Git token for private repositories (optional) |
+| Command | Flag | Description |
+|---------|------|-------------|
+| `init` | `--context` | **(required)** Kubernetes context name |
+| `init` | `--domain` | **(required)** Base domain for all services |
+| `init` | `--cluster` | Cluster name (default: `onprem`) |
+| `init` | `--admin-password` | Admin password (default: `admin`, warns) |
+| `deploy` | `--context` | **(required)** Kubernetes context name |
+| `deploy` | `--repo` | **(required)** Git repository URL |
+| `deploy` | `--cluster` | Cluster name (default: `onprem`) |
+| `deploy` | `--domain` | Base domain (default: `onprem.kuberise.dev`) |
+| `deploy` | `--revision` | Branch, tag, or commit SHA (default: `HEAD`) |
+| `deploy` | `--name` | App-of-apps name for multi-layer setups (default: `app-of-apps`) |
+| `deploy` | `--token` | Git token for private repositories (optional) |
+
+Run `kr init --help` or `kr deploy --help` for the full list of flags.
 
 **Example** using a local k3d cluster:
 
 ```bash
-./scripts/install.sh --context k3d-dev --cluster dev-app-onprem-one \
+kr init --context k3d-dev --cluster dev-app-onprem-one \
+  --domain k3d.kuberise.dev
+
+kr deploy --context k3d-dev --cluster dev-app-onprem-one \
   --repo https://github.com/<you>/kuberise.io.git \
   --revision main --domain k3d.kuberise.dev
+```
+
+### Multi-Layer Deployment
+
+Deploy multiple layers (OSS, Pro, Client) by calling `kr deploy` with different `--name` values:
+
+```bash
+# Pro layer
+kr deploy --context k3d-dev --cluster dev-app-onprem-one \
+  --repo https://github.com/kuberise/kuberise-pro.git \
+  --name app-of-apps-pro --token $TOKEN ...
+
+# Client layer
+kr deploy --context k3d-dev --cluster dev-app-onprem-one \
+  --repo https://github.com/org/client.git \
+  --name app-of-apps-client --token $TOKEN ...
 ```
 
 ### Uninstall
 
 ```bash
-./scripts/uninstall.sh <CONTEXT> <NAME>
+kr uninstall --context <CONTEXT> --cluster <NAME>
 ```
 
 ## Documentation

@@ -71,8 +71,9 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
   - `values/{cluster}/applications/`: Application-specific configurations
 
 - `scripts/`: Installation and utility scripts
-  - `install.sh`: Main installation script that sets up the platform
-  - `uninstall.sh`: Uninstallation script
+  - `kr`: Standalone CLI tool (`kr init`, `kr deploy`, `kr uninstall`)
+  - `install-kr.sh`: Curl-based installer for downloading `kr` from GitHub releases
+  - `uninstall.sh`: Legacy uninstallation script (use `kr uninstall` instead)
   - `upgrade.sh`: Upgrade script that checks for newer versions of external charts referenced in `values.yaml`
   - `k3d+registry/`: Scripts for local multi-cluster development setup
     - Creates two k3d clusters (shared and dev) connected via Cilium ClusterMesh
@@ -210,36 +211,53 @@ ArgoCD Applications support three types:
 ## Installation Process
 
 ### Prerequisites
-- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`, `cilium`, `yq`, `git`
+- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`
 - GitHub account or git repository
 - Kubernetes cluster (kind, minikube, or cloud provider)
 - K9s recommended for dashboard
 
-### Installation Script
-The `scripts/install.sh` script:
-1. Validates required tools and cluster connectivity
-2. Creates necessary namespaces and secrets
-3. Generates CA certificates if needed
-4. Installs Cilium (CNI)
-5. Installs ArgoCD
-6. Creates the root ArgoCD Application (app-of-apps)
-7. Configures Git repository access
-8. Configures OAuth2 client secrets
+### The `kr` CLI Tool
+The `kr` CLI separates cluster bootstrap from layer deployment:
 
-### Installation Parameters
+**`kr init`** - bootstraps the cluster (no repo clone needed):
+1. Validates required tools and cluster connectivity
+2. Creates namespaces and secrets
+3. Generates CA certificates
+4. Installs ArgoCD
+5. Optionally installs Cilium CNI (`--cilium` flag)
+6. Configures OAuth2 client secrets
+
+**`kr deploy`** - deploys an app-of-apps layer:
+1. Creates repository access secrets for ArgoCD
+2. Creates an ArgoCD AppProject
+3. Creates the app-of-apps ArgoCD Application
+
+Multiple layers (OSS, Pro, Client) can be deployed by calling `kr deploy` with different `--name` values.
+
+### kr init Parameters
 ```bash
-./scripts/install.sh --context <CONTEXT> --cluster <NAME> \
+kr init --context <CONTEXT> --cluster <NAME> --domain <DOMAIN>
+```
+- `--context`: **(required)** Kubernetes context name
+- `--domain`: **(required)** Base domain for services
+- `--cluster`: Cluster name (default: `onprem`)
+- `--admin-password`: Admin password (default: `admin`)
+
+### kr deploy Parameters
+```bash
+kr deploy --context <CONTEXT> --cluster <NAME> \
   --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> \
-  [--token <TOKEN>]
+  [--token <TOKEN>] [--name <NAME>]
 ```
 - `--context`: **(required)** Kubernetes context name
 - `--repo`: **(required)** Git repository URL
-- `--cluster`: Cluster name, must match values directory (default: `onprem`)
-- `--revision`: Branch/tag/commit SHA (default: `HEAD`)
+- `--cluster`: Cluster name (default: `onprem`)
 - `--domain`: Base domain for services (default: `onprem.kuberise.dev`)
+- `--revision`: Branch/tag/commit SHA (default: `HEAD`)
+- `--name`: App-of-apps name for multi-layer setups (default: `app-of-apps`)
 - `--token`: Optional Git token for private repos
 
-Environment variables: `ADMIN_PASSWORD`, `GITEA_ADMIN_PASSWORD`, `CLOUDFLARE_API_TOKEN`, `OPENAI_API_KEY`. Run `./scripts/install.sh --help` for details.
+Environment variables: `ADMIN_PASSWORD`, `GITEA_ADMIN_PASSWORD`, `CLOUDFLARE_API_TOKEN`, `OPENAI_API_KEY`. Run `kr init --help` or `kr deploy --help` for details.
 
 ### Local Development with k3d Clusters
 
@@ -281,9 +299,12 @@ The clusters are connected via Cilium ClusterMesh, enabling developer applicatio
 # Create both clusters
 ./scripts/k3d+registry/start.sh
 
-# After clusters are created, run install.sh for each cluster:
-./scripts/install.sh --context k3d-shared --cluster shared --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN>
-./scripts/install.sh --context k3d-dev --cluster dev --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN>
+# After clusters are created, bootstrap and deploy for each cluster:
+kr init --context k3d-shared --cluster shared --domain <DOMAIN>
+kr deploy --context k3d-shared --cluster shared --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN>
+
+kr init --context k3d-dev --cluster dev --domain <DOMAIN>
+kr deploy --context k3d-dev --cluster dev --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN>
 
 # Delete both clusters
 ./scripts/k3d+registry/delete-all.sh

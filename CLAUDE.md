@@ -9,17 +9,24 @@ kuberise.io is a free, open-source internal developer platform for Kubernetes. I
 ## Key Commands
 
 ```bash
-# Install platform on a cluster
-./scripts/install.sh --context <CONTEXT> --repo <REPO_URL> \
+# Install the kr CLI
+curl -sSL https://raw.githubusercontent.com/kuberise/kuberise.io/main/scripts/install-kr.sh | sh
+
+# Bootstrap a cluster (namespaces, secrets, CA, ArgoCD; --cilium for CNI)
+kr init --context <CONTEXT> --cluster <NAME> --domain <DOMAIN>
+
+# Deploy a layer (app-of-apps)
+kr deploy --context <CONTEXT> --repo <REPO_URL> \
   --cluster <NAME> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]
 
+# Uninstall
+kr uninstall --context <CONTEXT> --cluster <NAME>
+
 # Example: local k3d cluster
-./scripts/install.sh --context k3d-dev --cluster dev-app-onprem-one \
+kr init --context k3d-dev --cluster dev-app-onprem-one --domain k3d.kuberise.dev
+kr deploy --context k3d-dev --cluster dev-app-onprem-one \
   --repo https://github.com/<you>/kuberise.io.git \
   --revision main --domain k3d.kuberise.dev
-
-# Uninstall
-./scripts/uninstall.sh <CONTEXT> <NAME>
 
 # Check for newer versions of external Helm charts
 ./scripts/upgrade.sh

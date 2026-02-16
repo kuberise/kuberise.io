@@ -1,0 +1,1441 @@
+#!/bin/bash
+
+set -euo pipefail
+
+KR_VERSION="0.3.0"
+
+# ── Constants ──────────────────────────────────────────────────────
+
+readonly ARGOCD_CHART_VERSION="9.4.2"
+readonly ARGOCD_CHART_REPO="https://argoproj.github.io/argo-helm"
+readonly CILIUM_CHART_VERSION="1.19.0"
+readonly CILIUM_CHART_REPO="https://helm.cilium.io/"
+
+readonly NAMESPACES=(
+  argocd
+  postgres
+  keycloak
+  backstage
+  monitoring
+  cert-manager
+  external-dns
+  pgadmin
+  gitea
+  k8sgpt
+)
+
+readonly CA_BUNDLE_NAMESPACES=(
+  pgadmin
+  monitoring
+  argocd
+  keycloak
+  backstage
+  postgres
+  cert-manager
+  external-dns
+)
+
+readonly PG_APP_USERNAME="application"
+
+# All namespaces that kuberise may create (via kr init or ArgoCD apps).
+# Excludes kube-system since it is a core Kubernetes namespace.
+readonly KUBERISE_NAMESPACES=(
+  # Platform Core
+  argocd
+  backstage
+  gitea
+  hello
+  ingresses
+  raw
+  teams-namespaces
+
+  # Data Services
+  postgres
+  pgadmin
+  redis
+  minio
+  object-storage
+
+  # Network Services
+  metallb
+  external-dns
+  external-dns-sigs
+  internal-dns
+  ingress-nginx-external
+  ingress-nginx-internal
+
+  # Security & Auth
+  keycloak
+  cert-manager
+  kyverno
+  external-secrets
+  sealed-secrets
+  vault
+  secrets-manager
+  neuvector
+
+  # Monitoring
+  monitoring
+
+  # AI Tools
+  ollama
+  k8sgpt
+
+  # CI/CD
+  keda
+  tekton-operator
+  tekton-pipelines
+
+  # Multi-cluster / management
+  cattle-system
+  vcluster
+
+  # Example applications
+  frontend
+  backend
+  opencost
+)
+
+# Helm releases installed in kube-system by kr init (not managed by ArgoCD).
+# Cilium is intentionally NOT uninstalled - it is the CNI (networking layer).
+readonly KUBE_SYSTEM_HELM_RELEASES=()
+
+# ── Embedded Resources ────────────────────────────────────────────
+
+# ISRG Root X1 (Let's Encrypt) certificate
+read -r -d '' LETSENCRYPT_CRT <<'CERTEOF' || true
+-----BEGIN CERTIFICATE-----
+MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
+TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh
+cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4
+WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJu
+ZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBY
+MTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygc
+h77ct984kIxuPOZXoHj3dcKi/vVqbvYATyjb3miGbESTtrFj/RQSa78f0uoxmyF+
+0TM8ukj13Xnfs7j/EvEhmkvBioZxaUpmZmyPfjxwv60pIgbz5MDmgK7iS4+3mX6U
+A5/TR5d8mUgjU+g4rk8Kb4Mu0UlXjIB0ttov0DiNewNwIRt18jA8+o+u3dpjq+sW
+T8KOEUt+zwvo/7V3LvSye0rgTBIlDHCNAymg4VMk7BPZ7hm/ELNKjD+Jo2FR3qyH
+B5T0Y3HsLuJvW5iB4YlcNHlsdu87kGJ55tukmi8mxdAQ4Q7e2RCOFvu396j3x+UC
+B5iPNgiV5+I3lg02dZ77DnKxHZu8A/lJBdiB3QW0KtZB6awBdpUKD9jf1b0SHzUv
+KBds0pjBqAlkd25HN7rOrFleaJ1/ctaJxQZBKT5ZPt0m9STJEadao0xAH0ahmbWn
+OlFuhjuefXKnEgV4We0+UXgVCwOPjdAvBbI+e0ocS3MFEvzG6uBQE3xDk3SzynTn
+jh8BCNAw1FtxNrQHusEwMFxIt4I7mKZ9YIqioymCzLq9gwQbooMDQaHWBfEbwrbw
+qHyGO0aoSCqI3Haadr8faqU9GY/rOPNk3sgrDQoo//fb4hVC1CLQJ13hef4Y53CI
+rU7m2Ys6xt0nUW7/vGT1M0NPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNV
+HRMBAf8EBTADAQH/MB0GA1UdDgQWBBR5tFnme7bl5AFzgAiIyBpY9umbbjANBgkq
+hkiG9w0BAQsFAAOCAgEAVR9YqbyyqFDQDLHYGmkgJykIrGF1XIpu+ILlaS/V9lZL
+ubhzEFnTIZd+50xx+7LSYK05qAvqFyFWhfFQDlnrzuBZ6brJFe+GnY+EgPbk6ZGQ
+3BebYhtF8GaV0nxvwuo77x/Py9auJ/GpsMiu/X1+mvoiBOv/2X/qkSsisRcOj/KK
+NFtY2PwByVS5uCbMiogziUwthDyC3+6WVwW6LLv3xLfHTjuCvjHIInNzktHCgKQ5
+ORAzI4JMPJ+GslWYHb4phowim57iaztXOoJwTdwJx4nLCgdNbOhdjsnvzqvHu7Ur
+TkXWStAmzOVyyghqpZXjFaH3pO3JLF+l+/+sKAIuvtd7u+Nxe5AW0wdeRlN8NwdC
+jNPElpzVmbUq4JUagEiuTDkHzsxHpFKVK7q4+63SM1N95R1NbdWhscdCb+ZAJzVc
+oyi3B43njTOQ5yOf+1CceWxG1bQVs5ZufpsMljq4Ui0/1lvh+wjChP4kqKOJ2qxq
+4RgqsahDYVvTH9w7jXbyLeiNdd8XM2w9U/t7y0Ff/9yi0GE44Za4rF2LN9d11TPA
+mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
+emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
+-----END CERTIFICATE-----
+CERTEOF
+
+# ── Logging ────────────────────────────────────────────────────────
+
+if [[ -t 1 ]] && [[ -z "${NO_COLOR:-}" ]]; then
+  readonly C_RESET='\033[0m'
+  readonly C_INFO='\033[0;36m'   # cyan
+  readonly C_WARN='\033[0;33m'   # yellow
+  readonly C_ERROR='\033[0;31m'  # red
+  readonly C_STEP='\033[1;36m'   # bold cyan
+else
+  readonly C_RESET='' C_INFO='' C_WARN='' C_ERROR='' C_STEP=''
+fi
+
+function log_info()  { echo -e "${C_INFO}[INFO]${C_RESET}  $*"; }
+function log_warn()  { echo -e "${C_WARN}[WARN]${C_RESET}  $*" >&2; }
+function log_error() { echo -e "${C_ERROR}[ERROR]${C_RESET} $*" >&2; }
+function log_step()  { echo ""; echo -e "${C_STEP}── $* ──${C_RESET}"; }
+
+# ── Cleanup ────────────────────────────────────────────────────────
+
+TEMP_FILES=()
+
+function cleanup() {
+  if [[ ${#TEMP_FILES[@]} -gt 0 ]]; then
+    for f in "${TEMP_FILES[@]}"; do
+      rm -f "$f"
+    done
+  fi
+}
+trap cleanup EXIT
+
+function make_temp_file() {
+  local f
+  f=$(mktemp)
+  TEMP_FILES+=("$f")
+  echo "$f"
+}
+
+# ── Utility Functions ──────────────────────────────────────────────
+
+function generate_random_secret() {
+  local raw
+  raw=$(openssl rand -base64 48)
+  raw="${raw//[^a-zA-Z0-9]/}"
+  echo "${raw:0:32}"
+}
+
+# ── Kubernetes Helper Functions ────────────────────────────────────
+
+function filter_unchanged() {
+  grep -v ' unchanged$' || true
+}
+
+function create_namespace() {
+  local context=$1
+  local namespace=$2
+  kubectl create namespace "$namespace" \
+    --context "$context" \
+    --dry-run=client -o yaml | \
+    kubectl apply --context "$context" -f - | filter_unchanged
+}
+
+function create_secret() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+  shift 3
+  kubectl create secret generic "$secret_name" \
+    --context "$context" \
+    -n "$namespace" \
+    "$@" \
+    --dry-run=client -o yaml | \
+    kubectl apply --context "$context" -n "$namespace" -f - | filter_unchanged
+}
+
+function label_secret() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+  local label=$4
+  kubectl label secret "$secret_name" "$label" \
+    --context "$context" -n "$namespace" --overwrite
+}
+
+function secret_exists() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+  kubectl get secret "$secret_name" --context "$context" -n "$namespace" &>/dev/null
+}
+
+function get_or_generate_secret() {
+  local context=$1
+  local namespace=$2
+  local secret_name=$3
+  local key=${4:-"password"}
+
+  local secret_value
+  if ! secret_exists "$context" "$namespace" "$secret_name"; then
+    log_info "Generating random value for $secret_name" >&2
+    secret_value=$(generate_random_secret)
+  else
+    log_info "Secret $secret_name already exists, reusing it" >&2
+    secret_value=$(kubectl get secret "$secret_name" --context "$context" -n "$namespace" -o jsonpath="{.data.$key}" | base64 -d)
+  fi
+
+  echo "$secret_value"
+}
+
+# ── Init Functions ─────────────────────────────────────────────────
+
+function create_all_namespaces() {
+  local context=$1
+  for ns in "${NAMESPACES[@]}"; do
+    create_namespace "$context" "$ns"
+  done
+}
+
+function generate_ca_cert_and_key() {
+  local context=$1
+
+  local dir=".env"
+  local cert="$dir/ca.crt"
+  local key="$dir/ca.key"
+  local ca_bundle="$dir/ca-bundle.crt"
+
+  if [ ! -f "$cert" ] || [ ! -f "$key" ]; then
+    log_info "CA certificate/key files do not exist. Generating..."
+    mkdir -p "$dir"
+    openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+      -keyout "$key" -out "$cert" -subj "/CN=ca.kuberise.local CA/O=KUBERISE/C=NL"
+    log_info "CA certificate and key generated."
+  else
+    log_info "CA certificate and key already exist."
+  fi
+
+  log_info "Creating CA bundle with self-signed and Let's Encrypt certificates..."
+  local letsencrypt_file
+  letsencrypt_file=$(make_temp_file)
+  echo "$LETSENCRYPT_CRT" > "$letsencrypt_file"
+  cat "$cert" "$letsencrypt_file" > "$ca_bundle"
+
+  # Create TLS secret for cert-manager CA issuer
+  kubectl create secret tls ca-key-pair-external \
+    --cert="$cert" \
+    --key="$key" \
+    --namespace="cert-manager" \
+    --dry-run=client -o yaml | kubectl apply --namespace="cert-manager" --context="$context" -f - | filter_unchanged
+
+  # Create CA bundle ConfigMap in all relevant namespaces
+  for ns in "${CA_BUNDLE_NAMESPACES[@]}"; do
+    kubectl create configmap ca-bundle \
+      --from-file=ca.crt="$ca_bundle" \
+      --namespace="$ns" \
+      --dry-run=client -o yaml | kubectl apply --namespace="$ns" --context="$context" -f - | filter_unchanged
+  done
+
+  log_info "CA bundle created and ConfigMaps updated in all namespaces."
+}
+
+function create_database_secrets() {
+  local context=$1
+  local admin_password=$2
+
+  # PostgreSQL application database
+  PG_APP_PASSWORD=$(get_or_generate_secret "$context" "postgres" "database-app" "password")
+  create_secret "$context" "postgres" "database-app" \
+    --from-literal=dbname=app \
+    --from-literal=host=database-rw \
+    --from-literal=username="$PG_APP_USERNAME" \
+    --from-literal=user="$PG_APP_USERNAME" \
+    --from-literal=port=5432 \
+    --from-literal=password="$PG_APP_PASSWORD" \
+    --type=kubernetes.io/basic-auth
+
+  # PostgreSQL superuser
+  PG_SUPERUSER_PASSWORD=$(get_or_generate_secret "$context" "postgres" "database-superuser" "password")
+  create_secret "$context" "postgres" "database-superuser" \
+    --from-literal=dbname="*" \
+    --from-literal=host=database-rw \
+    --from-literal=username=postgres \
+    --from-literal=user=postgres \
+    --from-literal=port=5432 \
+    --from-literal=password="$PG_SUPERUSER_PASSWORD" \
+    --type=kubernetes.io/basic-auth
+
+  # Gitea admin (password configurable via GITEA_ADMIN_PASSWORD env var)
+  local gitea_password="${GITEA_ADMIN_PASSWORD:-$admin_password}"
+  create_secret "$context" "gitea" "gitea-admin-secret" \
+    --from-literal=username=gitea_admin \
+    --from-literal=password="$gitea_password" \
+    --from-literal=email=admin@gitea.admin \
+    --from-literal=passwordMode=keepUpdated \
+    --type=kubernetes.io/basic-auth
+}
+
+function create_application_secrets() {
+  local context=$1
+  local admin_password=$2
+
+  # K8sGPT (optional, requires OPENAI_API_KEY env var)
+  if [ -n "${OPENAI_API_KEY:-}" ]; then
+    create_secret "$context" "k8sgpt" "openai-api" \
+      --from-literal=openai-api-key="$OPENAI_API_KEY"
+  fi
+
+  # Keycloak database credentials
+  create_secret "$context" "keycloak" "pg-secret" \
+    --from-literal=KC_DB_USERNAME="$PG_APP_USERNAME" \
+    --from-literal=KC_DB_PASSWORD="$PG_APP_PASSWORD"
+
+  # Keycloak admin
+  create_secret "$context" "keycloak" "admin-secret" \
+    --from-literal=KEYCLOAK_ADMIN=admin \
+    --from-literal=KEYCLOAK_ADMIN_PASSWORD="$admin_password"
+
+  # Backstage database
+  create_secret "$context" "backstage" "pg-secret" \
+    --from-literal=password="$PG_APP_PASSWORD"
+
+  # Grafana admin
+  create_secret "$context" "monitoring" "grafana-admin" \
+    --from-literal=admin-user=admin \
+    --from-literal=admin-password="$admin_password" \
+    --from-literal=ldap-toml=
+
+  # Cloudflare (optional, requires CLOUDFLARE_API_TOKEN env var)
+  if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+    create_secret "$context" "external-dns" "cloudflare" \
+      --from-literal=cloudflare_api_token="$CLOUDFLARE_API_TOKEN"
+    create_secret "$context" "cert-manager" "cloudflare" \
+      --from-literal=cloudflare_api_token="$CLOUDFLARE_API_TOKEN"
+  fi
+
+  # Keycloak operator access to master realm
+  create_secret "$context" "keycloak" "keycloak-access" \
+    --from-literal=username=admin \
+    --from-literal=password="$admin_password"
+}
+
+function configure_oauth2_clients() {
+  local context=$1
+  local admin_password=$2
+  local domain=$3
+  local cluster_name=$4
+
+  # Kubernetes OAuth2 client
+  log_info "Setting up Kubernetes OAuth2 client secret..."
+  local kubernetes_secret
+  kubernetes_secret=$(get_or_generate_secret "$context" "keycloak" "kubernetes-oauth2-client-secret" "client-secret")
+  create_secret "$context" "keycloak" "kubernetes-oauth2-client-secret" \
+    --from-literal=client-secret="$kubernetes_secret"
+  configure_oidc_auth "$context" "$kubernetes_secret" "$domain" "$cluster_name"
+
+  # Grafana OAuth2 client
+  log_info "Setting up Grafana OAuth2 client secret..."
+  local grafana_secret
+  grafana_secret=$(get_or_generate_secret "$context" "keycloak" "grafana-oauth2-client-secret" "client-secret")
+  create_secret "$context" "keycloak" "grafana-oauth2-client-secret" \
+    --from-literal=client-secret="$grafana_secret"
+  create_secret "$context" "monitoring" "grafana-oauth2-client-secret" \
+    --from-literal=client-secret="$grafana_secret"
+
+  # PGAdmin OAuth2 client
+  log_info "Setting up PGAdmin OAuth2 client secret..."
+  local pgadmin_secret
+  pgadmin_secret=$(get_or_generate_secret "$context" "keycloak" "pgadmin-oauth2-client-secret" "client-secret")
+  create_secret "$context" "keycloak" "pgadmin-oauth2-client-secret" \
+    --from-literal=client-secret="$pgadmin_secret"
+  create_secret "$context" "pgadmin" "pgadmin-oauth2-client-secret" \
+    --from-literal=client-secret="$pgadmin_secret"
+
+  # OAuth2-Proxy client (with persistent cookie secret)
+  log_info "Setting up OAuth2-Proxy client secret..."
+  local oauth2_proxy_secret
+  oauth2_proxy_secret=$(get_or_generate_secret "$context" "keycloak" "oauth2-proxy-oauth2-client-secret" "client-secret")
+  local cookie_secret
+  cookie_secret=$(get_or_generate_secret "$context" "keycloak" "oauth2-proxy-oauth2-client-secret" "cookie-secret")
+  if [[ -z "$cookie_secret" ]]; then
+    cookie_secret=$(generate_random_secret)
+  fi
+  create_secret "$context" "keycloak" "oauth2-proxy-oauth2-client-secret" \
+    --from-literal=client-secret="$oauth2_proxy_secret" \
+    --from-literal=client-id=oauth2-proxy \
+    --from-literal=cookie-secret="$cookie_secret"
+
+  # ArgoCD OAuth2 client
+  log_info "Setting up ArgoCD OAuth2 client secret..."
+  local argocd_secret
+  argocd_secret=$(get_or_generate_secret "$context" "keycloak" "argocd-oauth2-client-secret" "client-secret")
+  create_secret "$context" "keycloak" "argocd-oauth2-client-secret" \
+    --from-literal=client-secret="$argocd_secret"
+  local argocd_client_secret_b64
+  argocd_client_secret_b64=$(echo -n "$argocd_secret" | base64)
+  kubectl patch secret argocd-secret --context "$context" -n argocd --patch "
+data:
+  oidc.keycloak.clientSecret: $argocd_client_secret_b64
+"
+}
+
+function configure_oidc_auth() {
+  local context=$1
+  local client_secret=$2
+  local domain=$3
+  local cluster_name=$4
+
+  log_info "Configuring OIDC authentication in kubeconfig..."
+
+  local cluster_name_k8s
+  cluster_name_k8s=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"$context\")].context.cluster}")
+
+  local oidc_user="oidc-$cluster_name"
+  local oidc_context="oidc-$cluster_name"
+
+  kubectl config set-credentials "$oidc_user" \
+    --exec-api-version=client.authentication.k8s.io/v1beta1 \
+    --exec-command=kubectl \
+    --exec-arg=oidc-login \
+    --exec-arg=get-token \
+    --exec-arg="--oidc-issuer-url=https://keycloak.$domain/realms/platform" \
+    --exec-arg=--oidc-client-id=kubernetes \
+    --exec-arg="--oidc-client-secret=$client_secret"
+
+  kubectl config set-context "$oidc_context" \
+    --cluster="$cluster_name_k8s" \
+    --user="$oidc_user" \
+    --namespace=default
+
+  log_info "OIDC configured. Use 'kubectl config use-context $oidc_context' to switch."
+}
+
+function install_argocd_minimal() {
+  local context=$1
+  local admin_password=$2
+  local domain=$3
+
+  log_info "Installing ArgoCD..."
+  local bcrypt_hash
+  bcrypt_hash=$(htpasswd -nbBC 10 "" "$admin_password" | tr -d ':\n' | sed 's/$2y/$2a/')
+
+  helm upgrade --install --kube-context "$context" \
+    -n argocd --create-namespace --wait \
+    --set configs.secret.argocdServerAdminPassword="$bcrypt_hash" \
+    --set configs.params.server.insecure=true \
+    --set server.service.type=ClusterIP \
+    --repo "$ARGOCD_CHART_REPO" --version "$ARGOCD_CHART_VERSION" \
+    argocd argo-cd > /dev/null
+
+  log_info "ArgoCD installed. Full configuration (ingress, OIDC, health checks) will be applied via GitOps after 'kr deploy'."
+}
+
+function install_cilium_minimal() {
+  local context=$1
+
+  log_info "Installing Cilium..."
+
+  helm upgrade --install --kube-context "$context" \
+    -n kube-system --wait \
+    --set operator.replicas=1 \
+    --repo "$CILIUM_CHART_REPO" --version "$CILIUM_CHART_VERSION" \
+    cilium cilium > /dev/null
+
+  log_info "Cilium installed. Advanced configuration (ClusterMesh, etc.) will be applied via GitOps after 'kr deploy'."
+}
+
+# ── Deploy Functions ───────────────────────────────────────────────
+
+function configure_repo_access() {
+  local context=$1
+  local aoa_name=$2
+  local repo_url=$3
+  local token=$4
+  local values_repo=$5
+  local defaults_repo=$6
+
+  if [ -n "$token" ]; then
+    local repo_secret_name="argocd-repo-${aoa_name}"
+    create_secret "$context" "argocd" "$repo_secret_name" \
+      --from-literal=name="$aoa_name" \
+      --from-literal=username=x \
+      --from-literal=password="$token" \
+      --from-literal=url="$repo_url" \
+      --from-literal=type=git
+    label_secret "$context" "argocd" "$repo_secret_name" "argocd.argoproj.io/secret-type=repository"
+
+    if [[ "$values_repo" != "$repo_url" ]]; then
+      local values_secret_name="argocd-repo-${aoa_name}-values"
+      create_secret "$context" "argocd" "$values_secret_name" \
+        --from-literal=name="${aoa_name}-values" \
+        --from-literal=username=x \
+        --from-literal=password="$token" \
+        --from-literal=url="$values_repo" \
+        --from-literal=type=git
+      label_secret "$context" "argocd" "$values_secret_name" "argocd.argoproj.io/secret-type=repository"
+    fi
+
+    if [[ "$defaults_repo" != "$repo_url" ]] && [[ "$defaults_repo" != "$values_repo" ]]; then
+      local defaults_secret_name="argocd-repo-${aoa_name}-defaults"
+      create_secret "$context" "argocd" "$defaults_secret_name" \
+        --from-literal=name="${aoa_name}-defaults" \
+        --from-literal=username=x \
+        --from-literal=password="$token" \
+        --from-literal=url="$defaults_repo" \
+        --from-literal=type=git
+      label_secret "$context" "argocd" "$defaults_secret_name" "argocd.argoproj.io/secret-type=repository"
+    fi
+  fi
+}
+
+function create_app_project() {
+  local context=$1
+  local cluster_name=$2
+
+  kubectl apply --context "$context" -n argocd -f - <<EOF | filter_unchanged
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: $cluster_name
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  sourceRepos:
+    - '*'
+  destinations:
+    - name: '*'
+      namespace: '*'
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+EOF
+}
+
+function create_app_of_apps() {
+  local context=$1
+  local cluster_name=$2
+  local git_repo=$3
+  local git_revision=$4
+  local domain=$5
+  local values_repo=$6
+  local values_revision=$7
+  local defaults_repo=$8
+  local defaults_revision=$9
+  local aoa_name=${10}
+
+  # Derive enabler filename from --name:
+  #   --name app-of-apps        → values-{cluster}.yaml  (backward compat)
+  #   --name app-of-apps-acme   → values-acme.yaml
+  #   --name app-of-apps-pro    → values-pro.yaml
+  local enabler_suffix
+  if [[ "$aoa_name" == "app-of-apps" ]]; then
+    enabler_suffix="$cluster_name"
+  else
+    enabler_suffix="${aoa_name#app-of-apps-}"
+  fi
+
+  # No resources-finalizer here: deleting app-of-apps with a finalizer triggers
+  # a deep cascade that is slow and fragile. The uninstall handles cleanup explicitly.
+  kubectl apply --context "$context" -n argocd -f - <<EOF | filter_unchanged
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: $aoa_name
+  namespace: argocd
+  labels:
+    team: platform
+spec:
+  project: $cluster_name
+  sources:
+    - repoURL: $git_repo
+      targetRevision: $git_revision
+      path: ./app-of-apps
+      helm:
+        ignoreMissingValueFiles: true
+        valueFiles:
+          - \$values/app-of-apps/values-$enabler_suffix.yaml
+        parameters:
+          - name: global.spec.source.repoURL
+            value: $git_repo
+          - name: global.spec.source.targetRevision
+            value: $git_revision
+          - name: global.spec.values.repoURL
+            value: $values_repo
+          - name: global.spec.values.targetRevision
+            value: $values_revision
+          - name: global.spec.defaults.repoURL
+            value: $defaults_repo
+          - name: global.spec.defaults.targetRevision
+            value: $defaults_revision
+          - name: global.clusterName
+            value: $cluster_name
+          - name: global.domain
+            value: $domain
+    - repoURL: $values_repo
+      targetRevision: $values_revision
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+EOF
+}
+
+# ── Uninstall Functions ────────────────────────────────────────────
+
+# Wrap kubectl for uninstall: bounded timeout and forced context
+function kubectl_uninstall() {
+  local timeout="${KUBECTL_REQUEST_TIMEOUT:-15s}"
+  command kubectl --request-timeout="$timeout" --context "$UNINSTALL_CONTEXT" "$@"
+}
+
+function collect_uninstall_namespaces() {
+  local candidates
+  local discovered
+
+  candidates=("${KUBERISE_NAMESPACES[@]}")
+  discovered=$(kubectl_uninstall get applications -n argocd \
+    -o jsonpath='{range .items[*]}{.spec.destination.namespace}{"\n"}{range .status.resources[*]}{.namespace}{"\n"}{end}{end}' 2>/dev/null || true)
+
+  if [[ -n "$discovered" ]]; then
+    while IFS= read -r ns; do
+      [[ -z "$ns" ]] && continue
+      case "$ns" in
+        kube-system|kube-public|kube-node-lease|default)
+          continue
+          ;;
+      esac
+      candidates+=("$ns")
+    done <<< "$discovered"
+  fi
+
+  UNINSTALL_NAMESPACES=()
+  while IFS= read -r ns; do
+    [[ -z "$ns" ]] && continue
+    UNINSTALL_NAMESPACES+=("$ns")
+  done < <(printf '%s\n' "${candidates[@]}" | awk 'NF' | sort -u)
+}
+
+function get_application_names() {
+  kubectl_uninstall get applications -n argocd -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo ""
+}
+
+function remove_app_of_apps() {
+  log_info "Deleting app-of-apps ArgoCD application(s)..."
+  local aoa_apps
+  aoa_apps=$(get_application_names)
+  for app in $aoa_apps; do
+    if [[ "$app" == app-of-apps* ]]; then
+      log_info "  Deleting $app"
+      kubectl_uninstall delete -n argocd application "$app" --ignore-not-found 2>/dev/null || true
+    fi
+  done
+
+  delete_all_applications
+
+  log_info "Deleting ArgoCD project..."
+  kubectl_uninstall patch appproject "$cluster_name" -n argocd \
+    --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
+  kubectl_uninstall delete -n argocd appproject "$cluster_name" --ignore-not-found 2>/dev/null || true
+}
+
+function delete_all_applications() {
+  local apps
+  apps=$(get_application_names)
+
+  if [[ -z "$apps" ]]; then
+    log_info "No remaining ArgoCD applications to delete."
+    return
+  fi
+
+  local count
+  count=$(echo "$apps" | wc -w | tr -d ' ')
+  log_info "Deleting all $count ArgoCD application(s) at once..."
+  kubectl_uninstall delete applications --all -n argocd --wait=false 2>/dev/null || true
+
+  local timeout=30
+  local elapsed=0
+  local interval=5
+
+  while [[ $elapsed -lt $timeout ]]; do
+    apps=$(get_application_names)
+
+    if [[ -z "$apps" ]]; then
+      log_info "All ArgoCD applications deleted successfully."
+      return
+    fi
+
+    count=$(echo "$apps" | wc -w | tr -d ' ')
+    log_info "Waiting for $count application(s) to finish deleting... (${elapsed}s/${timeout}s)"
+    sleep "$interval"
+    elapsed=$((elapsed + interval))
+  done
+
+  apps=$(get_application_names)
+  count=$(echo "$apps" | wc -w | tr -d ' ')
+  log_warn "$count application(s) still stuck after ${timeout}s. Clearing stuck resources..."
+
+  for app in $apps; do
+    clear_stuck_managed_resources "$app"
+  done
+
+  log_info "Waiting for ArgoCD to process resource cleanup..."
+  sleep 10
+
+  apps=$(get_application_names)
+  for app in $apps; do
+    log_warn "  Force-clearing ArgoCD finalizers on application: $app"
+    kubectl_uninstall patch application "$app" -n argocd \
+      --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
+  done
+
+  sleep 5
+  apps=$(get_application_names)
+  if [[ -z "$apps" ]]; then
+    log_info "All ArgoCD applications deleted successfully."
+  else
+    log_warn "Some applications may still be terminating."
+  fi
+}
+
+function clear_stuck_managed_resources() {
+  local app_name=$1
+  log_info "  Checking managed resources for stuck application: $app_name"
+
+  local resources
+  resources=$(kubectl_uninstall get application "$app_name" -n argocd \
+    -o jsonpath='{range .status.resources[*]}{.group}{"\t"}{.kind}{"\t"}{.namespace}{"\t"}{.name}{"\n"}{end}' 2>/dev/null || echo "")
+
+  while IFS=$'\t' read -r group kind ns name; do
+    [[ -z "$kind" || -z "$name" ]] && continue
+    if [[ -z "$group" ]]; then
+      [[ "$kind" != "PersistentVolumeClaim" && "$kind" != "PersistentVolume" ]] && continue
+    fi
+
+    local resource_ref="${kind}.${group}"
+    [[ -z "$group" ]] && resource_ref="$kind"
+
+    local deletion_ts
+    if [[ -z "$ns" ]]; then
+      deletion_ts=$(kubectl_uninstall get "$resource_ref" "$name" \
+        -o jsonpath='{.metadata.deletionTimestamp}' 2>/dev/null || echo "")
+    else
+      deletion_ts=$(kubectl_uninstall get "$resource_ref" "$name" -n "$ns" \
+        -o jsonpath='{.metadata.deletionTimestamp}' 2>/dev/null || echo "")
+    fi
+
+    if [[ -n "$deletion_ts" ]]; then
+      if [[ -z "$ns" ]]; then
+        log_info "    Clearing finalizers on ${kind}/${name}"
+        kubectl_uninstall patch "$resource_ref" "$name" \
+          --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
+      else
+        log_info "    Clearing finalizers on ${kind}/${name} in namespace ${ns}"
+        kubectl_uninstall patch "$resource_ref" "$name" -n "$ns" \
+          --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
+      fi
+    fi
+  done <<< "$resources"
+}
+
+function clear_namespace_finalizers() {
+  local ns=$1
+  log_warn "  Force-clearing spec.finalizers on namespace: $ns"
+  local payload='{"apiVersion":"v1","kind":"Namespace","metadata":{"name":"'"$ns"'"},"spec":{"finalizers":[]}}'
+  echo "$payload" | kubectl_uninstall replace --raw "/api/v1/namespaces/$ns/finalize" -f - 2>/dev/null || true
+}
+
+function clear_stuck_pvcs_and_pvs() {
+  local count_pvc=0
+  local count_pv=0
+
+  for ns in "${UNINSTALL_NAMESPACES[@]}"; do
+    local names
+    names=$(kubectl_uninstall get pvc -n "$ns" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
+    for pvc in $names; do
+      [[ -z "$pvc" ]] && continue
+      local dt
+      dt=$(kubectl_uninstall get pvc "$pvc" -n "$ns" -o jsonpath='{.metadata.deletionTimestamp}' 2>/dev/null || echo "")
+      if [[ -n "$dt" ]]; then
+        log_info "  Clearing finalizers on PVC $ns/$pvc"
+        kubectl_uninstall patch pvc "$pvc" -n "$ns" --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
+        count_pvc=$((count_pvc + 1))
+      fi
+    done
+  done
+
+  local pv_names
+  pv_names=$(kubectl_uninstall get pv -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
+  for pv in $pv_names; do
+    [[ -z "$pv" ]] && continue
+    local dt
+    dt=$(kubectl_uninstall get pv "$pv" -o jsonpath='{.metadata.deletionTimestamp}' 2>/dev/null || echo "")
+    if [[ -n "$dt" ]]; then
+      log_info "  Clearing finalizers on PV $pv"
+      kubectl_uninstall patch pv "$pv" --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
+      count_pv=$((count_pv + 1))
+    fi
+  done
+
+  if [[ $count_pvc -gt 0 || $count_pv -gt 0 ]]; then
+    log_info "Cleared finalizers on $count_pvc PVC(s) and $count_pv PV(s) stuck in Terminating."
+  fi
+}
+
+function uninstall_argocd() {
+  log_info "Uninstalling ArgoCD via Helm..."
+  helm uninstall argocd --kube-context "$UNINSTALL_CONTEXT" -n argocd 2>/dev/null || true
+}
+
+function uninstall_kube_system_releases() {
+  for release in "${KUBE_SYSTEM_HELM_RELEASES[@]}"; do
+    log_info "Uninstalling Helm release '$release' from kube-system..."
+    helm uninstall "$release" --kube-context "$UNINSTALL_CONTEXT" -n kube-system 2>/dev/null || true
+  done
+}
+
+function delete_orphaned_webhooks() {
+  local type=$1
+  local label=$2
+  local names
+  names=$(kubectl_uninstall get "$type" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
+
+  for name in $names; do
+    local svc_namespaces
+    svc_namespaces=$(kubectl_uninstall get "$type" "$name" \
+      -o jsonpath='{range .webhooks[*]}{.clientConfig.service.namespace}{"\n"}{end}' 2>/dev/null || echo "")
+    for ns in "${UNINSTALL_NAMESPACES[@]}"; do
+      if echo "$svc_namespaces" | grep -qxF "$ns"; then
+        log_info "  Deleting $label: $name (references namespace $ns)"
+        kubectl_uninstall delete "$type" "$name" --ignore-not-found 2>/dev/null || true
+        break
+      fi
+    done
+  done
+}
+
+function cleanup_cluster_scoped_resources() {
+  log_info "Cleaning up orphaned webhook configurations..."
+  delete_orphaned_webhooks validatingwebhookconfiguration "ValidatingWebhookConfiguration"
+  delete_orphaned_webhooks mutatingwebhookconfiguration "MutatingWebhookConfiguration"
+}
+
+function delete_namespaces() {
+  for ns in "${UNINSTALL_NAMESPACES[@]}"; do
+    if kubectl_uninstall get namespace "$ns" &>/dev/null; then
+      log_info "Deleting namespace: $ns"
+      kubectl_uninstall delete namespace "$ns" --wait=false 2>/dev/null || true
+    fi
+  done
+}
+
+function cleanup_stuck_namespaces() {
+  log_info "Clearing finalizers on any PVCs and PVs stuck in Terminating..."
+  clear_stuck_pvcs_and_pvs
+
+  local stuck_namespaces=()
+  for ns in "${UNINSTALL_NAMESPACES[@]}"; do
+    local phase
+    phase=$(kubectl_uninstall get namespace "$ns" \
+      -o jsonpath='{.status.phase}' 2>/dev/null || echo "")
+    if [[ "$phase" == "Terminating" ]]; then
+      stuck_namespaces+=("$ns")
+    fi
+  done
+
+  if [[ ${#stuck_namespaces[@]} -eq 0 ]]; then
+    log_info "All namespaces deleted or deleting normally."
+    return
+  fi
+
+  local count=${#stuck_namespaces[@]}
+  log_info "Waiting for $count namespace(s) still in Terminating state..."
+
+  local timeout=60
+  local elapsed=0
+  local interval=5
+
+  while [[ $elapsed -lt $timeout ]]; do
+    local still_stuck=()
+    for ns in "${stuck_namespaces[@]}"; do
+      local phase
+      phase=$(kubectl_uninstall get namespace "$ns" \
+        -o jsonpath='{.status.phase}' 2>/dev/null || echo "")
+      if [[ "$phase" == "Terminating" ]]; then
+        still_stuck+=("$ns")
+      fi
+    done
+
+    if [[ ${#still_stuck[@]} -eq 0 ]]; then
+      log_info "All namespaces deleted successfully."
+      return
+    fi
+
+    stuck_namespaces=("${still_stuck[@]}")
+    log_info "  ${#stuck_namespaces[@]} namespace(s) still terminating... (${elapsed}s/${timeout}s)"
+    sleep "$interval"
+    elapsed=$((elapsed + interval))
+  done
+
+  log_warn "${#stuck_namespaces[@]} namespace(s) stuck after ${timeout}s. Force-clearing finalizers..."
+  for ns in "${stuck_namespaces[@]}"; do
+    clear_namespace_finalizers "$ns"
+  done
+}
+
+function cleanup_kubeconfig() {
+  local context=$1
+  local cluster_name=$2
+
+  log_info "Cleaning up kubeconfig entries..."
+
+  local oidc_user="oidc-$cluster_name"
+  local oidc_context="oidc-$cluster_name"
+
+  if command kubectl config get-contexts "$oidc_context" &>/dev/null; then
+    command kubectl config delete-context "$oidc_context" 2>/dev/null || true
+    log_info "  Deleted kubeconfig context: $oidc_context"
+  fi
+
+  if command kubectl config view -o jsonpath="{.users[?(@.name==\"$oidc_user\")].name}" 2>/dev/null | grep -qF "$oidc_user"; then
+    command kubectl config delete-user "$oidc_user" 2>/dev/null || true
+    log_info "  Deleted kubeconfig user: $oidc_user"
+  fi
+
+  if ! command kubectl config get-contexts "$context" &>/dev/null; then
+    log_info "  Context '$context' not found in kubeconfig, skipping."
+    return
+  fi
+
+  local ctx_cluster ctx_user
+  ctx_cluster=$(command kubectl config view -o jsonpath="{.contexts[?(@.name==\"$context\")].context.cluster}" 2>/dev/null || echo "")
+  ctx_user=$(command kubectl config view -o jsonpath="{.contexts[?(@.name==\"$context\")].context.user}" 2>/dev/null || echo "")
+
+  command kubectl config delete-context "$context" 2>/dev/null || true
+  log_info "  Deleted kubeconfig context: $context"
+
+  if [[ -n "$ctx_cluster" ]]; then
+    local other_refs
+    other_refs=$(command kubectl config view -o jsonpath="{.contexts[?(@.context.cluster==\"$ctx_cluster\")].name}" 2>/dev/null || echo "")
+    if [[ -z "$other_refs" ]]; then
+      command kubectl config delete-cluster "$ctx_cluster" 2>/dev/null || true
+      log_info "  Deleted kubeconfig cluster: $ctx_cluster"
+    else
+      log_info "  Kept kubeconfig cluster '$ctx_cluster' (still referenced by other contexts)"
+    fi
+  fi
+
+  if [[ -n "$ctx_user" ]]; then
+    local other_refs
+    other_refs=$(command kubectl config view -o jsonpath="{.contexts[?(@.context.user==\"$ctx_user\")].name}" 2>/dev/null || echo "")
+    if [[ -z "$other_refs" ]]; then
+      command kubectl config delete-user "$ctx_user" 2>/dev/null || true
+      log_info "  Deleted kubeconfig user: $ctx_user"
+    else
+      log_info "  Kept kubeconfig user '$ctx_user' (still referenced by other contexts)"
+    fi
+  fi
+
+  local current
+  current=$(command kubectl config current-context 2>/dev/null || echo "")
+  if [[ "$current" == "$context" || "$current" == "$oidc_context" ]]; then
+    command kubectl config unset current-context 2>/dev/null || true
+    log_info "  Unset current-context (was pointing to deleted context)"
+  fi
+}
+
+# ── Prerequisite Checks ───────────────────────────────────────────
+
+function check_required_tools_init() {
+  local required_tools=("kubectl" "helm" "htpasswd" "openssl")
+  for tool in "${required_tools[@]}"; do
+    if ! command -v "$tool" &> /dev/null; then
+      log_error "$tool could not be found, please install it."
+      exit 1
+    fi
+  done
+}
+
+function check_required_tools_deploy() {
+  local required_tools=("kubectl" "helm")
+  for tool in "${required_tools[@]}"; do
+    if ! command -v "$tool" &> /dev/null; then
+      log_error "$tool could not be found, please install it."
+      exit 1
+    fi
+  done
+}
+
+function check_required_tools_uninstall() {
+  local required_tools=("kubectl" "helm")
+  for tool in "${required_tools[@]}"; do
+    if ! command -v "$tool" &> /dev/null; then
+      log_error "$tool could not be found, please install it."
+      exit 1
+    fi
+  done
+}
+
+function check_cluster_reachable() {
+  local context=$1
+  if ! kubectl cluster-info --context "$context" &>/dev/null; then
+    log_error "Cannot connect to cluster using context '$context'."
+    exit 1
+  fi
+}
+
+function check_argocd_installed() {
+  local context=$1
+  if ! kubectl get namespace argocd --context "$context" &>/dev/null; then
+    log_error "ArgoCD namespace not found. Run 'kr init' first to bootstrap the cluster."
+    exit 1
+  fi
+  if ! helm status argocd --kube-context "$context" -n argocd &>/dev/null; then
+    log_error "ArgoCD Helm release not found. Run 'kr init' first to bootstrap the cluster."
+    exit 1
+  fi
+}
+
+# ── Usage & Argument Parsing ──────────────────────────────────────
+
+function usage() {
+  cat <<EOF
+Usage: kr <command> [flags]
+
+Commands:
+  version      Print kr version
+  init         Bootstrap a cluster (namespaces, secrets, CA, ArgoCD)
+  deploy       Deploy an app-of-apps layer (OSS, Pro, or Client)
+  uninstall    Tear down the platform from a cluster
+
+Run 'kr <command> --help' for command-specific usage.
+EOF
+}
+
+function usage_init() {
+  cat <<EOF
+Usage: kr init [flags]
+
+Bootstrap a Kubernetes cluster with kuberise platform prerequisites.
+
+Required flags:
+  --context CONTEXT        Kubernetes context name
+  --domain DOMAIN          Base domain for services
+
+Optional flags:
+  --cluster NAME           Cluster name (default: onprem)
+  --admin-password PWD     Admin password (default: admin, warns if default)
+  --cilium                 Also install Cilium CNI
+  -h, --help               Show this help message
+
+Environment variables:
+  ADMIN_PASSWORD           Admin password (alternative to --admin-password)
+  GITEA_ADMIN_PASSWORD     Gitea admin password (default: value of admin password)
+  CLOUDFLARE_API_TOKEN     Cloudflare API token for ExternalDNS and cert-manager
+  OPENAI_API_KEY           OpenAI API key for K8sGPT
+
+Example:
+  kr init --context k3d-dev --cluster dev-app-onprem-one --domain dev.kuberise.dev
+  kr init --context k3d-dev --cluster dev-app-onprem-one --domain dev.kuberise.dev --cilium
+EOF
+}
+
+function usage_deploy() {
+  cat <<EOF
+Usage: kr deploy [flags]
+
+Deploy an app-of-apps layer to a bootstrapped cluster.
+
+Required flags:
+  --context CONTEXT        Kubernetes context name
+  --repo REPO_URL          Git repository URL for this layer
+
+Optional flags:
+  --cluster NAME           Cluster name (default: onprem)
+  --domain DOMAIN          Base domain (default: onprem.kuberise.dev)
+  --revision REV           Branch, tag, or commit SHA (default: HEAD)
+  --name NAME              App-of-apps name (default: app-of-apps)
+  --token TOKEN            Git token for private repositories
+  --values-repo URL        Git repo for cluster values (default: same as --repo)
+  --values-revision REV    Revision for values repo (default: same as --revision)
+  --defaults-repo URL      Git repo for default values (default: same as --repo)
+  --defaults-revision REV  Revision for defaults repo (default: same as --revision)
+  -h, --help               Show this help message
+
+Examples:
+  # Deploy OSS layer
+  kr deploy --context k3d-dev --cluster dev-app-onprem-one \\
+    --repo https://github.com/kuberise/kuberise.io.git \\
+    --revision v0.3.0 --domain dev.kuberise.dev
+
+  # Deploy Pro layer (separate name to avoid conflicts)
+  kr deploy --context k3d-dev --cluster dev-app-onprem-one \\
+    --repo https://github.com/kuberise/kuberise-pro.git \\
+    --defaults-repo https://github.com/kuberise/kuberise-pro.git \\
+    --values-repo https://github.com/org/client.git \\
+    --revision v0.3.0 --domain dev.kuberise.dev \\
+    --token \$TOKEN --name app-of-apps-pro
+EOF
+}
+
+function usage_uninstall() {
+  cat <<EOF
+Usage: kr uninstall [flags]
+
+Uninstall kuberise platform from a Kubernetes cluster.
+
+Required flags:
+  --context CONTEXT        Kubernetes context name
+  --cluster NAME           Cluster name (must match the name used during init)
+
+Optional flags:
+  --yes, -y                Skip interactive confirmation prompt
+  -h, --help               Show this help message
+
+Example:
+  kr uninstall --context k3d-dev --cluster dev-app-onprem-one
+EOF
+}
+
+# ── Parse: init ────────────────────────────────────────────────────
+
+function parse_init_args() {
+  INIT_CONTEXT=""
+  INIT_CLUSTER="onprem"
+  INIT_DOMAIN=""
+  INIT_ADMIN_PASSWORD=""
+  INIT_CILIUM=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --context)          INIT_CONTEXT="$2";          shift 2 ;;
+      --cluster)          INIT_CLUSTER="$2";          shift 2 ;;
+      --domain)           INIT_DOMAIN="$2";           shift 2 ;;
+      --admin-password)   INIT_ADMIN_PASSWORD="$2";   shift 2 ;;
+      --cilium)           INIT_CILIUM=true;           shift ;;
+      --help|-h)          usage_init; exit 0 ;;
+      *)                  log_error "Unknown option: $1"; usage_init; exit 1 ;;
+    esac
+  done
+
+  INIT_ADMIN_PASSWORD="${INIT_ADMIN_PASSWORD:-${ADMIN_PASSWORD:-admin}}"
+}
+
+function validate_init() {
+  check_required_tools_init
+
+  if [[ -z "$INIT_CONTEXT" ]]; then
+    log_error "Missing required flag: --context"
+    usage_init
+    exit 1
+  fi
+
+  if [[ -z "$INIT_DOMAIN" ]]; then
+    log_error "Missing required flag: --domain"
+    usage_init
+    exit 1
+  fi
+
+  check_cluster_reachable "$INIT_CONTEXT"
+
+  if [[ "$INIT_ADMIN_PASSWORD" == "admin" ]]; then
+    log_warn "Using default admin password 'admin'. Set --admin-password or ADMIN_PASSWORD env var for production use."
+  fi
+}
+
+# ── Parse: deploy ──────────────────────────────────────────────────
+
+function parse_deploy_args() {
+  DEPLOY_CONTEXT=""
+  DEPLOY_CLUSTER="onprem"
+  DEPLOY_REPO=""
+  DEPLOY_REVISION="HEAD"
+  DEPLOY_DOMAIN="onprem.kuberise.dev"
+  DEPLOY_NAME="app-of-apps"
+  DEPLOY_TOKEN=""
+  DEPLOY_VALUES_REPO=""
+  DEPLOY_VALUES_REVISION=""
+  DEPLOY_DEFAULTS_REPO=""
+  DEPLOY_DEFAULTS_REVISION=""
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --context)            DEPLOY_CONTEXT="$2";            shift 2 ;;
+      --cluster)            DEPLOY_CLUSTER="$2";            shift 2 ;;
+      --repo)               DEPLOY_REPO="$2";               shift 2 ;;
+      --revision)           DEPLOY_REVISION="$2";           shift 2 ;;
+      --domain)             DEPLOY_DOMAIN="$2";             shift 2 ;;
+      --name)               DEPLOY_NAME="$2";               shift 2 ;;
+      --token)              DEPLOY_TOKEN="$2";              shift 2 ;;
+      --values-repo)        DEPLOY_VALUES_REPO="$2";        shift 2 ;;
+      --values-revision)    DEPLOY_VALUES_REVISION="$2";    shift 2 ;;
+      --defaults-repo)      DEPLOY_DEFAULTS_REPO="$2";      shift 2 ;;
+      --defaults-revision)  DEPLOY_DEFAULTS_REVISION="$2";  shift 2 ;;
+      --help|-h)            usage_deploy; exit 0 ;;
+      *)                    log_error "Unknown option: $1"; usage_deploy; exit 1 ;;
+    esac
+  done
+
+  DEPLOY_VALUES_REPO="${DEPLOY_VALUES_REPO:-$DEPLOY_REPO}"
+  DEPLOY_VALUES_REVISION="${DEPLOY_VALUES_REVISION:-$DEPLOY_REVISION}"
+  DEPLOY_DEFAULTS_REPO="${DEPLOY_DEFAULTS_REPO:-$DEPLOY_REPO}"
+  DEPLOY_DEFAULTS_REVISION="${DEPLOY_DEFAULTS_REVISION:-$DEPLOY_REVISION}"
+}
+
+function validate_deploy() {
+  check_required_tools_deploy
+
+  if [[ -z "$DEPLOY_CONTEXT" ]]; then
+    log_error "Missing required flag: --context"
+    usage_deploy
+    exit 1
+  fi
+
+  if [[ -z "$DEPLOY_REPO" ]]; then
+    log_error "Missing required flag: --repo"
+    usage_deploy
+    exit 1
+  fi
+
+  check_cluster_reachable "$DEPLOY_CONTEXT"
+  check_argocd_installed "$DEPLOY_CONTEXT"
+}
+
+# ── Parse: uninstall ───────────────────────────────────────────────
+
+function parse_uninstall_args() {
+  UNINSTALL_CONTEXT=""
+  UNINSTALL_CLUSTER=""
+  UNINSTALL_ASSUME_YES=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --context)      UNINSTALL_CONTEXT="$2";      shift 2 ;;
+      --cluster)      UNINSTALL_CLUSTER="$2";       shift 2 ;;
+      --yes|-y)       UNINSTALL_ASSUME_YES=true;    shift ;;
+      --help|-h)      usage_uninstall; exit 0 ;;
+      *)              log_error "Unknown option: $1"; usage_uninstall; exit 1 ;;
+    esac
+  done
+}
+
+function validate_uninstall() {
+  check_required_tools_uninstall
+
+  if [[ -z "$UNINSTALL_CONTEXT" ]]; then
+    log_error "Missing required flag: --context"
+    usage_uninstall
+    exit 1
+  fi
+
+  if [[ -z "$UNINSTALL_CLUSTER" ]]; then
+    log_error "Missing required flag: --cluster"
+    usage_uninstall
+    exit 1
+  fi
+
+  if ! kubectl cluster-info --context "$UNINSTALL_CONTEXT" &>/dev/null; then
+    log_error "Cannot connect to cluster using context '$UNINSTALL_CONTEXT'."
+    exit 1
+  fi
+}
+
+# ── Subcommand: version ───────────────────────────────────────────
+
+function cmd_version() {
+  echo "kr version $KR_VERSION"
+}
+
+# ── Subcommand: init ──────────────────────────────────────────────
+
+function cmd_init() {
+  parse_init_args "$@"
+  validate_init
+
+  log_step "Creating namespaces"
+  create_all_namespaces "$INIT_CONTEXT"
+
+  log_step "Generating CA certificates"
+  generate_ca_cert_and_key "$INIT_CONTEXT"
+
+  log_step "Creating database secrets"
+  create_database_secrets "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD"
+
+  log_step "Creating application secrets"
+  create_application_secrets "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD"
+
+  if [[ "$INIT_CILIUM" == true ]]; then
+    log_step "Installing Cilium"
+    install_cilium_minimal "$INIT_CONTEXT"
+  fi
+
+  log_step "Installing ArgoCD"
+  install_argocd_minimal "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN"
+
+  log_step "Configuring OAuth2 clients"
+  configure_oauth2_clients "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN" "$INIT_CLUSTER"
+
+  echo ""
+  log_info "Cluster bootstrap completed successfully."
+  log_info "Next step: run 'kr deploy' to deploy an app-of-apps layer."
+}
+
+# ── Subcommand: deploy ────────────────────────────────────────────
+
+function cmd_deploy() {
+  parse_deploy_args "$@"
+  validate_deploy
+
+  log_step "Configuring repository access"
+  configure_repo_access "$DEPLOY_CONTEXT" "$DEPLOY_NAME" "$DEPLOY_REPO" \
+    "$DEPLOY_TOKEN" "$DEPLOY_VALUES_REPO" "$DEPLOY_DEFAULTS_REPO"
+
+  log_step "Creating ArgoCD project"
+  create_app_project "$DEPLOY_CONTEXT" "$DEPLOY_CLUSTER"
+
+  log_step "Deploying app-of-apps"
+  create_app_of_apps "$DEPLOY_CONTEXT" "$DEPLOY_CLUSTER" \
+    "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_DOMAIN" \
+    "$DEPLOY_VALUES_REPO" "$DEPLOY_VALUES_REVISION" \
+    "$DEPLOY_DEFAULTS_REPO" "$DEPLOY_DEFAULTS_REVISION" \
+    "$DEPLOY_NAME"
+
+  echo ""
+  log_info "Layer '$DEPLOY_NAME' deployed successfully."
+  log_info "ArgoCD will now sync the applications defined in the app-of-apps."
+}
+
+# ── Subcommand: uninstall ─────────────────────────────────────────
+
+function cmd_uninstall() {
+  parse_uninstall_args "$@"
+  validate_uninstall
+  collect_uninstall_namespaces
+
+  echo ""
+  if [[ "$UNINSTALL_ASSUME_YES" != true ]]; then
+    read -p "This will remove the '$UNINSTALL_CLUSTER' cluster installation from the '$UNINSTALL_CONTEXT' Kubernetes context.
+
+It will:
+  - Delete the app-of-apps ArgoCD application and project
+  - Uninstall ArgoCD Helm release
+  - Remove orphaned webhook configurations (cluster-scoped)
+  - Delete kuberise-managed namespaces (including ArgoCD-discovered namespaces)
+  - Remove cluster context and OIDC entries from kubeconfig (if present)
+  - Cilium (CNI) will NOT be removed (the cluster needs it to function)
+
+Are you sure you want to continue? (yes/no): " answer
+
+    if [[ "$answer" != "yes" ]]; then
+      echo "Aborting uninstallation."
+      exit 0
+    fi
+  fi
+
+  log_step "Removing app-of-apps"
+  remove_app_of_apps
+
+  log_step "Uninstalling ArgoCD"
+  uninstall_argocd
+
+  if [[ ${#KUBE_SYSTEM_HELM_RELEASES[@]} -gt 0 ]]; then
+    log_step "Uninstalling kube-system Helm releases"
+    uninstall_kube_system_releases
+  fi
+
+  log_step "Cleaning up cluster-scoped resources"
+  cleanup_cluster_scoped_resources
+
+  log_step "Deleting namespaces"
+  delete_namespaces
+
+  log_step "Checking for stuck namespaces"
+  cleanup_stuck_namespaces
+
+  log_step "Cleaning up kubeconfig"
+  cleanup_kubeconfig "$UNINSTALL_CONTEXT" "$UNINSTALL_CLUSTER"
+
+  echo ""
+  log_info "kuberise uninstalled successfully."
+}
+
+# ── Main Dispatch ──────────────────────────────────────────────────
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 1
+fi
+
+case "$1" in
+  version)    cmd_version ;;
+  init)       shift; cmd_init "$@" ;;
+  deploy)     shift; cmd_deploy "$@" ;;
+  uninstall)  shift; cmd_uninstall "$@" ;;
+  --help|-h)  usage; exit 0 ;;
+  *)          log_error "Unknown command: $1"; usage; exit 1 ;;
+esac

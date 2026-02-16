@@ -1,5 +1,28 @@
 # Release Notes
 
+## [0.3.0] - 16 February 2026
+
+### Standalone `kr` CLI Tool
+
+This release introduces `kr`, a standalone CLI tool that replaces `install.sh` with a cleaner separation of concerns: cluster bootstrap (`kr init`) vs layer deployment (`kr deploy`). The tool is self-contained (no repo clone needed) and supports deploying multiple layers (OSS, Pro, Client) independently.
+
+### Added
+- **`kr` CLI tool** (`scripts/kr`) - standalone bash script with subcommands: `version`, `init`, `deploy`, `uninstall`.
+- **`kr init`** - bootstraps a cluster with namespaces, secrets, CA certificates, and ArgoCD (minimal --set flags only). Optionally installs Cilium with `--cilium`. No values files or repo clone required.
+- **`kr deploy`** - deploys an app-of-apps layer with per-layer repo secrets (prefixed by `--name` to avoid conflicts between OSS/Pro/Client layers). Can be called multiple times with different `--name` values.
+- **`kr uninstall`** - full teardown (migrated from `uninstall.sh`), including stuck resource cleanup and kubeconfig removal.
+- **Inline AppProject** - generated directly via kubectl apply instead of `helm template`, removing the dependency on a local repo checkout during deploy.
+- **Embedded Let's Encrypt certificate** - the ISRG Root X1 certificate is embedded in the script instead of read from a file.
+- **`scripts/install-kr.sh`** - curl-based installer for downloading `kr` from GitHub releases.
+
+### Changed
+- **ArgoCD bootstrap is now minimal** - installs with `--set` flags only (admin password, insecure mode, ClusterIP). Full configuration (ingress, OIDC, health checks, resource customizations) is applied via GitOps after `kr deploy`.
+- **Cilium bootstrap is now minimal** - installs a bare CNI. Advanced configuration (ClusterMesh, etc.) is applied via GitOps after `kr deploy`.
+- **Repo access secrets include layer name** - secret names use the `--name` prefix (e.g., `argocd-repo-app-of-apps-pro`) to prevent conflicts when deploying multiple layers.
+
+### Removed
+- **`scripts/install.sh`** - replaced by `kr init` + `kr deploy`.
+
 ## [0.2.0] - 14 February 2026
 
 ### Improved Install UX: Named Flags, Clearer Prerequisites, and Docs
