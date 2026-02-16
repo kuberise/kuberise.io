@@ -547,13 +547,12 @@ function configure_repo_access() {
 
 function create_app_project() {
   local context=$1
-  local cluster_name=$2
 
   kubectl apply --context "$context" -n argocd -f - <<EOF | filter_unchanged
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: $cluster_name
+  name: kuberise
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -607,7 +606,7 @@ metadata:
   labels:
     team: platform
 spec:
-  project: $cluster_name
+  project: kuberise
   sources:
     - repoURL: $git_repo
       targetRevision: $git_revision
@@ -699,9 +698,9 @@ function remove_app_of_apps() {
   delete_all_applications
 
   log_info "Deleting ArgoCD project..."
-  kubectl_uninstall patch appproject "$cluster_name" -n argocd \
+  kubectl_uninstall patch appproject kuberise -n argocd \
     --type merge -p '{"metadata":{"finalizers":null}}' 2>/dev/null || true
-  kubectl_uninstall delete -n argocd appproject "$cluster_name" --ignore-not-found 2>/dev/null || true
+  kubectl_uninstall delete -n argocd appproject kuberise --ignore-not-found 2>/dev/null || true
 }
 
 function delete_all_applications() {
@@ -1356,7 +1355,7 @@ function cmd_deploy() {
     "$DEPLOY_TOKEN" "$DEPLOY_VALUES_REPO" "$DEPLOY_DEFAULTS_REPO"
 
   log_step "Creating ArgoCD project"
-  create_app_project "$DEPLOY_CONTEXT" "$DEPLOY_CLUSTER"
+  create_app_project "$DEPLOY_CONTEXT"
 
   log_step "Deploying app-of-apps"
   create_app_of_apps "$DEPLOY_CONTEXT" "$DEPLOY_CLUSTER" \
