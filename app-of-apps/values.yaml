@@ -1,5 +1,6 @@
-# some of the values will be filled by install.sh script
+# some of the values will be filled by kr deploy
 global:
+  argoProject: kuberise
   clusterName: x
   domain: x
 
@@ -14,6 +15,9 @@ global:
     values:
       repoURL: x
       targetRevision: x
+    defaults:
+      repoURL: ""
+      targetRevision: ""
 
 # There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
 ArgocdApplications:
