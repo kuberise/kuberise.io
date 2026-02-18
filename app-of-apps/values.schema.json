@@ -8,10 +8,15 @@
   "properties": {
     "global": {
       "type": "object",
-      "description": "Global configuration injected by install.sh and used across all applications.",
+      "description": "Global configuration injected by kr deploy and used across all applications.",
       "required": ["clusterName", "domain"],
       "additionalProperties": false,
       "properties": {
+        "argoProject": {
+          "type": "string",
+          "description": "ArgoCD AppProject name that all child applications belong to. Defaults to kuberise.",
+          "default": "kuberise"
+        },
         "clusterName": {
           "type": "string",
           "description": "Name of the target cluster. Must match a directory under values/.",
@@ -75,6 +80,21 @@
                   "description": "Git branch, tag, or commit SHA for values files."
                 }
               }
+            },
+            "defaults": {
+              "type": "object",
+              "description": "Git repository for default value files. When set, default values come from this repo ($defaults ref) while cluster overrides come from the values repo ($values ref). Falls back to source repo when empty.",
+              "additionalProperties": false,
+              "properties": {
+                "repoURL": {
+                  "type": "string",
+                  "description": "Git repository URL for default value files."
+                },
+                "targetRevision": {
+                  "type": "string",
+                  "description": "Git branch, tag, or commit SHA for default value files."
+                }
+              }
             }
           }
         }
@@ -132,6 +152,14 @@
         "valuesTargetRevision": {
           "type": "string",
           "description": "Override the global values targetRevision for this application (multi-source split-repo topology)."
+        },
+        "defaultsRepoURL": {
+          "type": "string",
+          "description": "Override the global defaults repoURL for this application."
+        },
+        "defaultsTargetRevision": {
+          "type": "string",
+          "description": "Override the global defaults targetRevision for this application."
         },
         "values": {
           "type": "array",

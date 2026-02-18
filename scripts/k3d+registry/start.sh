@@ -52,38 +52,33 @@ else
 fi
 
 # Create dev-app-onprem-one cluster
-if k3d cluster get dev-app-onprem-one >/dev/null 2>&1; then
-  echo "k3d cluster 'dev-app-onprem-one' already exists"
-else
-  echo "Creating k3d cluster 'dev-app-onprem-one'..."
-  k3d cluster create dev-app-onprem-one --config "$DEV_APP_ONPREM_ONE_YAML_TMP"
-fi
+# if k3d cluster get dev-app-onprem-one >/dev/null 2>&1; then
+#   echo "k3d cluster 'dev-app-onprem-one' already exists"
+# else
+#   echo "Creating k3d cluster 'dev-app-onprem-one'..."
+#   k3d cluster create dev-app-onprem-one --config "$DEV_APP_ONPREM_ONE_YAML_TMP"
+# fi
 
 echo ""
 echo "✓ Both clusters created successfully!"
 echo "  - dev-shared-onprem cluster: k3d-dev-shared-onprem"
-echo "  - dev-app-onprem-one cluster: k3d-dev-app-onprem-one"
+# echo "  - dev-app-onprem-one cluster: k3d-dev-app-onprem-one"
 echo ""
-echo "Next steps:"
-echo "  1. Install Cilium CNI and ClusterMesh in both clusters"
-echo "  2. Run install.sh for each cluster:"
-echo "     ./scripts/install.sh --context k3d-dev-shared-onprem --cluster dev-shared-onprem --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]"
-echo "     ./scripts/install.sh --context k3d-dev-app-onprem-one --cluster dev-app-onprem-one --repo <REPO_URL> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]"
-
-REVISION=main
-./scripts/install.sh \
-  --context k3d-dev-shared-onprem \
-  --cluster dev-shared-onprem \
-  --repo https://github.com/kuberise/kuberise.io.git \
-  --revision "$REVISION" \
-  --domain dev.kuberise.dev \
-  --token "$GITHUB_TOKEN"
 
 
-./scripts/install.sh \
-  --context k3d-dev-app-onprem-one \
-  --cluster dev-app-onprem-one \
-  --repo https://github.com/kuberise/kuberise.io.git \
-  --revision "$REVISION" \
-  --domain dev.kuberise.dev \
-  --token "$GITHUB_TOKEN"
+
+
+kr init --context k3d-dev-shared-onprem --cluster dev --domain dev.kuberise.dev --cilium
+
+kr deploy --context k3d-dev-shared-onprem --cluster dev --name platform \
+          --repo https://github.com/kuberise/kuberise.io.git --revision 0.3.0 \
+          --defaults-repo https://github.com/kuberise/kuberise.io.git --defaults-revision 0.3.0 \  # You can remove this line and it will use the --repo and --revision for defaults
+          --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
+          --domain dev.kuberise.dev --token $GITHUB_TOKEN
+
+
+kr deploy --context k3d-dev-shared-onprem --cluster dev --name webshop \
+          --repo https://github.com/kuberise/kuberise-client.git --revision main \
+          --defaults-repo https://github.com/kuberise/kuberise-client.git --defaults-revision main \
+          --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
+          --domain dev.kuberise.dev --token $GITHUB_TOKEN

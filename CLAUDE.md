@@ -9,17 +9,24 @@ kuberise.io is a free, open-source internal developer platform for Kubernetes. I
 ## Key Commands
 
 ```bash
-# Install platform on a cluster
-./scripts/install.sh --context <CONTEXT> --repo <REPO_URL> \
+# Install the kr CLI
+curl -sSL https://raw.githubusercontent.com/kuberise/kuberise.io/main/scripts/install-kr.sh | sh
+
+# Bootstrap a cluster (namespaces, secrets, CA, ArgoCD; --cilium for CNI)
+kr init --context <CONTEXT> --cluster <NAME> --domain <DOMAIN>
+
+# Deploy a layer (app-of-apps)
+kr deploy --context <CONTEXT> --repo <REPO_URL> \
   --cluster <NAME> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]
 
+# Uninstall
+kr uninstall --context <CONTEXT> --cluster <NAME>
+
 # Example: local k3d cluster
-./scripts/install.sh --context k3d-dev --cluster dev-app-onprem-one \
+kr init --context k3d-dev --cluster dev-app-onprem-one --domain k3d.kuberise.dev
+kr deploy --context k3d-dev --cluster dev-app-onprem-one \
   --repo https://github.com/<you>/kuberise.io.git \
   --revision main --domain k3d.kuberise.dev
-
-# Uninstall
-./scripts/uninstall.sh <CONTEXT> <NAME>
 
 # Check for newer versions of external Helm charts
 ./scripts/upgrade.sh
@@ -77,8 +84,15 @@ All clusters share the same charts and external chart references. Per-cluster co
 - **Bash scripts**: use `set -euo pipefail`
 - **Writing style**: never use em dash (--), use hyphen (-) or rephrase
 - **Defaults**: be explicit about default values in templates rather than relying on implicit defaults
+- **Version format**: use `0.3.0` format (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs. Third-party tool versions follow their upstream format
 - **Breaking changes**: document in RELEASE_NOTES.md
 - **ADRs**: stored in `docs/adr/`, use standard format (Status, Context, Decision, Consequences)
+
+## Releasing a New Version
+
+When adding a new release version to `RELEASE_NOTES.md`, you must also update the website (`https.kuberise.io` repo):
+1. **Changelog entry**: Create `https.kuberise.io/content/4.changelog/{N}.{major}-{minor}-{patch}.md` with frontmatter (title, description, date, image) and release notes content. The file number `{N}` should be the next sequential number after the existing entries.
+2. **Version badge**: Update the `version` field in `https.kuberise.io/app/app.config.ts` to the new version (e.g., `'0.3.0'`). This version is displayed next to the logo in the website header.
 
 ## CI/CD
 
