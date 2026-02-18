@@ -290,6 +290,13 @@ ArgocdApplications:
   secrets-manager:
     enabled: false
 
+  trivy-operator:
+    enabled: false
+    namespace: trivy-system
+    chart: trivy-operator
+    repoURL: https://aquasecurity.github.io/helm-charts/
+    targetRevision: 0.32.0
+
   neuvector:
     enabled: false
     chart: core
