@@ -72,7 +72,7 @@ kr init --context k3d-dev-shared-onprem --cluster dev --domain dev.kuberise.dev 
 
 kr deploy --context k3d-dev-shared-onprem --cluster dev --name platform \
           --repo https://github.com/kuberise/kuberise.io.git --revision 0.3.0 \
-          --defaults-repo https://github.com/kuberise/kuberise.io.git --defaults-revision 0.3.0 \  # You can remove this line and it will use the --repo and --revision for defaults
+          --defaults-repo https://github.com/kuberise/kuberise.io.git --defaults-revision 0.3.0 \
           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
           --domain dev.kuberise.dev --token $GITHUB_TOKEN
 
