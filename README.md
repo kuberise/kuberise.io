@@ -23,8 +23,10 @@ kuberise.io gives you a production-ready platform on any Kubernetes cluster -- l
 ### Install the `kr` CLI
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/kuberise/kuberise.io/main/scripts/install-kr.sh | sh
+curl -sSL https://kuberise.io/install | sh
 ```
+
+To install a specific version, set `KR_VERSION` for the shell that runs the script: `curl -sSL https://kuberise.io/install | KR_VERSION=0.3.0 sh`
 
 ### Bootstrap and Deploy
 

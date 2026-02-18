@@ -10,7 +10,7 @@ kuberise.io is a free, open-source internal developer platform for Kubernetes. I
 
 ```bash
 # Install the kr CLI
-curl -sSL https://raw.githubusercontent.com/kuberise/kuberise.io/main/scripts/install-kr.sh | sh
+curl -sSL https://kuberise.io/install | sh
 
 # Bootstrap a cluster (namespaces, secrets, CA, ArgoCD; --cilium for CNI)
 kr init --context <CONTEXT> --cluster <NAME> --domain <DOMAIN>

@@ -2,7 +2,11 @@
 # Install kr - the kuberise CLI tool
 #
 # Usage:
+#   curl -sSL https://kuberise.io/install | sh
 #   curl -sSL https://raw.githubusercontent.com/kuberise/kuberise.io/main/scripts/install-kr.sh | sh
+#
+# Specific version (set KR_VERSION for sh, not curl):
+#   curl -sSL https://kuberise.io/install | KR_VERSION=0.3.0 sh
 #
 # Environment variables:
 #   KR_VERSION      - Version to install (default: latest release)
@@ -20,7 +24,7 @@ else
   if [ -z "$VERSION" ]; then
     echo "Error: could not determine latest version." >&2
     echo "The repository may not have any releases yet." >&2
-    echo "Set KR_VERSION manually, e.g.: KR_VERSION=0.3.0 sh install-kr.sh" >&2
+    echo "Set KR_VERSION manually, e.g.: curl -sSL https://kuberise.io/install | KR_VERSION=0.3.0 sh" >&2
     exit 1
   fi
 fi
