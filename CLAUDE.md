@@ -84,8 +84,15 @@ All clusters share the same charts and external chart references. Per-cluster co
 - **Bash scripts**: use `set -euo pipefail`
 - **Writing style**: never use em dash (--), use hyphen (-) or rephrase
 - **Defaults**: be explicit about default values in templates rather than relying on implicit defaults
+- **Version format**: use `0.3.0` (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs. Third-party tool versions follow their upstream format
 - **Breaking changes**: document in RELEASE_NOTES.md
 - **ADRs**: stored in `docs/adr/`, use standard format (Status, Context, Decision, Consequences)
+
+## Releasing a New Version
+
+When adding a new release version to `RELEASE_NOTES.md`, you must also update the website (`https.kuberise.io` repo):
+1. **Changelog entry**: Create `https.kuberise.io/content/4.changelog/{N}.{major}-{minor}-{patch}.md` with frontmatter (title, description, date, image) and release notes content. The file number `{N}` should be the next sequential number after the existing entries.
+2. **Version badge**: Update the `version` field in `https.kuberise.io/app/app.config.ts` to the new version (e.g., `'0.3.0'`). This version is displayed next to the logo in the website header.
 
 ## CI/CD
 

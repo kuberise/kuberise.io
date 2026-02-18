@@ -107,6 +107,10 @@ ArgoCD Applications support three types:
 - Chart names should match directory names (kebab-case)
 - Include `Chart.yaml` with proper versioning
 
+### Version Format
+- Use `0.3.0` (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs
+- Third-party tool versions follow their upstream format
+
 ### Naming Conventions
 - Component names: kebab-case (e.g., `cert-manager`, `external-dns`)
 - Namespace names: Usually match component name or follow Kubernetes conventions
@@ -374,6 +378,12 @@ When adding a new property to `app-of-apps/templates/ArgocdApplications.yaml`, y
 - Use Helm template helpers for consistent naming
 - Pattern: `{{ include "component.fullname" . }}`
 - Include component name in all resources
+
+## Releasing a New Version
+
+When adding a new release version to `RELEASE_NOTES.md`, you must also update the website (`https.kuberise.io` repo):
+1. **Changelog entry**: Create `https.kuberise.io/content/4.changelog/{N}.{major}-{minor}-{patch}.md` with frontmatter (title, description, date, proper image) and release notes content. The file number `{N}` should be the next sequential number after the existing entries.
+2. **Version badge**: Update the `version` field in `https.kuberise.io/app/app.config.ts` to the new version (e.g., `'0.3.0'`). This version is displayed next to the logo in the website header.
 
 ## Important Notes
 
