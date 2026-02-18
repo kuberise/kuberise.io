@@ -7,6 +7,7 @@
 This release adds support for separate Git tokens per repository in `kr deploy`. Previously, a single `--token` was shared across all three repository sources (charts, default values, cluster values). This was limiting when repositories belong to different Git organizations, providers, or require different access scopes.
 
 ### Added
+- **`--dry-run` flag for `kr deploy`** - Preview all Kubernetes manifests that would be applied without making changes.
 - **`--values-token` flag** - Git token for the values repository, independent of the main `--token`.
 - **`--defaults-token` flag** - Git token for the defaults repository, independent of the main `--token`.
 - **Cascade defaults** - When only `--token` is provided, it is used as the fallback for all repositories (preserving existing behavior). Individual token flags override only when explicitly given.
