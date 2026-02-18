@@ -194,6 +194,17 @@ function filter_unchanged() {
   grep -v ' unchanged$' || true
 }
 
+# In dry-run mode, print the manifest from stdin instead of applying it.
+# In normal mode, apply the manifest via kubectl.
+function apply_manifest() {
+  if [[ "${KR_DRY_RUN:-false}" == true ]]; then
+    cat
+    echo "---"
+  else
+    kubectl apply "$@" | filter_unchanged
+  fi
+}
+
 function create_namespace() {
   local context=$1
   local namespace=$2
@@ -214,7 +225,7 @@ function create_secret() {
     -n "$namespace" \
     "$@" \
     --dry-run=client -o yaml | \
-    kubectl apply --context "$context" -n "$namespace" -f - | filter_unchanged
+    apply_manifest --context "$context" -n "$namespace" -f -
 }
 
 function label_secret() {
@@ -222,6 +233,10 @@ function label_secret() {
   local namespace=$2
   local secret_name=$3
   local label=$4
+  if [[ "${KR_DRY_RUN:-false}" == true ]]; then
+    log_info "[dry-run] Would label secret $namespace/$secret_name with $label"
+    return
+  fi
   kubectl label secret "$secret_name" "$label" \
     --context "$context" -n "$namespace" --overwrite
 }
@@ -573,7 +588,7 @@ function configure_repo_access() {
 function create_app_project() {
   local context=$1
 
-  kubectl apply --context "$context" -n argocd -f - <<EOF | filter_unchanged
+  apply_manifest --context "$context" -n argocd -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -616,7 +631,7 @@ function create_app_of_apps() {
 
   # No resources-finalizer here: deleting app-of-apps with a finalizer triggers
   # a deep cascade that is slow and fragile. The uninstall handles cleanup explicitly.
-  kubectl apply --context "$context" -n argocd -f - <<EOF | filter_unchanged
+  apply_manifest --context "$context" -n argocd -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -1140,6 +1155,7 @@ Optional flags:
   --domain DOMAIN          Base domain (default: onprem.kuberise.dev)
   --revision REV           Branch, tag, or commit SHA (default: HEAD)
   --name NAME              Layer identifier (default: platform)
+  --dry-run                Show what would be applied without making changes
   --token TOKEN            Git token for private repositories (used as fallback for all repos)
   --values-repo URL        Git repo for cluster values (default: same as --repo)
   --values-revision REV    Revision for values repo (default: same as --revision)
@@ -1205,6 +1221,7 @@ function parse_init_args() {
       --domain)           INIT_DOMAIN="$2";           shift 2 ;;
       --admin-password)   INIT_ADMIN_PASSWORD="$2";   shift 2 ;;
       --cilium)           INIT_CILIUM=true;           shift ;;
+      --dry-run)          log_error "The init command does not support --dry-run. Only 'kr deploy' supports it."; exit 1 ;;
       --help|-h)          usage_init; exit 0 ;;
       *)                  log_error "Unknown option: $1"; usage_init; exit 1 ;;
     esac
@@ -1244,6 +1261,7 @@ function parse_deploy_args() {
   DEPLOY_REVISION="HEAD"
   DEPLOY_DOMAIN="onprem.kuberise.dev"
   DEPLOY_NAME="platform"
+  DEPLOY_DRY_RUN=false
   DEPLOY_TOKEN=""
   DEPLOY_VALUES_REPO=""
   DEPLOY_VALUES_REVISION=""
@@ -1260,6 +1278,7 @@ function parse_deploy_args() {
       --revision)           DEPLOY_REVISION="$2";           shift 2 ;;
       --domain)             DEPLOY_DOMAIN="$2";             shift 2 ;;
       --name)               DEPLOY_NAME="$2";               shift 2 ;;
+      --dry-run)            DEPLOY_DRY_RUN=true;            shift ;;
       --token)              DEPLOY_TOKEN="$2";              shift 2 ;;
       --values-repo)        DEPLOY_VALUES_REPO="$2";        shift 2 ;;
       --values-revision)    DEPLOY_VALUES_REVISION="$2";    shift 2 ;;
@@ -1384,6 +1403,12 @@ function cmd_deploy() {
   parse_deploy_args "$@"
   validate_deploy
 
+  KR_DRY_RUN="$DEPLOY_DRY_RUN"
+
+  if [[ "$KR_DRY_RUN" == true ]]; then
+    log_info "Dry-run mode: showing resources that would be applied (no changes will be made)"
+  fi
+
   log_step "Configuring repository access"
   configure_repo_access "$DEPLOY_CONTEXT" "$DEPLOY_NAME" "$DEPLOY_REPO" \
     "$DEPLOY_TOKEN" "$DEPLOY_VALUES_REPO" "$DEPLOY_VALUES_TOKEN" \
@@ -1400,8 +1425,12 @@ function cmd_deploy() {
     "$DEPLOY_NAME"
 
   echo ""
-  log_info "Layer '$DEPLOY_NAME' deployed (app-of-apps-$DEPLOY_NAME)."
-  log_info "ArgoCD will now sync the applications defined in the app-of-apps."
+  if [[ "$KR_DRY_RUN" == true ]]; then
+    log_info "Dry-run completed. No changes were made."
+  else
+    log_info "Layer '$DEPLOY_NAME' deployed (app-of-apps-$DEPLOY_NAME)."
+    log_info "ArgoCD will now sync the applications defined in the app-of-apps."
+  fi
 }
 
 # ── Subcommand: uninstall ─────────────────────────────────────────
