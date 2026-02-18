@@ -49,13 +49,13 @@ metadata:
   name: app-of-apps-{{ cluster_name }}
   namespace: argocd
   # No resources-finalizer: deleting app-of-apps with a finalizer triggers
-  # a deep cascade that is slow and fragile. The uninstall script handles
-  # cleanup explicitly.
+  # a deep cascade that is slow and fragile. kr uninstall handles cleanup
+  # explicitly.
 ```
 
-The app-of-apps is only ever deleted during platform uninstall. The uninstall script (`scripts/uninstall.sh`) handles the deletion lifecycle explicitly: it deletes child applications, clears stuck finalizers, removes orphaned webhook configurations, and deletes namespaces in a controlled sequence.
+The app-of-apps is only ever deleted during platform uninstall. The `kr uninstall` command handles the deletion lifecycle explicitly: it deletes child applications, clears stuck finalizers, removes orphaned webhook configurations, and deletes namespaces in a controlled sequence.
 
-If someone accidentally deletes app-of-apps without the uninstall script, the child Applications become "orphaned" from their parent but continue running and functioning normally. Re-creating app-of-apps (by re-running install.sh) causes ArgoCD to re-adopt them.
+If someone accidentally deletes app-of-apps without `kr uninstall`, the child Applications become "orphaned" from their parent but continue running and functioning normally. Re-creating app-of-apps (by re-running `kr deploy`) causes ArgoCD to re-adopt them.
 
 ### 2. Resources-finalizer on all child Applications
 
