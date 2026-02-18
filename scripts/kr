@@ -532,7 +532,9 @@ function configure_repo_access() {
   local repo_url=$3
   local token=$4
   local values_repo=$5
-  local defaults_repo=$6
+  local values_token=$6
+  local defaults_repo=$7
+  local defaults_token=$8
 
   if [ -n "$token" ]; then
     local repo_secret_name="argocd-repo-${aoa_name}"
@@ -543,28 +545,28 @@ function configure_repo_access() {
       --from-literal=url="$repo_url" \
       --from-literal=type=git
     label_secret "$context" "argocd" "$repo_secret_name" "argocd.argoproj.io/secret-type=repository"
+  fi
 
-    if [[ "$values_repo" != "$repo_url" ]]; then
-      local values_secret_name="argocd-repo-${aoa_name}-values"
-      create_secret "$context" "argocd" "$values_secret_name" \
-        --from-literal=name="${aoa_name}-values" \
-        --from-literal=username=x \
-        --from-literal=password="$token" \
-        --from-literal=url="$values_repo" \
-        --from-literal=type=git
-      label_secret "$context" "argocd" "$values_secret_name" "argocd.argoproj.io/secret-type=repository"
-    fi
+  if [[ "$values_repo" != "$repo_url" || "$values_token" != "$token" ]] && [ -n "$values_token" ]; then
+    local values_secret_name="argocd-repo-${aoa_name}-values"
+    create_secret "$context" "argocd" "$values_secret_name" \
+      --from-literal=name="${aoa_name}-values" \
+      --from-literal=username=x \
+      --from-literal=password="$values_token" \
+      --from-literal=url="$values_repo" \
+      --from-literal=type=git
+    label_secret "$context" "argocd" "$values_secret_name" "argocd.argoproj.io/secret-type=repository"
+  fi
 
-    if [[ "$defaults_repo" != "$repo_url" ]] && [[ "$defaults_repo" != "$values_repo" ]]; then
-      local defaults_secret_name="argocd-repo-${aoa_name}-defaults"
-      create_secret "$context" "argocd" "$defaults_secret_name" \
-        --from-literal=name="${aoa_name}-defaults" \
-        --from-literal=username=x \
-        --from-literal=password="$token" \
-        --from-literal=url="$defaults_repo" \
-        --from-literal=type=git
-      label_secret "$context" "argocd" "$defaults_secret_name" "argocd.argoproj.io/secret-type=repository"
-    fi
+  if [[ "$defaults_repo" != "$repo_url" || "$defaults_token" != "$token" ]] && [[ "$defaults_repo" != "$values_repo" || "$defaults_token" != "$values_token" ]] && [ -n "$defaults_token" ]; then
+    local defaults_secret_name="argocd-repo-${aoa_name}-defaults"
+    create_secret "$context" "argocd" "$defaults_secret_name" \
+      --from-literal=name="${aoa_name}-defaults" \
+      --from-literal=username=x \
+      --from-literal=password="$defaults_token" \
+      --from-literal=url="$defaults_repo" \
+      --from-literal=type=git
+    label_secret "$context" "argocd" "$defaults_secret_name" "argocd.argoproj.io/secret-type=repository"
   fi
 }
 
@@ -1138,11 +1140,13 @@ Optional flags:
   --domain DOMAIN          Base domain (default: onprem.kuberise.dev)
   --revision REV           Branch, tag, or commit SHA (default: HEAD)
   --name NAME              Layer identifier (default: platform)
-  --token TOKEN            Git token for private repositories
+  --token TOKEN            Git token for private repositories (used as fallback for all repos)
   --values-repo URL        Git repo for cluster values (default: same as --repo)
   --values-revision REV    Revision for values repo (default: same as --revision)
+  --values-token TOKEN     Git token for values repo (default: same as --token)
   --defaults-repo URL      Git repo for default values (default: same as --repo)
   --defaults-revision REV  Revision for defaults repo (default: same as --revision)
+  --defaults-token TOKEN   Git token for defaults repo (default: same as --token)
   -h, --help               Show this help message
 
 The --name flag controls:
@@ -1243,8 +1247,10 @@ function parse_deploy_args() {
   DEPLOY_TOKEN=""
   DEPLOY_VALUES_REPO=""
   DEPLOY_VALUES_REVISION=""
+  DEPLOY_VALUES_TOKEN=""
   DEPLOY_DEFAULTS_REPO=""
   DEPLOY_DEFAULTS_REVISION=""
+  DEPLOY_DEFAULTS_TOKEN=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -1257,8 +1263,10 @@ function parse_deploy_args() {
       --token)              DEPLOY_TOKEN="$2";              shift 2 ;;
       --values-repo)        DEPLOY_VALUES_REPO="$2";        shift 2 ;;
       --values-revision)    DEPLOY_VALUES_REVISION="$2";    shift 2 ;;
+      --values-token)       DEPLOY_VALUES_TOKEN="$2";       shift 2 ;;
       --defaults-repo)      DEPLOY_DEFAULTS_REPO="$2";      shift 2 ;;
       --defaults-revision)  DEPLOY_DEFAULTS_REVISION="$2";  shift 2 ;;
+      --defaults-token)     DEPLOY_DEFAULTS_TOKEN="$2";     shift 2 ;;
       --help|-h)            usage_deploy; exit 0 ;;
       *)                    log_error "Unknown option: $1"; usage_deploy; exit 1 ;;
     esac
@@ -1266,8 +1274,10 @@ function parse_deploy_args() {
 
   DEPLOY_VALUES_REPO="${DEPLOY_VALUES_REPO:-$DEPLOY_REPO}"
   DEPLOY_VALUES_REVISION="${DEPLOY_VALUES_REVISION:-$DEPLOY_REVISION}"
+  DEPLOY_VALUES_TOKEN="${DEPLOY_VALUES_TOKEN:-$DEPLOY_TOKEN}"
   DEPLOY_DEFAULTS_REPO="${DEPLOY_DEFAULTS_REPO:-$DEPLOY_REPO}"
   DEPLOY_DEFAULTS_REVISION="${DEPLOY_DEFAULTS_REVISION:-$DEPLOY_REVISION}"
+  DEPLOY_DEFAULTS_TOKEN="${DEPLOY_DEFAULTS_TOKEN:-$DEPLOY_TOKEN}"
 }
 
 function validate_deploy() {
@@ -1376,7 +1386,8 @@ function cmd_deploy() {
 
   log_step "Configuring repository access"
   configure_repo_access "$DEPLOY_CONTEXT" "$DEPLOY_NAME" "$DEPLOY_REPO" \
-    "$DEPLOY_TOKEN" "$DEPLOY_VALUES_REPO" "$DEPLOY_DEFAULTS_REPO"
+    "$DEPLOY_TOKEN" "$DEPLOY_VALUES_REPO" "$DEPLOY_VALUES_TOKEN" \
+    "$DEPLOY_DEFAULTS_REPO" "$DEPLOY_DEFAULTS_TOKEN"
 
   log_step "Creating ArgoCD project"
   create_app_project "$DEPLOY_CONTEXT"

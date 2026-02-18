@@ -1,5 +1,21 @@
 # Release Notes
 
+## [0.4.0] - DRAFT
+
+### Per-Repository Git Tokens
+
+This release adds support for separate Git tokens per repository in `kr deploy`. Previously, a single `--token` was shared across all three repository sources (charts, default values, cluster values). This was limiting when repositories belong to different Git organizations, providers, or require different access scopes.
+
+### Added
+- **`--values-token` flag** - Git token for the values repository, independent of the main `--token`.
+- **`--defaults-token` flag** - Git token for the defaults repository, independent of the main `--token`.
+- **Cascade defaults** - When only `--token` is provided, it is used as the fallback for all repositories (preserving existing behavior). Individual token flags override only when explicitly given.
+- **ADR-0024** documenting the rationale for per-repository authentication.
+
+### Changed
+- **`--token` description** updated to clarify its role as fallback for all repos.
+- **Repository secret creation** now evaluates each repo independently. A secret is created when the token is non-empty and the URL/token combination differs from an already-created secret.
+
 ## [0.3.0] - 18 February 2026
 
 ### Standalone `kr` CLI Tool
