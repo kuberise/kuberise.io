@@ -177,6 +177,8 @@ function make_temp_file() {
 # ── Utility Functions ──────────────────────────────────────────────
 
 function generate_random_secret() {
+  # Generate a 32-character alphanumeric string.
+  # Uses parameter expansion instead of piping to head to avoid SIGPIPE with pipefail.
   local raw
   raw=$(openssl rand -base64 48)
   raw="${raw//[^a-zA-Z0-9]/}"
@@ -185,6 +187,9 @@ function generate_random_secret() {
 
 # ── Kubernetes Helper Functions ────────────────────────────────────
 
+# Filter out "unchanged" lines from kubectl apply output to reduce noise on re-runs.
+# The "|| true" prevents grep from returning exit code 1 when everything is unchanged,
+# which would otherwise abort the script under set -eo pipefail.
 function filter_unchanged() {
   grep -v ' unchanged$' || true
 }
@@ -203,6 +208,7 @@ function create_secret() {
   local namespace=$2
   local secret_name=$3
   shift 3
+  # Remaining arguments (--from-literal, --type, etc.) are passed directly to kubectl
   kubectl create secret generic "$secret_name" \
     --context "$context" \
     -n "$namespace" \
@@ -227,6 +233,23 @@ function secret_exists() {
   kubectl get secret "$secret_name" --context "$context" -n "$namespace" &>/dev/null
 }
 
+# Retrieves or generates a secret value
+#
+# This function checks if a secret exists in a namespace:
+# - If it doesn't exist, generates a random value
+# - If it exists, retrieves the value from the specified key
+#
+# Arguments:
+#   $1 - Kubernetes context
+#   $2 - Namespace
+#   $3 - Secret name
+#   $4 - Key in the secret to retrieve (default: 'password')
+#
+# Example usage:
+#   password=$(get_or_generate_secret "$CONTEXT" "postgres" "database-superuser" "password")
+#
+# Returns:
+#   The secret value (either retrieved or newly generated) on stdout
 function get_or_generate_secret() {
   local context=$1
   local namespace=$2
