@@ -1,7 +1,0 @@
-opencost:
-  ui:
-    ingress:
-      hosts:
-        - host: opencost.airgap.kuberise.dev
-          paths:
-            - /
