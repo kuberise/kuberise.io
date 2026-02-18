@@ -17,7 +17,7 @@ kuberise.io gives you a production-ready platform on any Kubernetes cluster -- l
 
 ### Prerequisites
 
-- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`
+- CLI tools: `kubectl`, `helm`, `htpasswd`, `openssl`, `cilium`, `yq`, `git`
 - A Kubernetes cluster ([k3d](https://k3d.io), [kind](https://kind.sigs.k8s.io), minikube, or any cloud provider)
 
 ### Install the `kr` CLI

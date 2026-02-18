@@ -84,7 +84,7 @@ All clusters share the same charts and external chart references. Per-cluster co
 - **Bash scripts**: use `set -euo pipefail`
 - **Writing style**: never use em dash (--), use hyphen (-) or rephrase
 - **Defaults**: be explicit about default values in templates rather than relying on implicit defaults
-- **Version format**: use `0.3.0` (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs. Third-party tool versions follow their upstream format
+- **Version format**: use `0.3.0` format (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs. Third-party tool versions follow their upstream format
 - **Breaking changes**: document in RELEASE_NOTES.md
 - **ADRs**: stored in `docs/adr/`, use standard format (Status, Context, Decision, Consequences)
 

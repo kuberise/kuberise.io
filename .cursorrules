@@ -73,7 +73,6 @@ ArgoCD Applications automatically merge these files in order (defaults first, th
 - `scripts/`: Installation and utility scripts
   - `kr`: Standalone CLI tool (`kr init`, `kr deploy`, `kr uninstall`)
   - `install-kr.sh`: Curl-based installer for downloading `kr` from GitHub releases
-  - `uninstall.sh`: Legacy uninstallation script (use `kr uninstall` instead)
   - `upgrade.sh`: Upgrade script that checks for newer versions of external charts referenced in `values.yaml`
   - `k3d+registry/`: Scripts for local multi-cluster development setup
     - Creates two k3d clusters (shared and dev) connected via Cilium ClusterMesh
@@ -108,7 +107,7 @@ ArgoCD Applications support three types:
 - Include `Chart.yaml` with proper versioning
 
 ### Version Format
-- Use `0.3.0` (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs
+- Use `0.3.0` format (no 'v' prefix) everywhere - git tags, release notes, changelogs, docs
 - Third-party tool versions follow their upstream format
 
 ### Naming Conventions

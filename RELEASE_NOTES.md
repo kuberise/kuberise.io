@@ -1,6 +1,6 @@
 # Release Notes
 
-## [0.3.0] - 16 February 2026
+## [0.3.0] - 18 February 2026
 
 ### Standalone `kr` CLI Tool
 
@@ -22,6 +22,7 @@ This release introduces `kr`, a standalone CLI tool that replaces `install.sh` w
 
 ### Removed
 - **`scripts/install.sh`** - replaced by `kr init` + `kr deploy`.
+- **`scripts/uninstall.sh`** - replaced by `kr uninstall`.
 
 ## [0.2.0] - 14 February 2026
 
