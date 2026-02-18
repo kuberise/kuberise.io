@@ -467,7 +467,7 @@ function configure_oidc_auth() {
   log_info "OIDC configured. Use 'kubectl config use-context $oidc_context' to switch."
 }
 
-function install_argocd_minimal() {
+function install_argocd() {
   local context=$1
   local admin_password=$2
   local domain=$3
@@ -487,7 +487,7 @@ function install_argocd_minimal() {
   log_info "ArgoCD installed. Full configuration (ingress, OIDC, health checks) will be applied via GitOps after 'kr deploy'."
 }
 
-function install_cilium_minimal() {
+function install_cilium() {
   local context=$1
 
   log_info "Installing Cilium..."
@@ -587,8 +587,7 @@ function create_app_of_apps() {
   # --name is the layer identifier (default: platform)
   # Application name: app-of-apps-{name}    Enabler: values-{name}.yaml
   #   platform (default)                  → app-of-apps-platform / values-platform.yaml
-  #   pro                                 → app-of-apps-pro      / values-pro.yaml
-  #   acme                                → app-of-apps-acme     / values-acme.yaml
+  #   webshop                             → app-of-apps-webshop  / values-webshop.yaml
 
   # No resources-finalizer here: deleting app-of-apps with a finalizer triggers
   # a deep cascade that is slow and fragile. The uninstall handles cleanup explicitly.
@@ -1066,7 +1065,7 @@ Usage: kr <command> [flags]
 Commands:
   version      Print kr version
   init         Bootstrap a cluster (namespaces, secrets, CA, ArgoCD)
-  deploy       Deploy an app-of-apps layer (OSS, Pro, or Client)
+  deploy       Deploy an app-of-apps layer (Platform, Client, Teams, etc.)
   uninstall    Tear down the platform from a cluster
 
 Run 'kr <command> --help' for command-specific usage.
@@ -1129,24 +1128,18 @@ The --name flag controls:
   Repo secret:       argocd-repo-{name}
 
 Examples:
-  # Deploy OSS layer (default --name platform)
+  # Deploy platform layer (default --name platform)
+  # Uses OSS charts with default values, overridden by client-specific values
   kr deploy --context k3d-dev --cluster dev-shared-onprem \\
     --repo https://github.com/kuberise/kuberise.io.git \\
+    --values-repo https://github.com/org/client.git \\
     --revision v0.3.0 --domain dev.kuberise.dev
 
-  # Deploy Pro layer
-  kr deploy --context k3d-dev --cluster dev-shared-onprem \\
-    --repo https://github.com/kuberise/kuberise-pro.git \\
-    --defaults-repo https://github.com/kuberise/kuberise-pro.git \\
-    --values-repo https://github.com/org/client.git \\
-    --revision v0.3.0 --domain dev.kuberise.dev \\
-    --token \$TOKEN --name pro
-
-  # Deploy Client layer
+  # Deploy client layer with client-specific charts and values
   kr deploy --context k3d-dev --cluster dev-shared-onprem \\
     --repo https://github.com/org/client.git \\
     --revision main --domain dev.kuberise.dev \\
-    --token \$TOKEN --name acme
+    --token \$TOKEN --name webshop
 EOF
 }
 
@@ -1338,11 +1331,11 @@ function cmd_init() {
 
   if [[ "$INIT_CILIUM" == true ]]; then
     log_step "Installing Cilium"
-    install_cilium_minimal "$INIT_CONTEXT"
+    install_cilium "$INIT_CONTEXT"
   fi
 
   log_step "Installing ArgoCD"
-  install_argocd_minimal "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN"
+  install_argocd "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN"
 
   log_step "Configuring OAuth2 clients"
   configure_oauth2_clients "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN" "$INIT_CLUSTER"

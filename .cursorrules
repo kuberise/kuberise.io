@@ -232,7 +232,7 @@ The `kr` CLI separates cluster bootstrap from layer deployment:
 2. Creates an ArgoCD AppProject
 3. Creates the app-of-apps ArgoCD Application
 
-Multiple layers (OSS, Pro, Client) can be deployed by calling `kr deploy` with different `--name` values. The `--name` is a short layer identifier (e.g., `platform`, `pro`, `acme`). It controls the Application name (`app-of-apps-{name}`), enabler file (`values-{name}.yaml`), and repo secret (`argocd-repo-{name}`).
+Multiple layers can be deployed by calling `kr deploy` with different `--name` values. For example, one layer can deploy the platform charts with default values overridden by client configuration, while another layer can deploy client-specific charts. The `--name` is a short layer identifier (e.g., `platform`, `webshop`). It controls the Application name (`app-of-apps-{name}`), enabler file (`values-{name}.yaml`), and repo secret (`argocd-repo-{name}`).
 
 ### kr init Parameters
 ```bash

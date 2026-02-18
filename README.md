@@ -67,18 +67,18 @@ kr deploy --context k3d-dev --cluster dev-app-onprem-one \
 
 ### Multi-Layer Deployment
 
-Deploy multiple layers (OSS, Pro, Client) by calling `kr deploy` with different `--name` values:
+Deploy multiple layers (OSS, Client, Teams, etc.) by calling `kr deploy` with different `--name` values:
 
 ```bash
-# Pro layer
+# Default layer
 kr deploy --context k3d-dev --cluster dev-app-onprem-one \
-  --repo https://github.com/kuberise/kuberise-pro.git \
-  --name pro --token $TOKEN ...
+  --repo https://github.com/kuberise/kuberise.io.git \
+  --name default ...
 
 # Client layer
 kr deploy --context k3d-dev --cluster dev-app-onprem-one \
   --repo https://github.com/org/client.git \
-  --name acme --token $TOKEN ...
+  --name client-name --token $TOKEN ...
 ```
 
 ### Uninstall

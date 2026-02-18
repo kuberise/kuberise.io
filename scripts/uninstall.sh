@@ -200,8 +200,8 @@ function collect_uninstall_namespaces() {
 
 function remove_app_of_apps() {
   # Step 1: Delete all app-of-apps Applications.
-  # In OSS there is one (app-of-apps-platform). In pro/client setups
-  # there can be up to three (app-of-apps-pro, app-of-apps-acme, etc.).
+  # There is at least one (app-of-apps-platform). In multi-layer setups
+  # there can be more (e.g., app-of-apps-webshop).
   # No finalizer per ADR-0018, so deletion is instant.
   log_info "Deleting app-of-apps ArgoCD application(s)..."
   local aoa_apps

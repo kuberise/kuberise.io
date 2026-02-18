@@ -6,9 +6,9 @@ Accepted (supersedes ADR-0013)
 
 ## Context
 
-ArgoCD AppProjects group Applications and define access controls (allowed source repos, destination namespaces, cluster resource whitelists). With the introduction of multi-layer deployment (ADR-0003 in kuberise-pro), a single cluster can host up to three app-of-apps Applications (e.g., `app-of-apps-platform`, `app-of-apps-pro`, `app-of-apps-acme`), each deploying a different set of tools. This raises the question of how many AppProjects to create per cluster:
+ArgoCD AppProjects group Applications and define access controls (allowed source repos, destination namespaces, cluster resource whitelists). With multi-layer deployment, a single cluster can host multiple app-of-apps Applications (e.g., `app-of-apps-platform`, `app-of-apps-webshop`), each deploying a different set of tools. This raises the question of how many AppProjects to create per cluster:
 
-1. **One project per layer** - each `kr deploy` creates its own AppProject (e.g., `platform`, `pro`, `acme`).
+1. **One project per layer** - each `kr deploy` creates its own AppProject (e.g., `platform`, `webshop`).
 2. **One project per cluster** - all layers share a single AppProject.
 
 Additionally, ADR-0013 placed the AppProject inside the app-of-apps Helm chart so ArgoCD could manage it declaratively. In practice this created a circular dependency during deletion: the app-of-apps Application tried to delete the AppProject, but the AppProject's `resources-finalizer` blocked deletion because the app-of-apps still belonged to it.
@@ -27,7 +27,7 @@ The AppProject is no longer a Helm template inside the app-of-apps chart. Instea
 
 ### Why one project is enough
 
-- **Each cluster has its own ArgoCD instance.** Cross-cluster isolation is already handled at the infrastructure level. A per-cluster AppProject does not add meaningful isolation beyond what already exists.
+- **Each cluster has its own ArgoCD instance.** Cross-cluster isolation is already handled at the infrastructure level. A per-layer AppProject does not add meaningful isolation beyond what already exists.
 - **The AppProject allows everything.** The current spec uses `'*'` for sourceRepos, destinations, and clusterResourceWhitelist. Multiple projects with identical permissive specs add management overhead with no security benefit.
 - **Simpler mental model.** One project means `kr deploy` is idempotent on the AppProject - the first deploy creates it, subsequent deploys see it already exists. No need to coordinate project names across layers.
 
