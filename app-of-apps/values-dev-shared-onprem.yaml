@@ -114,6 +114,9 @@ ArgocdApplications:
   policy:
     enabled: false
 
+  trivy-operator:
+    enabled: true
+
   neuvector:
     enabled: false
 

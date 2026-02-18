@@ -73,6 +73,7 @@ readonly KUBERISE_NAMESPACES=(
   vault
   secrets-manager
   neuvector
+  trivy-system
 
   # Monitoring
   monitoring
