@@ -70,14 +70,17 @@ echo ""
 
 kr init --context k3d-dev-shared-onprem --cluster dev --domain dev.kuberise.dev --cilium
 
-kr deploy --context k3d-dev-shared-onprem --cluster dev \
+kr deploy --context k3d-dev-shared-onprem --cluster dev --name platform \
           --repo https://github.com/kuberise/kuberise.io.git --revision threelayer \
           --defaults-repo https://github.com/kuberise/kuberise.io.git --defaults-revision threelayer \
           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
           --domain dev.kuberise.dev --token $GITHUB_TOKEN
 
-kr deploy --context k3d-dev-shared-onprem --cluster dev-client --name acme \
+
+kr deploy --context k3d-dev-shared-onprem --cluster dev --name acme \
           --repo https://github.com/kuberise/kuberise-client.git --revision main \
           --defaults-repo https://github.com/kuberise/kuberise-client.git --defaults-revision main \
           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
           --domain dev.kuberise.dev --token $GITHUB_TOKEN
+
+          # --defaults-repo https://github.com/kuberise/kuberise-pro.git --defaults-revision main \
