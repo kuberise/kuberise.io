@@ -4,6 +4,8 @@ serviceMonitor:
   enabled: true
   interval: 1m
   scrapeTimeout: 10s
+hostNetwork:
+  enabled: true
 defaultArgs:
   - --cert-dir=/tmp
   - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
