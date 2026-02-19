@@ -12,3 +12,7 @@ defaultArgs:
   - --kubelet-use-node-status-port
   - --metric-resolution=15s
   - --kubelet-insecure-tls
+# Port 4443 avoids conflict with kubelet (port 10250) when hostNetwork is enabled
+containerPort: 4443
+args:
+  - --kubelet-insecure-tls
