@@ -63,7 +63,7 @@ Add `type: kustomize` or `type: raw` if not Helm. Add `namespace` only if it dif
 
 ## 5. Enable in cluster values
 
-Add to relevant `app-of-apps/values-{cluster}.yaml` files with `enabled: true`.
+Add to the relevant `app-of-apps/values-{name}.yaml` enabler file (e.g. `values-webshop.yaml`) with `enabled: true`.
 
 ## Conventions
 

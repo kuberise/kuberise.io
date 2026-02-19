@@ -59,15 +59,15 @@ Values are passed directly to upstream charts (no subchart nesting prefix).
 ### Operator + Config Chart Pattern
 Components needing custom CRD instances are split into two apps: operator app (syncWave 1) installs the upstream chart, config app (syncWave 2) in `charts/{name}-config/` installs CRD instances. Examples: `cert-manager` + `cert-manager-config`, `keycloak` + `keycloak-config`.
 
-### Multi-Cluster Support
-All clusters share the same charts and external chart references. Per-cluster config lives in `values/{cluster}/` directories. Cluster-specific app-of-apps overrides are in `app-of-apps/values-{cluster}.yaml`.
+### Multi-Cluster and Multi-Layer Support
+All clusters share the same charts and external chart references. Per-cluster config lives in `values/{cluster}/` directories. Per-deploy enabler files are in `app-of-apps/values-{name}.yaml` (named after the `--name` layer identifier, not the cluster).
 
 ## Adding Components
 
 ### New External Component
 1. Add to `app-of-apps/values.yaml` under `ArgocdApplications` with `chart`, `repoURL`, `targetRevision` (set `enabled: false`)
 2. Create default values in `values/defaults/platform/{name}/values.yaml` (even if empty)
-3. Enable in relevant `app-of-apps/values-{cluster}.yaml`
+3. Enable in relevant `app-of-apps/values-{name}.yaml` (e.g. `values-webshop.yaml`)
 4. Only create cluster-specific values files if actual overrides exist
 
 ### New Local Chart
