@@ -1,0 +1,18 @@
+metrics:
+  enabled: true
+serviceMonitor:
+  enabled: true
+  interval: 1m
+  scrapeTimeout: 10s
+hostNetwork:
+  enabled: true
+defaultArgs:
+  - --cert-dir=/tmp
+  - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+  - --kubelet-use-node-status-port
+  - --metric-resolution=15s
+  - --kubelet-insecure-tls
+# Port 4443 avoids conflict with kubelet (port 10250) when hostNetwork is enabled
+containerPort: 4443
+args:
+  - --kubelet-insecure-tls

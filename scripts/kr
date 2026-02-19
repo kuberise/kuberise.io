@@ -625,9 +625,9 @@ function create_app_of_apps() {
   local defaults_revision=$9
   local aoa_name=${10}
 
-  # --name is the layer identifier (default: platform)
+  # --name is the layer identifier (default: shared)
   # Application name: app-of-apps-{name}    Enabler: values-{name}.yaml
-  #   platform (default)                  → app-of-apps-platform / values-platform.yaml
+  #   shared (default)                    → app-of-apps-shared / values-shared.yaml
   #   webshop                             → app-of-apps-webshop  / values-webshop.yaml
 
   # No resources-finalizer here: deleting app-of-apps with a finalizer triggers
@@ -1155,7 +1155,7 @@ Optional flags:
   --cluster NAME           Cluster name (default: onprem)
   --domain DOMAIN          Base domain (default: onprem.kuberise.dev)
   --revision REV           Branch, tag, or commit SHA (default: HEAD)
-  --name NAME              Layer identifier (default: platform)
+  --name NAME              Layer identifier (default: shared)
   --dry-run                Show what would be applied without making changes
   --token TOKEN            Git token for private repositories (used as fallback for all repos)
   --values-repo URL        Git repo for cluster values (default: same as --repo)
@@ -1172,7 +1172,7 @@ The --name flag controls:
   Repo secret:       argocd-repo-{name}
 
 Examples:
-  # Deploy platform layer (default --name platform)
+  # Deploy platform layer (default --name shared)
   # Uses OSS charts with default values, overridden by client-specific values
   kr deploy --context k3d-dev --cluster dev-shared-onprem \\
     --repo https://github.com/kuberise/kuberise.io.git \\
@@ -1261,7 +1261,7 @@ function parse_deploy_args() {
   DEPLOY_REPO=""
   DEPLOY_REVISION="HEAD"
   DEPLOY_DOMAIN="onprem.kuberise.dev"
-  DEPLOY_NAME="platform"
+  DEPLOY_NAME="shared"
   DEPLOY_DRY_RUN=false
   DEPLOY_TOKEN=""
   DEPLOY_VALUES_REPO=""

@@ -38,7 +38,7 @@ Create `values/defaults/platform/{component-name}/values.yaml`. This file must a
 
 ## 4. Enable in cluster values files
 
-Add the component to relevant `app-of-apps/values-{cluster}.yaml` files with `enabled: true`.
+Add the component to the relevant `app-of-apps/values-{name}.yaml` enabler file (e.g. `values-webshop.yaml`) with `enabled: true`.
 
 ## 5. Operator + Config pattern (if needed)
 

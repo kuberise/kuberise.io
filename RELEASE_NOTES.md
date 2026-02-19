@@ -26,7 +26,7 @@ This release introduces `kr`, a standalone CLI tool that replaces `install.sh` w
 ### Added
 - **`kr` CLI tool** (`scripts/kr`) - standalone bash script with subcommands: `version`, `init`, `deploy`, `uninstall`.
 - **`kr init`** - bootstraps a cluster with namespaces, secrets, CA certificates, and ArgoCD. Optionally installs Cilium with `--cilium`. No values files or repo clone required.
-- **`kr deploy`** - deploys an app-of-apps layer. The `--name` flag is a short layer identifier (default: `platform`) that controls the Application name (`app-of-apps-{name}`), enabler file (`values-{name}.yaml`), and repo secret (`argocd-repo-{name}`). Can be called multiple times with different `--name` values (e.g., `--name webshop`).
+- **`kr deploy`** - deploys an app-of-apps layer. The `--name` flag is a short layer identifier (default: `shared`) that controls the Application name (`app-of-apps-{name}`), enabler file (`values-{name}.yaml`), and repo secret (`argocd-repo-{name}`). Can be called multiple times with different `--name` values (e.g., `--name webshop`).
 - **`kr uninstall`** - full teardown (migrated from `uninstall.sh`), including stuck resource cleanup and kubeconfig removal.
 - **Inline AppProject** - generated directly via kubectl apply instead of `helm template`, removing the dependency on a local repo checkout during deploy.
 - **Embedded Let's Encrypt certificate** - the ISRG Root X1 certificate is embedded in the script instead of read from a file.

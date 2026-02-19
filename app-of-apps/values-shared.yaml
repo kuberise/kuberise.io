@@ -1,0 +1,70 @@
+ArgocdApplications:
+
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
+
+  raw:
+    enabled: true
+
+  #=================================#
+  #          Data Services          #
+  #=================================#
+
+  database:
+    enabled: true
+
+  postgres-operator:
+    enabled: true
+
+  #=================================#
+  #      Network Services           #
+  #=================================#
+
+  ingress-nginx-external:
+    enabled: true
+
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
+
+  keycloak:
+    enabled: true
+
+  keycloak-config:
+    enabled: true
+
+  keycloak-operator:
+    enabled: true
+
+  cert-manager:
+    enabled: true
+
+  cert-manager-config:
+    enabled: true
+
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
+
+  dashboards:
+    enabled: true
+
+  metrics-server:
+    enabled: true
+
+  kube-prometheus-stack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  #=================================#
+  #      Example Applications       #
+  #=================================#
+
+  frontend-https:
+    enabled: true

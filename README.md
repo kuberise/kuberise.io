@@ -51,7 +51,7 @@ kr deploy --context <CONTEXT> --cluster <NAME> \
 | `deploy` | `--cluster` | Cluster name (default: `onprem`) |
 | `deploy` | `--domain` | Base domain (default: `onprem.kuberise.dev`) |
 | `deploy` | `--revision` | Branch, tag, or commit SHA (default: `HEAD`) |
-| `deploy` | `--name` | Layer identifier for multi-layer setups (default: `platform`) |
+| `deploy` | `--name` | Layer identifier for multi-layer setups (default: `shared`) |
 | `deploy` | `--token` | Git token for private repositories (optional) |
 
 Run `kr init --help` or `kr deploy --help` for the full list of flags.

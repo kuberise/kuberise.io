@@ -1,2 +1,0 @@
-persistentVolume:
-  storageClass: gp2

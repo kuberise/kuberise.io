@@ -66,19 +66,29 @@ echo "  - dev-shared-onprem cluster: k3d-dev-shared-onprem"
 echo ""
 
 
+# REVISION=0.3.0
+REVISION=example-cluster
 
 
-kr init --context k3d-dev-shared-onprem --cluster dev --domain dev.kuberise.dev --cilium
+kr init --context k3d-dev-shared-onprem --cluster example --domain dev.kuberise.dev --cilium
 
-kr deploy --context k3d-dev-shared-onprem --cluster dev --name platform \
-          --repo https://github.com/kuberise/kuberise.io.git --revision 0.3.0 \
-          --defaults-repo https://github.com/kuberise/kuberise.io.git --defaults-revision 0.3.0 \
-          --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
-          --domain dev.kuberise.dev --token $GITHUB_TOKEN
+kr deploy --context k3d-dev-shared-onprem --cluster example --name shared \
+          --repo https://github.com/kuberise/kuberise.io.git --revision $REVISION \
+          --domain dev.kuberise.dev
+
+# kr deploy --context k3d-dev-shared-onprem --cluster example --name shared \
+#           --repo https://github.com/kuberise/kuberise.io.git --revision example-cluster \
+#           --domain dev.kuberise.dev --dry-run
+
+# kr deploy --context k3d-dev-shared-onprem --cluster example --name shared \
+#           --repo https://github.com/kuberise/kuberise.io.git --revision $REVISION \
+#           --defaults-repo https://github.com/kuberise/kuberise.io.git --defaults-revision $REVISION \
+#           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
+#           --domain dev.kuberise.dev --token $GITHUB_TOKEN
 
 
-kr deploy --context k3d-dev-shared-onprem --cluster dev --name webshop \
-          --repo https://github.com/kuberise/kuberise-client.git --revision main \
-          --defaults-repo https://github.com/kuberise/kuberise-client.git --defaults-revision main \
-          --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
-          --domain dev.kuberise.dev --token $GITHUB_TOKEN
+# kr deploy --context k3d-dev-shared-onprem --cluster dev --name webshop \
+#           --repo https://github.com/kuberise/kuberise-client.git --revision main \
+#           --defaults-repo https://github.com/kuberise/kuberise-client.git --defaults-revision main \
+#           --values-repo https://github.com/kuberise/kuberise-client.git --values-revision main \
+#           --domain dev.kuberise.dev --token $GITHUB_TOKEN
