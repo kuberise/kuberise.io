@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-KR_VERSION="0.3.0"
+KR_VERSION="0.4.0"
 
 # ── Constants ──────────────────────────────────────────────────────
 
@@ -588,6 +588,7 @@ function configure_repo_access() {
 
 function create_app_project() {
   local context=$1
+  local destination=${2:-https://kubernetes.default.svc}
 
   apply_manifest --context "$context" -n argocd -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
@@ -603,7 +604,7 @@ spec:
   destinations:
     - name: '*'
       namespace: '*'
-      server: https://kubernetes.default.svc
+      server: $destination
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
@@ -624,6 +625,7 @@ function create_app_of_apps() {
   local defaults_repo=$8
   local defaults_revision=$9
   local aoa_name=${10}
+  local destination=${11:-https://kubernetes.default.svc}
 
   # --name is the layer identifier (default: shared)
   # Application name: app-of-apps-{name}    Enabler: values-{name}.yaml
@@ -669,11 +671,13 @@ spec:
             value: $cluster_name
           - name: global.domain
             value: $domain
+          - name: global.spec.destination.server
+            value: $destination
     - repoURL: $values_repo
       targetRevision: $values_revision
       ref: values
   destination:
-    server: https://kubernetes.default.svc
+    server: $destination
     namespace: argocd
   syncPolicy:
     automated:
@@ -1156,6 +1160,8 @@ Optional flags:
   --domain DOMAIN          Base domain (default: onprem.kuberise.dev)
   --revision REV           Branch, tag, or commit SHA (default: HEAD)
   --name NAME              Layer identifier (default: shared)
+  --destination URL        Kubernetes API server URL for remote deployment
+                           (default: https://kubernetes.default.svc)
   --dry-run                Show what would be applied without making changes
   --token TOKEN            Git token for private repositories (used as fallback for all repos)
   --values-repo URL        Git repo for cluster values (default: same as --repo)
@@ -1184,6 +1190,12 @@ Examples:
     --repo https://github.com/org/client.git \\
     --revision main --domain dev.kuberise.dev \\
     --token \$TOKEN --name webshop
+
+  # Deploy to a remote cluster (hub-and-spoke)
+  kr deploy --context k3d-mgmt --cluster dev \\
+    --repo https://github.com/kuberise/kuberise.io.git \\
+    --revision main --domain dev.kuberise.dev \\
+    --destination https://localhost:7443 --name shared
 EOF
 }
 
@@ -1262,6 +1274,7 @@ function parse_deploy_args() {
   DEPLOY_REVISION="HEAD"
   DEPLOY_DOMAIN="onprem.kuberise.dev"
   DEPLOY_NAME="shared"
+  DEPLOY_DESTINATION="https://kubernetes.default.svc"
   DEPLOY_DRY_RUN=false
   DEPLOY_TOKEN=""
   DEPLOY_VALUES_REPO=""
@@ -1279,6 +1292,7 @@ function parse_deploy_args() {
       --revision)           DEPLOY_REVISION="$2";           shift 2 ;;
       --domain)             DEPLOY_DOMAIN="$2";             shift 2 ;;
       --name)               DEPLOY_NAME="$2";               shift 2 ;;
+      --destination)        DEPLOY_DESTINATION="$2";        shift 2 ;;
       --dry-run)            DEPLOY_DRY_RUN=true;            shift ;;
       --token)              DEPLOY_TOKEN="$2";              shift 2 ;;
       --values-repo)        DEPLOY_VALUES_REPO="$2";        shift 2 ;;
@@ -1416,14 +1430,14 @@ function cmd_deploy() {
     "$DEPLOY_DEFAULTS_REPO" "$DEPLOY_DEFAULTS_TOKEN"
 
   log_step "Creating ArgoCD project"
-  create_app_project "$DEPLOY_CONTEXT"
+  create_app_project "$DEPLOY_CONTEXT" "$DEPLOY_DESTINATION"
 
   log_step "Deploying app-of-apps"
   create_app_of_apps "$DEPLOY_CONTEXT" "$DEPLOY_CLUSTER" \
     "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_DOMAIN" \
     "$DEPLOY_VALUES_REPO" "$DEPLOY_VALUES_REVISION" \
     "$DEPLOY_DEFAULTS_REPO" "$DEPLOY_DEFAULTS_REVISION" \
-    "$DEPLOY_NAME"
+    "$DEPLOY_NAME" "$DEPLOY_DESTINATION"
 
   echo ""
   if [[ "$KR_DRY_RUN" == true ]]; then
