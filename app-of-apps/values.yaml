@@ -19,7 +19,12 @@ global:
       repoURL: ""
       targetRevision: ""
 
-# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm
+# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm.
+#
+# IMPORTANT: All apps MUST have "enabled: false" as their default here.
+# This values.yaml is loaded as Helm chart defaults for ALL layers (platform, pro, client).
+# If any app is enabled here, it will leak into every layer. Enablement is controlled
+# exclusively by the client repo's enabler files (values-{cluster}-{layer}.yaml).
 ArgocdApplications:
 
   #=================================#
@@ -321,7 +326,7 @@ ArgocdApplications:
 
   # TODO: should be updated manually
   kube-prometheus-stack-crds:
-    enabled: false # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
+    enabled: false
     namespace: monitoring
 
   kube-prometheus-stack:
