@@ -321,7 +321,7 @@ ArgocdApplications:
 
   # TODO: should be updated manually
   kube-prometheus-stack-crds:
-    enabled: true # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
+    enabled: false # should be enabled by default. PodMonitor and ServiceMonitor CRDs are required for other charts to work.
     namespace: monitoring
 
   kube-prometheus-stack:
