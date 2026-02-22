@@ -1,0 +1,408 @@
+# Platform (OSS) app definitions - loaded explicitly per layer via $layer/app-of-apps/values-base.yaml.
+# This file is NOT auto-loaded by Helm (only values.yaml is). Each layer gets only its own definitions.
+#
+# There are three types of ArgocdApplications: kustomize, helm, and raw. Default is helm.
+#
+# IMPORTANT: All apps MUST have "enabled: false" as their default here.
+# Enablement is controlled exclusively by the client repo's enabler files
+# (values-{cluster}-{layer}.yaml).
+ArgocdApplications:
+
+  #=================================#
+  #      Platform Core Apps         #
+  #=================================#
+
+  raw:
+    enabled: false
+    path: values/{{ $.Values.global.clusterName }}/platform/raw
+    type: raw
+    recursive: true
+
+  argocd-image-updater:
+    enabled: false
+    namespace: argocd
+    chart: argocd-image-updater
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 1.1.0
+
+  teams-namespaces:
+    enabled: false
+
+  team-setup:
+    enabled: false
+    namespace: keycloak
+
+  backstage:
+    enabled: false
+
+  gitea:
+    enabled: false
+    chart: gitea
+    repoURL: https://dl.gitea.io/charts
+    targetRevision: 12.5.0
+
+  hello:
+    enabled: false
+    type: kustomize
+
+  rancher:
+    enabled: false
+    namespace: cattle-system
+    chart: rancher
+    repoURL: https://releases.rancher.com/server-charts/latest
+    targetRevision: 2.13.2
+
+  vcluster:
+    enabled: false
+    chart: vcluster
+    repoURL: https://charts.loft.sh
+    targetRevision: 0.32.0-next.0
+
+  # The helm chart copied from the github repo manually. It is not available in the helm repo. Should be updated manually.
+  # https://github.com/tektoncd/operator/tree/release-v0.75.x
+  tekton-operator:
+    enabled: false
+
+  tekton-pipelines:
+    enabled: false
+    path: values/{{ $.Values.global.clusterName }}/platform/tekton-pipelines
+    type: raw
+
+  keda:
+    enabled: false
+    chart: keda
+    repoURL: https://kedacore.github.io/charts
+    targetRevision: 2.19.0
+
+  #=================================#
+  #      Data Services              #
+  #=================================#
+
+  database:
+    enabled: false
+    namespace: postgres
+    path: values/{{ $.Values.global.clusterName }}/platform/database/
+    type: raw
+
+  postgres-operator:
+    enabled: false
+    namespace: postgres
+    chart: cloudnative-pg
+    repoURL: https://cloudnative-pg.github.io/charts
+    targetRevision: 0.27.1
+
+  pgadmin-config:
+    enabled: false
+    namespace: pgadmin
+    # pgadmin-config deploys BEFORE pgadmin because pgadmin mounts the
+    # pgadmin ConfigMap created by this config chart.
+    # syncWave: 1
+
+  pgadmin:
+    enabled: false
+    chart: pgadmin4
+    repoURL: https://helm.runix.net
+    targetRevision: 1.59.0
+    # syncWave: 2
+
+  redis:
+    enabled: false
+    chart: redis
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    targetRevision: 25.2.0
+
+  minio:
+    enabled: false
+    chart: operator
+    repoURL: https://operator.min.io
+    targetRevision: 7.1.1
+
+  object-storage:
+    enabled: false
+    path: values/{{ $.Values.global.clusterName }}/platform/object-storage/
+    type: raw
+
+  #=================================#
+  #      Network Services           #
+  #=================================#
+
+  metallb:
+    enabled: false
+    chart: metallb
+    repoURL: https://metallb.github.io/metallb
+    targetRevision: 0.15.3
+
+  metallb-config:
+    enabled: false
+    namespace: metallb
+    # syncWave: 2
+
+  internal-dns:
+    enabled: false
+    chart: external-dns
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    targetRevision: 9.0.3
+
+  external-dns:
+    enabled: false
+    chart: external-dns
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    targetRevision: 9.0.3
+
+  external-dns-sigs: # bitnami chart doesn't work well with azure-private-dns provider
+    enabled: false
+    chart: external-dns
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: 1.20.0
+
+  ingress-nginx-external:
+    enabled: false
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.14.3
+
+  ingress-nginx-internal:
+    enabled: false
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.14.3
+
+  cilium:
+    enabled: false
+    namespace: kube-system
+    chart: cilium
+    repoURL: https://helm.cilium.io/
+    targetRevision: 1.19.0
+
+  aws-lb-controller:
+    enabled: false
+    namespace: kube-system
+    chart: aws-load-balancer-controller
+    repoURL: https://aws.github.io/eks-charts
+    targetRevision: 3.0.0
+
+  # custom ingress resources
+  ingresses:
+    enabled: false
+
+  #=================================#
+  #      Security & Auth            #
+  #=================================#
+
+  keycloak-config:
+    enabled: false
+    namespace: keycloak
+    # keycloak-config deploys BEFORE keycloak because keycloak mounts the
+    # keycloak-tls secret created by the Certificate in this config chart.
+    # syncWave: 1
+
+  keycloak:
+    enabled: false
+    chart: keycloakx
+    repoURL: https://codecentric.github.io/helm-charts
+    targetRevision: 7.1.8
+    # syncWave: 2
+
+  keycloak-operator:
+    enabled: false
+    namespace: keycloak
+    chart: keycloak-operator
+    repoURL: https://epam.github.io/edp-helm-charts/stable
+    targetRevision: 1.32.0
+
+  external-secrets:
+    enabled: false
+    chart: external-secrets
+    repoURL: https://charts.external-secrets.io
+    targetRevision: 2.0.0
+
+  oauth2-proxy:
+    enabled: false
+    namespace: keycloak
+    chart: oauth2-proxy
+    repoURL: https://oauth2-proxy.github.io/manifests
+    targetRevision: 10.1.3
+
+  cert-manager:
+    enabled: false
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.20.0-alpha.1
+
+  cert-manager-config:
+    enabled: false
+    namespace: cert-manager
+
+  kyverno:
+    enabled: false
+    chart: kyverno
+    repoURL: https://kyverno.github.io/kyverno
+    targetRevision: 3.7.0
+    finalizers:
+      - post-delete-finalizer.argocd.argoproj.io
+      - post-delete-finalizer.argocd.argoproj.io/cleanup
+
+  policy:
+    enabled: false
+    namespace: kyverno
+    path: values/{{ $.Values.global.clusterName }}/platform/policy/
+    type: raw
+
+  sealed-secrets:
+    enabled: false
+    chart: sealed-secrets
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    targetRevision: 2.18.1
+
+  vault:
+    enabled: false
+    chart: vault
+    repoURL: https://helm.releases.hashicorp.com
+    targetRevision: 0.32.0
+
+  vault-secrets-operator:
+    enabled: false
+    namespace: vault
+    chart: vault-secrets-operator
+    repoURL: https://helm.releases.hashicorp.com
+    targetRevision: 1.2.0
+
+  secrets:
+    enabled: false
+    namespace: vault
+    path: values/{{ $.Values.global.clusterName }}/platform/secrets/
+    type: raw
+
+  secrets-manager:
+    enabled: false
+
+  trivy-operator:
+    enabled: false
+    namespace: trivy-system
+    chart: trivy-operator
+    repoURL: https://aquasecurity.github.io/helm-charts/
+    targetRevision: 0.32.0
+
+  neuvector:
+    enabled: false
+    chart: core
+    repoURL: https://neuvector.github.io/neuvector-helm/
+    targetRevision: 2.8.11
+
+  #=================================#
+  #      Monitoring Stack           #
+  #=================================#
+
+  dashboards:
+    enabled: false
+    namespace: monitoring
+    type: kustomize
+
+  metrics-server:
+    enabled: false
+    namespace: kube-system
+    chart: metrics-server
+    repoURL: https://kubernetes-sigs.github.io/metrics-server
+    targetRevision: 3.13.0
+
+  # TODO: should be updated manually
+  kube-prometheus-stack-crds:
+    enabled: false
+    namespace: monitoring
+
+  kube-prometheus-stack:
+    enabled: false
+    namespace: monitoring
+    serverSideApply: false
+    chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 81.6.7
+
+  loki:
+    enabled: false
+    namespace: monitoring
+    chart: loki-distributed
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 0.80.6
+    ignoreDifferences:
+      - group: apps
+        kind: StatefulSet
+        jqPathExpressions:
+          - .spec.volumeClaimTemplates[]?.apiVersion
+          - .spec.volumeClaimTemplates[]?.kind
+
+  promtail:
+    enabled: false
+    namespace: monitoring
+    chart: promtail
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 6.17.1
+
+  opencost:
+    enabled: false
+    chart: opencost
+    repoURL: https://opencost.github.io/opencost-helm-chart
+    targetRevision: 2.5.8
+
+  #=================================#
+  #           AI Tools              #
+  #=================================#
+
+  ollama:
+    enabled: false
+    chart: ollama
+    repoURL: https://otwld.github.io/ollama-helm/
+    targetRevision: 1.42.0
+
+  k8sgpt:
+    enabled: false
+    chart: k8sgpt-operator
+    repoURL: https://charts.k8sgpt.ai/
+    targetRevision: 0.2.25
+
+  k8sgpt-config:
+    enabled: false
+    namespace: k8sgpt
+    # syncWave: 2
+
+  #=================================#
+  #      Example Applications       #
+  #=================================#
+
+  grpc-server:
+    enabled: false
+    path: charts/generic-deployment
+    valuesFolder: applications
+    namespace: frontend
+    team: frontend
+
+  # http container example with external traffic
+  show-env:
+    enabled: false
+    path: charts/generic-deployment
+    valuesFolder: applications
+    namespace: frontend
+    team: frontend
+
+  # https container example with external traffic that receives traffic over https from ingress controller
+  frontend-https:
+    enabled: false
+    path: charts/generic-deployment
+    valuesFolder: applications
+    namespace: frontend
+    team: frontend
+
+  # a sample of microservice with internal traffic
+  backend:
+    enabled: false
+    path: charts/generic-deployment
+    valuesFolder: applications
+    team: backend
+
+  # a sample of microservice with internal traffic
+  api:
+    enabled: false
+    path: charts/generic-deployment
+    valuesFolder: applications
+    namespace: backend
+    team: backend

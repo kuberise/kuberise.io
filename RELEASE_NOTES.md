@@ -64,7 +64,7 @@ This release is a major architectural change to how ArgoCD applications referenc
 
 ### Added
 - **Multi-source ArgoCD applications** — Helm-type apps now use `spec.sources` (plural) with a chart source and a separate `ref: values` source, enabling value files to reside in a different repository.
-- **Direct external chart references** — External charts are referenced directly in `app-of-apps/values.yaml` via `chart`, `repoURL`, and `targetRevision` fields, removing the need for wrapper charts.
+- **Direct external chart references** — External charts are referenced directly in `app-of-apps/values-base.yaml` via `chart`, `repoURL`, and `targetRevision` fields, removing the need for wrapper charts.
 - **Operator + config chart separation** — Five components have been split into operator and config applications: `cert-manager-config`, `keycloak-config`, `metallb-config`, `pgadmin-config`, and `k8sgpt-config`. Sync waves control deployment ordering.
 - **Split-repo topology support** — New `valuesRepoURL` and `valuesTargetRevision` fields allow per-application override of the values repository, enabling developer-owned configuration in separate repos.
 - **ADR-0014** documenting the rationale and consequences of this migration.
@@ -73,7 +73,7 @@ This release is a major architectural change to how ArgoCD applications referenc
 - **Directory rename: `templates/` to `charts/`** — The top-level directory now only contains local Helm charts, kustomize apps, and config charts.
 - **Value file un-nesting** — All value files across all clusters have been un-nested, removing the subchart alias prefix. Values are now passed directly to upstream charts as documented by their maintainers.
 - **ArgoCD template** — Value file paths now use `$values/` prefix instead of relative `../../` paths. Non-Helm apps (kustomize, raw) continue using single-source `spec.source`.
-- **`scripts/upgrade.sh` rewritten** — Now reads chart references from `app-of-apps/values.yaml` instead of scanning for `Chart.yaml` files in wrapper directories.
+- **`scripts/upgrade.sh` rewritten** — Now reads chart references from `app-of-apps/values-base.yaml` instead of scanning for `Chart.yaml` files in wrapper directories.
 
 ### Removed
 - **All wrapper charts** — 28+ `Chart.yaml` files under `templates/` that listed external charts as dependencies have been removed.

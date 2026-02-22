@@ -17,7 +17,7 @@ Ask the user for:
 - Target namespace (defaults to component name)
 - Which clusters should have it enabled
 
-## 2. Add to app-of-apps/values.yaml
+## 2. Add to app-of-apps/values-base.yaml
 
 Add the component under `ArgocdApplications` in the appropriate section (Platform Core, Data Services, Network Services, Security & Auth, Monitoring, AI Tools, CI/CD). Set `enabled: false` by default.
 
@@ -54,7 +54,7 @@ Remind the user to add the tool's name and logo to the homepage in `https.kuberi
 
 ## 7. Verify
 
-- Check that the new entry in `values.yaml` has valid YAML syntax
+- Check that the new entry in `values-base.yaml` has valid YAML syntax
 - Verify the default values file exists at the correct path
 - Confirm no schema validation fields are missing (check `app-of-apps/values.schema.json` if new fields were introduced)
 - Show default values of the chart to the user if it is an external chart. (e.g. using helm show values command)

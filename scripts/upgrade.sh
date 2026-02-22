@@ -24,7 +24,7 @@ Examples:
     $(basename $0) --help   # Show this help message
 
 The script will:
-1. Parse app-of-apps/values.yaml for applications with chart and repoURL fields
+1. Parse app-of-apps/values-base.yaml for applications with chart and repoURL fields
 2. Check ArgoCD and Cilium chart versions in scripts/install.sh
 3. Check each chart's current version against the latest available version
 4. Update versions if newer versions are available
@@ -78,7 +78,7 @@ while getopts "hyl-:" opt; do
     esac
 done
 
-VALUES_FILE="app-of-apps/values.yaml"
+VALUES_FILE="app-of-apps/values-base.yaml"
 INSTALL_SCRIPT="scripts/install.sh"
 
 if [ ! -f "$VALUES_FILE" ]; then

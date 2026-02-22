@@ -6,7 +6,7 @@ This document describes the structure, flow, and implementation details of `scri
 
 The script automates discovery of newer Helm chart versions and helps keep the platform up to date. It:
 
-- Parses `app-of-apps/values.yaml` for applications that reference external charts (`chart` + `repoURL` + `targetRevision`)
+- Parses `app-of-apps/values-base.yaml` for applications that reference external charts (`chart` + `repoURL` + `targetRevision`)
 - Checks the ArgoCD and Cilium chart versions hardcoded in `scripts/install.sh`
 - Compares each current version against the latest available from the chart repositories
 - Updates versions when newer releases are available (interactive or automatic)
@@ -22,7 +22,7 @@ The script is **read-only in list mode** (`-l`) and **write-only when updates ar
 - `helm` – used to fetch chart metadata from OCI registries (when `repoURL` is `oci://...`)
 - `grep`, `sed`, `awk` – for parsing and updating files
 
-**Working directory:** Run from the repository root so paths `app-of-apps/values.yaml` and `scripts/install.sh` resolve correctly. The script exits with an error if either file is missing.
+**Working directory:** Run from the repository root so paths `app-of-apps/values-base.yaml` and `scripts/install.sh` resolve correctly. The script exits with an error if either file is missing.
 
 **Network:** Update mode needs network access to fetch `index.yaml` from chart repositories or to query OCI registries. List mode only reads local files.
 
@@ -52,7 +52,7 @@ The script is **read-only in list mode** (`-l`) and **write-only when updates ar
 
 The script reads from two places:
 
-1. **`app-of-apps/values.yaml`**  
+1. **`app-of-apps/values-base.yaml`**  
    Applications under `ArgocdApplications` that have `chart`, `repoURL`, and `targetRevision` fields. These are external Helm charts managed by Argo CD. The script uses `yq` to extract application names and their `chart`, `targetRevision`, and `repoURL` values.
 
 2. **`scripts/install.sh`**  

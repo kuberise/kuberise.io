@@ -16,7 +16,7 @@ Run the upgrade check script and summarize results.
 
 2. Parse the output and present a summary table showing:
    - Component name
-   - Current version (from `app-of-apps/values.yaml`)
+   - Current version (from `app-of-apps/values-base.yaml`)
    - Latest available version
    - Whether it's a major, minor, or patch update
 
@@ -24,7 +24,7 @@ Run the upgrade check script and summarize results.
    - Major version bumps may have breaking changes - flag these prominently
    - Link to the chart's changelog if available (usually in the chart's GitHub repo)
 
-4. If the user wants to upgrade specific components, update the `targetRevision` field in `app-of-apps/values.yaml`.
+4. If the user wants to upgrade specific components, update the `targetRevision` field in `app-of-apps/values-base.yaml`.
 
 ## Important
 

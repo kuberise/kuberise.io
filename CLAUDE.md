@@ -12,21 +12,18 @@ kuberise.io is a free, open-source internal developer platform for Kubernetes. I
 # Install the kr CLI
 curl -sSL https://kuberise.io/install | sh
 
-# Bootstrap a cluster (namespaces, secrets, CA, ArgoCD; --cilium for CNI)
-kr init --context <CONTEXT> --cluster <NAME> --domain <DOMAIN>
+# Primary command: init-if-needed + deploy all clusters (run from client repo root)
+kr up --repo https://github.com/<you>/client-webshop.git
 
-# Deploy a layer (app-of-apps)
-kr deploy --context <CONTEXT> --repo <REPO_URL> \
-  --cluster <NAME> --revision <REVISION> --domain <DOMAIN> [--token <TOKEN>]
+# Teardown all clusters
+kr down --repo https://github.com/<you>/client-webshop.git
 
-# Uninstall
+# Escape hatches for fine-grained control:
+kr init                                    # Init all clusters from kuberise.yaml
+kr init --cluster mgmt                     # Init only one cluster
+kr init --context k3d-dev --domain k3d.kuberise.dev  # Legacy mode (no kuberise.yaml)
+kr deploy --repo <CLIENT_REPO_URL>         # Deploy only (skip init)
 kr uninstall --context <CONTEXT> --cluster <NAME>
-
-# Example: local k3d cluster
-kr init --context k3d-dev --cluster dev-app-onprem-one --domain k3d.kuberise.dev
-kr deploy --context k3d-dev --cluster dev-app-onprem-one \
-  --repo https://github.com/<you>/kuberise.io.git \
-  --revision main --domain k3d.kuberise.dev
 
 # Check for newer versions of external Helm charts
 ./scripts/upgrade.sh
@@ -43,9 +40,14 @@ There are no unit tests or linters. Testing is done by deploying to a developmen
 ## Architecture
 
 ### App-of-Apps Pattern
-- `app-of-apps/values.yaml` defines all 40+ ArgoCD Applications (the single source of truth for what gets deployed)
-- `app-of-apps/templates/ArgocdApplications.yaml` generates ArgoCD Application manifests from those definitions
+- `app-of-apps/` is the centralized Helm chart shared by all layers (OSS, pro, client)
+- `app-of-apps/values-base.yaml` defines all 40+ platform applications (all disabled by default)
+- `app-of-apps/templates/ArgocdApplications.yaml` generates ArgoCD Application manifests from values
 - `app-of-apps/values.schema.json` validates the application definitions - any new field added to the template must also be added here
+- Pro/client repos provide only value overlays (`app-of-apps/values-base.yaml`) - no templates or Chart.yaml
+- Client repos have `kuberise.yaml` at their root with a `clusters:` map declaring all clusters, their contexts, domains, and layers
+- `kr up` is the primary command - it reads `kuberise.yaml`, bootstraps clusters that need init (detects via `helm status argocd`), and deploys all layers in parallel
+- `kr init` and `kr deploy` are escape hatches for fine-grained control; `kr init` also reads `kuberise.yaml` when available
 
 ### Multi-Source Applications (ADR-0014)
 Helm-type apps use two sources: (1) chart source (external repo or local path), (2) values source (git repo with `$values/` prefix). Non-Helm apps (kustomize, raw) use single source.
@@ -60,20 +62,22 @@ Values are passed directly to upstream charts (no subchart nesting prefix).
 Components needing custom CRD instances are split into two apps: operator app (syncWave 1) installs the upstream chart, config app (syncWave 2) in `charts/{name}-config/` installs CRD instances. Examples: `cert-manager` + `cert-manager-config`, `keycloak` + `keycloak-config`.
 
 ### Multi-Cluster and Multi-Layer Support
-All clusters share the same charts and external chart references. Per-cluster config lives in `values/{cluster}/` directories. Per-deploy enabler files are in `app-of-apps/values-{name}.yaml` (named after the `--name` layer identifier, not the cluster).
+All clusters share the same charts and external chart references. Per-cluster config lives in `values/{cluster}/` directories. Each client repo has a `kuberise.yaml` with a `clusters:` map - each key is a cluster name with its context, domain, and layers. `kr up` handles init-if-needed + deploy for all clusters in parallel with retry for inaccessible clusters (supports CAPI-created clusters). Smart ArgoCD detection (`helm status argocd`) skips init on already-bootstrapped clusters. Enabler files (`values-{clusterName}-{layerName}.yaml`) in the client repo control which apps each layer deploys per cluster.
 
 ## Adding Components
 
+**Important**: All apps in `app-of-apps/values-base.yaml` MUST have `enabled: false`. Each layer's `values-base.yaml` is loaded explicitly (not auto-loaded by Helm), so only that layer's definitions are visible. Enablement is controlled exclusively by the client repo's enabler files.
+
 ### New External Component
-1. Add to `app-of-apps/values.yaml` under `ArgocdApplications` with `chart`, `repoURL`, `targetRevision` (set `enabled: false`)
+1. Add to `app-of-apps/values-base.yaml` under `ArgocdApplications` with `chart`, `repoURL`, `targetRevision` (set `enabled: false`)
 2. Create default values in `values/defaults/platform/{name}/values.yaml` (even if empty)
-3. Enable in relevant `app-of-apps/values-{name}.yaml` (e.g. `values-webshop.yaml`)
+3. Enable in the client repo's enabler file (e.g. `client-webshop/app-of-apps/values-dev-platform.yaml`)
 4. Only create cluster-specific values files if actual overrides exist
 
 ### New Local Chart
 1. Create chart in `charts/{name}/`
 2. Add default values in `values/defaults/platform/{name}/values.yaml`
-3. Add to `app-of-apps/values.yaml` (no chart/repoURL/targetRevision needed; defaults to `charts/{name}` path)
+3. Add to `app-of-apps/values-base.yaml` with `enabled: false` (no chart/repoURL/targetRevision needed; defaults to `charts/{name}` path)
 
 ## Conventions
 

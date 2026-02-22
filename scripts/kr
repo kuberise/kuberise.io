@@ -158,11 +158,17 @@ function log_step()  { echo ""; echo -e "${C_STEP}── $* ──${C_RESET}"; }
 # ── Cleanup ────────────────────────────────────────────────────────
 
 TEMP_FILES=()
+TEMP_DIRS=()
 
 function cleanup() {
   if [[ ${#TEMP_FILES[@]} -gt 0 ]]; then
     for f in "${TEMP_FILES[@]}"; do
       rm -f "$f"
+    done
+  fi
+  if [[ ${#TEMP_DIRS[@]} -gt 0 ]]; then
+    for d in "${TEMP_DIRS[@]}"; do
+      rm -rf "$d"
     done
   fi
 }
@@ -176,6 +182,59 @@ function make_temp_file() {
 }
 
 # ── Utility Functions ──────────────────────────────────────────────
+
+# Inject a token into an HTTPS git URL for authenticated cloning.
+# Converts https://github.com/org/repo.git to https://x:TOKEN@github.com/org/repo.git
+function inject_token_into_url() {
+  local url=$1
+  local token=$2
+  echo "$url" | sed "s|https://|https://x:${token}@|"
+}
+
+# Fetch kuberise.yaml from a remote git repo when it's not found locally.
+# Uses shallow clone + sparse checkout to minimize bandwidth.
+#
+# Arguments:
+#   $1 - Git repo URL (e.g., https://github.com/org/client-webshop.git)
+#   $2 - Git revision (branch, tag, or SHA; default: HEAD)
+#   $3 - Git token for private repos (optional)
+#
+# Prints the path to the fetched kuberise.yaml on stdout.
+# Returns non-zero if fetch fails.
+function fetch_kuberise_yaml() {
+  local repo_url=$1
+  local revision=${2:-HEAD}
+  local token=${3:-}
+
+  log_info "kuberise.yaml not found locally, fetching from $repo_url..." >&2
+
+  local tmp_dir
+  tmp_dir=$(mktemp -d)
+  TEMP_DIRS+=("$tmp_dir")
+
+  local clone_url="$repo_url"
+  if [[ -n "$token" ]]; then
+    clone_url=$(inject_token_into_url "$clone_url" "$token")
+  fi
+
+  # Build clone args: use --branch only for non-HEAD revisions
+  local clone_args=(--depth 1 --single-branch --no-checkout)
+  if [[ "$revision" != "HEAD" ]]; then
+    clone_args+=(--branch "$revision")
+  fi
+
+  if ! git clone "${clone_args[@]}" "$clone_url" "$tmp_dir" 2>/dev/null; then
+    log_error "Failed to clone $repo_url (revision: $revision)"
+    return 1
+  fi
+
+  if ! (cd "$tmp_dir" && git checkout HEAD -- kuberise.yaml) 2>/dev/null; then
+    log_error "kuberise.yaml not found in $repo_url (revision: $revision)"
+    return 1
+  fi
+
+  echo "$tmp_dir/kuberise.yaml"
+}
 
 function generate_random_secret() {
   # Generate a 32-character alphanumeric string.
@@ -542,48 +601,48 @@ function install_cilium() {
 
 # ── Deploy Functions ───────────────────────────────────────────────
 
-function configure_repo_access() {
+function configure_repo_secret() {
   local context=$1
-  local aoa_name=$2
-  local repo_url=$3
-  local token=$4
-  local values_repo=$5
-  local values_token=$6
-  local defaults_repo=$7
-  local defaults_token=$8
+  local secret_name=$2
+  local label_name=$3
+  local repo_url=$4
+  local token=$5
 
   if [ -n "$token" ]; then
-    local repo_secret_name="argocd-repo-${aoa_name}"
-    create_secret "$context" "argocd" "$repo_secret_name" \
-      --from-literal=name="$aoa_name" \
+    create_secret "$context" "argocd" "$secret_name" \
+      --from-literal=name="$label_name" \
       --from-literal=username=x \
       --from-literal=password="$token" \
       --from-literal=url="$repo_url" \
       --from-literal=type=git
-    label_secret "$context" "argocd" "$repo_secret_name" "argocd.argoproj.io/secret-type=repository"
+    label_secret "$context" "argocd" "$secret_name" "argocd.argoproj.io/secret-type=repository"
   fi
+}
 
-  if [[ "$values_repo" != "$repo_url" || "$values_token" != "$token" ]] && [ -n "$values_token" ]; then
-    local values_secret_name="argocd-repo-${aoa_name}-values"
-    create_secret "$context" "argocd" "$values_secret_name" \
-      --from-literal=name="${aoa_name}-values" \
-      --from-literal=username=x \
-      --from-literal=password="$values_token" \
-      --from-literal=url="$values_repo" \
-      --from-literal=type=git
-    label_secret "$context" "argocd" "$values_secret_name" "argocd.argoproj.io/secret-type=repository"
-  fi
+function configure_all_repo_access() {
+  local context=$1
+  local kuberise_repo=$2
+  local kuberise_token=$3
+  local client_repo=$4
+  local client_token=$5
 
-  if [[ "$defaults_repo" != "$repo_url" || "$defaults_token" != "$token" ]] && [[ "$defaults_repo" != "$values_repo" || "$defaults_token" != "$values_token" ]] && [ -n "$defaults_token" ]; then
-    local defaults_secret_name="argocd-repo-${aoa_name}-defaults"
-    create_secret "$context" "argocd" "$defaults_secret_name" \
-      --from-literal=name="${aoa_name}-defaults" \
-      --from-literal=username=x \
-      --from-literal=password="$defaults_token" \
-      --from-literal=url="$defaults_repo" \
-      --from-literal=type=git
-    label_secret "$context" "argocd" "$defaults_secret_name" "argocd.argoproj.io/secret-type=repository"
-  fi
+  # Kuberise (OSS) repo (usually public, token optional)
+  configure_repo_secret "$context" "argocd-repo-kuberise" "kuberise" \
+    "$kuberise_repo" "$kuberise_token"
+
+  # Client repo
+  configure_repo_secret "$context" "argocd-repo-client" "client" \
+    "$client_repo" "$client_token"
+}
+
+function configure_layer_repo_access() {
+  local context=$1
+  local layer_name=$2
+  local layer_repo=$3
+  local layer_token=$4
+
+  configure_repo_secret "$context" "argocd-repo-layer-${layer_name}" "layer-${layer_name}" \
+    "$layer_repo" "$layer_token"
 }
 
 function create_app_project() {
@@ -614,23 +673,26 @@ spec:
 EOF
 }
 
-function create_app_of_apps() {
+function create_layer_app_of_apps() {
   local context=$1
   local cluster_name=$2
-  local git_repo=$3
-  local git_revision=$4
-  local domain=$5
-  local values_repo=$6
-  local values_revision=$7
-  local defaults_repo=$8
-  local defaults_revision=$9
-  local aoa_name=${10}
+  local layer_name=$3
+  local layer_repo=$4
+  local layer_revision=$5
+  local kuberise_repo=$6
+  local kuberise_revision=$7
+  local client_repo=$8
+  local client_revision=$9
+  local domain=${10}
   local destination=${11:-https://kubernetes.default.svc}
 
-  # --name is the layer identifier (default: shared)
-  # Application name: app-of-apps-{name}    Enabler: values-{name}.yaml
-  #   shared (default)                    → app-of-apps-shared / values-shared.yaml
-  #   webshop                             → app-of-apps-webshop  / values-webshop.yaml
+  # Enabler file uses combined naming: values-{clusterName}-{layerName}.yaml
+  local enabler_file="values-${cluster_name}-${layer_name}.yaml"
+
+  # Each layer gets its own ArgoCD Application: app-of-apps-{layer_name}
+  # Chart source is always the kuberise (OSS) repo.
+  # Layer values come from the layer repo ($layer ref).
+  # Enabler files come from the client repo ($client ref).
 
   # No resources-finalizer here: deleting app-of-apps with a finalizer triggers
   # a deep cascade that is slow and fragile. The uninstall handles cleanup explicitly.
@@ -638,44 +700,48 @@ function create_app_of_apps() {
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps-$aoa_name
+  name: app-of-apps-$layer_name
   namespace: argocd
   labels:
     team: platform
 spec:
   project: kuberise
   sources:
-    - repoURL: $git_repo
-      targetRevision: $git_revision
+    - repoURL: $kuberise_repo
+      targetRevision: $kuberise_revision
       path: ./app-of-apps
       helm:
         ignoreMissingValueFiles: true
         valueFiles:
-          - \$values/app-of-apps/values-$aoa_name.yaml
+          - \$layer/app-of-apps/values-base.yaml
+          - \$client/app-of-apps/$enabler_file
         parameters:
           - name: global.argoProject
             value: kuberise
           - name: global.spec.source.repoURL
-            value: $git_repo
+            value: $layer_repo
           - name: global.spec.source.targetRevision
-            value: $git_revision
+            value: $layer_revision
           - name: global.spec.values.repoURL
-            value: $values_repo
+            value: $client_repo
           - name: global.spec.values.targetRevision
-            value: $values_revision
+            value: $client_revision
           - name: global.spec.defaults.repoURL
-            value: $defaults_repo
+            value: $layer_repo
           - name: global.spec.defaults.targetRevision
-            value: $defaults_revision
+            value: $layer_revision
           - name: global.clusterName
             value: $cluster_name
           - name: global.domain
             value: $domain
           - name: global.spec.destination.server
             value: $destination
-    - repoURL: $values_repo
-      targetRevision: $values_revision
-      ref: values
+    - repoURL: $layer_repo
+      targetRevision: $layer_revision
+      ref: layer
+    - repoURL: $client_repo
+      targetRevision: $client_revision
+      ref: client
   destination:
     server: $destination
     namespace: argocd
@@ -1062,7 +1128,7 @@ function check_required_tools_init() {
 }
 
 function check_required_tools_deploy() {
-  local required_tools=("kubectl" "helm")
+  local required_tools=("kubectl" "helm" "yq" "git")
   for tool in "${required_tools[@]}"; do
     if ! command -v "$tool" &> /dev/null; then
       log_error "$tool could not be found, please install it."
@@ -1108,10 +1174,14 @@ function usage() {
 Usage: kr <command> [flags]
 
 Commands:
+  up           Init (if needed) and deploy all clusters from kuberise.yaml
   version      Print kr version
-  init         Bootstrap a cluster (namespaces, secrets, CA, ArgoCD)
-  deploy       Deploy an app-of-apps layer (Platform, Client, Teams, etc.)
+  init         Bootstrap clusters (namespaces, secrets, CA, ArgoCD)
+  deploy       Deploy all layers to already-bootstrapped clusters
   uninstall    Tear down the platform from a cluster
+
+The recommended command is 'kr up' which automatically initializes
+clusters that need it and deploys all layers.
 
 Run 'kr <command> --help' for command-specific usage.
 EOF
@@ -1121,17 +1191,20 @@ function usage_init() {
   cat <<EOF
 Usage: kr init [flags]
 
-Bootstrap a Kubernetes cluster with kuberise platform prerequisites.
-
-Required flags:
-  --context CONTEXT        Kubernetes context name
-  --domain DOMAIN          Base domain for services
+Bootstrap Kubernetes clusters with kuberise platform prerequisites.
+If kuberise.yaml exists, reads cluster config from it (context, domain, name).
+Otherwise, requires --context and --domain flags for single-cluster mode.
 
 Optional flags:
-  --cluster NAME           Cluster name (default: onprem)
   --admin-password PWD     Admin password (default: admin, warns if default)
   --cilium                 Also install Cilium CNI
+  --cluster NAME           Init only this cluster (when using kuberise.yaml)
+  --config PATH            Path to kuberise.yaml (default: ./kuberise.yaml)
   -h, --help               Show this help message
+
+Legacy single-cluster flags (used when --context is provided):
+  --context CONTEXT        Kubernetes context name
+  --domain DOMAIN          Base domain for services
 
 Environment variables:
   ADMIN_PASSWORD           Admin password (alternative to --admin-password)
@@ -1139,9 +1212,15 @@ Environment variables:
   CLOUDFLARE_API_TOKEN     Cloudflare API token for ExternalDNS and cert-manager
   OPENAI_API_KEY           OpenAI API key for K8sGPT
 
-Example:
-  kr init --context k3d-dev --cluster dev-app-onprem-one --domain dev.kuberise.dev
-  kr init --context k3d-dev --cluster dev-app-onprem-one --domain dev.kuberise.dev --cilium
+Examples:
+  # Init all clusters from kuberise.yaml
+  kr init
+
+  # Init only the mgmt cluster
+  kr init --cluster mgmt
+
+  # Legacy: init a single cluster without kuberise.yaml
+  kr init --context k3d-dev --domain dev.kuberise.dev
 EOF
 }
 
@@ -1149,53 +1228,66 @@ function usage_deploy() {
   cat <<EOF
 Usage: kr deploy [flags]
 
-Deploy an app-of-apps layer to a bootstrapped cluster.
+Deploy all clusters and layers defined in kuberise.yaml.
+Reads kuberise.yaml from the current directory (or --config path).
+Deploys to all clusters in parallel, with retry for inaccessible clusters.
 
 Required flags:
-  --context CONTEXT        Kubernetes context name
-  --repo REPO_URL          Git repository URL for this layer
+  --repo REPO_URL          Git repository URL for the client repo
 
 Optional flags:
-  --cluster NAME           Cluster name (default: onprem)
-  --domain DOMAIN          Base domain (default: onprem.kuberise.dev)
-  --revision REV           Branch, tag, or commit SHA (default: HEAD)
-  --name NAME              Layer identifier (default: shared)
-  --destination URL        Kubernetes API server URL for remote deployment
-                           (default: https://kubernetes.default.svc)
+  --revision REV           Client repo branch, tag, or commit SHA (default: HEAD)
+  --token TOKEN            Git token for private repositories (fallback for all repos)
+  --cluster NAME           Deploy only this cluster (default: deploy all clusters)
+  --layer NAME             Deploy only this layer (default: deploy all layers)
+  --config PATH            Path to kuberise.yaml (default: ./kuberise.yaml)
+  --retry-interval SECS    Seconds between retries for inaccessible clusters (default: 30)
+  --retry-timeout SECS     Max seconds to wait for inaccessible clusters (default: 300)
   --dry-run                Show what would be applied without making changes
-  --token TOKEN            Git token for private repositories (used as fallback for all repos)
-  --values-repo URL        Git repo for cluster values (default: same as --repo)
-  --values-revision REV    Revision for values repo (default: same as --revision)
-  --values-token TOKEN     Git token for values repo (default: same as --token)
-  --defaults-repo URL      Git repo for default values (default: same as --repo)
-  --defaults-revision REV  Revision for defaults repo (default: same as --revision)
-  --defaults-token TOKEN   Git token for defaults repo (default: same as --token)
   -h, --help               Show this help message
 
-The --name flag controls:
-  Application name:  app-of-apps-{name}
-  Enabler file:      values-{name}.yaml (in values repo)
-  Repo secret:       argocd-repo-{name}
+kuberise.yaml defines kuberise version and a map of clusters with their layers:
+
+  kuberise:
+    repoURL: https://github.com/kuberise/kuberise.io.git
+    targetRevision: 0.4.0
+
+  clusters:
+    mgmt:
+      context: k3d-mgmt
+      domain: mgmt.webshop.kuberise.dev
+      layers:
+        - name: platform
+          repoURL: kuberise
+        - name: pro
+          repoURL: https://github.com/myorg/kuberise-pro.git
+          targetRevision: main
+    dev:
+      context: k3d-dev
+      domain: dev.webshop.kuberise.dev
+      layers:
+        - name: platform
+          repoURL: kuberise
+        - name: webshop
+
+Each cluster's context is used for kubectl/helm operations. Enabler files
+use the naming convention: values-{clusterName}-{layerName}.yaml
 
 Examples:
-  # Deploy platform layer (default --name shared)
-  # Uses OSS charts with default values, overridden by client-specific values
-  kr deploy --context k3d-dev --cluster dev-shared-onprem \\
-    --repo https://github.com/kuberise/kuberise.io.git \\
-    --values-repo https://github.com/org/client.git \\
-    --revision v0.3.0 --domain dev.kuberise.dev
+  # Deploy all clusters and layers
+  kr deploy --repo https://github.com/org/client-webshop.git
 
-  # Deploy client layer with client-specific charts and values
-  kr deploy --context k3d-dev --cluster dev-shared-onprem \\
-    --repo https://github.com/org/client.git \\
-    --revision main --domain dev.kuberise.dev \\
-    --token \$TOKEN --name webshop
+  # Deploy only the dev cluster
+  kr deploy --repo https://github.com/org/client-webshop.git \\
+    --cluster dev
 
-  # Deploy to a remote cluster (hub-and-spoke)
-  kr deploy --context k3d-mgmt --cluster dev \\
-    --repo https://github.com/kuberise/kuberise.io.git \\
-    --revision main --domain dev.kuberise.dev \\
-    --destination https://localhost:7443 --name shared
+  # Deploy only the platform layer on all clusters
+  kr deploy --repo https://github.com/org/client-webshop.git \\
+    --layer platform
+
+  # Dry-run to preview generated manifests
+  kr deploy --repo https://github.com/org/client-webshop.git \\
+    --dry-run
 EOF
 }
 
@@ -1204,6 +1296,7 @@ function usage_uninstall() {
 Usage: kr uninstall [flags]
 
 Uninstall kuberise platform from a Kubernetes cluster.
+Removes all app-of-apps layers, ArgoCD, and kuberise-managed namespaces.
 
 Required flags:
   --context CONTEXT        Kubernetes context name
@@ -1223,17 +1316,20 @@ EOF
 function parse_init_args() {
   INIT_CONTEXT=""
   INIT_CLUSTER="onprem"
+  INIT_CLUSTER_FILTER=""
   INIT_DOMAIN=""
   INIT_ADMIN_PASSWORD=""
   INIT_CILIUM=false
+  INIT_CONFIG="kuberise.yaml"
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --context)          INIT_CONTEXT="$2";          shift 2 ;;
-      --cluster)          INIT_CLUSTER="$2";          shift 2 ;;
+      --cluster)          INIT_CLUSTER_FILTER="$2";   shift 2 ;;
       --domain)           INIT_DOMAIN="$2";           shift 2 ;;
       --admin-password)   INIT_ADMIN_PASSWORD="$2";   shift 2 ;;
       --cilium)           INIT_CILIUM=true;           shift ;;
+      --config)           INIT_CONFIG="$2";           shift 2 ;;
       --dry-run)          log_error "The init command does not support --dry-run. Only 'kr deploy' supports it."; exit 1 ;;
       --help|-h)          usage_init; exit 0 ;;
       *)                  log_error "Unknown option: $1"; usage_init; exit 1 ;;
@@ -1241,6 +1337,12 @@ function parse_init_args() {
   done
 
   INIT_ADMIN_PASSWORD="${INIT_ADMIN_PASSWORD:-${ADMIN_PASSWORD:-admin}}"
+
+  # In legacy mode (explicit --context), use --cluster as the cluster name, not a filter
+  if [[ -n "$INIT_CONTEXT" ]]; then
+    INIT_CLUSTER="${INIT_CLUSTER_FILTER:-onprem}"
+    INIT_CLUSTER_FILTER=""
+  fi
 }
 
 function validate_init() {
@@ -1268,60 +1370,35 @@ function validate_init() {
 # ── Parse: deploy ──────────────────────────────────────────────────
 
 function parse_deploy_args() {
-  DEPLOY_CONTEXT=""
-  DEPLOY_CLUSTER="onprem"
   DEPLOY_REPO=""
   DEPLOY_REVISION="HEAD"
-  DEPLOY_DOMAIN="onprem.kuberise.dev"
-  DEPLOY_NAME="shared"
-  DEPLOY_DESTINATION="https://kubernetes.default.svc"
   DEPLOY_DRY_RUN=false
   DEPLOY_TOKEN=""
-  DEPLOY_VALUES_REPO=""
-  DEPLOY_VALUES_REVISION=""
-  DEPLOY_VALUES_TOKEN=""
-  DEPLOY_DEFAULTS_REPO=""
-  DEPLOY_DEFAULTS_REVISION=""
-  DEPLOY_DEFAULTS_TOKEN=""
+  DEPLOY_CLUSTER=""
+  DEPLOY_LAYER=""
+  DEPLOY_CONFIG="kuberise.yaml"
+  DEPLOY_RETRY_INTERVAL=30
+  DEPLOY_RETRY_TIMEOUT=300
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --context)            DEPLOY_CONTEXT="$2";            shift 2 ;;
-      --cluster)            DEPLOY_CLUSTER="$2";            shift 2 ;;
-      --repo)               DEPLOY_REPO="$2";               shift 2 ;;
-      --revision)           DEPLOY_REVISION="$2";           shift 2 ;;
-      --domain)             DEPLOY_DOMAIN="$2";             shift 2 ;;
-      --name)               DEPLOY_NAME="$2";               shift 2 ;;
-      --destination)        DEPLOY_DESTINATION="$2";        shift 2 ;;
-      --dry-run)            DEPLOY_DRY_RUN=true;            shift ;;
-      --token)              DEPLOY_TOKEN="$2";              shift 2 ;;
-      --values-repo)        DEPLOY_VALUES_REPO="$2";        shift 2 ;;
-      --values-revision)    DEPLOY_VALUES_REVISION="$2";    shift 2 ;;
-      --values-token)       DEPLOY_VALUES_TOKEN="$2";       shift 2 ;;
-      --defaults-repo)      DEPLOY_DEFAULTS_REPO="$2";      shift 2 ;;
-      --defaults-revision)  DEPLOY_DEFAULTS_REVISION="$2";  shift 2 ;;
-      --defaults-token)     DEPLOY_DEFAULTS_TOKEN="$2";     shift 2 ;;
-      --help|-h)            usage_deploy; exit 0 ;;
-      *)                    log_error "Unknown option: $1"; usage_deploy; exit 1 ;;
+      --repo)             DEPLOY_REPO="$2";             shift 2 ;;
+      --revision)         DEPLOY_REVISION="$2";         shift 2 ;;
+      --token)            DEPLOY_TOKEN="$2";            shift 2 ;;
+      --cluster)          DEPLOY_CLUSTER="$2";          shift 2 ;;
+      --layer)            DEPLOY_LAYER="$2";            shift 2 ;;
+      --config)           DEPLOY_CONFIG="$2";           shift 2 ;;
+      --retry-interval)   DEPLOY_RETRY_INTERVAL="$2";   shift 2 ;;
+      --retry-timeout)    DEPLOY_RETRY_TIMEOUT="$2";    shift 2 ;;
+      --dry-run)          DEPLOY_DRY_RUN=true;          shift ;;
+      --help|-h)          usage_deploy; exit 0 ;;
+      *)                  log_error "Unknown option: $1"; usage_deploy; exit 1 ;;
     esac
   done
-
-  DEPLOY_VALUES_REPO="${DEPLOY_VALUES_REPO:-$DEPLOY_REPO}"
-  DEPLOY_VALUES_REVISION="${DEPLOY_VALUES_REVISION:-$DEPLOY_REVISION}"
-  DEPLOY_VALUES_TOKEN="${DEPLOY_VALUES_TOKEN:-$DEPLOY_TOKEN}"
-  DEPLOY_DEFAULTS_REPO="${DEPLOY_DEFAULTS_REPO:-$DEPLOY_REPO}"
-  DEPLOY_DEFAULTS_REVISION="${DEPLOY_DEFAULTS_REVISION:-$DEPLOY_REVISION}"
-  DEPLOY_DEFAULTS_TOKEN="${DEPLOY_DEFAULTS_TOKEN:-$DEPLOY_TOKEN}"
 }
 
 function validate_deploy() {
   check_required_tools_deploy
-
-  if [[ -z "$DEPLOY_CONTEXT" ]]; then
-    log_error "Missing required flag: --context"
-    usage_deploy
-    exit 1
-  fi
 
   if [[ -z "$DEPLOY_REPO" ]]; then
     log_error "Missing required flag: --repo"
@@ -1329,8 +1406,107 @@ function validate_deploy() {
     exit 1
   fi
 
-  check_cluster_reachable "$DEPLOY_CONTEXT"
-  check_argocd_installed "$DEPLOY_CONTEXT"
+  if [[ ! -f "$DEPLOY_CONFIG" ]]; then
+    local fetched
+    if fetched=$(fetch_kuberise_yaml "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_TOKEN"); then
+      DEPLOY_CONFIG="$fetched"
+    else
+      log_error "kuberise.yaml not found locally and could not be fetched from --repo."
+      log_error "Run kr deploy from the root of your client repo, or use --config to specify the path."
+      exit 1
+    fi
+  fi
+}
+
+# ── kuberise.yaml Parsing ───────────────────────────────────────────
+
+function parse_kuberise_yaml() {
+  local config_file=$1
+
+  KUBERISE_REPO_URL=$(yq '.kuberise.repoURL' "$config_file")
+  KUBERISE_TARGET_REVISION=$(yq '.kuberise.targetRevision' "$config_file")
+
+  if [[ "$KUBERISE_REPO_URL" == "null" || -z "$KUBERISE_REPO_URL" ]]; then
+    log_error "kuberise.repoURL is required in $config_file"
+    exit 1
+  fi
+  if [[ "$KUBERISE_TARGET_REVISION" == "null" || -z "$KUBERISE_TARGET_REVISION" ]]; then
+    log_error "kuberise.targetRevision is required in $config_file"
+    exit 1
+  fi
+
+  # Read cluster names from the clusters map keys
+  CLUSTER_NAMES=()
+  while IFS= read -r name; do
+    [[ -z "$name" || "$name" == "null" ]] && continue
+    CLUSTER_NAMES+=("$name")
+  done < <(yq '.clusters | keys | .[]' "$config_file")
+
+  if [[ ${#CLUSTER_NAMES[@]} -eq 0 ]]; then
+    log_error "At least one cluster must be defined in $config_file"
+    exit 1
+  fi
+}
+
+function get_cluster_config() {
+  local config_file=$1
+  local cluster_name=$2
+
+  CL_CONTEXT=$(yq ".clusters.$cluster_name.context // \"\"" "$config_file")
+  CL_DOMAIN=$(yq ".clusters.$cluster_name.domain" "$config_file")
+  CL_DESTINATION=$(yq ".clusters.$cluster_name.destination // \"https://kubernetes.default.svc\"" "$config_file")
+  CL_LAYERS_COUNT=$(yq ".clusters.$cluster_name.layers | length" "$config_file")
+
+  if [[ "$CL_CONTEXT" == "null" || -z "$CL_CONTEXT" ]]; then
+    log_error "clusters.$cluster_name.context is required in $config_file"
+    exit 1
+  fi
+  if [[ "$CL_DOMAIN" == "null" || -z "$CL_DOMAIN" ]]; then
+    log_error "clusters.$cluster_name.domain is required in $config_file"
+    exit 1
+  fi
+  if [[ "$CL_LAYERS_COUNT" -eq 0 ]]; then
+    log_error "At least one layer must be defined for cluster '$cluster_name' in $config_file"
+    exit 1
+  fi
+}
+
+function get_layer_config() {
+  local config_file=$1
+  local cluster_name=$2
+  local index=$3
+
+  LAYER_NAME=$(yq ".clusters.$cluster_name.layers[$index].name" "$config_file")
+  local raw_repo
+  raw_repo=$(yq ".clusters.$cluster_name.layers[$index].repoURL // \"\"" "$config_file")
+  LAYER_TARGET_REVISION=$(yq ".clusters.$cluster_name.layers[$index].targetRevision // \"\"" "$config_file")
+  LAYER_TOKEN_ENV=$(yq ".clusters.$cluster_name.layers[$index].token // \"\"" "$config_file")
+
+  # Resolve repoURL
+  if [[ "$raw_repo" == "kuberise" ]]; then
+    LAYER_REPO_URL="$KUBERISE_REPO_URL"
+    LAYER_TARGET_REVISION="${LAYER_TARGET_REVISION:-$KUBERISE_TARGET_REVISION}"
+  elif [[ -n "$raw_repo" ]]; then
+    LAYER_REPO_URL="$raw_repo"
+  else
+    # Default: use client repo
+    LAYER_REPO_URL="$DEPLOY_REPO"
+    LAYER_TARGET_REVISION="${LAYER_TARGET_REVISION:-$DEPLOY_REVISION}"
+  fi
+
+  # Ensure revision has a value
+  if [[ -z "$LAYER_TARGET_REVISION" ]]; then
+    LAYER_TARGET_REVISION="HEAD"
+  fi
+
+  # Resolve token from env var name
+  LAYER_TOKEN=""
+  if [[ -n "$LAYER_TOKEN_ENV" ]]; then
+    LAYER_TOKEN="${!LAYER_TOKEN_ENV:-}"
+    if [[ -z "$LAYER_TOKEN" ]]; then
+      log_warn "Token env var '$LAYER_TOKEN_ENV' for layer '$LAYER_NAME' is not set or empty."
+    fi
+  fi
 }
 
 # ── Parse: uninstall ───────────────────────────────────────────────
@@ -1380,43 +1556,166 @@ function cmd_version() {
 
 # ── Subcommand: init ──────────────────────────────────────────────
 
-function cmd_init() {
-  parse_init_args "$@"
-  validate_init
+# Core init logic for a single cluster. Can be called by cmd_init or cmd_up.
+function init_cluster() {
+  local context=$1
+  local cluster_name=$2
+  local domain=$3
+  local admin_password=$4
+  local cilium=$5
 
-  log_step "Creating namespaces"
-  create_all_namespaces "$INIT_CONTEXT"
+  log_step "Initializing cluster: $cluster_name ($domain) via context $context"
 
-  log_step "Generating CA certificates"
-  generate_ca_cert_and_key "$INIT_CONTEXT"
+  log_info "Creating namespaces..."
+  create_all_namespaces "$context"
 
-  log_step "Creating database secrets"
-  create_database_secrets "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD"
+  log_info "Generating CA certificates..."
+  generate_ca_cert_and_key "$context"
 
-  log_step "Creating application secrets"
-  create_application_secrets "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD"
+  log_info "Creating database secrets..."
+  create_database_secrets "$context" "$admin_password"
 
-  if [[ "$INIT_CILIUM" == true ]]; then
-    log_step "Installing Cilium"
-    install_cilium "$INIT_CONTEXT"
+  log_info "Creating application secrets..."
+  create_application_secrets "$context" "$admin_password"
+
+  if [[ "$cilium" == true ]]; then
+    log_info "Installing Cilium..."
+    install_cilium "$context"
   fi
 
-  log_step "Installing ArgoCD"
-  install_argocd "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN"
+  log_info "Installing ArgoCD..."
+  install_argocd "$context" "$admin_password" "$domain"
 
-  log_step "Configuring OAuth2 clients"
-  configure_oauth2_clients "$INIT_CONTEXT" "$INIT_ADMIN_PASSWORD" "$INIT_DOMAIN" "$INIT_CLUSTER"
+  log_info "Configuring OAuth2 clients..."
+  configure_oauth2_clients "$context" "$admin_password" "$domain" "$cluster_name"
 
-  echo ""
-  log_info "Cluster bootstrap completed successfully."
-  log_info "Next step: run 'kr deploy' to deploy an app-of-apps layer."
+  log_info "Cluster $cluster_name initialized successfully."
+}
+
+function cmd_init() {
+  parse_init_args "$@"
+
+  # If kuberise.yaml exists and no --context given, read clusters from it
+  if [[ -z "$INIT_CONTEXT" && -f "$INIT_CONFIG" ]]; then
+    check_required_tools_init
+    check_required_tools_deploy  # need yq for kuberise.yaml parsing
+    parse_kuberise_yaml "$INIT_CONFIG"
+
+    if [[ "$INIT_ADMIN_PASSWORD" == "admin" ]]; then
+      log_warn "Using default admin password 'admin'. Set --admin-password or ADMIN_PASSWORD env var for production use."
+    fi
+
+    local init_count=0
+    for cluster_name in "${CLUSTER_NAMES[@]}"; do
+      if [[ -n "$INIT_CLUSTER_FILTER" && "$cluster_name" != "$INIT_CLUSTER_FILTER" ]]; then
+        continue
+      fi
+
+      get_cluster_config "$INIT_CONFIG" "$cluster_name"
+
+      if ! kubectl cluster-info --context "$CL_CONTEXT" &>/dev/null; then
+        log_warn "Cluster $cluster_name (context: $CL_CONTEXT) is not accessible. Skipping."
+        continue
+      fi
+
+      init_cluster "$CL_CONTEXT" "$cluster_name" "$CL_DOMAIN" "$INIT_ADMIN_PASSWORD" "$INIT_CILIUM"
+      init_count=$((init_count + 1))
+    done
+
+    echo ""
+    if [[ "$init_count" -eq 0 ]]; then
+      log_warn "No clusters initialized. Check --cluster filter or cluster accessibility."
+    else
+      log_info "$init_count cluster(s) initialized successfully."
+      log_info "Next step: run 'kr deploy' or 'kr up' to deploy all layers."
+    fi
+  else
+    # Legacy mode: explicit --context and --domain flags
+    validate_init
+    init_cluster "$INIT_CONTEXT" "$INIT_CLUSTER" "$INIT_DOMAIN" "$INIT_ADMIN_PASSWORD" "$INIT_CILIUM"
+    echo ""
+    log_info "Next step: run 'kr deploy' or 'kr up' from your client repo to deploy all layers."
+  fi
 }
 
 # ── Subcommand: deploy ────────────────────────────────────────────
 
+function deploy_cluster() {
+  local config_file=$1
+  local cluster_name=$2
+
+  get_cluster_config "$config_file" "$cluster_name"
+
+  local context="$CL_CONTEXT"
+  local domain="$CL_DOMAIN"
+  local destination="$CL_DESTINATION"
+  local layers_count="$CL_LAYERS_COUNT"
+
+  log_step "Deploying cluster: $cluster_name ($domain) via context $context"
+
+  # Verify ArgoCD is installed on this cluster
+  check_argocd_installed "$context"
+
+  # Configure repo access for this cluster
+  configure_all_repo_access "$context" \
+    "$KUBERISE_REPO_URL" "$DEPLOY_TOKEN" \
+    "$DEPLOY_REPO" "$DEPLOY_TOKEN"
+
+  # Create ArgoCD project for this cluster
+  create_app_project "$context" "$destination"
+
+  local deployed_count=0
+  for ((i=0; i<layers_count; i++)); do
+    get_layer_config "$config_file" "$cluster_name" "$i"
+
+    # Apply --layer filter if set
+    if [[ -n "$DEPLOY_LAYER" && "$LAYER_NAME" != "$DEPLOY_LAYER" ]]; then
+      continue
+    fi
+
+    log_info "  Layer: $LAYER_NAME ($LAYER_REPO_URL @ $LAYER_TARGET_REVISION)"
+
+    # Configure layer-specific repo access if the layer has its own repo
+    local layer_token="${LAYER_TOKEN:-$DEPLOY_TOKEN}"
+    if [[ "$LAYER_REPO_URL" != "$KUBERISE_REPO_URL" && "$LAYER_REPO_URL" != "$DEPLOY_REPO" ]]; then
+      configure_layer_repo_access "$context" "$LAYER_NAME" \
+        "$LAYER_REPO_URL" "$layer_token"
+    fi
+
+    create_layer_app_of_apps "$context" "$cluster_name" "$LAYER_NAME" \
+      "$LAYER_REPO_URL" "$LAYER_TARGET_REVISION" \
+      "$KUBERISE_REPO_URL" "$KUBERISE_TARGET_REVISION" \
+      "$DEPLOY_REPO" "$DEPLOY_REVISION" \
+      "$domain" "$destination"
+
+    deployed_count=$((deployed_count + 1))
+  done
+
+  if [[ "$deployed_count" -eq 0 ]]; then
+    log_warn "Cluster $cluster_name: no layers deployed. Check --layer filter."
+  else
+    log_info "Cluster $cluster_name: $deployed_count layer(s) deployed."
+  fi
+}
+
+function check_cluster_accessible() {
+  local config_file=$1
+  local cluster_name=$2
+
+  local context
+  context=$(yq ".clusters.$cluster_name.context // \"\"" "$config_file")
+
+  if [[ -z "$context" || "$context" == "null" ]]; then
+    return 1
+  fi
+
+  kubectl cluster-info --context "$context" &>/dev/null
+}
+
 function cmd_deploy() {
   parse_deploy_args "$@"
   validate_deploy
+  parse_kuberise_yaml "$DEPLOY_CONFIG"
 
   KR_DRY_RUN="$DEPLOY_DRY_RUN"
 
@@ -1424,27 +1723,430 @@ function cmd_deploy() {
     log_info "Dry-run mode: showing resources that would be applied (no changes will be made)"
   fi
 
-  log_step "Configuring repository access"
-  configure_repo_access "$DEPLOY_CONTEXT" "$DEPLOY_NAME" "$DEPLOY_REPO" \
-    "$DEPLOY_TOKEN" "$DEPLOY_VALUES_REPO" "$DEPLOY_VALUES_TOKEN" \
-    "$DEPLOY_DEFAULTS_REPO" "$DEPLOY_DEFAULTS_TOKEN"
+  log_info "Kuberise: $KUBERISE_REPO_URL @ $KUBERISE_TARGET_REVISION"
+  log_info "Clusters: ${CLUSTER_NAMES[*]}"
 
-  log_step "Creating ArgoCD project"
-  create_app_project "$DEPLOY_CONTEXT" "$DEPLOY_DESTINATION"
+  # Determine which clusters to deploy (apply --cluster filter)
+  local target_clusters=()
+  for cluster_name in "${CLUSTER_NAMES[@]}"; do
+    if [[ -n "$DEPLOY_CLUSTER" && "$cluster_name" != "$DEPLOY_CLUSTER" ]]; then
+      continue
+    fi
+    target_clusters+=("$cluster_name")
+  done
 
-  log_step "Deploying app-of-apps"
-  create_app_of_apps "$DEPLOY_CONTEXT" "$DEPLOY_CLUSTER" \
-    "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_DOMAIN" \
-    "$DEPLOY_VALUES_REPO" "$DEPLOY_VALUES_REVISION" \
-    "$DEPLOY_DEFAULTS_REPO" "$DEPLOY_DEFAULTS_REVISION" \
-    "$DEPLOY_NAME" "$DEPLOY_DESTINATION"
+  if [[ ${#target_clusters[@]} -eq 0 ]]; then
+    log_warn "No clusters matched. Check --cluster filter or kuberise.yaml."
+    return
+  fi
 
+  # Separate accessible and inaccessible clusters
+  local accessible=()
+  local inaccessible=()
+  for cluster_name in "${target_clusters[@]}"; do
+    if check_cluster_accessible "$DEPLOY_CONFIG" "$cluster_name"; then
+      accessible+=("$cluster_name")
+    else
+      inaccessible+=("$cluster_name")
+    fi
+  done
+
+  if [[ ${#accessible[@]} -gt 0 ]]; then
+    log_info "Accessible clusters: ${accessible[*]}"
+  fi
+  if [[ ${#inaccessible[@]} -gt 0 ]]; then
+    log_warn "Inaccessible clusters (will retry): ${inaccessible[*]}"
+  fi
+
+  # Deploy accessible clusters in parallel
+  local pids=()
+  local log_files=()
+  local cluster_for_pid=()
+
+  for cluster_name in "${accessible[@]}"; do
+    local log_file
+    log_file=$(make_temp_file)
+    log_files+=("$log_file")
+    cluster_for_pid+=("$cluster_name")
+
+    if [[ ${#accessible[@]} -eq 1 ]]; then
+      # Single cluster: deploy inline (no background process needed)
+      deploy_cluster "$DEPLOY_CONFIG" "$cluster_name"
+    else
+      # Multiple clusters: deploy in parallel
+      deploy_cluster "$DEPLOY_CONFIG" "$cluster_name" > "$log_file" 2>&1 &
+      pids+=($!)
+    fi
+  done
+
+  # Wait for parallel deploys and collect results
+  local failed_clusters=()
+  if [[ ${#pids[@]} -gt 0 ]]; then
+    for i in "${!pids[@]}"; do
+      if wait "${pids[$i]}"; then
+        log_info "Cluster ${cluster_for_pid[$i]}: deployment completed."
+      else
+        log_error "Cluster ${cluster_for_pid[$i]}: deployment failed."
+        failed_clusters+=("${cluster_for_pid[$i]}")
+      fi
+      # Print the cluster's output
+      if [[ -s "${log_files[$i]}" ]]; then
+        echo "--- Output: ${cluster_for_pid[$i]} ---"
+        cat "${log_files[$i]}"
+        echo "--- End: ${cluster_for_pid[$i]} ---"
+      fi
+    done
+  fi
+
+  # Retry inaccessible clusters
+  if [[ ${#inaccessible[@]} -gt 0 ]]; then
+    local elapsed=0
+    local remaining=("${inaccessible[@]}")
+
+    while [[ ${#remaining[@]} -gt 0 && $elapsed -lt $DEPLOY_RETRY_TIMEOUT ]]; do
+      log_info "Waiting ${DEPLOY_RETRY_INTERVAL}s before retrying inaccessible clusters... (${elapsed}s/${DEPLOY_RETRY_TIMEOUT}s)"
+      sleep "$DEPLOY_RETRY_INTERVAL"
+      elapsed=$((elapsed + DEPLOY_RETRY_INTERVAL))
+
+      local still_waiting=()
+      for cluster_name in "${remaining[@]}"; do
+        if check_cluster_accessible "$DEPLOY_CONFIG" "$cluster_name"; then
+          log_info "Cluster $cluster_name is now accessible. Deploying..."
+          if deploy_cluster "$DEPLOY_CONFIG" "$cluster_name"; then
+            log_info "Cluster $cluster_name: deployment completed."
+          else
+            log_error "Cluster $cluster_name: deployment failed."
+            failed_clusters+=("$cluster_name")
+          fi
+        else
+          still_waiting+=("$cluster_name")
+        fi
+      done
+      remaining=("${still_waiting[@]}")
+    done
+
+    if [[ ${#remaining[@]} -gt 0 ]]; then
+      log_error "Timed out waiting for clusters: ${remaining[*]}"
+      failed_clusters+=("${remaining[@]}")
+    fi
+  fi
+
+  # Summary
   echo ""
   if [[ "$KR_DRY_RUN" == true ]]; then
     log_info "Dry-run completed. No changes were made."
+  elif [[ ${#failed_clusters[@]} -gt 0 ]]; then
+    log_error "Deployment failed for clusters: ${failed_clusters[*]}"
+    exit 1
   else
-    log_info "Layer '$DEPLOY_NAME' deployed (app-of-apps-$DEPLOY_NAME)."
-    log_info "ArgoCD will now sync the applications defined in the app-of-apps."
+    log_info "All clusters deployed successfully."
+    log_info "ArgoCD will now sync the applications defined in each app-of-apps."
+  fi
+}
+
+# ── Subcommand: up ─────────────────────────────────────────────────
+
+function is_argocd_installed() {
+  local context=$1
+  helm status argocd --kube-context "$context" -n argocd &>/dev/null
+}
+
+function usage_up() {
+  cat <<EOF
+Usage: kr up [flags]
+
+Initialize and deploy all clusters defined in kuberise.yaml.
+For each accessible cluster: bootstraps (init) if ArgoCD is not installed,
+then deploys all layers. Clusters already initialized skip straight to deploy.
+
+Required flags:
+  --repo REPO_URL          Git repository URL for the client repo
+
+Optional flags:
+  --admin-password PWD     Admin password for init (default: admin, warns if default)
+  --cilium                 Install Cilium CNI on clusters that need init
+  --revision REV           Client repo branch, tag, or commit SHA (default: HEAD)
+  --token TOKEN            Git token for private repositories (fallback for all repos)
+  --cluster NAME           Target only this cluster (default: all clusters)
+  --layer NAME             Deploy only this layer (default: deploy all layers)
+  --config PATH            Path to kuberise.yaml (default: ./kuberise.yaml)
+  --retry-interval SECS    Seconds between retries for inaccessible clusters (default: 30)
+  --retry-timeout SECS     Max seconds to wait for inaccessible clusters (default: 300)
+  --dry-run                Show what would be applied without making changes
+  -h, --help               Show this help message
+
+Examples:
+  # Full setup: init + deploy all clusters
+  kr up --repo https://github.com/org/client-webshop.git
+
+  # Target only the dev cluster
+  kr up --repo https://github.com/org/client-webshop.git --cluster dev
+
+  # With Cilium and custom password
+  kr up --repo https://github.com/org/client-webshop.git \\
+    --cilium --admin-password mypassword
+EOF
+}
+
+function parse_up_args() {
+  UP_REPO=""
+  UP_REVISION="HEAD"
+  UP_TOKEN=""
+  UP_CLUSTER=""
+  UP_LAYER=""
+  UP_CONFIG="kuberise.yaml"
+  UP_ADMIN_PASSWORD=""
+  UP_CILIUM=false
+  UP_DRY_RUN=false
+  UP_RETRY_INTERVAL=30
+  UP_RETRY_TIMEOUT=300
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --repo)             UP_REPO="$2";             shift 2 ;;
+      --revision)         UP_REVISION="$2";         shift 2 ;;
+      --token)            UP_TOKEN="$2";            shift 2 ;;
+      --cluster)          UP_CLUSTER="$2";          shift 2 ;;
+      --layer)            UP_LAYER="$2";            shift 2 ;;
+      --config)           UP_CONFIG="$2";           shift 2 ;;
+      --admin-password)   UP_ADMIN_PASSWORD="$2";   shift 2 ;;
+      --cilium)           UP_CILIUM=true;           shift ;;
+      --retry-interval)   UP_RETRY_INTERVAL="$2";   shift 2 ;;
+      --retry-timeout)    UP_RETRY_TIMEOUT="$2";    shift 2 ;;
+      --dry-run)          UP_DRY_RUN=true;          shift ;;
+      --help|-h)          usage_up; exit 0 ;;
+      *)                  log_error "Unknown option: $1"; usage_up; exit 1 ;;
+    esac
+  done
+
+  UP_ADMIN_PASSWORD="${UP_ADMIN_PASSWORD:-${ADMIN_PASSWORD:-admin}}"
+}
+
+function validate_up() {
+  # Check all tools needed for both init and deploy
+  local required_tools=("kubectl" "helm" "htpasswd" "openssl" "yq" "git")
+  for tool in "${required_tools[@]}"; do
+    if ! command -v "$tool" &> /dev/null; then
+      log_error "$tool could not be found, please install it."
+      exit 1
+    fi
+  done
+
+  if [[ -z "$UP_REPO" ]]; then
+    log_error "Missing required flag: --repo"
+    usage_up
+    exit 1
+  fi
+
+  if [[ ! -f "$UP_CONFIG" ]]; then
+    local fetched
+    if fetched=$(fetch_kuberise_yaml "$UP_REPO" "$UP_REVISION" "$UP_TOKEN"); then
+      UP_CONFIG="$fetched"
+    else
+      log_error "kuberise.yaml not found locally and could not be fetched from --repo."
+      log_error "Run kr up from the root of your client repo, or use --config to specify the path."
+      exit 1
+    fi
+  fi
+}
+
+function up_cluster() {
+  local config_file=$1
+  local cluster_name=$2
+
+  get_cluster_config "$config_file" "$cluster_name"
+
+  local context="$CL_CONTEXT"
+  local domain="$CL_DOMAIN"
+  local destination="$CL_DESTINATION"
+  local layers_count="$CL_LAYERS_COUNT"
+
+  # Check if ArgoCD is installed - if not, run init first
+  if ! is_argocd_installed "$context"; then
+    log_step "Cluster $cluster_name: ArgoCD not found, initializing..."
+    if [[ "$UP_ADMIN_PASSWORD" == "admin" ]]; then
+      log_warn "Using default admin password 'admin'. Set --admin-password or ADMIN_PASSWORD env var for production use."
+    fi
+    init_cluster "$context" "$cluster_name" "$domain" "$UP_ADMIN_PASSWORD" "$UP_CILIUM"
+  else
+    log_info "Cluster $cluster_name: ArgoCD already installed, skipping init."
+  fi
+
+  # Now deploy layers
+  log_step "Deploying cluster: $cluster_name ($domain)"
+
+  # Configure repo access
+  configure_all_repo_access "$context" \
+    "$KUBERISE_REPO_URL" "$UP_TOKEN" \
+    "$UP_REPO" "$UP_TOKEN"
+
+  # Create ArgoCD project
+  create_app_project "$context" "$destination"
+
+  local deployed_count=0
+  for ((i=0; i<layers_count; i++)); do
+    get_layer_config "$config_file" "$cluster_name" "$i"
+
+    # Apply --layer filter if set
+    if [[ -n "$UP_LAYER" && "$LAYER_NAME" != "$UP_LAYER" ]]; then
+      continue
+    fi
+
+    log_info "  Layer: $LAYER_NAME ($LAYER_REPO_URL @ $LAYER_TARGET_REVISION)"
+
+    # Configure layer-specific repo access if the layer has its own repo
+    local layer_token="${LAYER_TOKEN:-$UP_TOKEN}"
+    if [[ "$LAYER_REPO_URL" != "$KUBERISE_REPO_URL" && "$LAYER_REPO_URL" != "$UP_REPO" ]]; then
+      configure_layer_repo_access "$context" "$LAYER_NAME" \
+        "$LAYER_REPO_URL" "$layer_token"
+    fi
+
+    create_layer_app_of_apps "$context" "$cluster_name" "$LAYER_NAME" \
+      "$LAYER_REPO_URL" "$LAYER_TARGET_REVISION" \
+      "$KUBERISE_REPO_URL" "$KUBERISE_TARGET_REVISION" \
+      "$UP_REPO" "$UP_REVISION" \
+      "$domain" "$destination"
+
+    deployed_count=$((deployed_count + 1))
+  done
+
+  if [[ "$deployed_count" -eq 0 ]]; then
+    log_warn "Cluster $cluster_name: no layers deployed. Check --layer filter."
+  else
+    log_info "Cluster $cluster_name: $deployed_count layer(s) deployed."
+  fi
+}
+
+function cmd_up() {
+  parse_up_args "$@"
+  validate_up
+  parse_kuberise_yaml "$UP_CONFIG"
+
+  # Set deploy globals used by get_layer_config
+  DEPLOY_REPO="$UP_REPO"
+  DEPLOY_REVISION="$UP_REVISION"
+  DEPLOY_LAYER="$UP_LAYER"
+  KR_DRY_RUN="$UP_DRY_RUN"
+
+  if [[ "$KR_DRY_RUN" == true ]]; then
+    log_info "Dry-run mode: showing resources that would be applied (no changes will be made)"
+  fi
+
+  log_info "Kuberise: $KUBERISE_REPO_URL @ $KUBERISE_TARGET_REVISION"
+  log_info "Clusters: ${CLUSTER_NAMES[*]}"
+
+  # Determine target clusters (apply --cluster filter)
+  local target_clusters=()
+  for cluster_name in "${CLUSTER_NAMES[@]}"; do
+    if [[ -n "$UP_CLUSTER" && "$cluster_name" != "$UP_CLUSTER" ]]; then
+      continue
+    fi
+    target_clusters+=("$cluster_name")
+  done
+
+  if [[ ${#target_clusters[@]} -eq 0 ]]; then
+    log_warn "No clusters matched. Check --cluster filter or kuberise.yaml."
+    return
+  fi
+
+  # Separate accessible and inaccessible clusters
+  local accessible=()
+  local inaccessible=()
+  for cluster_name in "${target_clusters[@]}"; do
+    if check_cluster_accessible "$UP_CONFIG" "$cluster_name"; then
+      accessible+=("$cluster_name")
+    else
+      inaccessible+=("$cluster_name")
+    fi
+  done
+
+  if [[ ${#accessible[@]} -gt 0 ]]; then
+    log_info "Accessible clusters: ${accessible[*]}"
+  fi
+  if [[ ${#inaccessible[@]} -gt 0 ]]; then
+    log_warn "Inaccessible clusters (will retry): ${inaccessible[*]}"
+  fi
+
+  # Process accessible clusters in parallel
+  local pids=()
+  local log_files=()
+  local cluster_for_pid=()
+  local failed_clusters=()
+
+  for cluster_name in "${accessible[@]}"; do
+    local log_file
+    log_file=$(make_temp_file)
+    log_files+=("$log_file")
+    cluster_for_pid+=("$cluster_name")
+
+    if [[ ${#accessible[@]} -eq 1 ]]; then
+      up_cluster "$UP_CONFIG" "$cluster_name"
+    else
+      up_cluster "$UP_CONFIG" "$cluster_name" > "$log_file" 2>&1 &
+      pids+=($!)
+    fi
+  done
+
+  # Wait for parallel processes
+  if [[ ${#pids[@]} -gt 0 ]]; then
+    for i in "${!pids[@]}"; do
+      if wait "${pids[$i]}"; then
+        log_info "Cluster ${cluster_for_pid[$i]}: completed."
+      else
+        log_error "Cluster ${cluster_for_pid[$i]}: failed."
+        failed_clusters+=("${cluster_for_pid[$i]}")
+      fi
+      if [[ -s "${log_files[$i]}" ]]; then
+        echo "--- Output: ${cluster_for_pid[$i]} ---"
+        cat "${log_files[$i]}"
+        echo "--- End: ${cluster_for_pid[$i]} ---"
+      fi
+    done
+  fi
+
+  # Retry inaccessible clusters
+  if [[ ${#inaccessible[@]} -gt 0 ]]; then
+    local elapsed=0
+    local remaining=("${inaccessible[@]}")
+
+    while [[ ${#remaining[@]} -gt 0 && $elapsed -lt $UP_RETRY_TIMEOUT ]]; do
+      log_info "Waiting ${UP_RETRY_INTERVAL}s before retrying inaccessible clusters... (${elapsed}s/${UP_RETRY_TIMEOUT}s)"
+      sleep "$UP_RETRY_INTERVAL"
+      elapsed=$((elapsed + UP_RETRY_INTERVAL))
+
+      local still_waiting=()
+      for cluster_name in "${remaining[@]}"; do
+        if check_cluster_accessible "$UP_CONFIG" "$cluster_name"; then
+          log_info "Cluster $cluster_name is now accessible."
+          if up_cluster "$UP_CONFIG" "$cluster_name"; then
+            log_info "Cluster $cluster_name: completed."
+          else
+            log_error "Cluster $cluster_name: failed."
+            failed_clusters+=("$cluster_name")
+          fi
+        else
+          still_waiting+=("$cluster_name")
+        fi
+      done
+      remaining=("${still_waiting[@]}")
+    done
+
+    if [[ ${#remaining[@]} -gt 0 ]]; then
+      log_error "Timed out waiting for clusters: ${remaining[*]}"
+      failed_clusters+=("${remaining[@]}")
+    fi
+  fi
+
+  # Summary
+  echo ""
+  if [[ "$KR_DRY_RUN" == true ]]; then
+    log_info "Dry-run completed. No changes were made."
+  elif [[ ${#failed_clusters[@]} -gt 0 ]]; then
+    log_error "Failed clusters: ${failed_clusters[*]}"
+    exit 1
+  else
+    log_info "All clusters are up and running."
+    log_info "ArgoCD will now sync the applications defined in each app-of-apps."
   fi
 }
 
@@ -1460,7 +2162,7 @@ function cmd_uninstall() {
     read -p "This will remove the '$UNINSTALL_CLUSTER' cluster installation from the '$UNINSTALL_CONTEXT' Kubernetes context.
 
 It will:
-  - Delete the app-of-apps ArgoCD application and project
+  - Delete all app-of-apps ArgoCD applications and the project
   - Uninstall ArgoCD Helm release
   - Remove orphaned webhook configurations (cluster-scoped)
   - Delete kuberise-managed namespaces (including ArgoCD-discovered namespaces)
@@ -1510,10 +2212,12 @@ if [[ $# -eq 0 ]]; then
 fi
 
 case "$1" in
+  up)         shift; cmd_up "$@" ;;
   version)    cmd_version ;;
   init)       shift; cmd_init "$@" ;;
   deploy)     shift; cmd_deploy "$@" ;;
   uninstall)  shift; cmd_uninstall "$@" ;;
+  down)       shift; cmd_uninstall "$@" ;;
   --help|-h)  usage; exit 0 ;;
   *)          log_error "Unknown command: $1"; usage; exit 1 ;;
 esac

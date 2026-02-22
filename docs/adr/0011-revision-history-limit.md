@@ -17,6 +17,6 @@ The default of 3 provides enough history to compare recent syncs and support rol
 ## Consequences
 
 - All generated ArgoCD Applications will retain at most 3 revisions by default instead of 10.
-- The global default can be changed via `global.revisionHistoryLimit` in `app-of-apps/values.yaml`.
+- The global default can be changed via `global.revisionHistoryLimit` in `app-of-apps/values.yaml` (the chart defaults file).
 - Per-application overrides are supported via the `revisionHistoryLimit` field on each application definition.
 - Clusters that need deeper audit history for specific applications can override on a per-app basis.
