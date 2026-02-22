@@ -50,7 +50,7 @@ There are no unit tests or linters. Testing is done by deploying to a developmen
 - `kr init` and `kr deploy` are escape hatches for fine-grained control; `kr init` also reads `kuberise.yaml` when available
 
 ### Multi-Source Applications (ADR-0014)
-Helm-type apps use two sources: (1) chart source (external repo or local path), (2) values source (git repo with `$values/` prefix). Non-Helm apps (kustomize, raw) use single source.
+Helm-type apps use two sources: (1) chart source (external repo or local path), (2) values source (git repo with `$values/` prefix). Non-Helm apps (kustomize, raw) use single source. Per-app `repoURL: kuberise` resolves to the OSS repo, letting client-layer apps reference charts from kuberise.io (e.g., `charts/generic-deployment`).
 
 ### Value File Hierarchy
 1. **Defaults**: `values/defaults/platform/{component}/values.yaml` - always exist, even if empty

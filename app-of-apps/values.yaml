@@ -19,5 +19,8 @@ global:
     defaults:
       repoURL: ""
       targetRevision: ""
+  kuberise:
+    repoURL: ""
+    targetRevision: ""
 
 ArgocdApplications: {}

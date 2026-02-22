@@ -736,6 +736,10 @@ spec:
             value: $domain
           - name: global.spec.destination.server
             value: $destination
+          - name: global.kuberise.repoURL
+            value: $kuberise_repo
+          - name: global.kuberise.targetRevision
+            value: $kuberise_revision
     - repoURL: $layer_repo
       targetRevision: $layer_revision
       ref: layer
