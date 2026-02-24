@@ -81,7 +81,7 @@ The client repo URL is resolved in this order: `--repo` flag > `client.repoURL` 
 
 ### `kr init`
 
-Bootstrap Kubernetes clusters with kuberise platform prerequisites. Supports two modes: **kuberise.yaml mode** (reads cluster config from file) and **legacy single-cluster mode** (requires `--context` and `--domain` flags).
+Bootstrap Kubernetes clusters with kuberise platform prerequisites. Supports two modes: **kuberise.yaml mode** (reads cluster config from file) and **single-cluster mode** (requires `--context` and `--domain` flags).
 
 **Optional flags:**
 - `--admin-password PWD` - Admin password (default: `admin`)
