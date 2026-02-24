@@ -205,8 +205,9 @@ function fetch_kuberise_yaml() {
   local repo_url=$1
   local revision=${2:-HEAD}
   local token=${3:-}
+  local config_path=${4:-kuberise.yaml}
 
-  log_info "kuberise.yaml not found locally, fetching from $repo_url..." >&2
+  log_info "$config_path not found locally, fetching from $repo_url..." >&2
 
   local tmp_dir
   tmp_dir=$(mktemp -d)
@@ -228,12 +229,12 @@ function fetch_kuberise_yaml() {
     return 1
   fi
 
-  if ! (cd "$tmp_dir" && git checkout HEAD -- kuberise.yaml) 2>/dev/null; then
-    log_error "kuberise.yaml not found in $repo_url (revision: $revision)"
+  if ! (cd "$tmp_dir" && git checkout HEAD -- "$config_path") 2>/dev/null; then
+    log_error "$config_path not found in $repo_url (revision: $revision)"
     return 1
   fi
 
-  echo "$tmp_dir/kuberise.yaml"
+  echo "$tmp_dir/$config_path"
 }
 
 function generate_random_secret() {
@@ -1236,10 +1237,13 @@ Deploy all clusters and layers defined in kuberise.yaml.
 Reads kuberise.yaml from the current directory (or --config path).
 Deploys to all clusters in parallel, with retry for inaccessible clusters.
 
-Required flags:
-  --repo REPO_URL          Git repository URL for the client repo
+The client repo URL is resolved in this order:
+  1. --repo flag (if provided)
+  2. client.repoURL in kuberise.yaml
+  3. Error if neither is set
 
 Optional flags:
+  --repo REPO_URL          Git repository URL for the client repo
   --revision REV           Client repo branch, tag, or commit SHA (default: HEAD)
   --token TOKEN            Git token for private repositories (fallback for all repos)
   --cluster NAME           Deploy only this cluster (default: deploy all clusters)
@@ -1250,7 +1254,11 @@ Optional flags:
   --dry-run                Show what would be applied without making changes
   -h, --help               Show this help message
 
-kuberise.yaml defines kuberise version and a map of clusters with their layers:
+kuberise.yaml defines kuberise version, client repo, and a map of clusters with their layers:
+
+  client:
+    repoURL: https://github.com/org/client-webshop.git
+    targetRevision: main  # optional, default: HEAD
 
   kuberise:
     repoURL: https://github.com/kuberise/kuberise.io.git
@@ -1278,20 +1286,20 @@ Each cluster's context is used for kubectl/helm operations. Enabler files
 use the naming convention: values-{clusterName}-{layerName}.yaml
 
 Examples:
-  # Deploy all clusters and layers
+  # Deploy from the client repo directory (uses client.repoURL from kuberise.yaml)
+  kr deploy
+
+  # Deploy all clusters and layers (explicit repo URL)
   kr deploy --repo https://github.com/org/client-webshop.git
 
   # Deploy only the dev cluster
-  kr deploy --repo https://github.com/org/client-webshop.git \\
-    --cluster dev
+  kr deploy --cluster dev
 
   # Deploy only the platform layer on all clusters
-  kr deploy --repo https://github.com/org/client-webshop.git \\
-    --layer platform
+  kr deploy --layer platform
 
   # Dry-run to preview generated manifests
-  kr deploy --repo https://github.com/org/client-webshop.git \\
-    --dry-run
+  kr deploy --dry-run
 EOF
 }
 
@@ -1383,15 +1391,17 @@ function parse_deploy_args() {
   DEPLOY_CONFIG="kuberise.yaml"
   DEPLOY_RETRY_INTERVAL=30
   DEPLOY_RETRY_TIMEOUT=300
+  DEPLOY_CONFIG_EXPLICIT=false
+  DEPLOY_REVISION_EXPLICIT=false
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --repo)             DEPLOY_REPO="$2";             shift 2 ;;
-      --revision)         DEPLOY_REVISION="$2";         shift 2 ;;
+      --revision)         DEPLOY_REVISION="$2";         DEPLOY_REVISION_EXPLICIT=true; shift 2 ;;
       --token)            DEPLOY_TOKEN="$2";            shift 2 ;;
       --cluster)          DEPLOY_CLUSTER="$2";          shift 2 ;;
       --layer)            DEPLOY_LAYER="$2";            shift 2 ;;
-      --config)           DEPLOY_CONFIG="$2";           shift 2 ;;
+      --config)           DEPLOY_CONFIG="$2";           DEPLOY_CONFIG_EXPLICIT=true; shift 2 ;;
       --retry-interval)   DEPLOY_RETRY_INTERVAL="$2";   shift 2 ;;
       --retry-timeout)    DEPLOY_RETRY_TIMEOUT="$2";    shift 2 ;;
       --dry-run)          DEPLOY_DRY_RUN=true;          shift ;;
@@ -1404,19 +1414,27 @@ function parse_deploy_args() {
 function validate_deploy() {
   check_required_tools_deploy
 
-  if [[ -z "$DEPLOY_REPO" ]]; then
-    log_error "Missing required flag: --repo"
-    usage_deploy
-    exit 1
-  fi
-
-  if [[ ! -f "$DEPLOY_CONFIG" ]]; then
-    local fetched
-    if fetched=$(fetch_kuberise_yaml "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_TOKEN"); then
-      DEPLOY_CONFIG="$fetched"
-    else
-      log_error "kuberise.yaml not found locally and could not be fetched from --repo."
-      log_error "Run kr deploy from the root of your client repo, or use --config to specify the path."
+  if [[ -n "$DEPLOY_REPO" ]]; then
+    # --repo provided: fetch config from remote if not found locally
+    if [[ ! -f "$DEPLOY_CONFIG" ]]; then
+      local fetch_path="kuberise.yaml"
+      if [[ "$DEPLOY_CONFIG_EXPLICIT" == "true" ]]; then
+        fetch_path="$DEPLOY_CONFIG"
+      fi
+      local fetched
+      if fetched=$(fetch_kuberise_yaml "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_TOKEN" "$fetch_path"); then
+        DEPLOY_CONFIG="$fetched"
+      else
+        log_error "$fetch_path not found locally and could not be fetched from --repo."
+        log_error "Run kr deploy from the root of your client repo, or use --config to specify the path."
+        exit 1
+      fi
+    fi
+  else
+    # No --repo: config file must exist locally
+    if [[ ! -f "$DEPLOY_CONFIG" ]]; then
+      log_error "Config file not found: $DEPLOY_CONFIG"
+      log_error "Run kr deploy from the root of your client repo, use --config to specify the path, or use --repo to fetch remotely."
       exit 1
     fi
   fi
@@ -1449,6 +1467,41 @@ function parse_kuberise_yaml() {
   if [[ ${#CLUSTER_NAMES[@]} -eq 0 ]]; then
     log_error "At least one cluster must be defined in $config_file"
     exit 1
+  fi
+}
+
+# Resolve the client repo URL and revision from CLI flags or kuberise.yaml.
+# Sets DEPLOY_REPO and DEPLOY_REVISION as globals.
+#
+# Priority: --repo flag > client.repoURL in config > error
+#           --revision flag (explicit) > client.targetRevision > "HEAD"
+function resolve_client_repo() {
+  local config_file=$1
+  local cli_repo=$2
+  local cli_revision=$3
+  local revision_explicit=$4
+
+  local yaml_repo
+  yaml_repo=$(yq '.client.repoURL // ""' "$config_file")
+  local yaml_revision
+  yaml_revision=$(yq '.client.targetRevision // ""' "$config_file")
+
+  if [[ -n "$cli_repo" ]]; then
+    DEPLOY_REPO="$cli_repo"
+  elif [[ -n "$yaml_repo" ]]; then
+    DEPLOY_REPO="$yaml_repo"
+  else
+    log_error "Client repo URL not found."
+    log_error "Provide --repo on the command line, or add client.repoURL to $config_file."
+    exit 1
+  fi
+
+  if [[ "$revision_explicit" == "true" ]]; then
+    DEPLOY_REVISION="$cli_revision"
+  elif [[ -n "$yaml_revision" ]]; then
+    DEPLOY_REVISION="$yaml_revision"
+  else
+    DEPLOY_REVISION="HEAD"
   fi
 }
 
@@ -1720,6 +1773,7 @@ function cmd_deploy() {
   parse_deploy_args "$@"
   validate_deploy
   parse_kuberise_yaml "$DEPLOY_CONFIG"
+  resolve_client_repo "$DEPLOY_CONFIG" "$DEPLOY_REPO" "$DEPLOY_REVISION" "$DEPLOY_REVISION_EXPLICIT"
 
   KR_DRY_RUN="$DEPLOY_DRY_RUN"
 
@@ -1863,10 +1917,13 @@ Initialize and deploy all clusters defined in kuberise.yaml.
 For each accessible cluster: bootstraps (init) if ArgoCD is not installed,
 then deploys all layers. Clusters already initialized skip straight to deploy.
 
-Required flags:
-  --repo REPO_URL          Git repository URL for the client repo
+The client repo URL is resolved in this order:
+  1. --repo flag (if provided)
+  2. client.repoURL in kuberise.yaml
+  3. Error if neither is set
 
 Optional flags:
+  --repo REPO_URL          Git repository URL for the client repo
   --admin-password PWD     Admin password for init (default: admin, warns if default)
   --cilium                 Install Cilium CNI on clusters that need init
   --revision REV           Client repo branch, tag, or commit SHA (default: HEAD)
@@ -1880,15 +1937,17 @@ Optional flags:
   -h, --help               Show this help message
 
 Examples:
-  # Full setup: init + deploy all clusters
+  # Full setup from client repo directory (uses client.repoURL from kuberise.yaml)
+  kr up
+
+  # Full setup with explicit repo URL
   kr up --repo https://github.com/org/client-webshop.git
 
   # Target only the dev cluster
-  kr up --repo https://github.com/org/client-webshop.git --cluster dev
+  kr up --cluster dev
 
   # With Cilium and custom password
-  kr up --repo https://github.com/org/client-webshop.git \\
-    --cilium --admin-password mypassword
+  kr up --cilium --admin-password mypassword
 EOF
 }
 
@@ -1904,15 +1963,17 @@ function parse_up_args() {
   UP_DRY_RUN=false
   UP_RETRY_INTERVAL=30
   UP_RETRY_TIMEOUT=300
+  UP_CONFIG_EXPLICIT=false
+  UP_REVISION_EXPLICIT=false
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --repo)             UP_REPO="$2";             shift 2 ;;
-      --revision)         UP_REVISION="$2";         shift 2 ;;
+      --revision)         UP_REVISION="$2";         UP_REVISION_EXPLICIT=true; shift 2 ;;
       --token)            UP_TOKEN="$2";            shift 2 ;;
       --cluster)          UP_CLUSTER="$2";          shift 2 ;;
       --layer)            UP_LAYER="$2";            shift 2 ;;
-      --config)           UP_CONFIG="$2";           shift 2 ;;
+      --config)           UP_CONFIG="$2";           UP_CONFIG_EXPLICIT=true; shift 2 ;;
       --admin-password)   UP_ADMIN_PASSWORD="$2";   shift 2 ;;
       --cilium)           UP_CILIUM=true;           shift ;;
       --retry-interval)   UP_RETRY_INTERVAL="$2";   shift 2 ;;
@@ -1936,19 +1997,27 @@ function validate_up() {
     fi
   done
 
-  if [[ -z "$UP_REPO" ]]; then
-    log_error "Missing required flag: --repo"
-    usage_up
-    exit 1
-  fi
-
-  if [[ ! -f "$UP_CONFIG" ]]; then
-    local fetched
-    if fetched=$(fetch_kuberise_yaml "$UP_REPO" "$UP_REVISION" "$UP_TOKEN"); then
-      UP_CONFIG="$fetched"
-    else
-      log_error "kuberise.yaml not found locally and could not be fetched from --repo."
-      log_error "Run kr up from the root of your client repo, or use --config to specify the path."
+  if [[ -n "$UP_REPO" ]]; then
+    # --repo provided: fetch config from remote if not found locally
+    if [[ ! -f "$UP_CONFIG" ]]; then
+      local fetch_path="kuberise.yaml"
+      if [[ "$UP_CONFIG_EXPLICIT" == "true" ]]; then
+        fetch_path="$UP_CONFIG"
+      fi
+      local fetched
+      if fetched=$(fetch_kuberise_yaml "$UP_REPO" "$UP_REVISION" "$UP_TOKEN" "$fetch_path"); then
+        UP_CONFIG="$fetched"
+      else
+        log_error "$fetch_path not found locally and could not be fetched from --repo."
+        log_error "Run kr up from the root of your client repo, or use --config to specify the path."
+        exit 1
+      fi
+    fi
+  else
+    # No --repo: config file must exist locally
+    if [[ ! -f "$UP_CONFIG" ]]; then
+      log_error "Config file not found: $UP_CONFIG"
+      log_error "Run kr up from the root of your client repo, use --config to specify the path, or use --repo to fetch remotely."
       exit 1
     fi
   fi
@@ -2025,10 +2094,11 @@ function cmd_up() {
   parse_up_args "$@"
   validate_up
   parse_kuberise_yaml "$UP_CONFIG"
+  resolve_client_repo "$UP_CONFIG" "$UP_REPO" "$UP_REVISION" "$UP_REVISION_EXPLICIT"
 
   # Set deploy globals used by get_layer_config
-  DEPLOY_REPO="$UP_REPO"
-  DEPLOY_REVISION="$UP_REVISION"
+  UP_REPO="$DEPLOY_REPO"
+  UP_REVISION="$DEPLOY_REVISION"
   DEPLOY_LAYER="$UP_LAYER"
   KR_DRY_RUN="$UP_DRY_RUN"
 
