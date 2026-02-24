@@ -57,20 +57,76 @@ KR_VERSION="{X.Y.Z}"
 
 This version is displayed by `kr version` and must match the release.
 
-## 6. Create git tag and GitHub release
+## 6. Generate release PR title and description
 
-Remind the user to create a git tag (no 'v' prefix) and a GitHub release:
+Generate a PR title and body for the release branch. This is the main PR that merges all release changes into `main`.
+
+**PR title format:**
+```
+Release {X.Y.Z}: {Short Title from RELEASE_NOTES}
+```
+
+**PR body format:**
+```markdown
+## Release {X.Y.Z} - {Short Title}
+
+{One-sentence summary from RELEASE_NOTES}
+
+### Changes in this PR
+- Updated `RELEASE_NOTES.md` with version {X.Y.Z}
+- Created changelog entry `{N}.{major}-{minor}-{patch}.md`
+- Updated version badge in `app.config.ts` to {X.Y.Z}
+- Updated `KR_VERSION` in `scripts/kr` to {X.Y.Z}
+
+### Release notes
+
+{Copy the Added/Changed/Removed sections from RELEASE_NOTES.md}
+```
+
+Present the PR title and body to the user so they can use it when creating the PR.
+
+## 7. Generate git tag message
+
+Generate an annotated tag message for the release. The tag should be annotated (not lightweight) so it includes metadata.
+
+**Tag command:**
 ```bash
-git tag {X.Y.Z}
+git tag -a {X.Y.Z} -m "{Tag message}"
+```
+
+**Tag message format:**
+```
+Release {X.Y.Z}: {Short Title}
+
+{2-3 sentence summary of the most important changes, derived from RELEASE_NOTES.md}
+```
+
+Present the full `git tag` command to the user.
+
+## 8. Create GitHub release
+
+Remind the user to push the tag and create a GitHub release.
+
+**IMPORTANT: The `scripts/kr` file MUST be attached as a release asset.** Without it, the installer (`curl -sSL https://kuberise.io/install | sh`) will fail with a 404 error because it downloads `kr` from `https://github.com/kuberise/kuberise.io/releases/download/{X.Y.Z}/kr`.
+
+```bash
 git push origin {X.Y.Z}
+gh release create {X.Y.Z} --title "{X.Y.Z} - {Short Title}" --notes-file <(sed -n '/## \[{X.Y.Z}\]/,/## \[/p' RELEASE_NOTES.md | head -n -1) scripts/kr
 ```
 
-Then create a GitHub release from the tag. This is required for the `kr` installer (`install-kr.sh`) to download the correct version. The release should attach the `scripts/kr` script as a release asset:
+If the `sed` approach is too complex, generate the release notes content and present a simpler `gh release create` command with `--notes` inline.
+
+If the release already exists but is missing the asset, use:
 ```bash
-gh release create {X.Y.Z} --title "{X.Y.Z}" --notes "See RELEASE_NOTES.md for details" scripts/kr
+gh release upload {X.Y.Z} scripts/kr
 ```
 
-## 7. Draft a LinkedIn post
+After creating the release, verify the installer works:
+```bash
+curl -sSL https://kuberise.io/install | sh
+```
+
+## 9. Draft a LinkedIn post
 
 Draft a LinkedIn post for the kuberise company page announcing the new release. The post should:
 - Start with a hook line about the key feature
@@ -81,13 +137,14 @@ Draft a LinkedIn post for the kuberise company page announcing the new release. 
 
 Present the draft to the user for review before posting. Do not post it automatically.
 
-## 8. Summary checklist
+## 10. Summary checklist
 
 Present a checklist of everything that was done:
 - [ ] `RELEASE_NOTES.md` updated with new version
 - [ ] Changelog entry created in website repo
 - [ ] Version badge updated in `app.config.ts`
 - [ ] `KR_VERSION` updated in `scripts/kr`
-- [ ] Git tag created and pushed
+- [ ] Release PR title and description generated
+- [ ] Annotated git tag message generated
 - [ ] GitHub release created with `kr` script attached
 - [ ] LinkedIn post drafted
