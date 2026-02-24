@@ -1,6 +1,6 @@
 ---
 name: release
-description: Guide through creating a new kuberise.io release with release notes, changelog, and version badge
+description: Guide through creating a new kuberise.io release with release notes, changelog, version badge, GitHub release, and LinkedIn post
 ---
 
 # Create a New Release
@@ -48,17 +48,46 @@ export default defineAppConfig({
 })
 ```
 
-## 5. Create git tag
+## 5. Update `KR_VERSION` in the kr script
 
-Remind the user to create a git tag (no 'v' prefix):
+Update the `KR_VERSION` variable at the top of `../kuberise.io/scripts/kr`:
 ```bash
-git tag {X.Y.Z}
+KR_VERSION="{X.Y.Z}"
 ```
 
-## 6. Summary checklist
+This version is displayed by `kr version` and must match the release.
+
+## 6. Create git tag and GitHub release
+
+Remind the user to create a git tag (no 'v' prefix) and a GitHub release:
+```bash
+git tag {X.Y.Z}
+git push origin {X.Y.Z}
+```
+
+Then create a GitHub release from the tag. This is required for the `kr` installer (`install-kr.sh`) to download the correct version. The release should attach the `scripts/kr` script as a release asset:
+```bash
+gh release create {X.Y.Z} --title "{X.Y.Z}" --notes "See RELEASE_NOTES.md for details" scripts/kr
+```
+
+## 7. Draft a LinkedIn post
+
+Draft a LinkedIn post for the kuberise company page announcing the new release. The post should:
+- Start with a hook line about the key feature
+- Summarize the 2-3 most impactful changes in plain language (not too technical)
+- Include relevant hashtags (#kubernetes #devops #platform #opensource #gitops)
+- Keep it concise (under 200 words)
+- End with a call to action (link to changelog or GitHub)
+
+Present the draft to the user for review before posting. Do not post it automatically.
+
+## 8. Summary checklist
 
 Present a checklist of everything that was done:
 - [ ] `RELEASE_NOTES.md` updated with new version
 - [ ] Changelog entry created in website repo
 - [ ] Version badge updated in `app.config.ts`
-- [ ] Git tag created
+- [ ] `KR_VERSION` updated in `scripts/kr`
+- [ ] Git tag created and pushed
+- [ ] GitHub release created with `kr` script attached
+- [ ] LinkedIn post drafted

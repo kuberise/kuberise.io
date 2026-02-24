@@ -50,7 +50,7 @@ charts/{chart-name}/
 
 Create `values/defaults/platform/{chart-name}/values.yaml` (even if empty).
 
-## 4. Register in app-of-apps/values.yaml
+## 4. Register in app-of-apps/values-base.yaml
 
 Add under `ArgocdApplications`. Local charts don't need `chart`, `repoURL`, or `targetRevision` fields - they default to `charts/{name}` path.
 

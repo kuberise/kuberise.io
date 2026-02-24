@@ -53,6 +53,9 @@ ArgocdApplications:
   metrics-server:
     enabled: true
 
+  kube-prometheus-stack-crds:
+    enabled: false
+
   kube-prometheus-stack:
     enabled: true
 

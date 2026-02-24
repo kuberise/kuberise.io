@@ -81,7 +81,7 @@ On an AppProject, this finalizer has different behavior than on an Application: 
 
 ### 4. Additional finalizers for specific applications
 
-Some applications require extra ArgoCD finalizers for proper cleanup. These are specified per-application in `app-of-apps/values.yaml` via the `finalizers` field:
+Some applications require extra ArgoCD finalizers for proper cleanup. These are specified per-application in `app-of-apps/values-base.yaml` via the `finalizers` field:
 
 ```yaml
 kyverno:

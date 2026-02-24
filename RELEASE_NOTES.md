@@ -1,21 +1,29 @@
 # Release Notes
 
-## [0.4.0] - DRAFT
+## [0.4.0] - 24 February 2026
 
-### Per-Repository Git Tokens
+### Declarative Multi-Cluster Deployment with `kr up`
 
-This release adds support for separate Git tokens per repository in `kr deploy`. Previously, a single `--token` was shared across all three repository sources (charts, default values, cluster values). This was limiting when repositories belong to different Git organizations, providers, or require different access scopes.
+This release introduces `kuberise.yaml`, a declarative cluster manifest that describes the full desired state of all clusters managed by a client repo. The new `kr up` command reads this file and handles the complete lifecycle: bootstrapping clusters that need initialization and deploying all layers to clusters that are already running. Clusters are processed in parallel with automatic retry for clusters that are not yet accessible (e.g., clusters being provisioned by CAPI).
 
 ### Added
-- **`--dry-run` flag for `kr deploy`** - Preview all Kubernetes manifests that would be applied without making changes.
-- **`--values-token` flag** - Git token for the values repository, independent of the main `--token`.
-- **`--defaults-token` flag** - Git token for the defaults repository, independent of the main `--token`.
-- **Cascade defaults** - When only `--token` is provided, it is used as the fallback for all repositories (preserving existing behavior). Individual token flags override only when explicitly given.
+- **`kr up` command** - the primary command for managing clusters. Reads `kuberise.yaml`, detects whether each cluster needs initialization (via `helm status argocd`), runs `kr init` for new clusters, then deploys all layers. Accessible clusters are processed in parallel; inaccessible clusters are retried with configurable interval and timeout (`--retry-interval`, `--retry-timeout`).
+- **`kr down` command** - alias for `kr uninstall`, providing an intuitive `up`/`down` pair.
+- **`kuberise.yaml` support** - declarative cluster manifest at the root of each client repo. Declares `client.repoURL`, `kuberise.repoURL`/`targetRevision`, and a `clusters:` map where each cluster defines its `context`, `domain`, and `layers`. Each layer specifies a `name`, optional `repoURL` (`kuberise` for the OSS repo, omit for the client repo, or an explicit URL), optional `targetRevision`, and optional `token` (environment variable name for authentication).
+- **`--dry-run` flag** for `kr deploy` and `kr up` - preview all Kubernetes manifests that would be applied without making changes.
+- **`--cluster` filter** for `kr deploy` and `kr up` - target a single cluster instead of all clusters defined in `kuberise.yaml`.
+- **`--layer` filter** for `kr up` - deploy only a specific layer within each cluster.
+- **Remote config fetching** - `kr up --repo <URL>` can fetch `kuberise.yaml` from a remote git repo via shallow clone when not running from the client repo directory.
+- **Per-layer token resolution** - each layer in `kuberise.yaml` can specify a `token:` field with the name of an environment variable, enabling secure authentication to private repos without storing credentials in git.
+- **ADR-0023** documenting the single AppProject-per-cluster pattern (supersedes ADR-0013).
 - **ADR-0024** documenting the rationale for per-repository authentication.
 
 ### Changed
-- **`--token` description** updated to clarify its role as fallback for all repos.
-- **Repository secret creation** now evaluates each repo independently. A secret is created when the token is non-empty and the URL/token combination differs from an already-created secret.
+- **`kr deploy` now reads `kuberise.yaml`** - resolves clusters, layers, and repos from the config file instead of requiring all values as CLI flags. CLI flags (`--repo`, `--revision`, `--token`) override the config file values.
+- **Parallel multi-cluster deployment** - both `kr deploy` and `kr up` process accessible clusters in parallel using background processes with PID tracking and error collection. A single cluster deploys inline (no background process overhead).
+- **AppProject management** - the ArgoCD AppProject is now created imperatively via `kubectl apply` in `kr deploy` instead of via Helm template, breaking the circular dependency during uninstall (ADR-0023).
+- **Enhanced uninstall** - `kr uninstall` (and `kr down`) now clears finalizers on stuck resources, handles PVCs/PVs in Terminating state, removes orphaned ValidatingWebhookConfigurations and MutatingWebhookConfigurations, and cleans up OIDC context/user entries from kubeconfig.
+- **Enabler file naming** - enabler files now use `values-{clusterName}-{layerName}.yaml` convention for multi-cluster support (e.g., `values-dev-platform.yaml`).
 
 ## [0.3.0] - 18 February 2026
 
@@ -64,7 +72,7 @@ This release is a major architectural change to how ArgoCD applications referenc
 
 ### Added
 - **Multi-source ArgoCD applications** — Helm-type apps now use `spec.sources` (plural) with a chart source and a separate `ref: values` source, enabling value files to reside in a different repository.
-- **Direct external chart references** — External charts are referenced directly in `app-of-apps/values.yaml` via `chart`, `repoURL`, and `targetRevision` fields, removing the need for wrapper charts.
+- **Direct external chart references** — External charts are referenced directly in `app-of-apps/values-base.yaml` via `chart`, `repoURL`, and `targetRevision` fields, removing the need for wrapper charts.
 - **Operator + config chart separation** — Five components have been split into operator and config applications: `cert-manager-config`, `keycloak-config`, `metallb-config`, `pgadmin-config`, and `k8sgpt-config`. Sync waves control deployment ordering.
 - **Split-repo topology support** — New `valuesRepoURL` and `valuesTargetRevision` fields allow per-application override of the values repository, enabling developer-owned configuration in separate repos.
 - **ADR-0014** documenting the rationale and consequences of this migration.
@@ -73,7 +81,7 @@ This release is a major architectural change to how ArgoCD applications referenc
 - **Directory rename: `templates/` to `charts/`** — The top-level directory now only contains local Helm charts, kustomize apps, and config charts.
 - **Value file un-nesting** — All value files across all clusters have been un-nested, removing the subchart alias prefix. Values are now passed directly to upstream charts as documented by their maintainers.
 - **ArgoCD template** — Value file paths now use `$values/` prefix instead of relative `../../` paths. Non-Helm apps (kustomize, raw) continue using single-source `spec.source`.
-- **`scripts/upgrade.sh` rewritten** — Now reads chart references from `app-of-apps/values.yaml` instead of scanning for `Chart.yaml` files in wrapper directories.
+- **`scripts/upgrade.sh` rewritten** — Now reads chart references from `app-of-apps/values-base.yaml` instead of scanning for `Chart.yaml` files in wrapper directories.
 
 ### Removed
 - **All wrapper charts** — 28+ `Chart.yaml` files under `templates/` that listed external charts as dependencies have been removed.

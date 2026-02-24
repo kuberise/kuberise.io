@@ -22,7 +22,7 @@ This enhancement is deferred. The current kustomize applications in the platform
 
 When a concrete need arises for kustomize parameters, the implementation should:
 
-1. Add optional kustomize fields (e.g., `namePrefix`, `nameSuffix`, `images`, `commonLabels`, `commonAnnotations`) to the application definition in `app-of-apps/values.yaml`.
+1. Add optional kustomize fields (e.g., `namePrefix`, `nameSuffix`, `images`, `commonLabels`, `commonAnnotations`) to the application definition in `app-of-apps/values-base.yaml`.
 2. Update `app-of-apps/templates/ArgocdApplications.yaml` to render these fields under `source.kustomize` when the application type is `kustomize`.
 3. Update `app-of-apps/values.schema.json` to include the new properties with appropriate type constraints.
 

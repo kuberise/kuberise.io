@@ -38,6 +38,21 @@
           "minimum": 0,
           "default": 3
         },
+        "kuberise": {
+          "type": "object",
+          "description": "OSS kuberise.io repository coordinates. Set by kr deploy so that per-app repoURL: kuberise can resolve to the OSS repo.",
+          "additionalProperties": false,
+          "properties": {
+            "repoURL": {
+              "type": "string",
+              "description": "Git repository URL of the kuberise.io OSS repo."
+            },
+            "targetRevision": {
+              "type": "string",
+              "description": "Git branch, tag, or commit SHA of the kuberise.io OSS repo."
+            }
+          }
+        },
         "spec": {
           "type": "object",
           "description": "Source and destination configuration for ArgoCD Applications.",
@@ -139,7 +154,7 @@
         },
         "repoURL": {
           "type": "string",
-          "description": "Override the global source repoURL for this application (e.g., external Helm chart repository URL)."
+          "description": "Override the global source repoURL for this application. Use \"kuberise\" as a shorthand to reference the OSS kuberise.io repo (e.g., for client apps that use charts from the OSS repo)."
         },
         "targetRevision": {
           "type": "string",

@@ -22,10 +22,10 @@ The platform uses GitOps principles with ArgoCD for declarative application mana
 - See ADR-0014 for the rationale behind this architecture
 
 ### External Chart References
-- External Helm charts are referenced directly in `app-of-apps/values.yaml` using `chart`, `repoURL`, and `targetRevision` fields
+- External Helm charts are referenced directly in `app-of-apps/values-base.yaml` using `chart`, `repoURL`, and `targetRevision` fields
 - No wrapper charts or local Chart.yaml dependencies for external charts
 - Values are passed directly to the upstream chart (no subchart nesting)
-- The `scripts/upgrade.sh` script reads chart references from `values.yaml` to check for updates
+- The `scripts/upgrade.sh` script reads chart references from `values-base.yaml` to check for updates
 
 ### Operator + Config Chart Pattern
 - Components that install an operator AND need custom configuration resources are split into two ArgoCD Applications:
@@ -134,7 +134,7 @@ ArgoCD Applications support three types:
 - Use `global.cluster` for cluster-specific references
 
 ### ArgoCD Application Configuration
-- Applications are defined in `app-of-apps/values.yaml` under `ArgocdApplications`
+- Applications are defined in `app-of-apps/values-base.yaml` under `ArgocdApplications`
 - Each application has:
   - `enabled`: Boolean to enable/disable
   - `namespace`: Target namespace (defaults to component name)
@@ -322,7 +322,7 @@ kr deploy --context k3d-dev --cluster dev --repo <REPO_URL> --revision <REVISION
 ## Development Guidelines
 
 ### Adding a New External Component
-1. Add application definition to `app-of-apps/values.yaml` under `ArgocdApplications` with `chart`, `repoURL`, and `targetRevision` fields
+1. Add application definition to `app-of-apps/values-base.yaml` under `ArgocdApplications` with `chart`, `repoURL`, and `targetRevision` fields
 2. Set `enabled: false` by default
 3. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty (placeholder files in defaults are required). Values should be at the top level (no subchart nesting).
 4. Only create cluster-specific values in `values/{cluster}/platform/{component-name}/values.yaml` if there are actual overrides for that cluster. Do NOT create empty placeholder files in cluster directories (see ADR-0002).
@@ -335,7 +335,7 @@ kr deploy --context k3d-dev --cluster dev --repo <REPO_URL> --revision <REVISION
 ### Adding a New Local Chart
 1. Create Helm chart in `charts/{component-name}/`
 2. Add default values in `values/defaults/platform/{component-name}/values.yaml` even if it is empty
-3. Add application definition to `app-of-apps/values.yaml` (no `chart`/`repoURL`/`targetRevision` needed; defaults to `charts/{name}` path)
+3. Add application definition to `app-of-apps/values-base.yaml` (no `chart`/`repoURL`/`targetRevision` needed; defaults to `charts/{name}` path)
 4. Follow the same cluster enable/disable pattern as external components
 
 ### Adding a New Field to ArgoCD Application Template

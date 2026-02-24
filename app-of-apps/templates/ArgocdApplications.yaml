@@ -32,9 +32,17 @@ spec:
   {{- if hasKey $app "defaultsTargetRevision" }}
     {{- $defaultsTargetRevision = $app.defaultsTargetRevision }}
   {{- end }}
+  {{- $chartRepoURL := default $.Values.global.spec.source.repoURL $app.repoURL }}
+  {{- $chartTargetRevision := default $.Values.global.spec.source.targetRevision $app.targetRevision }}
+  {{- if eq (toString (default "" $app.repoURL)) "kuberise" }}
+    {{- $chartRepoURL = $.Values.global.kuberise.repoURL }}
+    {{- if not (hasKey $app "targetRevision") }}
+      {{- $chartTargetRevision = $.Values.global.kuberise.targetRevision }}
+    {{- end }}
+  {{- end }}
   sources:
-    - repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}
-      targetRevision: {{ default $.Values.global.spec.source.targetRevision $app.targetRevision }}
+    - repoURL: {{ $chartRepoURL }}
+      targetRevision: {{ $chartTargetRevision }}
       {{- if hasKey $app "chart" }}
       chart: {{ $app.chart }}
       {{- else if hasKey $app "path" }}
@@ -68,9 +76,17 @@ spec:
       targetRevision: {{ default $defaultsTargetRevision $app.defaultsTargetRevision }}
       ref: defaults
 {{- else }}
+  {{- $srcRepoURL := default $.Values.global.spec.source.repoURL $app.repoURL }}
+  {{- $srcTargetRevision := default $.Values.global.spec.source.targetRevision $app.targetRevision }}
+  {{- if eq (toString (default "" $app.repoURL)) "kuberise" }}
+    {{- $srcRepoURL = $.Values.global.kuberise.repoURL }}
+    {{- if not (hasKey $app "targetRevision") }}
+      {{- $srcTargetRevision = $.Values.global.kuberise.targetRevision }}
+    {{- end }}
+  {{- end }}
   source:
-    repoURL: {{ default $.Values.global.spec.source.repoURL $app.repoURL }}
-    targetRevision: {{ default $.Values.global.spec.source.targetRevision $app.targetRevision }}
+    repoURL: {{ $srcRepoURL }}
+    targetRevision: {{ $srcTargetRevision }}
     {{- if hasKey $app "path" }}
     path: {{ tpl $app.path $ }}
     {{- else }}

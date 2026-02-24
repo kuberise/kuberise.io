@@ -45,7 +45,7 @@ Non-Helm applications (kustomize, raw) continue to use single-source `spec.sourc
 
 ### 2. Direct external chart references
 
-External Helm charts are now referenced directly in `app-of-apps/values.yaml` using `chart`, `repoURL`, and `targetRevision` fields, instead of through local wrapper Chart.yaml files. For example:
+External Helm charts are now referenced directly in `app-of-apps/values-base.yaml` using `chart`, `repoURL`, and `targetRevision` fields, instead of through local wrapper Chart.yaml files. For example:
 
 ```yaml
 cert-manager:
@@ -107,7 +107,7 @@ The multi-source architecture enables each application to optionally use a diffe
 
 ### 7. Upgrade script
 
-The `scripts/upgrade.sh` script has been rewritten to read chart references from `app-of-apps/values.yaml` instead of scanning for `Chart.yaml` files in wrapper chart directories.
+The `scripts/upgrade.sh` script has been rewritten to read chart references from `app-of-apps/values-base.yaml` instead of scanning for `Chart.yaml` files in wrapper chart directories.
 
 ## Consequences
 
