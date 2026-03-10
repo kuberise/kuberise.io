@@ -1821,21 +1821,23 @@ function cmd_deploy() {
   local log_files=()
   local cluster_for_pid=()
 
-  for cluster_name in "${accessible[@]}"; do
-    local log_file
-    log_file=$(make_temp_file)
-    log_files+=("$log_file")
-    cluster_for_pid+=("$cluster_name")
+  if [[ ${#accessible[@]} -gt 0 ]]; then
+    for cluster_name in "${accessible[@]}"; do
+      local log_file
+      log_file=$(make_temp_file)
+      log_files+=("$log_file")
+      cluster_for_pid+=("$cluster_name")
 
-    if [[ ${#accessible[@]} -eq 1 ]]; then
-      # Single cluster: deploy inline (no background process needed)
-      deploy_cluster "$DEPLOY_CONFIG" "$cluster_name"
-    else
-      # Multiple clusters: deploy in parallel
-      deploy_cluster "$DEPLOY_CONFIG" "$cluster_name" > "$log_file" 2>&1 &
-      pids+=($!)
-    fi
-  done
+      if [[ ${#accessible[@]} -eq 1 ]]; then
+        # Single cluster: deploy inline (no background process needed)
+        deploy_cluster "$DEPLOY_CONFIG" "$cluster_name"
+      else
+        # Multiple clusters: deploy in parallel
+        deploy_cluster "$DEPLOY_CONFIG" "$cluster_name" > "$log_file" 2>&1 &
+        pids+=($!)
+      fi
+    done
+  fi
 
   # Wait for parallel deploys and collect results
   local failed_clusters=()
@@ -1880,7 +1882,7 @@ function cmd_deploy() {
           still_waiting+=("$cluster_name")
         fi
       done
-      remaining=("${still_waiting[@]}")
+      remaining=(${still_waiting[@]+"${still_waiting[@]}"})
     done
 
     if [[ ${#remaining[@]} -gt 0 ]]; then
@@ -2147,19 +2149,21 @@ function cmd_up() {
   local cluster_for_pid=()
   local failed_clusters=()
 
-  for cluster_name in "${accessible[@]}"; do
-    local log_file
-    log_file=$(make_temp_file)
-    log_files+=("$log_file")
-    cluster_for_pid+=("$cluster_name")
+  if [[ ${#accessible[@]} -gt 0 ]]; then
+    for cluster_name in "${accessible[@]}"; do
+      local log_file
+      log_file=$(make_temp_file)
+      log_files+=("$log_file")
+      cluster_for_pid+=("$cluster_name")
 
-    if [[ ${#accessible[@]} -eq 1 ]]; then
-      up_cluster "$UP_CONFIG" "$cluster_name"
-    else
-      up_cluster "$UP_CONFIG" "$cluster_name" > "$log_file" 2>&1 &
-      pids+=($!)
-    fi
-  done
+      if [[ ${#accessible[@]} -eq 1 ]]; then
+        up_cluster "$UP_CONFIG" "$cluster_name"
+      else
+        up_cluster "$UP_CONFIG" "$cluster_name" > "$log_file" 2>&1 &
+        pids+=($!)
+      fi
+    done
+  fi
 
   # Wait for parallel processes
   if [[ ${#pids[@]} -gt 0 ]]; then
@@ -2202,7 +2206,7 @@ function cmd_up() {
           still_waiting+=("$cluster_name")
         fi
       done
-      remaining=("${still_waiting[@]}")
+      remaining=(${still_waiting[@]+"${still_waiting[@]}"})
     done
 
     if [[ ${#remaining[@]} -gt 0 ]]; then
