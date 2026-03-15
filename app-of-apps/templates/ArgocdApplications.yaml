@@ -51,7 +51,7 @@ spec:
       path: charts/{{ $name }}
       {{- end }}
       helm:
-        ignoreMissingValueFiles: true # adr 0002
+        # ignoreMissingValueFiles: true # adr 0002 # commented out to make sure it gets values from the correct files.
         valueFiles:
           {{- if hasKey $app "values" }}
           {{- range $app.values }}
