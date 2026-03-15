@@ -589,8 +589,6 @@ function install_argocd() {
 function install_cilium() {
   local context=$1
 
-  log_info "Installing Cilium..."
-
   helm upgrade --install --kube-context "$context" \
     -n kube-system --wait \
     --set operator.replicas=1 \
@@ -1696,7 +1694,6 @@ function init_cluster() {
     install_cilium "$context"
   fi
 
-  log_info "Installing ArgoCD..."
   install_argocd "$context" "$admin_password" "$domain"
 
   log_info "Configuring OAuth2 clients..."
