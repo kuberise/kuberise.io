@@ -2036,16 +2036,16 @@ function up_cluster() {
   local destination="$CL_DESTINATION"
   local layers_count="$CL_LAYERS_COUNT"
 
-  # Check if ArgoCD is installed - if not, run init first
-  if ! is_argocd_installed "$context"; then
-    log_step "Cluster $cluster_name: ArgoCD not found, initializing..."
-    if [[ "$UP_ADMIN_PASSWORD" == "admin" ]]; then
-      log_warn "Using default admin password 'admin'. Set --admin-password or ADMIN_PASSWORD env var for production use."
-    fi
-    init_cluster "$context" "$cluster_name" "$domain" "$UP_ADMIN_PASSWORD" "$UP_CILIUM"
+  # Always run init (upgrade) - all init functions are idempotent
+  if is_argocd_installed "$context"; then
+    log_info "Cluster $cluster_name: ArgoCD already installed, upgrading..."
   else
-    log_info "Cluster $cluster_name: ArgoCD already installed, skipping init."
+    log_step "Cluster $cluster_name: ArgoCD not found, initializing..."
   fi
+  if [[ "$UP_ADMIN_PASSWORD" == "admin" ]]; then
+    log_warn "Using default admin password 'admin'. Set --admin-password or ADMIN_PASSWORD env var for production use."
+  fi
+  init_cluster "$context" "$cluster_name" "$domain" "$UP_ADMIN_PASSWORD" "$UP_CILIUM"
 
   # Now deploy layers
   log_step "Deploying cluster: $cluster_name ($domain)"
