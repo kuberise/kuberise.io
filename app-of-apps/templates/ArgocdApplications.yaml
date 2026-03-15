@@ -118,7 +118,7 @@ spec:
       refresh: true
       # Unlimited retries (ADR-0007): bounded retries caused earlier sync waves
       # to give up before dependencies were ready, blocking all later waves.
-      limit: 0
+      limit: -1
       backoff:
         duration: 10s
         factor: 2
