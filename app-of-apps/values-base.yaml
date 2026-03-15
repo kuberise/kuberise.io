@@ -228,6 +228,15 @@ ArgocdApplications:
     chart: cert-manager
     repoURL: https://charts.jetstack.io
     targetRevision: v1.20.0-alpha.1
+    ignoreDifferences:
+      - group: admissionregistration.k8s.io
+        kind: ValidatingWebhookConfiguration
+        jsonPointers:
+          - /webhooks/0/clientConfig/caBundle
+      - group: admissionregistration.k8s.io
+        kind: MutatingWebhookConfiguration
+        jsonPointers:
+          - /webhooks/0/clientConfig/caBundle
 
   cert-manager-config:
     enabled: false
