@@ -228,6 +228,8 @@ ArgocdApplications:
     chart: cert-manager
     repoURL: https://charts.jetstack.io
     targetRevision: v1.20.0-alpha.1
+    syncOptions:
+      - RespectIgnoreDifferences=true
     ignoreDifferences:
       - group: admissionregistration.k8s.io
         kind: ValidatingWebhookConfiguration
