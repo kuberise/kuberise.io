@@ -1203,7 +1203,7 @@ Otherwise, requires --context and --domain flags for single-cluster mode.
 Optional flags:
   --admin-password PWD     Admin password (default: admin, warns if default)
   --cilium                 Also install Cilium CNI
-  --cluster NAME           Init only this cluster (when using kuberise.yaml)
+  --cluster NAME           Target this cluster and its children (default: all)
   --config PATH            Path to kuberise.yaml (default: ./kuberise.yaml)
   -h, --help               Show this help message
 
@@ -1246,7 +1246,7 @@ Optional flags:
   --repo REPO_URL          Git repository URL for the client repo
   --revision REV           Client repo branch, tag, or commit SHA (default: HEAD)
   --token TOKEN            Git token for private repositories (fallback for all repos)
-  --cluster NAME           Deploy only this cluster (default: deploy all clusters)
+  --cluster NAME           Target this cluster and its children (default: all)
   --layer NAME             Deploy only this layer (default: deploy all layers)
   --config PATH            Path to kuberise.yaml (default: ./kuberise.yaml)
   --retry-interval SECS    Seconds between retries for inaccessible clusters (default: 30)
@@ -1468,6 +1468,62 @@ function parse_kuberise_yaml() {
     log_error "At least one cluster must be defined in $config_file"
     exit 1
   fi
+
+  # Validate parent references
+  for cluster_name in "${CLUSTER_NAMES[@]}"; do
+    local parent
+    parent=$(yq ".clusters.$cluster_name.parent // \"\"" "$config_file")
+    if [[ -n "$parent" ]]; then
+      local found=false
+      for candidate in "${CLUSTER_NAMES[@]}"; do
+        if [[ "$candidate" == "$parent" ]]; then
+          found=true
+          break
+        fi
+      done
+      if [[ "$found" == false ]]; then
+        log_error "Cluster '$cluster_name' references parent '$parent' which does not exist in $config_file"
+        exit 1
+      fi
+    fi
+  done
+}
+
+# Resolve the set of clusters to target based on --cluster filter and parent-child
+# relationships. When --cluster X is specified and X has children (clusters with
+# parent: X), the target set expands to X + all its children. One level deep only.
+#
+# Sets TARGET_CLUSTERS array as a global. Parent is always first in the array.
+#
+# Usage: resolve_target_clusters <config_file> <cluster_filter>
+function resolve_target_clusters() {
+  local config_file=$1
+  local filter=$2
+
+  TARGET_CLUSTERS=()
+
+  if [[ -z "$filter" ]]; then
+    # No filter: target all clusters
+    TARGET_CLUSTERS=("${CLUSTER_NAMES[@]}")
+    return
+  fi
+
+  # Find children of the filtered cluster (clusters with parent: <filter>)
+  local children=()
+  for cluster_name in "${CLUSTER_NAMES[@]}"; do
+    local parent
+    parent=$(yq ".clusters.$cluster_name.parent // \"\"" "$config_file")
+    if [[ "$parent" == "$filter" ]]; then
+      children+=("$cluster_name")
+    fi
+  done
+
+  # Build target list: parent first, then children
+  TARGET_CLUSTERS=("$filter")
+  if [[ ${#children[@]} -gt 0 ]]; then
+    TARGET_CLUSTERS+=("${children[@]}")
+    log_info "Cluster $filter has children: ${children[*]}"
+  fi
 }
 
 # Resolve the client repo URL and revision from CLI flags or kuberise.yaml.
@@ -1662,11 +1718,10 @@ function cmd_init() {
       log_warn "Using default admin password 'admin'. Set --admin-password or ADMIN_PASSWORD env var for production use."
     fi
 
+    resolve_target_clusters "$INIT_CONFIG" "$INIT_CLUSTER_FILTER"
+
     local init_count=0
-    for cluster_name in "${CLUSTER_NAMES[@]}"; do
-      if [[ -n "$INIT_CLUSTER_FILTER" && "$cluster_name" != "$INIT_CLUSTER_FILTER" ]]; then
-        continue
-      fi
+    for cluster_name in "${TARGET_CLUSTERS[@]}"; do
 
       get_cluster_config "$INIT_CONFIG" "$cluster_name"
 
@@ -1784,14 +1839,9 @@ function cmd_deploy() {
   log_info "Kuberise: $KUBERISE_REPO_URL @ $KUBERISE_TARGET_REVISION"
   log_info "Clusters: ${CLUSTER_NAMES[*]}"
 
-  # Determine which clusters to deploy (apply --cluster filter)
-  local target_clusters=()
-  for cluster_name in "${CLUSTER_NAMES[@]}"; do
-    if [[ -n "$DEPLOY_CLUSTER" && "$cluster_name" != "$DEPLOY_CLUSTER" ]]; then
-      continue
-    fi
-    target_clusters+=("$cluster_name")
-  done
+  # Determine which clusters to deploy (apply --cluster filter with child expansion)
+  resolve_target_clusters "$DEPLOY_CONFIG" "$DEPLOY_CLUSTER"
+  local target_clusters=("${TARGET_CLUSTERS[@]}")
 
   if [[ ${#target_clusters[@]} -eq 0 ]]; then
     log_warn "No clusters matched. Check --cluster filter or kuberise.yaml."
@@ -1930,7 +1980,7 @@ Optional flags:
   --cilium                 Install Cilium CNI on clusters that need init
   --revision REV           Client repo branch, tag, or commit SHA (default: HEAD)
   --token TOKEN            Git token for private repositories (fallback for all repos)
-  --cluster NAME           Target only this cluster (default: all clusters)
+  --cluster NAME           Target this cluster and its children (default: all)
   --layer NAME             Deploy only this layer (default: deploy all layers)
   --config PATH            Path to kuberise.yaml (default: ./kuberise.yaml)
   --retry-interval SECS    Seconds between retries for inaccessible clusters (default: 30)
@@ -2111,14 +2161,9 @@ function cmd_up() {
   log_info "Kuberise: $KUBERISE_REPO_URL @ $KUBERISE_TARGET_REVISION"
   log_info "Clusters: ${CLUSTER_NAMES[*]}"
 
-  # Determine target clusters (apply --cluster filter)
-  local target_clusters=()
-  for cluster_name in "${CLUSTER_NAMES[@]}"; do
-    if [[ -n "$UP_CLUSTER" && "$cluster_name" != "$UP_CLUSTER" ]]; then
-      continue
-    fi
-    target_clusters+=("$cluster_name")
-  done
+  # Determine target clusters (apply --cluster filter with child expansion)
+  resolve_target_clusters "$UP_CONFIG" "$UP_CLUSTER"
+  local target_clusters=("${TARGET_CLUSTERS[@]}")
 
   if [[ ${#target_clusters[@]} -eq 0 ]]; then
     log_warn "No clusters matched. Check --cluster filter or kuberise.yaml."
