@@ -52,6 +52,8 @@ spec:
       {{- end }}
       helm:
         # ignoreMissingValueFiles: true # adr 0002 # commented out to make sure it gets values from the correct files.
+        # since the architecture is complex, it is important to make sure it gets values from the correct files.
+        # so all empty values file should exist otherwise it will fail to sync.
         valueFiles:
           {{- if hasKey $app "values" }}
           {{- range $app.values }}
