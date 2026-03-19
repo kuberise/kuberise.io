@@ -1,0 +1,2 @@
+# Default values for cilium-config
+# Override per cluster in values/{cluster}/platform/cilium-config/values.yaml

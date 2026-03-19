@@ -1,0 +1,16 @@
+gateway:
+  namespace: kube-system
+  tlsSecretName: ssl-certificate-letsencrypt
+  tlsSecretNamespace: cert-manager
+  nodePort:
+    enabled: false
+    https: 30443
+    http: 30080
+
+routes: []
+# Example:
+# - name: argocd-server
+#   namespace: argocd
+#   subdomain: argocd
+#   serviceName: argocd-server
+#   port: 443

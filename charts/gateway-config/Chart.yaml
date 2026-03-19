@@ -1,0 +1,6 @@
+apiVersion: v2
+name: gateway-config
+description: Gateway API configuration - Gateway, HTTPRoutes, and supporting resources
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

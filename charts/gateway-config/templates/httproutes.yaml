@@ -1,0 +1,19 @@
+{{- range .Values.routes }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+spec:
+  parentRefs:
+    - name: platform-gateway
+      namespace: {{ $.Values.gateway.namespace }}
+      sectionName: https
+  hostnames:
+    - "{{ .subdomain }}.{{ $.Values.global.domain }}"
+  rules:
+    - backendRefs:
+        - name: {{ .serviceName }}
+          port: {{ .port }}
+{{- end }}

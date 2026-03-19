@@ -1,0 +1,2 @@
+# Default values for gateway-config
+# Override per cluster in values/{cluster}/platform/gateway-config/values.yaml

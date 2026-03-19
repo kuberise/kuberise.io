@@ -1,0 +1,22 @@
+{{- if .Values.gateway.nodePort.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-nodeport
+  namespace: {{ .Values.gateway.namespace }}
+spec:
+  type: NodePort
+  selector:
+    io.cilium.gateway/owning-gateway: platform-gateway
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+      nodePort: {{ .Values.gateway.nodePort.https }}
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: {{ .Values.gateway.nodePort.http }}
+{{- end }}
