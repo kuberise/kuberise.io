@@ -73,11 +73,7 @@ controller:
 server:
   insecure: true
   ingress:
-    enabled: true
-    ingressClassName: nginx-external
-    servicePort: http
-    hostname: "" # will be set by the install script
-    tls: true
+    enabled: false
   metrics:
     enabled: true
     serviceMonitor:
