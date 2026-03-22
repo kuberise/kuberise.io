@@ -172,12 +172,6 @@ ArgocdApplications:
     ignoreDifferences:
       - group: ""
         kind: Secret
-        name: cilium-ca
-        jsonPointers:
-          - /data
-      - group: ""
-        kind: Secret
-        name: hubble-server-certs
         jsonPointers:
           - /data
 
