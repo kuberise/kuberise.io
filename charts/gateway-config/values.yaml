@@ -2,6 +2,10 @@ gateway:
   namespace: kube-system
   tlsSecretName: ssl-certificate-letsencrypt
   tlsSecretNamespace: cert-manager
+  # Override the IP/hostname that external-dns publishes in DNS records.
+  # Set this to the public IP of an external load balancer when the
+  # Cilium Gateway LB IP is private (e.g. on bare-metal/VM setups).
+  externalTarget: ""
   nodePort:
     enabled: false
     https: 30443
