@@ -4,6 +4,11 @@ kind: Service
 metadata:
   name: gateway-nodeport
   namespace: {{ .Values.gateway.namespace }}
+  {{- if .Values.gateway.externalTarget }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.global.domain }}"
+    external-dns.alpha.kubernetes.io/target: {{ .Values.gateway.externalTarget }}
+  {{- end }}
 spec:
   type: NodePort
   selector:
