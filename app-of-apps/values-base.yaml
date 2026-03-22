@@ -161,6 +161,16 @@ ArgocdApplications:
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.15.0
 
+  gateway-api-crds:
+    enabled: false
+    namespace: kube-system
+    type: kustomize
+    repoURL: https://github.com/kubernetes-sigs/gateway-api.git
+    targetRevision: v1.2.1
+    path: config/crd
+    serverSideApply: true
+    syncWave: 0
+
   cilium:
     enabled: false
     namespace: kube-system
