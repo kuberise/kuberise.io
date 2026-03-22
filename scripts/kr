@@ -592,6 +592,7 @@ function install_cilium() {
   helm upgrade --install --kube-context "$context" \
     -n kube-system --wait \
     --set operator.replicas=1 \
+    --set ipam.mode=kubernetes \
     --repo "$CILIUM_CHART_REPO" --version "$CILIUM_CHART_VERSION" \
     cilium cilium > /dev/null
 
