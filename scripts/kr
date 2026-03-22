@@ -578,7 +578,7 @@ function install_argocd() {
   helm upgrade --install --kube-context "$context" \
     -n argocd --create-namespace --wait \
     --set configs.secret.argocdServerAdminPassword="$bcrypt_hash" \
-    --set configs.params.server.insecure=true \
+    --set configs.params."server\.insecure"=true \
     --set server.service.type=ClusterIP \
     --repo "$ARGOCD_CHART_REPO" --version "$ARGOCD_CHART_VERSION" \
     argocd argo-cd > /dev/null
