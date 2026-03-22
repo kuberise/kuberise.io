@@ -11,8 +11,6 @@ env:
       secretKeyRef:
         name: cloudflare
         key: cloudflare_api_token
-extraArgs:
-  cloudflare-proxied: "false"
 policy: sync
 txtOwnerId: "dev-shared-onprem-externaldns"
 txtPrefix: "externaldns"
