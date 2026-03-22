@@ -1,0 +1,17 @@
+{{- if .Values.gateway.externalTarget }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-dns
+  namespace: {{ .Values.gateway.namespace }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.global.domain }}"
+    external-dns.alpha.kubernetes.io/target: {{ .Values.gateway.externalTarget }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+{{- end }}
