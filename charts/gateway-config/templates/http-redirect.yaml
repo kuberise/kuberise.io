@@ -5,13 +5,19 @@ metadata:
   namespace: {{ .Values.gateway.namespace }}
 spec:
   parentRefs:
-    - name: platform-gateway
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: platform-gateway
       namespace: {{ .Values.gateway.namespace }}
       sectionName: http
   hostnames:
     - "*.{{ .Values.global.domain }}"
   rules:
-    - filters:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
         - type: RequestRedirect
           requestRedirect:
             scheme: https

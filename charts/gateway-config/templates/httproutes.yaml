@@ -7,13 +7,22 @@ metadata:
   namespace: {{ .namespace }}
 spec:
   parentRefs:
-    - name: platform-gateway
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: platform-gateway
       namespace: {{ $.Values.gateway.namespace }}
       sectionName: https
   hostnames:
     - "{{ .subdomain }}.{{ $.Values.global.domain }}"
   rules:
-    - backendRefs:
-        - name: {{ .serviceName }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ .serviceName }}
           port: {{ .port }}
+          weight: 1
 {{- end }}
