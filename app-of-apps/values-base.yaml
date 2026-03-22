@@ -166,7 +166,7 @@ ArgocdApplications:
     namespace: kube-system
     type: kustomize
     repoURL: https://github.com/kubernetes-sigs/gateway-api.git
-    targetRevision: v1.2.1
+    targetRevision: v1.4.1
     path: config/crd
     serverSideApply: true
     syncWave: 0
@@ -176,7 +176,7 @@ ArgocdApplications:
     namespace: kube-system
     chart: cilium
     repoURL: https://helm.cilium.io/
-    targetRevision: 1.20.0-pre.0
+    targetRevision: 1.19.1
     syncOptions:
       - RespectIgnoreDifferences=true
     ignoreDifferences:
