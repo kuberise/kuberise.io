@@ -8,7 +8,7 @@ KR_VERSION="0.4.0"
 
 readonly ARGOCD_CHART_VERSION="9.4.2"
 readonly ARGOCD_CHART_REPO="https://argoproj.github.io/argo-helm"
-readonly CILIUM_CHART_VERSION="1.19.0"
+readonly CILIUM_CHART_VERSION="1.19.1"
 readonly CILIUM_CHART_REPO="https://helm.cilium.io/"
 
 readonly NAMESPACES=(
