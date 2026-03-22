@@ -167,6 +167,19 @@ ArgocdApplications:
     chart: cilium
     repoURL: https://helm.cilium.io/
     targetRevision: 1.20.0-pre.0
+    syncOptions:
+      - RespectIgnoreDifferences=true
+    ignoreDifferences:
+      - group: ""
+        kind: Secret
+        name: cilium-ca
+        jsonPointers:
+          - /data
+      - group: ""
+        kind: Secret
+        name: hubble-server-certs
+        jsonPointers:
+          - /data
 
   cilium-config:
     enabled: false
