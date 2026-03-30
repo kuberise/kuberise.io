@@ -711,7 +711,7 @@ spec:
       targetRevision: $kuberise_revision
       path: ./app-of-apps
       helm:
-        ignoreMissingValueFiles: true
+        ignoreMissingValueFiles: false # adr 0002 # commented out to make sure it gets values from the correct files.
         valueFiles:
           - \$layer/app-of-apps/values-base.yaml
           - \$client/app-of-apps/$enabler_file
