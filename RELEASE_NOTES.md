@@ -1,5 +1,27 @@
 # Release Notes
 
+## [0.5.0] - 2 April 2026
+
+### Gateway API, Unlimited Sync Retries, and 20+ Chart Upgrades
+
+This release adds Gateway API support with a dedicated config chart, switches ArgoCD sync retries to unlimited with exponential backoff to eliminate sync-wave deadlocks, splits Cilium into operator and config charts, and upgrades 20+ external Helm charts to their latest versions.
+
+### Added
+- **Gateway API support** - new `gateway-api-crds` app (kustomize, from upstream `kubernetes-sigs/gateway-api`) installs Gateway API CRDs, and a new `gateway-config` chart provisions Gateway resources, HTTP-to-HTTPS redirect, per-service HTTPRoutes, ReferenceGrant, and an optional DNS target service.
+- **`cilium-config` chart** - new config chart for Cilium CR instances (L2AnnouncementPolicy, LoadBalancerIPPool), following the operator + config chart pattern used by cert-manager and keycloak.
+- **cert-manager SSA webhook fix** - added `ignoreDifferences` with `RespectIgnoreDifferences=true` for `caBundle` on ValidatingWebhookConfiguration and MutatingWebhookConfiguration to resolve server-side apply conflicts. Includes a troubleshooting guide in `docs/public/`.
+
+### Changed
+- **Unlimited sync retries** (ADR-0007 update) - sync retry policy changed from `limit: 5` to `limit: -1` (unlimited) with exponential backoff. Bounded retries caused earlier sync waves to exhaust their retry budget before dependencies were ready, permanently blocking all later waves.
+- **`ignoreMissingValueFiles` disabled** - commented out to enforce that all expected value files exist. This catches misconfiguration early rather than silently skipping missing files.
+- **`internal-dns` switched to upstream chart** - now uses the `kubernetes-sigs.github.io/external-dns/` Helm repo instead of the Bitnami OCI chart.
+- **`kr` CLI improvements** - fixed ArgoCD install param escaping (`server.insecure`), `--cluster` targeting now includes child clusters via `parent:` in `kuberise.yaml`, added parent reference validation, and `kr up` now always runs idempotent init (upgrade if already installed).
+- **Cilium updated to 1.20.0-pre.1** - updated install params to use `ipam.mode=kubernetes`, added `ignoreDifferences` for Secret data to prevent drift detection on auto-generated secrets.
+- **20+ chart version bumps** - argocd-image-updater 1.1.4, rancher 2.14.0, vcluster 0.34.0, cloudnative-pg 0.28.0, pgadmin4 1.62.0, redis 25.3.9, ingress-nginx 4.15.1, aws-lb-controller 3.1.0, keycloakx 7.1.9, external-secrets 2.2.0, oauth2-proxy 10.4.2, cert-manager v1.21.0-alpha.0, kyverno 3.7.1, vault-secrets-operator 1.3.0, trivy-operator 0.32.1, neuvector 2.8.12, kube-prometheus-stack 82.16.1, opencost 2.5.12, ollama 1.54.0, k8sgpt 0.2.27.
+
+### Removed
+- **`external-dns` duplicate entry** - consolidated `external-dns` and `external-dns-sigs` into a single `external-dns` app using the upstream kubernetes-sigs chart.
+
 ## [0.4.0] - 24 February 2026
 
 ### Declarative Multi-Cluster Deployment with `kr up`
