@@ -63,7 +63,7 @@ grafana:
       subPath: ca.crt
 
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx-external
     hosts:
       - grafana.{{ .Values.global.domain }}
@@ -87,7 +87,7 @@ prometheus:
     podMonitorSelectorNilUsesHelmValues: false
 
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx-external
     # annotations: # enable this when you want to use oauth2-proxy for prometheus
     #   nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.{{ .Values.global.domain }}/oauth2/start

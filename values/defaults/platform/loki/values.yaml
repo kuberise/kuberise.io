@@ -18,7 +18,7 @@ loki:
 
 gateway:
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx-external
     hosts:
       - host: loki-gateway.shared.kuberise.dev
