@@ -34,6 +34,10 @@ metadata:
 spec:
   secretName: ssl-certificate-letsencrypt
   dnsNames:
+  {{- if .Values.wildcardDomain }}
+  - "*.{{ .Values.global.domain }}"
+  - "{{ .Values.global.domain }}"
+  {{- end }}
   {{- range .Values.subdomains }}
   - "{{ . }}.{{ $.Values.global.domain }}"
   {{- end }}

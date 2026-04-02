@@ -1,0 +1,16 @@
+gateway:
+  namespace: kube-system
+  tlsSecretName: ssl-certificate-letsencrypt
+  tlsSecretNamespace: cert-manager
+  # Override the IP/hostname that external-dns publishes in DNS records.
+  # Set this to the public IP of an external load balancer when the
+  # Cilium Gateway LB IP is private (e.g. on bare-metal/VM setups).
+  externalTarget: ""
+
+routes: []
+# Example:
+# - name: argocd-server
+#   namespace: argocd
+#   subdomain: argocd
+#   serviceName: argocd-server
+#   port: 80

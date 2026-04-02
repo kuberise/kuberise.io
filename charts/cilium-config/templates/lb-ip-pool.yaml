@@ -1,0 +1,12 @@
+{{- range .Values.ipPools }}
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: {{ .name }}
+spec:
+  blocks:
+  {{- range .cidrs }}
+    - cidr: {{ . }}
+  {{- end }}
+{{- end }}

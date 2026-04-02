@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: l2-policy
+spec:
+  interfaces:
+  {{- range .Values.l2Policy.interfaces }}
+    - {{ . }}
+  {{- end }}
+  externalIPs: true
+  loadBalancerIPs: true

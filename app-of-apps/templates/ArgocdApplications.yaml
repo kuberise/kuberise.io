@@ -51,7 +51,9 @@ spec:
       path: charts/{{ $name }}
       {{- end }}
       helm:
-        ignoreMissingValueFiles: true # adr 0002
+        # ignoreMissingValueFiles: true # adr 0002 # commented out to make sure it gets values from the correct files.
+        # since the architecture is complex, it is important to make sure it gets values from the correct files.
+        # so all empty values file should exist otherwise it will fail to sync.
         valueFiles:
           {{- if hasKey $app "values" }}
           {{- range $app.values }}
@@ -116,7 +118,9 @@ spec:
     {{- end }}
     retry:
       refresh: true
-      limit: 5
+      # Unlimited retries (ADR-0007): bounded retries caused earlier sync waves
+      # to give up before dependencies were ready, blocking all later waves.
+      limit: -1
       backoff:
         duration: 10s
         factor: 2

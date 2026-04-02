@@ -7,7 +7,7 @@ Usage: $(basename $0) [options]
 
 This script checks and updates external Helm chart versions referenced in the
 app-of-apps values.yaml file and the ArgoCD/Cilium chart versions in
-scripts/install.sh. It compares current versions with the latest available
+scripts/install-kr.sh. It compares current versions with the latest available
 versions from their respective repositories.
 
 Options:
@@ -25,7 +25,7 @@ Examples:
 
 The script will:
 1. Parse app-of-apps/values-base.yaml for applications with chart and repoURL fields
-2. Check ArgoCD and Cilium chart versions in scripts/install.sh
+2. Check ArgoCD and Cilium chart versions in scripts/install-kr.sh
 3. Check each chart's current version against the latest available version
 4. Update versions if newer versions are available
 
@@ -79,7 +79,7 @@ while getopts "hyl-:" opt; do
 done
 
 VALUES_FILE="app-of-apps/values-base.yaml"
-INSTALL_SCRIPT="scripts/install.sh"
+INSTALL_SCRIPT="scripts/install-kr.sh"
 
 if [ ! -f "$VALUES_FILE" ]; then
     echo "Error: $VALUES_FILE not found. Run this script from the repository root."
@@ -116,13 +116,13 @@ INSTALL_SCRIPT_CHARTS=(
     "CILIUM|cilium|https://helm.cilium.io/"
 )
 
-# Read the current chart version from install.sh
+# Read the current chart version from install-kr.sh
 get_install_script_version() {
     local var_prefix=$1
     grep "^readonly ${var_prefix}_CHART_VERSION=" "$INSTALL_SCRIPT" | sed 's/.*="\(.*\)"/\1/'
 }
 
-# Update the chart version constant in install.sh
+# Update the chart version constant in install-kr.sh
 update_install_script_version() {
     local var_prefix=$1
     local new_version=$2
@@ -266,7 +266,7 @@ while IFS= read -r app_name; do
 done <<< "$app_names"
 
 echo ""
-echo "Checking install script chart versions (scripts/install.sh)..."
+echo "Checking install script chart versions (scripts/install-kr.sh)..."
 
 for entry in "${INSTALL_SCRIPT_CHARTS[@]}"; do
     IFS='|' read -r var_prefix chart_name repo_url <<< "$entry"
