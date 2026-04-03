@@ -20,7 +20,7 @@ envVarsExtra:
         name: pgadmin-oauth2-client-secret
         key: client-secret
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: nginx-external
   hosts:
     - host: pgadmin.{{ .Values.global.domain }}
