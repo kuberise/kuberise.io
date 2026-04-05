@@ -1385,6 +1385,7 @@ function parse_deploy_args() {
   DEPLOY_REVISION="HEAD"
   DEPLOY_DRY_RUN=false
   DEPLOY_TOKEN=""
+  DEPLOY_TOKEN_ENV=""
   DEPLOY_CLUSTER=""
   DEPLOY_LAYER=""
   DEPLOY_CONFIG="kuberise.yaml"
@@ -1446,6 +1447,7 @@ function parse_kuberise_yaml() {
 
   KUBERISE_REPO_URL=$(yq '.kuberise.repoURL' "$config_file")
   KUBERISE_TARGET_REVISION=$(yq '.kuberise.targetRevision' "$config_file")
+  KUBERISE_TOKEN_ENV=$(yq '.kuberise.token // ""' "$config_file")
 
   if [[ "$KUBERISE_REPO_URL" == "null" || -z "$KUBERISE_REPO_URL" ]]; then
     log_error "kuberise.repoURL is required in $config_file"
@@ -1540,6 +1542,8 @@ function resolve_client_repo() {
   yaml_repo=$(yq '.client.repoURL // ""' "$config_file")
   local yaml_revision
   yaml_revision=$(yq '.client.targetRevision // ""' "$config_file")
+  local yaml_token_env
+  yaml_token_env=$(yq '.client.token // ""' "$config_file")
 
   if [[ -n "$cli_repo" ]]; then
     DEPLOY_REPO="$cli_repo"
@@ -1558,6 +1562,8 @@ function resolve_client_repo() {
   else
     DEPLOY_REVISION="HEAD"
   fi
+
+  DEPLOY_TOKEN_ENV="$yaml_token_env"
 }
 
 function get_cluster_config() {
@@ -1595,15 +1601,27 @@ function get_layer_config() {
   LAYER_TOKEN_ENV=$(yq ".clusters.$cluster_name.layers[$index].token // \"\"" "$config_file")
 
   # Resolve repoURL
-  if [[ "$raw_repo" == "kuberise" ]]; then
-    LAYER_REPO_URL="$KUBERISE_REPO_URL"
-    LAYER_TARGET_REVISION="${LAYER_TARGET_REVISION:-$KUBERISE_TARGET_REVISION}"
-  elif [[ -n "$raw_repo" ]]; then
-    LAYER_REPO_URL="$raw_repo"
-  else
+  if [[ -z "$raw_repo" ]]; then
     # Default: use client repo
     LAYER_REPO_URL="$DEPLOY_REPO"
     LAYER_TARGET_REVISION="${LAYER_TARGET_REVISION:-$DEPLOY_REVISION}"
+    LAYER_TOKEN_ENV="${LAYER_TOKEN_ENV:-$DEPLOY_TOKEN_ENV}"
+  elif [[ "$raw_repo" != *"://"* ]]; then
+    # Named reference (e.g., "kuberise", "pro") - resolve from top-level block
+    local ref_repo ref_revision ref_token_env
+    ref_repo=$(yq ".$raw_repo.repoURL // \"\"" "$config_file")
+    ref_revision=$(yq ".$raw_repo.targetRevision // \"\"" "$config_file")
+    ref_token_env=$(yq ".$raw_repo.token // \"\"" "$config_file")
+    if [[ -z "$ref_repo" ]]; then
+      log_error "Layer '$LAYER_NAME': repoURL '$raw_repo' references top-level key '$raw_repo' but '$raw_repo.repoURL' is not defined in $config_file"
+      exit 1
+    fi
+    LAYER_REPO_URL="$ref_repo"
+    LAYER_TARGET_REVISION="${LAYER_TARGET_REVISION:-$ref_revision}"
+    LAYER_TOKEN_ENV="${LAYER_TOKEN_ENV:-$ref_token_env}"
+  else
+    # Full URL (contains ://)
+    LAYER_REPO_URL="$raw_repo"
   fi
 
   # Ensure revision has a value
@@ -1767,9 +1785,18 @@ function deploy_cluster() {
   check_argocd_installed "$context"
 
   # Configure repo access for this cluster
+  # Use tokens from kuberise.yaml when --token CLI flag is not provided
+  local kuberise_token="$DEPLOY_TOKEN"
+  if [[ -z "$kuberise_token" && -n "$KUBERISE_TOKEN_ENV" ]]; then
+    kuberise_token="${!KUBERISE_TOKEN_ENV:-}"
+  fi
+  local client_token="$DEPLOY_TOKEN"
+  if [[ -z "$client_token" && -n "$DEPLOY_TOKEN_ENV" ]]; then
+    client_token="${!DEPLOY_TOKEN_ENV:-}"
+  fi
   configure_all_repo_access "$context" \
-    "$KUBERISE_REPO_URL" "$DEPLOY_TOKEN" \
-    "$DEPLOY_REPO" "$DEPLOY_TOKEN"
+    "$KUBERISE_REPO_URL" "$kuberise_token" \
+    "$DEPLOY_REPO" "$client_token"
 
   # Create ArgoCD project for this cluster
   create_app_project "$context" "$destination"
