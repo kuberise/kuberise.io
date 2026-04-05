@@ -83,6 +83,7 @@ ArgocdApplications:
     namespace: postgres
     path: values/{{ $.Values.global.clusterName }}/platform/database/
     type: raw
+    # syncWave: 2
 
   postgres-operator:
     enabled: false
@@ -90,6 +91,7 @@ ArgocdApplications:
     chart: cloudnative-pg
     repoURL: https://cloudnative-pg.github.io/charts
     targetRevision: 0.28.0
+    # syncWave: 1
 
   pgadmin-config:
     enabled: false
